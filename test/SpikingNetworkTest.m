@@ -5,7 +5,29 @@ classdef SpikingNetworkTest < matlab.unittest.TestCase
             rng(rngDefault);   % set random number generator back to default
             load 'testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();
-%             network.buildNetwork(); 
+            % override parameters here. Plot: SpikingNetworkTestPlot.fig
+            % Defaults to the following:
+            network.recoveryRate = 0.02; 
+            network.subthresholdFluctuationSensitivity = 0.2; 
+            network.membranePotentialReset = -65; 
+            network.recoveryReset = 8; 
+            % generates "fast spiking": SpikingNetworkTestFastPlot.fig 
+%             network.recoveryRate = 0.02; 
+%             network.subthresholdFluctuationSensitivity = 0.2; 
+%             network.membranePotentialReset = -55; 
+%             network.recoveryReset = 4; 
+            % generates "burst": SpikingNetworkTestBurstPlot.fig
+%             network.recoveryRate = 0.1; 
+%             network.subthresholdFluctuationSensitivity = 0.2; 
+%             network.membranePotentialReset = -65; 
+%             network.recoveryReset = 2; 
+            % generates "fast bursting": SpikingNetworkTestFastBurstPlot.fig 
+%             network.recoveryRate = 0.1; 
+%             network.subthresholdFluctuationSensitivity = 0.25; 
+%             network.membranePotentialReset = -65; 
+%             network.recoveryReset = 2; 
+            
+            network.buildNetwork(); 
             firings = network.runNetwork();
             testCase.assertEqual(firings, expectedFirings, ...
                 'expected firings not matched');
