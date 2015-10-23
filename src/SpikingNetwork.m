@@ -10,7 +10,7 @@
 % MembranePotentialReset (c)
 % RecoveryReset (d)
 
-classdef SpikingNetwork
+classdef SpikingNetwork < handle
     properties
         nExcitatoryNeurons
         nInhibitoryNeurons
@@ -43,6 +43,46 @@ classdef SpikingNetwork
             obj.recoveryReset = 8; 
             obj.recoveryResetRange = 6;
             obj.maximumPotential = 30;
+            obj.buildNetwork()
+%             re=rand(obj.nExcitatoryNeurons,1);         
+%             ri=rand(obj.nInhibitoryNeurons,1); 
+%             %This will set the RecoveryRate for all excitatory neurons to 0.02 and the
+%             %RecoveryRate for inhibitory neurons to a random number between 0.02 and 0.1
+%             obj.recoveryRateList = [obj.recoveryRate*ones(obj.nExcitatoryNeurons,1);...
+%                 obj.recoveryRate+(0.1-obj.recoveryRate)*ri];
+%             %SubthresholdFluctuationSensitivity to range from 0.2-0.25
+%             obj.subthresholdFluctuationSensitivityList = ...
+%                 [obj.subthresholdFluctuationSensitivity*ones(obj.nExcitatoryNeurons,1); ...
+%                 (obj.subthresholdFluctuationSensitivity+0.05)-0.05*ri];
+%             %This will allow the spike reset membrane potential to range between -65
+%             %and -50
+%             obj.membranePotentialResetList =[obj.membranePotentialReset+15*re.^2; ...
+%                 obj.membranePotentialReset*ones(obj.nInhibitoryNeurons,1)];
+%             %This will allow the recovery reset value to range between 2 and 8
+%             obj.recoveryResetList =[obj.recoveryReset-(obj.recoveryResetRange*re.^2); ...
+%                 (obj.recoveryReset-obj.recoveryResetRange)*ones(obj.nInhibitoryNeurons,1)];
+%             totalNeurons = obj.nExcitatoryNeurons + obj.nInhibitoryNeurons;
+%             obj.network=[0.5*rand(totalNeurons,obj.nExcitatoryNeurons), ...
+%                 -rand(totalNeurons,obj.nInhibitoryNeurons)]; 
+% 
+%             %The following code can be used for the project when asked to create a
+%             %sparser weight matrix.
+%             %Choose a percent of connections to turn off.
+%             %percent_off=0.7; This is an extreme example with 70% of the connections
+%             %abolished.
+%             %connections=randperm((Ne+Ni)^2);
+%             %connections=connections(1:(floor(percent_off*length(connections))));
+%             %for i=1:length(connections)
+%             %    S(connections(i))=0;
+%             %end;
+% 
+%             %The initial values for v and u
+%             obj.membranePotential=obj.baselinePotential*ones(totalNeurons,1); 
+%             obj.recovery=obj.subthresholdFluctuationSensitivityList.* ... 
+%                 obj.membranePotential;                
+% 
+        end
+        function obj = buildNetwork(obj)
             re=rand(obj.nExcitatoryNeurons,1);         
             ri=rand(obj.nInhibitoryNeurons,1); 
             %This will set the RecoveryRate for all excitatory neurons to 0.02 and the
@@ -79,45 +119,6 @@ classdef SpikingNetwork
             obj.membranePotential=obj.baselinePotential*ones(totalNeurons,1); 
             obj.recovery=obj.subthresholdFluctuationSensitivityList.* ... 
                 obj.membranePotential;                
-
-        end
-        function obj = buildNetwork(obj)
-%             re=rand(obj.nExcitatoryNeurons,1);         
-%             ri=rand(obj.nInhibitoryNeurons,1); 
-%             %This will set the RecoveryRate for all excitatory neurons to 0.02 and the
-%             %RecoveryRate for inhibitory neurons to a random number between 0.02 and 0.1
-%             obj.recoveryRateList = [obj.recoveryRate*ones(obj.nExcitatoryNeurons,1);...
-%                 obj.recoveryRate+(0.1-obj.recoveryRate)*ri];
-%             %SubthresholdFluctuationSensitivity to range from 0.2-0.25
-%             obj.subthresholdFluctuationSensitivityList = ...
-%                 [obj.subthresholdFluctuationSensitivity*ones(obj.nExcitatoryNeurons,1); ...
-%                 (obj.subthresholdFluctuationSensitivity+0.05)-0.05*ri];
-%             %This will allow the spike reset membrane potential to range between -65
-%             %and -50
-%             obj.membranePotentialResetList =[obj.membranePotentialReset+15*re.^2; ...
-%                 obj.membranePotentialReset*ones(obj.nInhibitoryNeurons,1)];
-%             %This will allow the recovery reset value to range between 2 and 8
-%             obj.recoveryResetList =[obj.recoveryReset-(obj.recoveryResetRange*re.^2); ...
-%                 (obj.recoveryReset-obj.recoveryResetRange)*ones(obj.nInhibitoryNeurons,1)];
-%             totalNeurons = obj.nExcitatoryNeurons + obj.nInhibitoryNeurons;
-%             S=[0.5*rand(totalNeurons,obj.nExcitatoryNeurons), ...
-%                 -rand(totalNeurons,obj.nInhibitoryNeurons)]; 
-% 
-%             %The following code can be used for the project when asked to create a
-%             %sparser weight matrix.
-%             %Choose a percent of connections to turn off.
-%             %percent_off=0.7; This is an extreme example with 70% of the connections
-%             %abolished.
-%             %connections=randperm((Ne+Ni)^2);
-%             %connections=connections(1:(floor(percent_off*length(connections))));
-%             %for i=1:length(connections)
-%             %    S(connections(i))=0;
-%             %end;
-% 
-%             %The initial values for v and u
-%             obj.membranePotential=obj.baselinePotential*ones(totalNeurons,1); 
-%             obj.recovery=obj.subthresholdFluctuationSensitivityList.* ... 
-%                 obj.membranePotential;                
         end
         function firings = runNetwork(obj)
             %Firings will be a two-column matrix.  
