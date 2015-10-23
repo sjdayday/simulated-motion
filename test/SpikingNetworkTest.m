@@ -38,5 +38,28 @@ classdef SpikingNetworkTest < matlab.unittest.TestCase
 %             testCase.assertEqual(firings2, expectedFirings, 'will fail...');
 
         end
+        function testSpikingNetworkStepByStep(testCase)
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random number generator back to default
+            load 'testSpikingNetwork' expectedFirings;
+            network = SpikingNetwork();            
+            network.buildNetwork();
+            firings = [];
+            for t=1:network.totalMilliseconds          % simulation of 1000 ms 
+               %Create some random input external to the network
+               externalInput=[5*randn(network.nExcitatoryNeurons,1); ... 
+                   2*randn(network.nInhibitoryNeurons,1)]; % e.g., thalamic input 
+
+               fired = network.step(externalInput);
+
+               if ~isempty(fired)
+                   firings=[firings; t+0*fired, fired];
+               end;
+            end;
+            
+            testCase.assertEqual(firings, expectedFirings, ...
+                'expected firings not matched');
+
+        end
     end
 end
