@@ -37,11 +37,15 @@ classdef SpikingNetwork < handle
 %             Ne=800;                Ni=200;
             obj.nExcitatoryNeurons = 800;
             obj.nInhibitoryNeurons = 200;
+            % The next four (really five) parameters control the "type" of 
+            % neurons being simulated, e.g., regular, fast, bursting.  
+            % see SpikingNetworkTest, and Matlab for Neuro..., chapter 29.3 
             obj.recoveryRate = 0.02;
             obj.subthresholdFluctuationSensitivity = 0.2;
             obj.membranePotentialReset = -65;
             obj.recoveryReset = 8; 
-            obj.recoveryResetRange = 6;
+            obj.recoveryResetRange = 6;  % should shift with obj.recoveryReset
+
             obj.maximumPotential = 30;
             obj.totalMilliseconds = 1000; 
         end
@@ -89,11 +93,9 @@ classdef SpikingNetwork < handle
             %Firings will be a two-column matrix.  
             %The first column will indicate the time (1-1000) 
             %that a neuron’s membrane potential crossed 30, and 
-            %the second column %will be a number between 1 and Ne+Ni 
-            %that identifies which neuron fired at that %time.
-            %firings=[];
+            %the second column %will be a number between 1 and totalNeurons 
+            %that identifies which neuron fired at that time.
             firings=[];           % spike timings
-        
 
             for t=1:obj.totalMilliseconds          % simulation of 1000 ms 
                %Create some random input external to the network
@@ -104,7 +106,7 @@ classdef SpikingNetwork < handle
                fired=find(obj.membranePotentialList>=obj.maximumPotential); % indices of spikes
                if ~isempty(fired)  
                   %Add the times of firing and the neuron number to firings. 
-                  %TODO consider pre-allocating in blocks
+                  %TODO performance: consider pre-allocating in blocks
                   firings=[firings; t+0*fired, fired];
                   %Reset the neurons that fired to the spike reset membrane potential and   
                   %recovery variable.
@@ -114,7 +116,7 @@ classdef SpikingNetwork < handle
                   %neuron.
                   externalInput=externalInput+sum(obj.network(:,fired),2);
                end;
-               %Move the simulation forward using Euler’s method, twice in
+               %Move the simulation forward twice, using Euler’s method, in
                %small increments.
                obj.membranePotentialList=obj.membranePotentialList+ ... 
                    0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
@@ -130,6 +132,7 @@ classdef SpikingNetwork < handle
         end
         function plot(obj)
             %Plot the raster plot of the network activity.
+            %X=time in milliseconds, Y=neuron that fired
             plot(obj.firings(:,1),obj.firings(:,2),'.');
         end
     end

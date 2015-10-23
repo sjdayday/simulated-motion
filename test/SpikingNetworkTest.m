@@ -11,17 +11,17 @@ classdef SpikingNetworkTest < matlab.unittest.TestCase
             network.subthresholdFluctuationSensitivity = 0.2; 
             network.membranePotentialReset = -65; 
             network.recoveryReset = 8; 
-            % generates "fast spiking": SpikingNetworkTestFastPlot.fig 
+            % generates "fast spiking(?)": SpikingNetworkTestFastPlot.fig 
 %             network.recoveryRate = 0.02; 
 %             network.subthresholdFluctuationSensitivity = 0.2; 
 %             network.membranePotentialReset = -55; 
 %             network.recoveryReset = 4; 
-            % generates "burst": SpikingNetworkTestBurstPlot.fig
+            % generates "bursting (?)": SpikingNetworkTestBurstPlot.fig
 %             network.recoveryRate = 0.1; 
 %             network.subthresholdFluctuationSensitivity = 0.2; 
 %             network.membranePotentialReset = -65; 
 %             network.recoveryReset = 2; 
-            % generates "fast bursting": SpikingNetworkTestFastBurstPlot.fig 
+            % generates "fast bursting (?)": SpikingNetworkTestFastBurstPlot.fig 
 %             network.recoveryRate = 0.1; 
 %             network.subthresholdFluctuationSensitivity = 0.25; 
 %             network.membranePotentialReset = -65; 
