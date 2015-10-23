@@ -101,34 +101,41 @@ classdef SpikingNetwork < handle
                %Create some random input external to the network
                externalInput=[5*randn(obj.nExcitatoryNeurons,1); ... 
                    2*randn(obj.nInhibitoryNeurons,1)]; % e.g., thalamic input 
-               %Determine which neurons crossed threshold at the 
-               %current time step t. 
-               fired=find(obj.membranePotentialList>=obj.maximumPotential); % indices of spikes
-               if ~isempty(fired)  
-                  %Add the times of firing and the neuron number to firings. 
-                  %TODO performance: consider pre-allocating in blocks
-                  firings=[firings; t+0*fired, fired];
-                  %Reset the neurons that fired to the spike reset membrane potential and   
-                  %recovery variable.
-                  obj.membranePotentialList(fired)=obj.membranePotentialResetList(fired);  
-                  obj.recoveryList(fired)=obj.recoveryList(fired)+obj.recoveryResetList(fired);
-                  %strengths of all other neurons that fired in the last time step connected to that 
-                  %neuron.
-                  externalInput=externalInput+sum(obj.network(:,fired),2);
+               fired = step(obj, externalInput);
+               if ~isempty(fired)
+                   %Add the times of firing and the neuron number to firings.
+                   %TODO performance: consider pre-allocating in blocks
+                   firings=[firings; t+0*fired, fired];
                end;
-               %Move the simulation forward twice, using Euler’s method, in
-               %small increments.
-               obj.membranePotentialList=obj.membranePotentialList+ ... 
-                   0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
-                   140-obj.recoveryList+externalInput);
-               obj.membranePotentialList=obj.membranePotentialList+ ... 
-                   0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
-                   140-obj.recoveryList+externalInput);
-               obj.recoveryList=obj.recoveryList+obj.recoveryRateList.* ... 
-                   (obj.subthresholdFluctuationSensitivityList.* ... 
-                   obj.membranePotentialList-obj.recoveryList);   
             end;
             obj.firings = firings; 
+        end
+        function fired = step(obj, externalInput)
+           %Determine which neurons crossed threshold at the 
+           %current time step t. 
+           fired=find(obj.membranePotentialList>=obj.maximumPotential); % indices of spikes
+           if ~isempty(fired)  
+              %Reset the neurons that fired to the spike reset membrane potential and   
+              %recovery variable.
+              obj.membranePotentialList(fired)=obj.membranePotentialResetList(fired);  
+              obj.recoveryList(fired)=obj.recoveryList(fired)+obj.recoveryResetList(fired);
+              %strengths of all other neurons that fired in the last time step connected to that 
+              %neuron.
+              externalInput=externalInput+sum(obj.network(:,fired),2);
+           end;
+           %Move the simulation forward twice, using Euler’s method, in
+           %small increments....except this generates huge (10^3)
+           %increases; is that plausible? 
+           obj.membranePotentialList=obj.membranePotentialList+ ... 
+               0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
+               140-obj.recoveryList+externalInput);
+           obj.membranePotentialList=obj.membranePotentialList+ ... 
+               0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
+               140-obj.recoveryList+externalInput);
+           obj.recoveryList=obj.recoveryList+obj.recoveryRateList.* ... 
+               (obj.subthresholdFluctuationSensitivityList.* ... 
+               obj.membranePotentialList-obj.recoveryList);   
+
         end
         function plot(obj)
             %Plot the raster plot of the network activity.
