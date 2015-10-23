@@ -5,6 +5,7 @@ classdef SpikingNetworkTest < matlab.unittest.TestCase
             rng(rngDefault);   % set random number generator back to default
             load 'testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();
+            network.buildNetwork(); 
             firings = network.runNetwork();
             testCase.assertEqual(firings, expectedFirings, ...
                 'expected firings not matched');
