@@ -1,8 +1,10 @@
-classdef SpikingNetworkTest < matlab.unittest.TestCase
+% classdef SpikingNetworkTest < matlab.unittest.TestCase
+classdef SpikingNetworkTest < AbstractTest
     methods (Test)
+
         function testSpikingNetworkWithDefaultValues(testCase)
-            load '../rngDefaultSettings';
-            rng(rngDefault);   % set random number generator back to default
+%             load '../rngDefaultSettings';
+%             rng(rngDefault);   % set random number generator back to default
             load 'testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();
             % override parameters here. Plot: SpikingNetworkTestPlot.fig
@@ -39,8 +41,8 @@ classdef SpikingNetworkTest < matlab.unittest.TestCase
 
         end
         function testSpikingNetworkStepByStep(testCase)
-            load '../rngDefaultSettings';
-            rng(rngDefault);   % set random number generator back to default
+%             load '../rngDefaultSettings';
+%             rng(rngDefault);   % set random number generator back to default
             load 'testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();            
             network.buildNetwork();
