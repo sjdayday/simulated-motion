@@ -3,7 +3,7 @@ classdef AbstractTest < matlab.unittest.TestCase
         function setup(testCase)
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random number generator back to default
-            disp('loaded rng')
+%             disp('loaded rng')
         end
     end
 end
