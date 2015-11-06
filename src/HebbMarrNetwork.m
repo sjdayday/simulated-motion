@@ -46,27 +46,6 @@ classdef HebbMarrNetwork < handle
             end
 %             obj.weightFunction
         end
-%         function firings = runNetwork(obj)
-            %Firings will be a two-column matrix.  
-            %The first column will indicate the time (1-1000) 
-            %that a neuron’s membrane potential crossed 30, and 
-            %the second column %will be a number between 1 and totalNeurons 
-            %that identifies which neuron fired at that time.
-%             firings=[];           % spike timings
-
-%             for t=1:obj.totalMilliseconds          % simulation of 1000 ms 
-%                %Create some random input external to the network
-%                externalInput=[5*randn(obj.nExcitatoryNeurons,1); ... 
-%                    2*randn(obj.nInhibitoryNeurons,1)]; % e.g., thalamic input 
-%                fired = step(obj, externalInput);
-%                if ~isempty(fired)
-%                    %Add the times of firing and the neuron number to firings.
-%                    %TODO performance: consider pre-allocating in blocks
-%                    firings=[firings; t+0*fired, fired];
-%                end;
-%             end;
-%             obj.firings = firings; 
-%         end
         function fired = step(obj, inputX, inputY)
             verifyInputs(obj,inputX,inputY); 
             % inputY 
@@ -78,31 +57,21 @@ classdef HebbMarrNetwork < handle
                 end
             end
             fired = inputY;
-           %Determine which neurons crossed threshold at the 
-           %current time step t. 
-%            fired=find(obj.membranePotentialList>=obj.maximumPotential); % indices of spikes
-%            if ~isempty(fired)  
-%               %Reset the neurons that fired to the spike reset membrane potential and   
-%               %recovery variable.
-%               obj.membranePotentialList(fired)=obj.membranePotentialResetList(fired);  
-%               obj.recoveryList(fired)=obj.recoveryList(fired)+obj.recoveryResetList(fired);
-%               %strengths of all other neurons that fired in the last time step connected to that 
-%               %neuron.
-%               externalInput=externalInput+sum(obj.network(:,fired),2);
-%            end;
-%            %Move the simulation forward twice, using Euler’s method, in
-%            %small increments....except this generates huge (10^3)
-%            %increases; is that plausible? 
-%            obj.membranePotentialList=obj.membranePotentialList+ ... 
-%                0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
-%                140-obj.recoveryList+externalInput);
-%            obj.membranePotentialList=obj.membranePotentialList+ ... 
-%                0.5*(0.04*obj.membranePotentialList.^2+5*obj.membranePotentialList+ ... 
-%                140-obj.recoveryList+externalInput);
-%            obj.recoveryList=obj.recoveryList+obj.recoveryRateList.* ... 
-%                (obj.subthresholdFluctuationSensitivityList.* ... 
-%                obj.membranePotentialList-obj.recoveryList);   
-% 
+        end
+        function retrieved = read(obj, inputX)
+            retrieved = zeros(1,obj.nNeurons); 
+            verifyInputs(obj,inputX,[]); 
+            % inputY 
+            totalActivation = sum(inputX);
+            inputxIndices = find(inputX == 1); 
+            for ii = 1:obj.nNeurons
+                sumTree = 0;
+                for jj = inputxIndices
+                    sumTree = sumTree + obj.network(jj,ii);
+                end
+                activation = (sumTree/totalActivation); 
+                retrieved(1,ii) = (activation >= 1); 
+            end
         end
         function verifyInputs(obj,inputX,inputY)
             if (length(inputX) ~= obj.nSynapses) || ...
