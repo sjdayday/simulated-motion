@@ -17,7 +17,7 @@
 classdef HebbMarrNetwork < handle
     properties
         nNeurons
-        nSynapses
+        nAxons
         network     
         weightType
         weightFunction
@@ -28,13 +28,13 @@ classdef HebbMarrNetwork < handle
             %about 4 times as many excitatory nerons as inhibitory ones.
 %             Ne=800;                Ni=200;
             obj.nNeurons = 2;
-            obj.nSynapses = 4;
+            obj.nAxons = 4;
             obj.weightType = 'binary';  % weights are 0 or 1
         end
         % buildNetwork must be called after constructor is called and any 
         % properties are overridden. 
         function buildNetwork(obj)
-            obj.network = zeros(obj.nSynapses,obj.nNeurons); 
+            obj.network = zeros(obj.nAxons,obj.nNeurons); 
             buildWeightFunction(obj);
         end
         function buildWeightFunction(obj)
@@ -63,21 +63,16 @@ classdef HebbMarrNetwork < handle
             verifyInputs(obj,inputX,[]); 
             % inputY 
             totalActivation = sum(inputX);
-            inputxIndices = find(inputX == 1); 
-            for ii = 1:obj.nNeurons
-                sumTree = 0;
-                for jj = inputxIndices
-                    sumTree = sumTree + obj.network(jj,ii);
-                end
-                activation = (sumTree/totalActivation); 
-                retrieved(1,ii) = (activation >= 1); 
+            product = inputX*obj.network;
+            if totalActivation > 0
+                retrieved = fix(product/totalActivation); 
             end
         end
         function verifyInputs(obj,inputX,inputY)
-            if (length(inputX) ~= obj.nSynapses) || ...
+            if (length(inputX) ~= obj.nAxons) || ...
                 ((length(inputY) ~= obj.nNeurons) && (~isempty(inputY)))
                     error('HebbMarrNetwork:stepInputsWrongLength', ...
-                    ['InputX must be of same length as nSynapses; was %d.\n' ... 
+                    ['InputX must be of same length as nAxons; was %d.\n' ... 
                     'InputY must be the same length as nNeurons, or empty; was %d.'], length(inputX), length(inputY)) ;
             end
         end
