@@ -23,12 +23,9 @@ classdef HebbMarrNetwork < handle
         weightFunction
     end
     methods
-        function obj = HebbMarrNetwork()
-            %The number of excitatory neurons in the network.  The mammalian cortex has
-            %about 4 times as many excitatory nerons as inhibitory ones.
-%             Ne=800;                Ni=200;
-            obj.nNeurons = 2;
-            obj.nAxons = 4;
+        function obj = HebbMarrNetwork(dimension)
+            obj.nNeurons = dimension;
+            obj.nAxons = dimension;
             obj.weightType = 'binary';  % weights are 0 or 1
         end
         % buildNetwork must be called after constructor is called and any 

@@ -1,40 +1,31 @@
 classdef HebbMarrNetworkTest < AbstractTest
     methods (Test)
         function testCreateHebbianNetwork(testCase)
-            % testOnlyFiredSynapsesStrengthened
-%             load 'testHebbianNetwork' expectedFirings;
-            network = HebbMarrNetwork(); 
+            network = HebbMarrNetwork(5); 
             network.buildNetwork(); 
-            testCase.assertEqual(network.network, zeros(4,2)); 
-
-            network = HebbMarrNetwork(); 
-            % override parameters here.
-            network.nNeurons = 5; 
-            network.nAxons = 10; 
-            network.buildNetwork(); 
-            testCase.assertEqual(network.network, zeros(10,5)); 
+            testCase.assertEqual(network.network, zeros(5,5)); 
         end
-        function testCreatesWeightFunction(testCase)
-            network = HebbMarrNetwork(); 
+        function testThrowsForInvalidWeightFunction(testCase)
+            network = HebbMarrNetwork(5); 
             network.weightType = 'fred';
             testCase.verifyError(@network.buildNetwork,'HebbMarrNetwork:invalidWeightType'); 
         end
         function testThrowsIfInputsAreWrongLengthExceptInputYcanBeEmpty(testCase)
-            network = createHebbMarrNetwork(5, 10);
+            network = createHebbMarrNetwork(5);
             inputY = [1 1 1 1 1];  
             inputX = [1 1];   % wrong length X
             fh = @()network.step(inputX,inputY); 
             testCase.verifyError(fh,'HebbMarrNetwork:stepInputsWrongLength'); 
             inputY = [1 1];  % wrong length Y
-            inputX = [1 1 0 0 0 0 0 0 0 0 ]; 
+            inputX = [1 1 0 0 0]; 
             fh = @()network.step(inputX,inputY); 
             testCase.verifyError(fh,'HebbMarrNetwork:stepInputsWrongLength'); 
             inputY = [];  
-            inputX = [1 1 0 0 0 0 0 0 0 0 ]; 
+            inputX = [1 1 0 0 0]; 
             network.step(inputX,inputY); 
         end
         function testInputYcausesWeightsToBeUpdatedAndOutputsSameAsInputY(testCase)
-            network = createHebbMarrNetwork(5, 5);
+            network = createHebbMarrNetwork(5);
             inputY = [1 0 1 0 0];  % detonator synapses
             inputX = [1 1 0 0 0]; 
             fired = network.step(inputX, inputY); 
@@ -47,24 +38,24 @@ classdef HebbMarrNetworkTest < AbstractTest
             testCase.assertEqual(network.network, expectedNetwork);             
         end
         function testRetrievesStoredPattern(testCase)
-            network = createHebbMarrNetwork(5, 5);
+            network = createHebbMarrNetwork(5);
             checkInputOutput(network, testCase, [1 1 0 0 0], [1 0 1 0 0]);
         end
         function testRetrievesZeroForZeroInputsOrForInputNotPreviouslyStored(testCase)
-            network = createHebbMarrNetwork(5, 5);
+            network = createHebbMarrNetwork(5);
             checkInputOutput(network, testCase, [0 0 0 0 0], [0 0 0 0 0]);
             inputX = [1 0 0 0 0]; 
             retrieved = network.read(inputX);
             testCase.assertEqual(retrieved, [0 0 0 0 0]); 
         end
         function testRetrieveMultiplePatterns(testCase)
-            network = createHebbMarrNetwork(5, 5);
+            network = createHebbMarrNetwork(5);
             checkInputOutput(network, testCase, [1 1 0 0 0], [1 0 1 0 0]);
             checkInputOutput(network, testCase, [0 1 1 0 0], [0 1 1 0 0]);
             checkInputOutput(network, testCase, [0 0 0 1 1], [0 0 1 1 0]);
         end
         function testRetrievesPatternFromIncompleteInput(testCase)
-            network = createHebbMarrNetwork(5, 5);
+            network = createHebbMarrNetwork(5);
             inputY = [1 0 1 0 0]; 
             checkInputOutput(network, testCase, [1 1 1 1 0], inputY);
             inputX = [1 1 0 0 0]; 
@@ -72,7 +63,7 @@ classdef HebbMarrNetworkTest < AbstractTest
             testCase.assertEqual(retrieved, inputY); 
         end
         function testBookHeteroassociationExamples(testCase)
-            network = createHebbMarrNetwork(6, 6);
+            network = createHebbMarrNetwork(6);
             checkInputOutput(network, testCase, [0 0 0 1 1 1], [1 1 0 1 0 0]);  %X1,Y1
             checkInputOutput(network, testCase, [1 0 1 0 1 0], [0 0 1 0 1 1]);  %X2,Y2
             checkInputOutput(network, testCase, [0 0 1 0 1 1], [1 0 0 1 1 0]);  %X3,Y3
@@ -82,14 +73,12 @@ classdef HebbMarrNetworkTest < AbstractTest
             checkInputOutput(network, testCase, [0 1 1 1 0 0], [1 1 0 0 0 1]);  %X4,Y4
             retrieved = network.read([0 0 1 0 1 1]);  % X3
             testCase.assertNotEqual(retrieved, [1 0 0 1 1 0]); % not Y3 
-            testCase.assertEqual(retrieved, [1 1 0 1 1 0]); %  different 
+            testCase.assertEqual(retrieved, [1 1 0 1 1 0]); % saturated--error 
         end
     end
 end
-function network = createHebbMarrNetwork(neurons, axons)
-    network = HebbMarrNetwork();    
-    network.nNeurons = neurons; 
-    network.nAxons = axons; 
+function network = createHebbMarrNetwork(dimension)
+    network = HebbMarrNetwork(dimension);    
     network.weightType = 'binary'; %weights are binary
     network.buildNetwork(); 
 end
