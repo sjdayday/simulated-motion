@@ -17,45 +17,25 @@
 classdef AutoassociativeNetwork < HebbMarrNetwork 
 
     properties
+        wiring
+        currentInputX
     end
     methods
         function obj = AutoassociativeNetwork(dimension)
             obj = obj@HebbMarrNetwork(dimension);
-            %The number of excitatory neurons in the network.  The mammalian cortex has
-            %about 4 times as many excitatory nerons as inhibitory ones.
-%             Ne=800;                Ni=200;
+            obj.wiring = SequentialWiring(dimension); 
+            obj.currentInputX = zeros(1,dimension); 
         end
-        % buildNetwork must be called after constructor is called and any 
-        % properties are overridden. 
-%         function buildNetwork(obj)
-%             obj.network = zeros(obj.nAxons,obj.nNeurons); 
-%             buildWeightFunction(obj);
-%         end
-%         function buildWeightFunction(obj)
-%             switch obj.weightType
-%                 case 'binary'
-% 
-%                 otherwise
-%                     error('HebbMarrNetwork:invalidWeightType', ['Invalid weight type: ', obj.weightType, '\n']); 
-%             end
-% %             obj.weightFunction
-%         end
-%         function fired = step(obj, inputX, inputY)
-%             verifyInputs(obj,inputX,inputY); 
-%             % inputY 
-%             firedIndices = find(inputY == 1);
-%             inputxIndices = find(inputX == 1); 
-%             for ii = firedIndices
-%                 for jj = inputxIndices
-%                     obj.network(jj,ii) = 1;  % rows are synapses, cols are principal cells
-%                 end
-%             end
-%             fired = inputY;
-%         end
+        function fired = step(obj, inputX, inputY)
+            if sum(inputX) == 0
+                inputX = obj.currentInputX; 
+            end
+            fired = step@HebbMarrNetwork(obj, inputX, inputY); 
+            obj.currentInputX = obj.wiring.connect(fired);
+        end        
         function retrieved = read(obj, inputX)
             retrieved = zeros(1,obj.nNeurons); 
             verifyInputs(obj,inputX,[]); 
-            % inputY 
             totalActivation = sum(inputX);
             product = inputX*obj.network;
             while ((totalActivation > 0) && (sum(retrieved) == 0))
@@ -65,18 +45,8 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
                 totalActivation = totalActivation - 1; 
             end
         end
-%         function verifyInputs(obj,inputX,inputY)
-%             if (length(inputX) ~= obj.nAxons) || ...
-%                 ((length(inputY) ~= obj.nNeurons) && (~isempty(inputY)))
-%                     error('HebbMarrNetwork:stepInputsWrongLength', ...
-%                     ['InputX must be of same length as nAxons; was %d.\n' ... 
-%                     'InputY must be the same length as nNeurons, or empty; was %d.'], length(inputX), length(inputY)) ;
-%             end
-%         end
-%         function plot(obj)
-%             %Plot the raster plot of the network activity.
-%             %X=time in milliseconds, Y=neuron that fired
-% %             plot(obj.firings(:,1),obj.firings(:,2),'.');
-%         end
+        function inputX = getCurrentInputX(obj)
+            inputX = obj.currentInputX; 
+        end
     end
 end
