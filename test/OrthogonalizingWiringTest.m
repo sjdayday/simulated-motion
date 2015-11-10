@@ -7,5 +7,12 @@ classdef OrthogonalizingWiringTest < AbstractTest
             output = wiring.connect(input);
             testCase.assertEqual(output, [0 0 0 0 0 0 1 0 1 1]);             
         end
+        function testWiringFromLargeInternalVectorToSmallerOutput(testCase)
+            wiring = OrthogonalizingWiring([10 5]);
+            testCase.assertEqual([5 5 1 5 4 1 2 3 5 5], wiring.connectionList); 
+            input = [0 0 0 0 0 0 1 0 1 1];             
+            output = wiring.connect(input);
+            testCase.assertEqual(output, [0 1 0 0 1]);             
+        end
     end
 end

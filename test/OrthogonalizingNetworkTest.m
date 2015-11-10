@@ -13,8 +13,9 @@ classdef OrthogonalizingNetworkTest < AbstractTest
         function testInputsPropagatedToInternalNetwork(testCase)
             network = createOrthogonalizingNetwork(10,100); 
             input = [1 1 1 1 1 0 0 0 0 0];
-            network.step(input); 
-            testCase.assertEqual(sum(sum(network.network)), 5);             
+            fired = network.step(input); 
+            testCase.assertEqual(fired, [1 1 1 0 0 0 0 1 1 0]);             
+%             testCase.assertEqual(sum(sum(network.network)), 5);             
             
         end
 %         function testThrowsIfInputsAreWrongLengthExceptInputYcanBeEmpty(testCase)

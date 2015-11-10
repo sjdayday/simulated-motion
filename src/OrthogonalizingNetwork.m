@@ -21,7 +21,8 @@ classdef OrthogonalizingNetwork < handle
     properties
         nNeurons
         nSynapses
-        wiring
+        wiringInput
+        wiringOutput
         network     
         weightType
     end
@@ -30,7 +31,8 @@ classdef OrthogonalizingNetwork < handle
             obj.nSynapses = synapses;
             obj.nNeurons = neurons;
             obj.weightType = 'binary';  % weights are 0 or 1
-            obj.wiring = OrthogonalizingWiring([synapses neurons]); 
+            obj.wiringInput = OrthogonalizingWiring([synapses neurons]); 
+            obj.wiringOutput = OrthogonalizingWiring([neurons synapses]); 
         end
         % buildNetwork must be called after constructor is called and any 
         % properties are overridden. 
@@ -49,12 +51,22 @@ classdef OrthogonalizingNetwork < handle
 %         end
         function fired = step(obj, input)
             verifyInputs(obj,input); 
-            % inputY 
-            firedIndices = find(input == 1);
-            for ii = firedIndices
-                    obj.network(ii,ii) = 1;  % rows are synapses, cols are principal cells
-            end
-            fired = input;
+            % use OrthogonalizingWiring
+            internal = obj.wiringInput.connect(input);
+            fired = obj.wiringOutput.connect(internal);
+%             firedIndices = find(input == 1);
+%             for ii = firedIndices
+%                     obj.network(ii,ii) = 1;  % rows are synapses, cols are principal cells
+%             end
+%             fired = input;
+%                         if sum(inputX) == 0
+%                 inputX = obj.currentInputX; 
+%             end
+%             fired = step@HebbMarrNetwork(obj, inputX, inputY); 
+%             obj.currentInputX = 
+%                         network = createOrthogonalizingNetwork(10,100); 
+%             input = [1 1 1 1 1 0 0 0 0 0];
+%             network.step(input); 
         end
         function retrieved = read(obj, inputX)
             retrieved = zeros(1,obj.nNeurons); 

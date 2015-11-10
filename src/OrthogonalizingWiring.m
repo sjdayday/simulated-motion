@@ -1,4 +1,5 @@
-% SequentialWiring class:  connects inputs to outputs in sequence
+% OrthogonalizingWiring class:  connects inputs to outputs randomly
+% supports connecting from smaller to larger vectors or vice versa
 classdef OrthogonalizingWiring < Wiring 
 
     properties
@@ -11,10 +12,8 @@ classdef OrthogonalizingWiring < Wiring
             obj.connectionList = randi([1 obj.dimensions(1,2)],1,obj.dimensions(1,1));
         end
         function output = connect(obj, input)
-            output = zeros(1,length(obj.connectionList)); 
+            output = zeros(1,obj.dimensions(1,2)); 
             firedIndices = find(input == 1);
-%                         fired = step@HebbMarrNetwork(obj, inputX, inputY); 
-%             obj.currentInputX = obj.wiring.connect(fired);
             for ii = firedIndices
                 output(1,obj.connectionList(1,ii)) = 1;  % rows are synapses, cols are principal cells
             end
