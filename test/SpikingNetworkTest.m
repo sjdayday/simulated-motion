@@ -5,7 +5,7 @@ classdef SpikingNetworkTest < AbstractTest
         function testSpikingNetworkWithDefaultValues(testCase)
 %             load '../rngDefaultSettings';
 %             rng(rngDefault);   % set random number generator back to default
-            load 'testSpikingNetwork' expectedFirings;
+            load 'data/testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();
             % override parameters here. Plot: SpikingNetworkTestPlot.fig
             % Defaults to the following:
@@ -43,7 +43,7 @@ classdef SpikingNetworkTest < AbstractTest
         function testSpikingNetworkStepByStep(testCase)
 %             load '../rngDefaultSettings';
 %             rng(rngDefault);   % set random number generator back to default
-            load 'testSpikingNetwork' expectedFirings;
+            load 'data/testSpikingNetwork' expectedFirings;
             network = SpikingNetwork();            
             network.buildNetwork();
             firings = [];
