@@ -21,7 +21,7 @@ classdef GridChartNetwork < handle
         shiftInhibitoryTail
         normalizedWeight
         dt
-        stabilizationTime 
+        % stabilizationTime 
         velocity
         activation
         watchCell
@@ -56,14 +56,14 @@ classdef GridChartNetwork < handle
             % grid spacing is approx 1.02 - 0.48*log2(alpha), pg 236
             obj.inputGain = 30; % alpha
             obj.inputDirectionBias = 0; % beta--(grid orientation), radians
-            obj.weightStdDev = 0.24; % sigma--exponential weight std. deviation
-            obj.peakSynapticStrength = 0.3; % I 
+            obj.weightStdDev = 0.24; % 0.24 sigma--exponential weight std. deviation
+            obj.peakSynapticStrength = 0.3; % 0.3 I 
             % T--shift so tail of exponential weights turn inhibitory
             obj.shiftInhibitoryTail = 0.05;
             % tau--relative weight of normalized vs. full-strength synaptic inputs
-            obj.normalizedWeight = 0.8; 
+            obj.normalizedWeight = 0.8; % 0.8 
             obj.dt = 20; % time step in milliseconds
-            obj.stabilizationTime = 80; % no-velocity time for pattern to form, ms
+            % obj.stabilizationTime = 80; % no-velocity time for pattern to form, ms
             obj.velocity = [0; 0]; % v--velocity, m/ms  
             obj.firstPlot = 1; % first call to plot opens the figure
             obj.time = 0; % time step 
