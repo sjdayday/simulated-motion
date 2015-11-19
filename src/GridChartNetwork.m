@@ -45,6 +45,8 @@ classdef GridChartNetwork < handle
         time
         firstPlot
         h
+        Ahist
+        AhistAll
     end
     methods
         function obj = GridChartNetwork(nX, nY)
@@ -68,6 +70,8 @@ classdef GridChartNetwork < handle
             obj.firstPlot = 1; % first call to plot opens the figure
             obj.time = 0; % time step 
             buildNetwork(obj);
+%             obj.Ahist = zeros(10000,1); 
+%             obj.AhistAll = zeros(1000, obj.nCells); 
         end
         function buildNetwork(obj)
             % A--activation of each cell
@@ -171,7 +175,8 @@ classdef GridChartNetwork < handle
               squaredPairwiseDists = min(squaredPairwiseDists);
               squaredPairwiseDists = reshape(squaredPairwiseDists,obj.nCells,obj.nCells)';
 
-              % Weights have an excitatory center that peaks at I-T and if T>0, the
+              % Weights have an excitatory center that peaks at 
+              % I-T (peakSynapticStrength-shiftInhibitoryTail) and if T>0, the
               % weights are inhibitory for sufficiently high distances; specifically,
               % for distance > sigma*sqrt(-log(T/I)).
               obj.weights = obj.peakSynapticStrength * ... 
@@ -192,8 +197,8 @@ classdef GridChartNetwork < handle
                   obj.normalizedWeight*(synapticInput/sum(obj.activation));
 
               % Save activity of one cell for nostalgia's sake
-              % Ahist(time) = obj.activation(1,1);
-
+%               obj.Ahist(obj.time) = obj.activation(1,1);
+%               obj.AhistAll(obj.time,:) = obj.activation; 
               % Zero out negative activities
               obj.activation(obj.activation<0) = 0;
               saveStatistics(obj); 
@@ -222,7 +227,7 @@ classdef GridChartNetwork < handle
             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
         end
         function plot(obj)
-            if (obj.firstPlot == 1)
+            if obj.firstPlot
                 obj.h = figure('color','w');
                 drawnow
                 obj.firstPlot = 0;
