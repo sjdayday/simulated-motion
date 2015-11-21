@@ -19,6 +19,8 @@ classdef HeadDirectionSystem < handle
         weightInputVector
         angularWeightInputVector
         headDirectionWeights
+        featureWeights
+        maxFeatureWeight
         firstPlot
         h
         activation
@@ -33,6 +35,8 @@ classdef HeadDirectionSystem < handle
         clockwiseWeights
         counterClockwiseWeights
         angularWeightOffset
+        featuresDetected
+        featureLearningRate
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -43,24 +47,25 @@ classdef HeadDirectionSystem < handle
 %             disp(obj.maxHeadWeight);
             obj.sigmaHeadWeight  = 10; % zilli uses 15 for 100 cells 
             obj.sigmaAngularWeight = 5; 
-            % number of cells in Y direction; suggest 9*k 
             obj.weightInputVector = obj.maxHeadWeight* ... 
                 (normpdf(0:obj.nHeadDirectionCells-1,0.5,obj.sigmaHeadWeight)+ ...
                 normpdf(1:obj.nHeadDirectionCells,0.5+obj.nHeadDirectionCells,obj.sigmaHeadWeight));
             obj.angularWeightInputVector = obj.maxAngularWeight* ...
                 (normpdf(0:obj.nHeadDirectionCells-1,0,obj.sigmaAngularWeight)+ ...
                 normpdf(0:obj.nHeadDirectionCells-1,obj.nHeadDirectionCells,obj.sigmaAngularWeight));
-            %             buildHeadDirectionWeights(obj);
             obj.firstPlot = 1; 
             obj.xAxisValues = 1:nHeadDirectionCells*2; 
             obj.activation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells); 
-%             obj.activation = rand(1,obj.nHeadDirectionCells)/sqrt(obj.nHeadDirectionCells); 
             obj.time = 0; 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.8;
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 
+            obj.featuresDetected = zeros(1,obj.nHeadDirectionCells);
+            obj.featureWeights = zeros(obj.nHeadDirectionCells); 
+            obj.featureLearningRate = 0.5; 
+%             obj.maxFeatureWeight = 0.35; % not needed as yet 
         end
         function buildWeights(obj)
             obj.headDirectionWeights = toeplitz(obj.weightInputVector); 
@@ -88,9 +93,23 @@ classdef HeadDirectionSystem < handle
 %                 end
 %             end
         end
+        function updateFeatureWeights(obj)
+            % sigmoidal, negative at small activation values, linear over 
+            % most of the activation range, tops out about 0.35, which acts
+            % as an implementation of "Wmax"
+            % see Skaggs, figure 4, "f()".  
+            postActivation = 1./(1+exp(-obj.activation.*10)) -0.65; 
+            newWeights = (obj.featuresDetected' * postActivation) - obj.featureWeights;  
+            % only update rows where features were detected
+            for ii = 1:length(obj.featuresDetected)
+                newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
+            end
+            obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
+%             obj.featureWeights = obj.featureLearningRate*(postActivation - obj.featureWeights)*obj.featuresDetected;            
+        end
         function  step(obj)
             obj.time = obj.time+1;
-              
+            updateFeatureWeights(obj);   
               
 %                             obj.weights = obj.peakSynapticStrength * ... 
 %                   exp(-squaredPairwiseDists/obj.weightStdDev^2) - ... 
@@ -98,11 +117,12 @@ classdef HeadDirectionSystem < handle
             obj.currentActivationRatio = min(obj.activation)/max(obj.activation); 
             deltaActivation = max(obj.activation) - min(obj.activation); 
             keepAlive = zeros(1,obj.nHeadDirectionCells);
-%               keepAlive = rand(1,obj.nHeadDirectionCells) * exp(-deltaActivation);
+%             keepAlive = rand(1,obj.nHeadDirectionCells) * exp(-deltaActivation);
 %               keepAlive = ones(1,obj.nHeadDirectionCells)/2 * exp(-deltaActivation);
             synapticInput = ((obj.activation+keepAlive))*obj.headDirectionWeights + ...
                 obj.activation*(obj.clockwiseVelocity*obj.clockwiseWeights) + ...
-                obj.activation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); % /((1-obj.currentActivationRatio)*2)
+                obj.activation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights) + ...
+                + obj.activation * obj.featureWeights .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
 
               % Activity based on the synaptic input.
               % Notice synapticInput/sum(activation) is equivalent to 

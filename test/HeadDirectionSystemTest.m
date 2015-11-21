@@ -27,5 +27,14 @@ classdef HeadDirectionSystemTest < AbstractTest
                 4 3 2 1 5; ...
                 5 4 3 2 1]); 
         end
+        % testWithoutAdditionalInputActivationAmplitudeDifferencesVanish
+        % testActivationCanBeMaintainedWithRandomInputButAttractorMovesRandomly
+        % test...activation increases amplitude??
+        % testFeatureWeightsUpdated
+        % testActivityBumpMovesClockwiseAndCounterClockwise
+        % testActivityBumpMovesAtSpeedProportionalToAngularVelocity
+        % testFeatureDetected
+        % testExistingFeatureResetsActivityBumpAfterRandomInitialPositioning
+        % testFeatureWeightsStrengthen
     end
 end
