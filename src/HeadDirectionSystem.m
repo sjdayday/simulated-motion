@@ -37,6 +37,10 @@ classdef HeadDirectionSystem < handle
         angularWeightOffset
         featuresDetected
         featureLearningRate
+        stabilized
+        lastDeltaMin
+        lastMax
+        activationBeforeStabilization
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -65,6 +69,7 @@ classdef HeadDirectionSystem < handle
             obj.featuresDetected = zeros(1,obj.nHeadDirectionCells);
             obj.featureWeights = zeros(obj.nHeadDirectionCells); 
             obj.featureLearningRate = 0.5; 
+            obj.stabilized = 0; 
 %             obj.maxFeatureWeight = 0.35; % not needed as yet 
         end
         function buildWeights(obj)
@@ -77,21 +82,6 @@ classdef HeadDirectionSystem < handle
             obj.counterClockwiseWeights = ... 
                 [obj.counterClockwiseWeights((end-obj.angularWeightOffset+1):end,:); ...
                 obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
-
-%             L = length(obj.weightInputVector); 
-%             obj.headDirectionWeights = zeros(L); 
-%             for ii = 1:L
-%                 for jj = 1:(L-(ii-1))
-%                    obj.headDirectionWeights(jj+(ii-1),ii) = ...
-%                        obj.weightInputVector(1,jj); 
-%                 end
-%                 if ii > 1
-%                     for kk = 1:(ii-1)
-%                         obj.headDirectionWeights(kk,ii) = ... 
-%                             obj.weightInputVector(1,(L-ii+1+kk));
-%                     end
-%                 end
-%             end
         end
         function updateFeatureWeights(obj)
             % sigmoidal, negative at small activation values, linear over 
@@ -107,19 +97,43 @@ classdef HeadDirectionSystem < handle
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
 %             obj.featureWeights = obj.featureLearningRate*(postActivation - obj.featureWeights)*obj.featuresDetected;            
         end
+        % hack to force activation to stay reinforcing at a constant level
+        % until I learn how to do it right (Amari?) 
+        function keepActivationStable(obj)
+            obj.activationBeforeStabilization = obj.activation; 
+            maxAct = max(obj.activation);
+            minAct = min(obj.activation); 
+            meanAct = mean(obj.activation);
+            deltaMin = meanAct - minAct; 
+            if obj.stabilized
+                hi = find(obj.activation > meanAct); 
+                lo = find(obj.activation < meanAct); 
+                topRatio = obj.lastMax / maxAct;
+                for ii = hi
+                    obj.activation(1,ii) = topRatio * obj.activation(1,ii);
+                end
+                bottomDistance = zeros(1,length(lo));
+                bottomRatio = obj.lastDeltaMin / deltaMin;
+                idx = 1;
+                for ii = lo
+                    bottomDistance(1,idx) = meanAct - obj.activation(1,ii);
+                    obj.activation(1,ii) = meanAct - (bottomDistance(1,idx)*bottomRatio);
+                    if obj.activation(1,ii) < 0
+                        obj.activation(1,ii) = 0; 
+                    end
+                    idx = idx + 1;
+                end
+            else
+                obj.stabilized = 1; 
+            end
+            obj.lastDeltaMin = max([deltaMin obj.lastDeltaMin]);
+            obj.lastMax = max([maxAct obj.lastMax]); 
+        end
         function  step(obj)
             obj.time = obj.time+1;
-            updateFeatureWeights(obj);   
-              
-%                             obj.weights = obj.peakSynapticStrength * ... 
-%                   exp(-squaredPairwiseDists/obj.weightStdDev^2) - ... 
-%                   obj.shiftInhibitoryTail;
+            updateFeatureWeights(obj);                 
             obj.currentActivationRatio = min(obj.activation)/max(obj.activation); 
-            deltaActivation = max(obj.activation) - min(obj.activation); 
-            keepAlive = zeros(1,obj.nHeadDirectionCells);
-%             keepAlive = rand(1,obj.nHeadDirectionCells) * exp(-deltaActivation);
-%               keepAlive = ones(1,obj.nHeadDirectionCells)/2 * exp(-deltaActivation);
-            synapticInput = ((obj.activation+keepAlive))*obj.headDirectionWeights + ...
+            synapticInput = ((obj.activation))*obj.headDirectionWeights + ...
                 obj.activation*(obj.clockwiseVelocity*obj.clockwiseWeights) + ...
                 obj.activation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights) + ...
                 + obj.activation * obj.featureWeights .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
@@ -135,6 +149,7 @@ classdef HeadDirectionSystem < handle
             obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.activation));
 
+            keepActivationStable(obj);
               
 %               obj.activation =  obj.activation * obj.headDirectionWeights ;
 %             obj.Ahist(obj.time) = find(obj.activation == max(obj.activation)); 
@@ -144,22 +159,6 @@ classdef HeadDirectionSystem < handle
 %                 obj.Ahist(obj.time) =  deltaActivation ; 
 %                             synapticInput = obj.activation*obj.weights';
 % 
-%               % Activity based on the synaptic input.
-%               % Notice synapticInput/sum(activation) is equivalent to 
-%               % (activation/sum(activation))*weights', so the second
-%               % term is normalizedWeight times the synaptic inputs that would occur if the total
-%               % activity were normalized to 1. The first term is (1-normalizedWeight) times
-%               % the full synaptic activity. normalizedWeight is between 0 and 1 and weights
-%               % whether the input is completely normalized (normalizedWeight=1) or completely
-%               % "raw" or unnormalized (normalizedWeight=0).
-%               obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
-%                   obj.normalizedWeight*(synapticInput/sum(obj.activation));
-% 
-%               % Save activity of one cell for nostalgia's sake
-%               % Ahist(time) = obj.activation(1,1);
-% 
-%               % Zero out negative activities
-%               obj.activation(obj.activation<0) = 0;
 %               saveStatistics(obj); 
         end
 % 
@@ -192,13 +191,16 @@ classdef HeadDirectionSystem < handle
                 obj.firstPlot = 0;
             end
             figure(obj.h);
-            plot(obj.xAxisValues, [obj.activation obj.activation]);
+            % plot the smoothed activation before we stretch it
+            plot(obj.xAxisValues, [obj.activationBeforeStabilization obj.activationBeforeStabilization]);
 %             plot(obj.xAxisValues, repmat(obj.activation,[1 2]));
             obj.xAxis = gca; 
             % these values only work if nHeadDirectionCells is 60
             obj.xAxis.XTick = [0 15 30 45 60 75 90 105 120];
             obj.xAxis.XTickLabel = ... 
-                {'-360', '-270', '-180', '-90', '0', '90', '180', '270', '360'};
+                {'-2\pi', '-3\pi/2', '-\pi', '-\pi/2', '0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
+%                 {'-360', '-270', '-180', '-90', '0', '90', '180', '270', '360'};
+            title({'Head direction',sprintf('time = %d ',obj.time)});
 %             subplot(131);
 %             imagesc(reshape(obj.activation,obj.nY,obj.nX));
 %             axis square
