@@ -89,9 +89,11 @@ classdef HeadDirectionSystem < handle
             % as an implementation of "Wmax"
             % see Skaggs, figure 4, "f()".  
             postActivation = 1./(1+exp(-obj.activation.*10)) -0.65; 
+%             newWeights = (postActivation' * obj.featuresDetected) - obj.featureWeights;  
             newWeights = (obj.featuresDetected' * postActivation) - obj.featureWeights;  
             % only update rows where features were detected
             for ii = 1:length(obj.featuresDetected)
+%                 newWeights(:,ii) = obj.featuresDetected(1,ii).* newWeights(:,ii);
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
@@ -136,7 +138,7 @@ classdef HeadDirectionSystem < handle
             synapticInput = ((obj.activation))*obj.headDirectionWeights + ...
                 obj.activation*(obj.clockwiseVelocity*obj.clockwiseWeights) + ...
                 obj.activation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights) + ...
-                + obj.activation * obj.featureWeights .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
+                + obj.activation * obj.featureWeights; % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
 
               % Activity based on the synaptic input.
               % Notice synapticInput/sum(activation) is equivalent to 
