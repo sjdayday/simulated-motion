@@ -25,6 +25,8 @@ classdef ExperimentController < handle
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
+            buildChartSystemPropertyMap(obj);
+            buildHeadDirectionSystemPropertyMap(obj);
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -86,6 +88,12 @@ classdef ExperimentController < handle
         function value = getHeadDirectionSystemProperty(obj, property)
             value = getSystemProperty(obj, obj.headDirectionSystemPropertyMap, property);
         end
+        function addChartSystemProperty(obj, property)
+            addSystemProperty(obj, obj.chartSystemPropertyMap, property); 
+        end
+        function value = getChartSystemProperty(obj, property)
+            value = getSystemProperty(obj, obj.chartSystemPropertyMap, property);
+        end
         function addSystemProperty(obj, map, property) 
             map(property) = 1; 
             increment = [property,'.increment'];
@@ -105,6 +113,17 @@ classdef ExperimentController < handle
             addHeadDirectionSystemProperty(obj, 'normalizedWeight');
             addHeadDirectionSystemProperty(obj, 'sigmaAngularWeight');
             addHeadDirectionSystemProperty(obj, 'sigmaHeadWeight');
+        end
+        function buildChartSystemPropertyMap(obj)
+            addChartSystemProperty(obj, 'alphaOffset');
+            addChartSystemProperty(obj, 'angularWeightOffset');
+            addChartSystemProperty(obj, 'betaGain');
+            addChartSystemProperty(obj, 'CInhibitionOffset');
+            addChartSystemProperty(obj, 'featureLearningRate');
+            addChartSystemProperty(obj, 'normalizedWeight');
+            addChartSystemProperty(obj, 'sigmaAngularWeight');
+            addChartSystemProperty(obj, 'sigmaHeadWeight'); 
+            addChartSystemProperty(obj, 'sigmaWeightPattern');             
         end
         function plot(obj)
             if obj.firstPlot
