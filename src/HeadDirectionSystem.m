@@ -123,39 +123,7 @@ classdef HeadDirectionSystem < handle
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
 %             obj.featureWeights = obj.featureLearningRate*(postActivation - obj.featureWeights)*obj.featuresDetected;            
         end
-        % hack to force activation to stay reinforcing at a constant level
-        % until I learn how to do it right (Amari?) 
-        function keepActivationStable(obj)
-            obj.activationBeforeStabilization = obj.uActivation; 
-            maxAct = max(obj.uActivation);
-            minAct = min(obj.uActivation); 
-            meanAct = mean(obj.uActivation);
-            deltaMin = meanAct - minAct; 
-            if obj.stabilized
-                hi = find(obj.uActivation > meanAct); 
-                lo = find(obj.uActivation < meanAct); 
-                topRatio = obj.lastMax / maxAct;
-                for ii = hi
-                    obj.uActivation(1,ii) = topRatio * obj.uActivation(1,ii);
-                end
-                bottomDistance = zeros(1,length(lo));
-                bottomRatio = obj.lastDeltaMin / deltaMin;
-                idx = 1;
-                for ii = lo
-                    bottomDistance(1,idx) = meanAct - obj.uActivation(1,ii);
-                    obj.uActivation(1,ii) = meanAct - (bottomDistance(1,idx)*bottomRatio);
-                    if obj.uActivation(1,ii) < 0
-                        obj.uActivation(1,ii) = 0; 
-                    end
-                    idx = idx + 1;
-                end
-            else
-                obj.stabilized = 1; 
-            end
-            obj.lastDeltaMin = max([deltaMin obj.lastDeltaMin]);
-            obj.lastMax = max([maxAct obj.lastMax]); 
-        end
-        %% Trappenberg sigmoidal activation function (equation 7.2)
+         %% Trappenberg sigmoidal activation function (equation 7.2)
         function activationFunction(obj)
            obj.rate = 1 ./ (1 + exp(obj.betaGain * (-obj.uActivation - obj.alphaOffset)));  
         end
@@ -181,7 +149,6 @@ classdef HeadDirectionSystem < handle
             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
-%             keepActivationStable(obj);
               
 %               obj.activation =  obj.activation * obj.headDirectionWeights ;
 %             obj.Ahist(obj.time) = find(obj.activation == max(obj.activation)); 

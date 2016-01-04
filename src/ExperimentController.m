@@ -16,6 +16,7 @@ classdef ExperimentController < handle
 %             obj.hFigures = figure; 
             obj.nChartSystemSingleDimensionCells = 10;  % default
             obj.nHeadDirectionCells = 60;  %default
+            obj.currentStep = 1; 
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
         end
@@ -24,6 +25,26 @@ classdef ExperimentController < handle
         end
         function buildChartSystem(obj, nChartSystemSingleDimensionCells)
             obj.chartSystem = ChartSystem(nChartSystemSingleDimensionCells); 
+        end
+        function runHeadDirectionSystem(obj)
+            obj.headDirectionSystem.buildWeights(); 
+            for ii = obj.currentStep:obj.totalSteps
+               obj.headDirectionSystem.step(); 
+%                disp(ii);   % 1
+               obj.currentStep = obj.currentStep + 1; 
+%                disp(obj.currentStep); %2 
+%                disp(obj.headDirectionSystem.time); %2 
+            end
+        end
+        function runChartSystem(obj)
+            obj.chartSystem.buildWeights(); 
+            for ii = obj.currentStep:obj.totalSteps
+               obj.chartSystem.step(); 
+%                disp(ii); %21
+               obj.currentStep = obj.currentStep + 1; 
+%                disp(obj.currentStep);  %22 
+%                disp(obj.chartSystem.time); %1 
+            end
         end
         %% Single time step 
         function  step(obj)
