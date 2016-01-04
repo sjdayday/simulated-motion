@@ -41,6 +41,16 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.headDirectionSystem.time, 20);
             testCase.assertEqual(controller.chartSystem.time, 10);           
         end
+%         function testControllerContinuesFromWhereRunLeftOff(testCase)
+%             controller = ExperimentController(); 
+%             controller.totalSteps = 20; 
+%             controller.runHeadDirectionSystem(); 
+%             controller.totalSteps = 30; 
+%             controller.runChartSystem(); 
+%             testCase.assertEqual(controller.currentStep, 31);
+%             testCase.assertEqual(controller.headDirectionSystem.time, 20);
+%             testCase.assertEqual(controller.chartSystem.time, 10);           
+%         end
       
     end
 end

@@ -27,24 +27,17 @@ classdef ExperimentController < handle
             obj.chartSystem = ChartSystem(nChartSystemSingleDimensionCells); 
         end
         function runHeadDirectionSystem(obj)
-            obj.headDirectionSystem.buildWeights(); 
-            for ii = obj.currentStep:obj.totalSteps
-               obj.headDirectionSystem.step(); 
-%                disp(ii);   % 1
-               obj.currentStep = obj.currentStep + 1; 
-%                disp(obj.currentStep); %2 
-%                disp(obj.headDirectionSystem.time); %2 
-            end
+            runSystem(obj,obj.headDirectionSystem); 
         end
         function runChartSystem(obj)
-            obj.chartSystem.buildWeights(); 
+            runSystem(obj,obj.chartSystem); 
+        end
+        function runSystem(obj, system)
+            system.buildWeights(); 
             for ii = obj.currentStep:obj.totalSteps
-               obj.chartSystem.step(); 
-%                disp(ii); %21
+               system.step(); 
                obj.currentStep = obj.currentStep + 1; 
-%                disp(obj.currentStep);  %22 
-%                disp(obj.chartSystem.time); %1 
-            end
+            end            
         end
         %% Single time step 
         function  step(obj)

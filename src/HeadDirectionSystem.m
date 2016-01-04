@@ -8,7 +8,7 @@
 % http://senselab.med.yale.edu/ModelDb/showModel.cshtml?model=144006&file=/grid%20models%20package%20v1.007/NavratilovaEtAl2011.m
 % Zilli, E. A. (2012). Models of grid cell spatial firing published 2005?2011. 
 % Frontiers in neural circuits, 6.
-classdef HeadDirectionSystem < handle 
+classdef HeadDirectionSystem < System 
 
     properties
         nHeadDirectionCells
