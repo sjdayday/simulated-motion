@@ -21,79 +21,44 @@ classdef ExperimentController < handle
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
         end
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
-            obj.headDirectionSystem = HeadDirectionSystem(nHeadDirectionCells); 
+            obj.nHeadDirectionCells = nHeadDirectionCells;
+            rebuildHeadDirectionSystem(obj); 
+        end
+        function rebuildHeadDirectionSystem(obj) 
+           obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
         end
         function buildChartSystem(obj, nChartSystemSingleDimensionCells)
-            obj.chartSystem = ChartSystem(nChartSystemSingleDimensionCells); 
+            obj.nChartSystemSingleDimensionCells = nChartSystemSingleDimensionCells;
+            rebuildChartSystem(obj);
+        end
+        function rebuildChartSystem(obj) 
+            obj.chartSystem = ChartSystem(obj.nChartSystemSingleDimensionCells); 
         end
         function runHeadDirectionSystem(obj)
+            rebuildHeadDirectionSystem(obj);
             runSystem(obj,obj.headDirectionSystem); 
         end
         function runChartSystem(obj)
+            rebuildChartSystem(obj);
             runSystem(obj,obj.chartSystem); 
         end
         function runSystem(obj, system)
             system.buildWeights(); 
+            obj.currentStep = 1;             
+            runBareSystem(obj, system); 
+        end
+        function runBareSystem(obj, system)
             for ii = obj.currentStep:obj.totalSteps
                system.step(); 
                obj.currentStep = obj.currentStep + 1; 
-            end            
+            end                        
         end
-        %% Single time step 
-        function  step(obj)
-%             obj.time = obj.time+1;
-% %             updateFeatureWeights(obj);                 
-%             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
-%             activationFunction(obj); 
-% %             rate = zeros(10)
-%             synapticInput = headDirectionInput(obj); % obj.rate'*obj.wHeadDirectionWeights*
-% %             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx; % obj.rate'*obj.wHeadDirectionWeights*
-% %             flip = rot90(rot90(rot90(obj.rate))); 
-% %             syn2 = flip*obj.wHeadDirectionWeights*obj.dx;
-%             
-% %             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
-% %                 obj.uActivation*(obj.clockwiseVelocity*obj.positiveDirectionWeights) + ...
-% %                 obj.uActivation*(obj.counterClockwiseVelocity*obj.negativeDirectionWeights) + ...
-% %                 + obj.uActivation * obj.featureWeights; % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
-% 
-%             obj.uActivation = synapticInput; 
-% %             obj.uActivation = synapticInput+rot90(syn2); 
-% %             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
-% %                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
-% 
-%               
-% %               obj.activation =  obj.activation * obj.headDirectionWeights ;
-% %             obj.Ahist(obj.time) = find(obj.activation == max(obj.activation)); 
-% %               obj.Ahist(obj.time) = max(obj.activation) - min(obj.activation); 
-% 
-% %                 obj.Ahist(obj.time) =  deltaActivation ; 
-% %                             synapticInput = obj.activation*obj.weights';
-% % 
-% %               saveStatistics(obj); 
+        function continueHeadDirectionSystem(obj)
+            runBareSystem(obj,obj.headDirectionSystem);             
         end
-% 
-%         function saveStatistics(obj)
-%           % Save firing field information
-% %               if useRealTrajectory
-%             if obj.activation(obj.watchCell)>0
-%               if obj.spikeind==size(obj.spikeCoords,1)
-%                 % allocate space for next 1000 spikes:
-%                 obj.spikeCoords(obj.spikeind+1000,:) = [0 0];
-%                 obj.spikeCoords(obj.spikeind+1,:) = ...
-%                     [obj.position(1,obj.time) obj.position(2,obj.time)];
-%               else
-%                 obj.spikeCoords(obj.spikeind+1,:) = ... 
-%                     [obj.position(1,obj.time) obj.position(2,obj.time)];
-%               end
-%               obj.spikeind = obj.spikeind+1;
-%             end
-%             xindex = round((obj.position(1,obj.time)-obj.minX) / ...
-%                 (obj.maxX-obj.minX)*obj.nSpatialBins)+1;
-%             yindex = round((obj.position(2,obj.time)-obj.minY) / ...
-%                 (obj.maxY-obj.minY)*obj.nSpatialBins)+1;
-%             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
-%             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
-%         end
+        function continueChartSystem(obj)
+            runBareSystem(obj,obj.chartSystem);             
+        end
         function plot(obj)
             if obj.firstPlot
                 obj.h = figure('color','w');
