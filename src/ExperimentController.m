@@ -10,6 +10,7 @@ classdef ExperimentController < handle
         hFigures
         totalSteps
         currentStep
+        resetSeed
     end
     methods
         function obj = ExperimentController()
@@ -17,8 +18,12 @@ classdef ExperimentController < handle
             obj.nChartSystemSingleDimensionCells = 10;  % default
             obj.nHeadDirectionCells = 60;  %default
             obj.currentStep = 1; 
+            obj.resetSeed = true; 
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
+        end
+        function resetRandomSeed(obj, reset)
+            obj.resetSeed = reset; 
         end
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
             obj.nHeadDirectionCells = nHeadDirectionCells;
@@ -48,16 +53,28 @@ classdef ExperimentController < handle
             runBareSystem(obj, system); 
         end
         function runBareSystem(obj, system)
+            if obj.resetSeed
+               load '../rngDefaultSettings';
+               rng(rngDefault);    
+            end
             for ii = obj.currentStep:obj.totalSteps
                system.step(); 
                obj.currentStep = obj.currentStep + 1; 
             end                        
         end
         function continueHeadDirectionSystem(obj)
-            runBareSystem(obj,obj.headDirectionSystem);             
+            if obj.currentStep == 1
+                runHeadDirectionSystem(obj);
+            else
+                runBareSystem(obj,obj.headDirectionSystem);             
+            end
         end
         function continueChartSystem(obj)
-            runBareSystem(obj,obj.chartSystem);             
+            if obj.currentStep == 1
+                runChartSystem(obj);
+            else
+                runBareSystem(obj,obj.chartSystem);             
+            end
         end
         function plot(obj)
             if obj.firstPlot

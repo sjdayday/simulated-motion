@@ -60,7 +60,32 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             testCase.assertNotSameHandle(controller.headDirectionSystem, firstSystem);
         end
-      
+        function testContinueInvokesRunIfNoPreviousRun(testCase)
+            controller = ExperimentController(); 
+            controller.totalSteps = 20; 
+            controller.continueHeadDirectionSystem(); 
+            testCase.assertEqual(controller.currentStep, 21);
+        end
+        function testRunUsesDefaultSeed(testCase)
+            controller = ExperimentController(); 
+            controller.totalSteps = 5; 
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(round(rand()*1000)/1000, 0.815);
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(round(rand()*1000)/1000, 0.815);
+        end
+        function testResetsDefaultSeed(testCase)
+            controller = ExperimentController(); 
+            controller.totalSteps = 5; 
+            controller.resetRandomSeed(true); 
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(round(rand()*1000)/1000, 0.815, ...
+                'default is to reset seed');
+            controller.resetRandomSeed(false); 
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(round(rand()*1000)/1000, 0.255, 'different seed');
+        end
+        
     end
 end
 % function network = createHebbMarrNetwork(dimension)
