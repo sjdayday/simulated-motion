@@ -5,6 +5,8 @@ classdef ExperimentController < handle
     properties
         chartSystem
         headDirectionSystem
+        chartSystemPropertyMap
+        headDirectionSystemPropertyMap
         nChartSystemSingleDimensionCells
         nHeadDirectionCells
         hFigures
@@ -21,6 +23,8 @@ classdef ExperimentController < handle
             obj.resetSeed = true; 
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
+            obj.headDirectionSystemPropertyMap = containers.Map(); 
+            obj.chartSystemPropertyMap = containers.Map(); 
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -75,6 +79,32 @@ classdef ExperimentController < handle
             else
                 runBareSystem(obj,obj.chartSystem);             
             end
+        end
+        function addHeadDirectionSystemProperty(obj, property)
+            addSystemProperty(obj, obj.headDirectionSystemPropertyMap, property); 
+        end
+        function value = getHeadDirectionSystemProperty(obj, property)
+            value = getSystemProperty(obj, obj.headDirectionSystemPropertyMap, property);
+        end
+        function addSystemProperty(obj, map, property) 
+            map(property) = 1; 
+            increment = [property,'.increment'];
+            map(increment) = 1; 
+            max = [property,'.max'];
+            map(max) = 1; 
+        end
+        function value = getSystemProperty(obj, map, property) 
+            value = map(property); 
+        end
+        function buildHeadDirectionSystemPropertyMap(obj)
+            addHeadDirectionSystemProperty(obj, 'alphaOffset');
+            addHeadDirectionSystemProperty(obj, 'angularWeightOffset');
+            addHeadDirectionSystemProperty(obj, 'betaGain');
+            addHeadDirectionSystemProperty(obj, 'CInhibitionOffset');
+            addHeadDirectionSystemProperty(obj, 'featureLearningRate');
+            addHeadDirectionSystemProperty(obj, 'normalizedWeight');
+            addHeadDirectionSystemProperty(obj, 'sigmaAngularWeight');
+            addHeadDirectionSystemProperty(obj, 'sigmaHeadWeight');
         end
         function plot(obj)
             if obj.firstPlot
