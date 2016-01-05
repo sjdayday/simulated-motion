@@ -13,6 +13,9 @@ classdef ExperimentController < handle
         totalSteps
         currentStep
         resetSeed
+        iteration
+        statisticsHeader
+        statisticsDetail
     end
     methods
         function obj = ExperimentController()
@@ -21,12 +24,14 @@ classdef ExperimentController < handle
             obj.nHeadDirectionCells = 60;  %default
             obj.currentStep = 1; 
             obj.resetSeed = true; 
+            obj.iteration = 0; 
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
+            obj.statisticsHeader = {}; 
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -66,7 +71,8 @@ classdef ExperimentController < handle
             for ii = obj.currentStep:obj.totalSteps
                system.step(); 
                obj.currentStep = obj.currentStep + 1; 
-            end                        
+            end
+            obj.iteration = obj.iteration + 1; 
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
@@ -83,27 +89,46 @@ classdef ExperimentController < handle
             end
         end
         function addHeadDirectionSystemProperty(obj, property)
-            addSystemProperty(obj, obj.headDirectionSystemPropertyMap, property); 
+            addSystemProperty(obj, obj.headDirectionSystemPropertyMap, ... 
+                property, obj.headDirectionSystem); 
+        end
+        function addChartSystemProperty(obj, property)
+            addSystemProperty(obj, obj.chartSystemPropertyMap, ... 
+                property, obj.chartSystem); 
+        end
+        function addSystemProperty(obj, map, property, system) 
+            map(property) = system.(property); 
+            increment = [property,'.increment'];
+            map(increment) = 1; 
+            max = [property,'.max'];
+            map(max) = system.(property); 
         end
         function value = getHeadDirectionSystemProperty(obj, property)
             value = getSystemProperty(obj, obj.headDirectionSystemPropertyMap, property);
         end
-        function addChartSystemProperty(obj, property)
-            addSystemProperty(obj, obj.chartSystemPropertyMap, property); 
-        end
         function value = getChartSystemProperty(obj, property)
             value = getSystemProperty(obj, obj.chartSystemPropertyMap, property);
-        end
-        function addSystemProperty(obj, map, property) 
-            map(property) = 1; 
-            increment = [property,'.increment'];
-            map(increment) = 1; 
-            max = [property,'.max'];
-            map(max) = 1; 
         end
         function value = getSystemProperty(obj, map, property) 
             value = map(property); 
         end
+        function setChartSystemProperty(obj, property, value) 
+            setSystemProperty(obj, obj.chartSystemPropertyMap, property, value); 
+        end
+        function setHeadDirectionSystemProperty(obj, property, value) 
+            setSystemProperty(obj, obj.headDirectionSystemPropertyMap, property, value); 
+        end
+        % perhaps: map is property name:  obj.(map)(property) = value
+        function setSystemProperty(obj, map, property, value) 
+            map(property) = value; 
+        end
+        function updateSystemWithPropertyValue(obj, system, property, value)
+            system.(property) = value;  
+        end
+        function updateChartSystemWithPropertyValue(obj, property, value)
+            updateSystemWithPropertyValue(obj, obj.chartSystem, property, value); 
+        end
+ 
         function buildHeadDirectionSystemPropertyMap(obj)
             addHeadDirectionSystemProperty(obj, 'alphaOffset');
             addHeadDirectionSystemProperty(obj, 'angularWeightOffset');
@@ -114,9 +139,58 @@ classdef ExperimentController < handle
             addHeadDirectionSystemProperty(obj, 'sigmaAngularWeight');
             addHeadDirectionSystemProperty(obj, 'sigmaHeadWeight');
         end
+        function value = gCSP(obj, property)
+            value = getSystemProperty(obj, obj.chartSystemPropertyMap, property);
+        end
+        function value = gCSPi(obj, property)
+            value = getSystemProperty(obj, obj.chartSystemPropertyMap, [property,'.increment']);
+        end
+        function value = gCSPx(obj, property)
+            value = getSystemProperty(obj, obj.chartSystemPropertyMap, [property,'.max']);
+        end
+        
+        function iterateChartSystemForPropertyRanges(obj)
+            obj.statisticsHeader = {'iteration', 'weightSum', 'maxActivation', ...
+                'alphaOffset', ...
+                'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
+                'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
+                'sigmaWeightPattern'}; 
+            obj.statisticsDetail = zeros(1,11); 
+            for aa = gCSP(obj, 'alphaOffset'):gCSPi(obj, 'alphaOffset'):gCSPx(obj, 'alphaOffset')
+            for bb = gCSP(obj, 'betaGain'):gCSPi(obj, 'betaGain'):gCSPx(obj, 'betaGain')
+            for cc = gCSP(obj, 'CInhibitionOffset'):gCSPi(obj, 'CInhibitionOffset'):gCSPx(obj, 'CInhibitionOffset')
+            for dd = gCSP(obj, 'featureLearningRate'):gCSPi(obj, 'featureLearningRate'):gCSPx(obj, 'featureLearningRate')
+            for ee = gCSP(obj, 'normalizedWeight'):gCSPi(obj, 'normalizedWeight'):gCSPx(obj, 'normalizedWeight')
+            for ff = gCSP(obj, 'sigmaAngularWeight'):gCSPi(obj, 'sigmaAngularWeight'):gCSPx(obj, 'sigmaAngularWeight')
+            for gg = gCSP(obj, 'sigmaHeadWeight'):gCSPi(obj, 'sigmaHeadWeight'):gCSPx(obj, 'sigmaHeadWeight')
+            for hh = gCSP(obj, 'sigmaWeightPattern'):gCSPi(obj, 'sigmaWeightPattern'):gCSPx(obj, 'sigmaWeightPattern')
+                rebuildChartSystem(obj); 
+                updateChartSystemWithPropertyValue(obj, 'alphaOffset', aa); 
+                updateChartSystemWithPropertyValue(obj, 'betaGain', bb); 
+                updateChartSystemWithPropertyValue(obj, 'CInhibitionOffset', cc); 
+                updateChartSystemWithPropertyValue(obj, 'featureLearningRate', dd); 
+                updateChartSystemWithPropertyValue(obj, 'normalizedWeight', ee); 
+                updateChartSystemWithPropertyValue(obj, 'sigmaAngularWeight', ff); 
+                updateChartSystemWithPropertyValue(obj, 'sigmaHeadWeight', gg); 
+                updateChartSystemWithPropertyValue(obj, 'sigmaWeightPattern', hh); 
+                runChartSystem(obj); 
+                weightPage = obj.chartSystem.wHeadDirectionWeights(:,:,1); 
+                weightSum = sum(sum(weightPage)); 
+                maxActivation = max(obj.chartSystem.uActivation); 
+                obj.statisticsDetail(obj.iteration,:) = [obj.iteration, ...
+                    weightSum, maxActivation, aa, bb, cc, dd, ee, ff, gg, hh]; 
+                disp(obj.iteration); 
+            end                
+            end                
+            end                
+            end                
+            end                
+            end                
+            end                
+            end
+        end
         function buildChartSystemPropertyMap(obj)
             addChartSystemProperty(obj, 'alphaOffset');
-            addChartSystemProperty(obj, 'angularWeightOffset');
             addChartSystemProperty(obj, 'betaGain');
             addChartSystemProperty(obj, 'CInhibitionOffset');
             addChartSystemProperty(obj, 'featureLearningRate');

@@ -85,19 +85,19 @@ classdef ExperimentControllerTest < AbstractTest
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.255, 'different seed');
         end
-        function testAddPropertyAndGenerateSupportingKeysInMapAllDefaultingToOne(testCase)
-            controller = ExperimentController(); 
-            testMap = containers.Map(); 
-            controller.addSystemProperty(testMap, 'sigmaHeadWeight'); 
+        function testAddPropertyAndSupportingKeysInMapWithValueInTargetSystem(testCase)
+            controller = TestingExperimentController(); 
+            targetSystem = TestingSystem(); 
+            controller.addSystemProperty(controller.testingSystemPropertyMap, 'testProperty', targetSystem); 
             testCase.assertEqual(... 
-                controller.getSystemProperty(testMap, 'sigmaHeadWeight'), 1);
+                controller.getSystemProperty(controller.testingSystemPropertyMap, 'testProperty'), 2);
             testCase.assertEqual(... 
-                controller.getSystemProperty(testMap, 'sigmaHeadWeight.increment'), 1);
+                controller.getSystemProperty(controller.testingSystemPropertyMap, 'testProperty.increment'), 1);
             testCase.assertEqual(... 
-                controller.getSystemProperty(testMap, 'sigmaHeadWeight.max'), 1);
+                controller.getSystemProperty(controller.testingSystemPropertyMap, 'testProperty.max'), 2);
             testCase.assertEqual(... 
-                testMap.keys, ...
-                {'sigmaHeadWeight','sigmaHeadWeight.increment','sigmaHeadWeight.max'});
+                controller.testingSystemPropertyMap.keys, ...
+                {'testProperty','testProperty.increment','testProperty.max'});
         end
         function testBuildPropertyMapsWithDefaultKeys(testCase)
             controller = ExperimentController(); 
@@ -119,7 +119,6 @@ classdef ExperimentControllerTest < AbstractTest
                 {... 
                  'CInhibitionOffset','CInhibitionOffset.increment','CInhibitionOffset.max', ...
                  'alphaOffset','alphaOffset.increment','alphaOffset.max', ...
-                 'angularWeightOffset','angularWeightOffset.increment','angularWeightOffset.max', ...
                  'betaGain','betaGain.increment','betaGain.max', ...
                  'featureLearningRate','featureLearningRate.increment','featureLearningRate.max', ...
                  'normalizedWeight','normalizedWeight.increment','normalizedWeight.max', ...
@@ -130,8 +129,49 @@ classdef ExperimentControllerTest < AbstractTest
         function testPropertyMapsBuiltByDefault(testCase)
             controller = ExperimentController(); 
             testCase.assertEqual(controller.headDirectionSystemPropertyMap.Count, uint64(24));
-            testCase.assertEqual(controller.chartSystemPropertyMap.Count, uint64(27));
+            testCase.assertEqual(controller.chartSystemPropertyMap.Count, uint64(24));
         end
+        function testPropertyRangesAppliedToSystemAndGathersStats(testCase)
+            controller = TestingExperimentController(); 
+            controller.totalSteps = 3; 
+            testCase.assertEqual(controller.iteration, 0);
+            controller.setSystemProperty(controller.testingSystemPropertyMap, ...
+                'testProperty.max', 4);  
+            controller.setSystemProperty(controller.testingSystemPropertyMap, ...
+                'testProperty.increment', 0.5);  
+            controller.iterateTestingSystemForPropertyRanges(); 
+            testCase.assertEqual(controller.iteration, 5);
+            testCase.assertEqual(controller.statisticsHeader, {'iteration','testProperty'});
+            testCase.assertEqual(controller.statisticsDetail, ... 
+                [1 2; 2 2.5; 3 3; 4 3.5; 5 4]);
+        end
+        function testPropertyRangesAppliedToChartSystemAndGathersStats(testCase)
+            controller = ExperimentController(); 
+            controller.totalSteps = 20; 
+            testCase.assertEqual(controller.iteration, 0);
+            controller.setChartSystemProperty('betaGain', 0.41);  
+            controller.setChartSystemProperty('betaGain.increment', 0.1);  
+            controller.setChartSystemProperty('betaGain.max', 0.44);  
+            controller.setChartSystemProperty('sigmaWeightPattern', 0.65);  
+            controller.setChartSystemProperty('sigmaWeightPattern.increment', 0.05);  
+            controller.setChartSystemProperty('sigmaWeightPattern.max', 0.75);  
+            controller.setChartSystemProperty('CInhibitionOffset', 0.01);  
+            controller.setChartSystemProperty('CInhibitionOffset.increment', 0.02);  
+            controller.setChartSystemProperty('CInhibitionOffset.max', 0.07);  
+            controller.iterateChartSystemForPropertyRanges(); 
+%             testCase.assertEqual(controller.iteration, 5);
+%             testCase.assertEqual(controller.statisticsHeader, {'iteration','testProperty'});
+%             testCase.assertEqual(controller.statisticsDetail, ... 
+%                 [1 2; 2 2.5; 3 3; 4 3.5; 5 4]);
+            disp(controller.statisticsHeader);
+            disp(controller.statisticsDetail);            
+        end
+        
+%                     obj.betaGain = 0.42; % was .75
+%             obj.alphaOffset = 0; 
+%             obj.sigmaWeightPattern = 0.7; %  2*pi/10
+%             obj.CInhibitionOffset = 0.02; 
+
     end
 end
 % function network = createHebbMarrNetwork(dimension)
