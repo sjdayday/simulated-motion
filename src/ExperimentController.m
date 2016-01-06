@@ -70,15 +70,12 @@ classdef ExperimentController < handle
             runBareSystem(obj, system); 
         end
         function runBareSystem(obj, system)
-%             if obj.resetSeed
-%                load '../rngDefaultSettings';
-%                rng(rngDefault);    
-%             end
             for ii = obj.currentStep:obj.totalSteps
                system.step(); 
                obj.currentStep = obj.currentStep + 1; 
             end
-            obj.iteration = obj.iteration + 1; 
+            obj.iteration = obj.iteration + 1;
+            disp(obj.iteration); 
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
@@ -104,11 +101,6 @@ classdef ExperimentController < handle
         end
         function addSystemProperty(obj, map, property, system) 
             setSystemProperties(obj, map, property, system.(property)); 
-%             map(property) = system.(property); 
-%             increment = [property,'.increment'];
-%             map(increment) = 1; 
-%             max = [property,'.max'];
-%             map(max) = system.(property); 
         end
         function setSystemProperties(obj, map, property, value) 
             map(property) = value; 
@@ -204,7 +196,7 @@ classdef ExperimentController < handle
                 weightSum = sum(sum(weightPage)); 
                 maxActivation = max(max(obj.chartSystem.uActivation)); 
                 minActivation = min(min(obj.chartSystem.uActivation)); 
-                deltaMaxMin = abs(maxActivation) - abs(minActivation);  
+                deltaMaxMin = maxActivation - minActivation;  
                 [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
 %                 maxSlope = obj.chartSystem.getMetrics(); 
 %                 numMax = 0; 
