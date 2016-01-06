@@ -14,8 +14,9 @@ classdef ExperimentController < handle
         currentStep
         resetSeed
         iteration
-        statisticsHeader
-        statisticsDetail
+        chartStatisticsHeader
+        chartStatisticsDetail
+        nChartStats
     end
     methods
         function obj = ExperimentController()
@@ -25,13 +26,14 @@ classdef ExperimentController < handle
             obj.currentStep = 1; 
             obj.resetSeed = true; 
             obj.iteration = 0; 
+            obj.nChartStats = 6;
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
-            obj.statisticsHeader = {}; 
+            obj.chartStatisticsHeader = {}; 
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -59,15 +61,19 @@ classdef ExperimentController < handle
             runSystem(obj,obj.chartSystem); 
         end
         function runSystem(obj, system)
+            if obj.resetSeed
+               load '../rngDefaultSettings';
+               rng(rngDefault);    
+            end
             system.buildWeights(); 
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
         end
         function runBareSystem(obj, system)
-            if obj.resetSeed
-               load '../rngDefaultSettings';
-               rng(rngDefault);    
-            end
+%             if obj.resetSeed
+%                load '../rngDefaultSettings';
+%                rng(rngDefault);    
+%             end
             for ii = obj.currentStep:obj.totalSteps
                system.step(); 
                obj.currentStep = obj.currentStep + 1; 
@@ -97,12 +103,21 @@ classdef ExperimentController < handle
                 property, obj.chartSystem); 
         end
         function addSystemProperty(obj, map, property, system) 
-            map(property) = system.(property); 
+            setSystemProperties(obj, map, property, system.(property)); 
+%             map(property) = system.(property); 
+%             increment = [property,'.increment'];
+%             map(increment) = 1; 
+%             max = [property,'.max'];
+%             map(max) = system.(property); 
+        end
+        function setSystemProperties(obj, map, property, value) 
+            map(property) = value; 
             increment = [property,'.increment'];
             map(increment) = 1; 
             max = [property,'.max'];
-            map(max) = system.(property); 
+            map(max) = value; 
         end
+        
         function value = getHeadDirectionSystemProperty(obj, property)
             value = getSystemProperty(obj, obj.headDirectionSystemPropertyMap, property);
         end
@@ -148,14 +163,25 @@ classdef ExperimentController < handle
         function value = gCSPx(obj, property)
             value = getSystemProperty(obj, obj.chartSystemPropertyMap, [property,'.max']);
         end
-        
+        function rerunChartSystem(obj, record)
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'alphaOffset', record(1,obj.nChartStats+1)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'betaGain', record(1,obj.nChartStats+2)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'CInhibitionOffset', record(1,obj.nChartStats+3)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'featureLearningRate', record(1,obj.nChartStats+4)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'normalizedWeight', record(1,obj.nChartStats+5)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaAngularWeight', record(1,obj.nChartStats+6)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaHeadWeight', record(1,obj.nChartStats+7)); 
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaWeightPattern', record(1,obj.nChartStats+8));
+            iterateChartSystemForPropertyRanges(obj);
+        end
+
         function iterateChartSystemForPropertyRanges(obj)
-            obj.statisticsHeader = {'iteration', 'weightSum', 'maxActivation', ...
-                'alphaOffset', ...
+            obj.chartStatisticsHeader = {'iteration', 'weightSum', 'maxActivation', ... 
+                'deltaMaxMin', 'numMax', 'maxSlope', 'alphaOffset', ...
                 'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
                 'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
                 'sigmaWeightPattern'}; 
-            obj.statisticsDetail = zeros(1,11); 
+            obj.chartStatisticsDetail = zeros(1,obj.nChartStats+8); 
             for aa = gCSP(obj, 'alphaOffset'):gCSPi(obj, 'alphaOffset'):gCSPx(obj, 'alphaOffset')
             for bb = gCSP(obj, 'betaGain'):gCSPi(obj, 'betaGain'):gCSPx(obj, 'betaGain')
             for cc = gCSP(obj, 'CInhibitionOffset'):gCSPi(obj, 'CInhibitionOffset'):gCSPx(obj, 'CInhibitionOffset')
@@ -173,13 +199,17 @@ classdef ExperimentController < handle
                 updateChartSystemWithPropertyValue(obj, 'sigmaAngularWeight', ff); 
                 updateChartSystemWithPropertyValue(obj, 'sigmaHeadWeight', gg); 
                 updateChartSystemWithPropertyValue(obj, 'sigmaWeightPattern', hh); 
-                runChartSystem(obj); 
+                runSystem(obj,obj.chartSystem); % runChartSystem(obj) forces rebuild
                 weightPage = obj.chartSystem.wHeadDirectionWeights(:,:,1); 
                 weightSum = sum(sum(weightPage)); 
-                maxActivation = max(obj.chartSystem.uActivation); 
-                obj.statisticsDetail(obj.iteration,:) = [obj.iteration, ...
-                    weightSum, maxActivation, aa, bb, cc, dd, ee, ff, gg, hh]; 
-                disp(obj.iteration); 
+                maxActivation = max(max(obj.chartSystem.uActivation)); 
+                minActivation = min(min(obj.chartSystem.uActivation)); 
+                deltaMaxMin = abs(maxActivation) - abs(minActivation);  
+                [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
+%                 maxSlope = obj.chartSystem.getMetrics(); 
+%                 numMax = 0; 
+                obj.chartStatisticsDetail(obj.iteration,:) = [obj.iteration, ...
+                    weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg, hh]; 
             end                
             end                
             end                

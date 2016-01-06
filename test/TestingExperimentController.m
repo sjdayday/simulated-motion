@@ -4,6 +4,8 @@ classdef TestingExperimentController < ExperimentController
     properties
         testingSystem
         testingSystemPropertyMap
+        testingStatisticsHeader
+        testingStatisticsDetail
     end
         
     methods
@@ -22,8 +24,8 @@ classdef TestingExperimentController < ExperimentController
             value = getSystemProperty(obj, obj.testingSystemPropertyMap, property);
         end
         function iterateTestingSystemForPropertyRanges(obj)
-            obj.statisticsHeader = {'iteration', 'testProperty'}; 
-            obj.statisticsDetail = zeros(1,2); 
+            obj.testingStatisticsHeader = {'iteration', 'testProperty'}; 
+            obj.testingStatisticsDetail = zeros(1,2); 
             for aa = getTestingSystemProperty(obj, 'testProperty'): ...
                  getTestingSystemProperty(obj, 'testProperty.increment'): ...
                  getTestingSystemProperty(obj, 'testProperty.max')
@@ -31,7 +33,7 @@ classdef TestingExperimentController < ExperimentController
                  updateSystemWithPropertyValue(obj, obj.testingSystem, ...
                      'testProperty', aa); 
                  runSystem(obj,obj.testingSystem);
-                 obj.statisticsDetail(obj.iteration,:) = [obj.iteration, aa]; 
+                 obj.testingStatisticsDetail(obj.iteration,:) = [obj.iteration, aa]; 
             end
     %  for each parameter
     %     rebuildSystem

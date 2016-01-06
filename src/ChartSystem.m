@@ -243,6 +243,27 @@ classdef ChartSystem < System
 %             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
 %             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
 %         end
+%         function maxSlope = getMetrics(obj)
+        function [numMax , maxSlope] = getMetrics(obj)
+            act = obj.uActivation; 
+            maxes = find(act==max(max(act))); 
+            numMax = length(maxes); 
+            mm = act(maxes(1)); 
+            slopes = zeros(4,1); 
+            if maxes(1) > 1
+                slopes(1,1) = mm / act(maxes(1)-1); 
+            end
+            if maxes(1) < obj.totalCells
+                slopes(2,1) = mm / act(maxes(1)+1); 
+            end
+            if maxes(1) > 10
+                slopes(3,1) = mm / act(maxes(1)-10); 
+            end
+            if maxes(1) < obj.totalCells-10
+                slopes(4,1) = mm / act(maxes(1)+10); 
+            end
+            maxSlope = max(slopes); 
+        end
         function plot(obj)
             if obj.firstPlot
                 obj.h = figure('color','w');

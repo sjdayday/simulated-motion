@@ -141,37 +141,42 @@ classdef ExperimentControllerTest < AbstractTest
                 'testProperty.increment', 0.5);  
             controller.iterateTestingSystemForPropertyRanges(); 
             testCase.assertEqual(controller.iteration, 5);
-            testCase.assertEqual(controller.statisticsHeader, {'iteration','testProperty'});
-            testCase.assertEqual(controller.statisticsDetail, ... 
+            testCase.assertEqual(controller.testingStatisticsHeader, {'iteration','testProperty'});
+            testCase.assertEqual(controller.testingStatisticsDetail, ... 
                 [1 2; 2 2.5; 3 3; 4 3.5; 5 4]);
         end
-        function testPropertyRangesAppliedToChartSystemAndGathersStats(testCase)
+%         function testPropertyRangesAppliedToChartSystemAndGathersStats(testCase)
+%             controller = ExperimentController(); 
+%             controller.totalSteps = 20; 
+%             controller.setChartSystemProperty('betaGain', 0.4);  
+%             controller.setChartSystemProperty('betaGain.increment', 0.02);  
+%             controller.setChartSystemProperty('betaGain.max', 0.6);  
+%             controller.setChartSystemProperty('sigmaWeightPattern', 0.60);  
+%             controller.setChartSystemProperty('sigmaWeightPattern.increment', 0.05);  
+%             controller.setChartSystemProperty('sigmaWeightPattern.max', 0.90);  
+%             controller.setChartSystemProperty('CInhibitionOffset', 0.01);  
+%             controller.setChartSystemProperty('CInhibitionOffset.increment', 0.02);  
+%             controller.setChartSystemProperty('CInhibitionOffset.max', 0.21);  
+%             controller.iterateChartSystemForPropertyRanges(); 
+%             controller.statisticsHeader;
+%             controller.statisticsDetail;            
+%         end
+        function testMetricsVectorRerunsOriginalChartSystemScenario(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
             controller = ExperimentController(); 
+            record = [1 5.077490624715358 4.30861806429603 0.000001 1 1.00000000181092 0 0.4 0.01 0.5 0 5 10 0.6]; 
             controller.totalSteps = 20; 
-            testCase.assertEqual(controller.iteration, 0);
-            controller.setChartSystemProperty('betaGain', 0.41);  
-            controller.setChartSystemProperty('betaGain.increment', 0.1);  
-            controller.setChartSystemProperty('betaGain.max', 0.44);  
-            controller.setChartSystemProperty('sigmaWeightPattern', 0.65);  
-            controller.setChartSystemProperty('sigmaWeightPattern.increment', 0.05);  
-            controller.setChartSystemProperty('sigmaWeightPattern.max', 0.75);  
-            controller.setChartSystemProperty('CInhibitionOffset', 0.01);  
-            controller.setChartSystemProperty('CInhibitionOffset.increment', 0.02);  
-            controller.setChartSystemProperty('CInhibitionOffset.max', 0.07);  
-            controller.iterateChartSystemForPropertyRanges(); 
-%             testCase.assertEqual(controller.iteration, 5);
-%             testCase.assertEqual(controller.statisticsHeader, {'iteration','testProperty'});
-%             testCase.assertEqual(controller.statisticsDetail, ... 
-%                 [1 2; 2 2.5; 3 3; 4 3.5; 5 4]);
-            disp(controller.statisticsHeader);
-            disp(controller.statisticsDetail);            
+            controller.rerunChartSystem(record);
+            testCase.assertThat(controller.chartStatisticsDetail(1,:), ... 
+                IsEqualTo(record, 'Within', RelativeTolerance(00000000000001)));         
+            testCase.assertEqual(controller.chartStatisticsHeader, ... 
+                {'iteration', 'weightSum', 'maxActivation', ... 
+                'deltaMaxMin', 'numMax', 'maxSlope', 'alphaOffset', ...
+                'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
+                'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
+                'sigmaWeightPattern'});             
         end
-        
-%                     obj.betaGain = 0.42; % was .75
-%             obj.alphaOffset = 0; 
-%             obj.sigmaWeightPattern = 0.7; %  2*pi/10
-%             obj.CInhibitionOffset = 0.02; 
-
     end
 end
 % function network = createHebbMarrNetwork(dimension)
