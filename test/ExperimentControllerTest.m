@@ -177,6 +177,16 @@ classdef ExperimentControllerTest < AbstractTest
                 'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
                 'sigmaWeightPattern'});             
         end
+        function testSystemIsRunWithGui(testCase)
+            controller = ExperimentController(); 
+            testCase.assertEqual(controller.visual, false); 
+            controller.visualize(true); 
+            testCase.assertSameHandle(controller.headDirectionSystem.h, ...
+                controller.h);
+            testCase.assertSameHandle(controller.animal.h, ...
+                controller.h);
+            controller.visualize(false); % close handle
+        end
     end
 end
 % function network = createHebbMarrNetwork(dimension)

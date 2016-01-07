@@ -17,6 +17,13 @@ classdef ExperimentController < handle
         chartStatisticsHeader
         chartStatisticsDetail
         nChartStats
+        animal
+        visual
+        h
+        monitor
+        x
+        y
+        yy
     end
     methods
         function obj = ExperimentController()
@@ -34,16 +41,37 @@ classdef ExperimentController < handle
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
             obj.chartStatisticsHeader = {}; 
+            obj.animal = Animal(); 
+            obj.visual = false; 
+            obj.monitor = false; 
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
+        end
+        function visualize(obj, visual)
+            obj.visual = visual; 
+            if visual
+                obj.h = figure; 
+                obj.chartSystem.h = obj.h;
+                obj.headDirectionSystem.h = obj.h; 
+                obj.animal.h = obj.h; 
+%                 setupDisplay(obj);  % do later
+            else
+                if isvalid(obj.h) 
+                    close(obj.h)
+                end
+            end
         end
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
             obj.nHeadDirectionCells = nHeadDirectionCells;
             rebuildHeadDirectionSystem(obj); 
         end
         function rebuildHeadDirectionSystem(obj) 
-           obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
+            obj.headDirectionSystem.animal = obj.animal; 
+            if obj.visual
+                obj.headDirectionSystem.h = obj.h; 
+            end
         end
         function buildChartSystem(obj, nChartSystemSingleDimensionCells)
             obj.nChartSystemSingleDimensionCells = nChartSystemSingleDimensionCells;
@@ -71,11 +99,18 @@ classdef ExperimentController < handle
         end
         function runBareSystem(obj, system)
             for ii = obj.currentStep:obj.totalSteps
-               system.step(); 
+               system.step();
+               obj.animal.step(); 
                obj.currentStep = obj.currentStep + 1; 
+               if obj.visual
+                   plot(obj);  
+                   pause(0.1); 
+               end
             end
             obj.iteration = obj.iteration + 1;
-            disp(obj.iteration); 
+            if obj.monitor
+                disp(obj.iteration); 
+            end
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
@@ -198,8 +233,6 @@ classdef ExperimentController < handle
                 minActivation = min(min(obj.chartSystem.uActivation)); 
                 deltaMaxMin = maxActivation - minActivation;  
                 [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
-%                 maxSlope = obj.chartSystem.getMetrics(); 
-%                 numMax = 0; 
                 obj.chartStatisticsDetail(obj.iteration,:) = [obj.iteration, ...
                     weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg, hh]; 
             end                
@@ -221,17 +254,55 @@ classdef ExperimentController < handle
             addChartSystemProperty(obj, 'sigmaHeadWeight'); 
             addChartSystemProperty(obj, 'sigmaWeightPattern');             
         end
+        function setupDisplay(obj)
+            figure(obj.h); 
+            hold on;  
+            obj.x = -1.1:.01:1.1;
+            obj.y = zeros(1,221); 
+            for ii = 1:length(obj.x)
+                obj.y(1,ii) = sqrt(1.21 - obj.x(1,ii)^2);
+            end;
+            obj.yy = -obj.y;
+            subplot(221);
+            hold on; 
+            title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
+            p = plot(obj.x,obj.y,obj.x,obj.yy);
+            axis equal
+            axis off
+            p(1).LineWidth = 5;
+            p(2).LineWidth = 5;
+            p(2).Color = [0.5 0.5 0.5];
+            p(1).Color = [0.5 0.5 0.5];
+            subplot(222);
+            title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
+%             title('Internal head direction');
+            q = plot(obj.x,obj.y,obj.x,obj.yy);
+            axis equal
+            axis off
+            q(1).LineWidth = 5;
+            q(2).LineWidth = 5;
+            q(2).Color = [0.5 0.5 0.5];
+            q(1).Color = [0.5 0.5 0.5];
+            drawnow
+        end
         function plot(obj)
-            if obj.firstPlot
-                obj.h = figure('color','w');
-                drawnow
-                obj.firstPlot = 0;
-            end
+%             if obj.firstPlot
+%                 obj.h = figure('color','w');
+%                 drawnow
+%                 obj.firstPlot = 0;
+%             end
             figure(obj.h);
-            % plot the smoothed activation before we stretch it
-%             plot(obj.xAxisValues, [obj.activationBeforeStabilization obj.activationBeforeStabilization]);
-            surf(obj.uActivation); 
-            view(45,45); 
+            subplot(221);
+            title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
+            obj.animal.plot(); 
+            subplot(222);
+            title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
+            obj.headDirectionSystem.plotCircle(); 
+            subplot(224);
+            obj.headDirectionSystem.plotActivation(); 
+            hold on; 
+            title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
+            
 %             plot(obj.xAxisValues, [obj.uActivation obj.uActivation]); 
 % %             plot(obj.xAxisValues, repmat(obj.activation,[1 2]));
 %             obj.xAxis = gca; 

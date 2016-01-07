@@ -220,29 +220,6 @@ classdef ChartSystem < System
 % 
 %               saveStatistics(obj); 
         end
-% 
-%         function saveStatistics(obj)
-%           % Save firing field information
-% %               if useRealTrajectory
-%             if obj.activation(obj.watchCell)>0
-%               if obj.spikeind==size(obj.spikeCoords,1)
-%                 % allocate space for next 1000 spikes:
-%                 obj.spikeCoords(obj.spikeind+1000,:) = [0 0];
-%                 obj.spikeCoords(obj.spikeind+1,:) = ...
-%                     [obj.position(1,obj.time) obj.position(2,obj.time)];
-%               else
-%                 obj.spikeCoords(obj.spikeind+1,:) = ... 
-%                     [obj.position(1,obj.time) obj.position(2,obj.time)];
-%               end
-%               obj.spikeind = obj.spikeind+1;
-%             end
-%             xindex = round((obj.position(1,obj.time)-obj.minX) / ...
-%                 (obj.maxX-obj.minX)*obj.nSpatialBins)+1;
-%             yindex = round((obj.position(2,obj.time)-obj.minY) / ...
-%                 (obj.maxY-obj.minY)*obj.nSpatialBins)+1;
-%             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
-%             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
-%         end
 %         function maxSlope = getMetrics(obj)
         function [numMax , maxSlope] = getMetrics(obj)
             act = obj.uActivation; 

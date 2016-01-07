@@ -22,6 +22,7 @@ classdef HeadDirectionSystem < System
         featureWeights
         maxFeatureWeight
         firstPlot
+        firstCirclePlot
         h
         uActivation
         xAxisValues
@@ -48,6 +49,8 @@ classdef HeadDirectionSystem < System
         sigmaWeightPattern
         CInhibitionOffset
         dx
+        marker
+        animal
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -65,7 +68,8 @@ classdef HeadDirectionSystem < System
                 (normpdf(0:obj.nHeadDirectionCells-1,0,obj.sigmaAngularWeight)+ ...
                 normpdf(0:obj.nHeadDirectionCells-1,obj.nHeadDirectionCells,obj.sigmaAngularWeight));
             obj.firstPlot = 1; 
-            obj.xAxisValues = 1:nHeadDirectionCells*2; 
+            obj.firstCirclePlot = 1; 
+            obj.xAxisValues = 1:nHeadDirectionCells; 
             obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells); 
             obj.time = 0; 
             obj.Ahist = zeros(100,1);
@@ -123,13 +127,19 @@ classdef HeadDirectionSystem < System
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
 %             obj.featureWeights = obj.featureLearningRate*(postActivation - obj.featureWeights)*obj.featuresDetected;            
         end
-         %% Trappenberg sigmoidal activation function (equation 7.2)
+        function  updateVelocity(obj)
+           obj.clockwiseVelocity = obj.animal.clockwiseVelocity;  
+           obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity;             
+        end
+
+        %% Trappenberg sigmoidal activation function (equation 7.2)
         function activationFunction(obj)
            obj.rate = 1 ./ (1 + exp(obj.betaGain * (-obj.uActivation - obj.alphaOffset)));  
         end
         %% Single time step 
         function  step(obj)
             obj.time = obj.time+1;
+            updateVelocity(obj); 
             updateFeatureWeights(obj);                 
             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
             activationFunction(obj); 
@@ -183,6 +193,44 @@ classdef HeadDirectionSystem < System
 %             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
 %             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
 %         end
+        function plotCircle(obj)
+            figure(obj.h)
+            hold on; 
+            axis manual;
+            if obj.firstCirclePlot
+%                 hold on;
+%                 maxActivation = max(obj.uActivation); 
+                obj.marker = plot(1,0, ...
+                    'o','MarkerFaceColor','black','MarkerSize',10,'MarkerEdgeColor','black');
+                drawnow;
+                pause(1);
+                obj.firstCirclePlot = 0;
+            else
+                index = find(obj.uActivation==max(obj.uActivation)); 
+                radians = ((obj.nHeadDirectionCells-index)/obj.nHeadDirectionCells)*2*pi; 
+                obj.marker.XData = cos(radians); 
+                obj.marker.YData = sin(radians); 
+                drawnow;
+                
+            end            
+
+        end
+        function plotActivation(obj)
+            figure(obj.h)
+            hold off; 
+            plot(obj.xAxisValues, obj.uActivation); 
+%             plot(obj.xAxisValues, repmat(obj.activation,[1 2]));
+            obj.xAxis = gca; 
+            % these values only work if nHeadDirectionCells is 60
+            obj.xAxis.XTick = [0 15 30 45 60];
+            obj.xAxis.XTickLabel = ... 
+                {'2\pi', '3\pi/2', '\pi', '\pi/2', '0'};
+%                 {'-2\pi', '-3\pi/2', '-\pi', '-\pi/2', '0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
+%                 {'-360', '-270', '-180', '-90', '0', '90', '180', '270', '360'};
+%             title({'Head direction',sprintf('time = %d ',obj.time)});
+
+
+        end
         function plot(obj)
             if obj.firstPlot
                 obj.h = figure('color','w');
@@ -192,7 +240,7 @@ classdef HeadDirectionSystem < System
             figure(obj.h);
             % plot the smoothed activation before we stretch it
 %             plot(obj.xAxisValues, [obj.activationBeforeStabilization obj.activationBeforeStabilization]);
-            plot(obj.xAxisValues, [obj.uActivation obj.uActivation]); 
+            plot(obj.xAxisValues, obj.uActivation); 
 %             plot(obj.xAxisValues, repmat(obj.activation,[1 2]));
             obj.xAxis = gca; 
             % these values only work if nHeadDirectionCells is 60
