@@ -260,7 +260,7 @@ classdef ExperimentController < handle
             obj.x = -1.1:.01:1.1;
             obj.y = zeros(1,221); 
             for ii = 1:length(obj.x)
-                obj.y(1,ii) = sqrt(1.21 - obj.x(1,ii)^2);
+                obj.y(1,ii) = abs(sqrt(1.21 - obj.x(1,ii)^2));
             end;
             obj.yy = -obj.y;
             subplot(221);
