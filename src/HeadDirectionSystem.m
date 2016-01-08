@@ -128,7 +128,7 @@ classdef HeadDirectionSystem < System
 %             obj.featureWeights = obj.featureLearningRate*(postActivation - obj.featureWeights)*obj.featuresDetected;            
         end
         function  updateVelocity(obj)
-           obj.clockwiseVelocity = obj.animal.clockwiseVelocity;  
+           obj.clockwiseVelocity = -obj.animal.clockwiseVelocity;  
            obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity;             
         end
 

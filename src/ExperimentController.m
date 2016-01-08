@@ -104,7 +104,7 @@ classdef ExperimentController < handle
                obj.currentStep = obj.currentStep + 1; 
                if obj.visual
                    plot(obj);  
-                   pause(0.1); 
+                   pause(0.3); 
                end
             end
             obj.iteration = obj.iteration + 1;
