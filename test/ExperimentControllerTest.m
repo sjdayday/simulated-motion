@@ -145,22 +145,28 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.testingStatisticsDetail, ... 
                 [1 2; 2 2.5; 3 3; 4 3.5; 5 4]);
         end
-%         function testPropertyRangesAppliedToChartSystemAndGathersStats(testCase)
-%             controller = ExperimentController(); 
-%             controller.totalSteps = 20; 
-%             controller.setChartSystemProperty('betaGain', 0.4);  
-%             controller.setChartSystemProperty('betaGain.increment', 0.02);  
-%             controller.setChartSystemProperty('betaGain.max', 0.6);  
-%             controller.setChartSystemProperty('sigmaWeightPattern', 0.60);  
-%             controller.setChartSystemProperty('sigmaWeightPattern.increment', 0.05);  
-%             controller.setChartSystemProperty('sigmaWeightPattern.max', 0.90);  
-%             controller.setChartSystemProperty('CInhibitionOffset', 0.01);  
-%             controller.setChartSystemProperty('CInhibitionOffset.increment', 0.02);  
-%             controller.setChartSystemProperty('CInhibitionOffset.max', 0.21);  
-%             controller.iterateChartSystemForPropertyRanges(); 
-%             controller.statisticsHeader;
-%             controller.statisticsDetail;            
-%         end
+        function testPropertyRangesAppliedToChartSystemAndGathersStats(testCase)
+%                        obj.chartStatisticsHeader = {'iteration', 'weightSum', 'maxActivation', ... 
+%                 'deltaMaxMin', 'numMax', 'maxSlope', 'alphaOffset', ...
+%                 'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
+%                 'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
+%                 'sigmaWeightPattern'}; 
+% 
+            controller = ExperimentController(); 
+            controller.nChartSystemSingleDimensionCells = 50; 
+            controller.monitor = true; 
+            controller.totalSteps = 20; 
+            controller.setChartSystemProperty('betaGain', 0.25);  
+            controller.setChartSystemProperty('betaGain.increment', 0.05);  
+            controller.setChartSystemProperty('betaGain.max', 0.7);  
+            controller.setChartSystemProperty('sigmaWeightPattern', 0.50);  
+            controller.setChartSystemProperty('sigmaWeightPattern.increment', 0.05);  
+            controller.setChartSystemProperty('sigmaWeightPattern.max', 0.90);  
+            controller.setChartSystemProperty('CInhibitionOffset', 0.01);  
+            controller.setChartSystemProperty('CInhibitionOffset.increment', 0.03);  
+            controller.setChartSystemProperty('CInhibitionOffset.max', 0.25);  
+            controller.iterateChartSystemForPropertyRanges(); 
+        end
         function testMetricsVectorRerunsOriginalChartSystemScenario(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance

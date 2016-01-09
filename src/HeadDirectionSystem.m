@@ -70,7 +70,8 @@ classdef HeadDirectionSystem < System
             obj.firstPlot = 1; 
             obj.firstCirclePlot = 1; 
             obj.xAxisValues = 1:nHeadDirectionCells; 
-            obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells); 
+            initializeActivation(obj, true); 
+%             obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells); 
             obj.time = 0; 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
@@ -85,9 +86,18 @@ classdef HeadDirectionSystem < System
             obj.betaGain = 1; 
             obj.alphaOffset = 0; 
             obj.sigmaWeightPattern = 2*pi/10; 
-            obj.CInhibitionOffset = 0.5; 
+            obj.CInhibitionOffset = 0.35; % was 0.5 
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
 %             obj.maxFeatureWeight = 0.35; % not needed as yet 
+        end
+        function initializeActivation(obj, random)
+           if random
+               obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells);                
+           else
+               obj.uActivation = zeros(1,obj.nHeadDirectionCells);
+               obj.uActivation = obj.uActivation + 0.5;
+               obj.uActivation(1,60) = 0.8; 
+           end
         end
         function buildWeights(obj)
             % nn = 100; dx=2*pi/nn; sigma = 2*pi/10; C=0.5;
@@ -112,6 +122,13 @@ classdef HeadDirectionSystem < System
                 obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
         end
         function updateFeatureWeights(obj)
+            if isempty(obj.animal.features)
+                obj.featuresDetected = zeros(1,obj.nHeadDirectionCells);
+            else
+                for ii = obj.animal.features
+                    obj.featuresDetected(1,ii) = 1; 
+                end
+            end
             % sigmoidal, negative at small activation values, linear over 
             % most of the activation range, tops out about 0.35, which acts
             % as an implementation of "Wmax"

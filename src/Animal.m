@@ -11,6 +11,7 @@ classdef Animal < handle
         minimumVelocity
         markers
         time
+        features
     end
     methods
         function obj = Animal()
@@ -21,10 +22,17 @@ classdef Animal < handle
             obj.clockwiseVelocity = 0; 
             obj.counterClockwiseVelocity = 0; 
             obj.time = 0; 
+            obj.features = []; 
         end
         %% Single time step 
         function  step(obj)
             obj.time = obj.time+1;
+%             if obj.time == 3
+%                 obj.features = [30 52]; 
+%             end
+%             if obj.time == 10
+%                 obj.features = []; 
+%             end
             if obj.time == 5
                 obj.clockwiseVelocity = -obj.minimumVelocity; 
             end
@@ -46,6 +54,10 @@ classdef Animal < handle
                 'o','MarkerFaceColor',[0.5 0.5 0.5],'MarkerSize',10,'MarkerEdgeColor',[0.5 0.5 0.5]);
             obj.markers(1) = plot(1,0, ...
                 'o','MarkerFaceColor','black','MarkerSize',10,'MarkerEdgeColor','black');
+            plot(.9192,.9192, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+            plot(-1.3,0, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
             drawnow;
             pause(1);
         end

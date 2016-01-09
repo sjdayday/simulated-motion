@@ -24,6 +24,8 @@ classdef ExperimentController < handle
         x
         y
         yy
+        randomHeadDirection
+        stepPause
     end
     methods
         function obj = ExperimentController()
@@ -44,6 +46,8 @@ classdef ExperimentController < handle
             obj.animal = Animal(); 
             obj.visual = false; 
             obj.monitor = false; 
+            obj.randomHeadDirection = true; 
+            obj.stepPause = 0.1; 
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -69,6 +73,7 @@ classdef ExperimentController < handle
         function rebuildHeadDirectionSystem(obj) 
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
             obj.headDirectionSystem.animal = obj.animal; 
+            obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
             if obj.visual
                 obj.headDirectionSystem.h = obj.h; 
             end
@@ -97,19 +102,29 @@ classdef ExperimentController < handle
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
         end
+        function step(obj, system)
+           system.step();
+           obj.animal.step(); 
+           obj.currentStep = obj.currentStep + 1; 
+           if obj.visual
+               plot(obj);  
+               pause(obj.stepPause); 
+           end            
+        end
         function runBareSystem(obj, system)
             for ii = obj.currentStep:obj.totalSteps
-               system.step();
-               obj.animal.step(); 
-               obj.currentStep = obj.currentStep + 1; 
-               if obj.visual
-                   plot(obj);  
-                   pause(0.3); 
-               end
+                step(obj, system); 
+%                system.step();
+%                obj.animal.step(); 
+%                obj.currentStep = obj.currentStep + 1; 
+%                if obj.visual
+%                    plot(obj);  
+%                    pause(0.1); 
+%                end
             end
             obj.iteration = obj.iteration + 1;
             if obj.monitor
-                disp(obj.iteration); 
+                disp([obj.iteration length(obj.chartStatisticsDetail)]); 
             end
         end
         function continueHeadDirectionSystem(obj)
@@ -235,6 +250,8 @@ classdef ExperimentController < handle
                 [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
                 obj.chartStatisticsDetail(obj.iteration,:) = [obj.iteration, ...
                     weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg, hh]; 
+                tempDetail = obj.chartStatisticsDetail;
+                save 'detail50' tempDetail; 
             end                
             end                
             end                
@@ -274,15 +291,21 @@ classdef ExperimentController < handle
             p(2).Color = [0.5 0.5 0.5];
             p(1).Color = [0.5 0.5 0.5];
             subplot(222);
+            hold on 
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
 %             title('Internal head direction');
             q = plot(obj.x,obj.y,obj.x,obj.yy);
+            plot(.9192,.9192, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+            plot(-1.3,0, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
             axis equal
             axis off
             q(1).LineWidth = 5;
             q(2).LineWidth = 5;
             q(2).Color = [0.5 0.5 0.5];
             q(1).Color = [0.5 0.5 0.5];
+            
             drawnow
         end
         function plot(obj)
