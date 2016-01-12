@@ -27,7 +27,6 @@ classdef HeadDirectionSystem < System
         uActivation
         xAxisValues
         xAxis
-        time
         Ahist
         normalizedWeight
         currentActivationRatio
@@ -54,6 +53,7 @@ classdef HeadDirectionSystem < System
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
+            obj = obj@System();             
             obj.nHeadDirectionCells = nHeadDirectionCells; 
             obj.maxHeadWeight = 1; % 0.965 zilli; rationale? 
             obj.maxAngularWeight = 1; 
@@ -72,7 +72,6 @@ classdef HeadDirectionSystem < System
             obj.xAxisValues = 1:nHeadDirectionCells; 
             initializeActivation(obj, true); 
 %             obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells); 
-            obj.time = 0; 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
             obj.counterClockwiseVelocity = 0;

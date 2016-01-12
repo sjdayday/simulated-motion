@@ -26,7 +26,6 @@ classdef ChartSystem < System
         uActivation
         xAxisValues
         xAxis
-        time
         Ahist
         normalizedWeight
         currentActivationRatio
@@ -53,6 +52,7 @@ classdef ChartSystem < System
     end
     methods
         function obj = ChartSystem(nSingleDimensionCells)
+            obj = obj@System();             
             obj.nSingleDimensionCells = nSingleDimensionCells; 
             obj.totalCells = nSingleDimensionCells * nSingleDimensionCells; 
             obj.maxHeadWeight = 1; % 0.965 zilli; rationale? 
@@ -72,7 +72,6 @@ classdef ChartSystem < System
 %             obj.uActivation = ones(obj.nSingleDimensionCells); % /sqrt(obj.nSingleDimensionCells); 
 %             obj.uActivation(70,10) = 2; 
             obj.uActivation = 2*rand(obj.nSingleDimensionCells,obj.nSingleDimensionCells); % /sqrt(obj.nSingleDimensionCells); 
-            obj.time = 0; 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
             obj.counterClockwiseVelocity = 0;
