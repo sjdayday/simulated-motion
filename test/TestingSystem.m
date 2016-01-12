@@ -13,13 +13,9 @@ classdef TestingSystem < System
         end
         %% Single time step 
         function  step(obj)
-            obj.time = obj.time+1;
-            events(obj); 
+            step@System(obj); 
         end
         function plot(obj)
         end  
-%         function addEvent(obj, time, event)
-%             obj.eventMap(time) = event; 
-%         end
     end
 end

@@ -172,7 +172,7 @@ classdef ChartSystem < System
         end
         %% Single time step 
         function  step(obj)
-            obj.time = obj.time+1;
+            step@System(obj); 
 %             updateFeatureWeights(obj);                 
             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
             activationFunction(obj); 

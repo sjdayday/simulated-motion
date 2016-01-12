@@ -258,8 +258,8 @@ classdef ExperimentController < handle
                 [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
                 obj.chartStatisticsDetail(obj.iteration,:) = [obj.iteration, ...
                     weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg, hh]; 
-                tempDetail = obj.chartStatisticsDetail;
-                save 'detail50' tempDetail; 
+%                 tempDetail = obj.chartStatisticsDetail;
+%                 save 'detail50' tempDetail; 
             end                
             end                
             end                

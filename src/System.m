@@ -19,12 +19,15 @@ classdef System < handle
 %                disp([obj.time,obj.eventMap(obj.time)]); 
             end
         end
-
+        function  step(obj)
+            obj.time = obj.time+1;
+            events(obj); 
+        end
     end
     methods (Abstract)
         buildWeights(obj)
         %% Single time step 
-        step(obj)
+%         step(obj)
         plot(obj)
 %         addEvent(obj, time, event)
     end
