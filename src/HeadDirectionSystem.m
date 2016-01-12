@@ -95,10 +95,13 @@ classdef HeadDirectionSystem < System
                obj.uActivation = rand(1,obj.nHeadDirectionCells); % /sqrt(obj.nHeadDirectionCells);                
            else
                obj.uActivation = zeros(1,obj.nHeadDirectionCells);
-               obj.uActivation = obj.uActivation + 0.5;
+               obj.uActivation = obj.uActivation + 0.25;
                obj.uActivation(1,60) = 0.8; 
            end
         end
+        function addEvent(obj, time, event)
+            obj.eventMap(time) = event; 
+        end        
         function buildWeights(obj)
             % nn = 100; dx=2*pi/nn; sigma = 2*pi/10; C=0.5;
             for loc=1:obj.nHeadDirectionCells

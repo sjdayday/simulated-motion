@@ -90,6 +90,10 @@ classdef ChartSystem < System
             obj.dx = 1; % /obj.nSingleDimensionCells; 
 %             obj.maxFeatureWeight = 0.35; % not needed as yet 
         end
+        function addEvent(obj, time, event)
+            obj.eventMap(time) = event; 
+        end
+
         function buildWeights(obj)
             obj.location = zeros(obj.totalCells,2); 
             index = 1;

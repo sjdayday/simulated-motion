@@ -185,7 +185,15 @@ classdef ExperimentController < handle
         function updateChartSystemWithPropertyValue(obj, property, value)
             updateSystemWithPropertyValue(obj, obj.chartSystem, property, value); 
         end
- 
+        function addEvent(obj, system, time, event)
+            system.addEvent(time, event); 
+        end
+        function addHeadDirectionSystemEvent(obj, time, event)
+           obj.headDirectionSystem.addEvent(time, event); 
+        end
+        function addChartSystemEvent(obj, time, event)
+           obj.chartSystem.addEvent(time, event); 
+        end
         function buildHeadDirectionSystemPropertyMap(obj)
             addHeadDirectionSystemProperty(obj, 'alphaOffset');
             addHeadDirectionSystemProperty(obj, 'angularWeightOffset');

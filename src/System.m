@@ -9,5 +9,6 @@ classdef System < handle
         %% Single time step 
         step(obj)
         plot(obj)
+        addEvent(obj, time, event)
     end
 end
