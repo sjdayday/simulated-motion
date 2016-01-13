@@ -194,6 +194,9 @@ classdef ExperimentController < handle
         function addChartSystemEvent(obj, time, event)
            obj.chartSystem.addEvent(time, event); 
         end
+        function addAnimalEvent(obj, time, event)
+           obj.animal.addEvent(time, event); 
+        end
         function buildHeadDirectionSystemPropertyMap(obj)
             addHeadDirectionSystemProperty(obj, 'alphaOffset');
             addHeadDirectionSystemProperty(obj, 'angularWeightOffset');
@@ -297,10 +300,10 @@ classdef ExperimentController < handle
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
 %             title('Internal head direction');
             q = plot(obj.x,obj.y,obj.x,obj.yy);
-            plot(.9192,.9192, ...
-                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
-            plot(-1.3,0, ...
-                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+%             plot(.9192,.9192, ...
+%                 'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+%             plot(-1.3,0, ...
+%                 'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
             axis equal
             axis off
             q(1).LineWidth = 5;

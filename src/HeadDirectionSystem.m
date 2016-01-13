@@ -151,6 +151,13 @@ classdef HeadDirectionSystem < System
             figure(obj.h)
             hold on; 
             axis manual;
+            if not(isempty(obj.animal.features))   
+                hold on
+                plot(.9192,.9192, ...
+                    'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+                plot(-1.3,0, ...
+                    'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+            end                
             if obj.firstCirclePlot
                 obj.marker = plot(1,0, ...
                     'o','MarkerFaceColor','black','MarkerSize',10,'MarkerEdgeColor','black');

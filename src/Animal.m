@@ -1,5 +1,5 @@
 % Animal class:  model movement and depiction of the physical animal
-classdef Animal < handle 
+classdef Animal < System
 
     properties
         firstPlot
@@ -10,41 +10,46 @@ classdef Animal < handle
         currentDirection
         minimumVelocity
         markers
-        time
         features
+        showFeatures
     end
     methods
         function obj = Animal()
+            obj = obj@System(); 
             obj.directions = zeros(1,3);
             obj.markers = gobjects(3,1); 
             obj.firstPlot = 1; 
             obj.minimumVelocity = pi/20; 
             obj.clockwiseVelocity = 0; 
             obj.counterClockwiseVelocity = 0; 
-            obj.time = 0; 
-            obj.features = []; 
+            obj.features = [];
+            obj.showFeatures = 0; 
+        end
+        function buildWeights(obj)
+           % inherited from System 
         end
         %% Single time step 
         function  step(obj)
-            obj.time = obj.time+1;
-            if obj.time == 3
-                obj.features = [30 52]; 
-            end
-            if obj.time == 10
-                obj.features = []; 
-            end
-%             if obj.time == 5
-%                 obj.clockwiseVelocity = -obj.minimumVelocity; 
+            step@System(obj); 
+% %             obj.time = obj.time+1;
+%             if obj.time == 3
+%                 obj.features = [30 52]; 
 %             end
-%             if obj.time == 18
-%                 obj.clockwiseVelocity = 0; 
+%             if obj.time == 10
+%                 obj.features = []; 
 %             end
-%             if obj.time == 25
-%                 obj.counterClockwiseVelocity = obj.minimumVelocity*2; 
-%             end
-%             if obj.time == 37
-%                 obj.counterClockwiseVelocity = 0; 
-%             end
+% %             if obj.time == 5
+% %                 obj.clockwiseVelocity = -obj.minimumVelocity; 
+% %             end
+% %             if obj.time == 18
+% %                 obj.clockwiseVelocity = 0; 
+% %             end
+% %             if obj.time == 25
+% %                 obj.counterClockwiseVelocity = obj.minimumVelocity*2; 
+% %             end
+% %             if obj.time == 37
+% %                 obj.counterClockwiseVelocity = 0; 
+% %             end
         end
         function setupMarkers(obj)
             hold on;
@@ -54,10 +59,10 @@ classdef Animal < handle
                 'o','MarkerFaceColor',[0.5 0.5 0.5],'MarkerSize',10,'MarkerEdgeColor',[0.5 0.5 0.5]);
             obj.markers(1) = plot(1,0, ...
                 'o','MarkerFaceColor','black','MarkerSize',10,'MarkerEdgeColor','black');
-            plot(.9192,.9192, ...
-                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
-            plot(-1.3,0, ...
-                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+%             plot(.9192,.9192, ...
+%                 'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+%             plot(-1.3,0, ...
+%                 'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
             drawnow;
             pause(1);
         end
@@ -93,6 +98,15 @@ classdef Animal < handle
 %                 drawnow
                 obj.firstPlot = 0;
             end
+            if obj.showFeatures
+                hold on
+                plot(.9192,.9192, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+                plot(-1.3,0, ...
+                'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');
+            end
+            
+            
 
             hold on; 
             hold off; 
