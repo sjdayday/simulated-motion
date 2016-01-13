@@ -202,7 +202,6 @@ classdef ExperimentController < handle
             addHeadDirectionSystemProperty(obj, 'featureLearningRate');
             addHeadDirectionSystemProperty(obj, 'normalizedWeight');
             addHeadDirectionSystemProperty(obj, 'sigmaAngularWeight');
-            addHeadDirectionSystemProperty(obj, 'sigmaHeadWeight');
         end
         function value = gCSP(obj, property)
             value = getSystemProperty(obj, obj.chartSystemPropertyMap, property);
@@ -220,8 +219,7 @@ classdef ExperimentController < handle
             setSystemProperties(obj, obj.chartSystemPropertyMap, 'featureLearningRate', record(1,obj.nChartStats+4)); 
             setSystemProperties(obj, obj.chartSystemPropertyMap, 'normalizedWeight', record(1,obj.nChartStats+5)); 
             setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaAngularWeight', record(1,obj.nChartStats+6)); 
-            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaHeadWeight', record(1,obj.nChartStats+7)); 
-            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaWeightPattern', record(1,obj.nChartStats+8));
+            setSystemProperties(obj, obj.chartSystemPropertyMap, 'sigmaWeightPattern', record(1,obj.nChartStats+7));
             iterateChartSystemForPropertyRanges(obj);
         end
 
@@ -229,17 +227,16 @@ classdef ExperimentController < handle
             obj.chartStatisticsHeader = {'iteration', 'weightSum', 'maxActivation', ... 
                 'deltaMaxMin', 'numMax', 'maxSlope', 'alphaOffset', ...
                 'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
-                'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
+                'normalizedWeight', 'sigmaAngularWeight',  ... 
                 'sigmaWeightPattern'}; 
-            obj.chartStatisticsDetail = zeros(1,obj.nChartStats+8); 
+            obj.chartStatisticsDetail = zeros(1,obj.nChartStats+7); 
             for aa = gCSP(obj, 'alphaOffset'):gCSPi(obj, 'alphaOffset'):gCSPx(obj, 'alphaOffset')
             for bb = gCSP(obj, 'betaGain'):gCSPi(obj, 'betaGain'):gCSPx(obj, 'betaGain')
             for cc = gCSP(obj, 'CInhibitionOffset'):gCSPi(obj, 'CInhibitionOffset'):gCSPx(obj, 'CInhibitionOffset')
             for dd = gCSP(obj, 'featureLearningRate'):gCSPi(obj, 'featureLearningRate'):gCSPx(obj, 'featureLearningRate')
             for ee = gCSP(obj, 'normalizedWeight'):gCSPi(obj, 'normalizedWeight'):gCSPx(obj, 'normalizedWeight')
             for ff = gCSP(obj, 'sigmaAngularWeight'):gCSPi(obj, 'sigmaAngularWeight'):gCSPx(obj, 'sigmaAngularWeight')
-            for gg = gCSP(obj, 'sigmaHeadWeight'):gCSPi(obj, 'sigmaHeadWeight'):gCSPx(obj, 'sigmaHeadWeight')
-            for hh = gCSP(obj, 'sigmaWeightPattern'):gCSPi(obj, 'sigmaWeightPattern'):gCSPx(obj, 'sigmaWeightPattern')
+            for gg = gCSP(obj, 'sigmaWeightPattern'):gCSPi(obj, 'sigmaWeightPattern'):gCSPx(obj, 'sigmaWeightPattern')
                 rebuildChartSystem(obj); 
                 updateChartSystemWithPropertyValue(obj, 'alphaOffset', aa); 
                 updateChartSystemWithPropertyValue(obj, 'betaGain', bb); 
@@ -247,8 +244,7 @@ classdef ExperimentController < handle
                 updateChartSystemWithPropertyValue(obj, 'featureLearningRate', dd); 
                 updateChartSystemWithPropertyValue(obj, 'normalizedWeight', ee); 
                 updateChartSystemWithPropertyValue(obj, 'sigmaAngularWeight', ff); 
-                updateChartSystemWithPropertyValue(obj, 'sigmaHeadWeight', gg); 
-                updateChartSystemWithPropertyValue(obj, 'sigmaWeightPattern', hh); 
+                updateChartSystemWithPropertyValue(obj, 'sigmaWeightPattern', gg); 
                 runSystem(obj,obj.chartSystem); % runChartSystem(obj) forces rebuild
                 weightPage = obj.chartSystem.wHeadDirectionWeights(:,:,1); 
                 weightSum = sum(sum(weightPage)); 
@@ -257,10 +253,9 @@ classdef ExperimentController < handle
                 deltaMaxMin = maxActivation - minActivation;  
                 [numMax , maxSlope] = obj.chartSystem.getMetrics(); 
                 obj.chartStatisticsDetail(obj.iteration,:) = [obj.iteration, ...
-                    weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg, hh]; 
+                    weightSum, maxActivation, deltaMaxMin, numMax, maxSlope, aa, bb, cc, dd, ee, ff, gg]; 
 %                 tempDetail = obj.chartStatisticsDetail;
 %                 save 'detail50' tempDetail; 
-            end                
             end                
             end                
             end                
@@ -276,7 +271,6 @@ classdef ExperimentController < handle
             addChartSystemProperty(obj, 'featureLearningRate');
             addChartSystemProperty(obj, 'normalizedWeight');
             addChartSystemProperty(obj, 'sigmaAngularWeight');
-            addChartSystemProperty(obj, 'sigmaHeadWeight'); 
             addChartSystemProperty(obj, 'sigmaWeightPattern');             
         end
         function setupDisplay(obj)
@@ -317,11 +311,6 @@ classdef ExperimentController < handle
             drawnow
         end
         function plot(obj)
-%             if obj.firstPlot
-%                 obj.h = figure('color','w');
-%                 drawnow
-%                 obj.firstPlot = 0;
-%             end
             figure(obj.h);
             subplot(221);
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
@@ -333,36 +322,6 @@ classdef ExperimentController < handle
             obj.headDirectionSystem.plotActivation(); 
             hold on; 
             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
-            
-%             plot(obj.xAxisValues, [obj.uActivation obj.uActivation]); 
-% %             plot(obj.xAxisValues, repmat(obj.activation,[1 2]));
-%             obj.xAxis = gca; 
-%             % these values only work if nSingleDimensionCells is 60
-%             obj.xAxis.XTick = [0 15 30 45 60 75 90 105 120];
-%             obj.xAxis.XTickLabel = ... 
-%                 {'-2\pi', '-3\pi/2', '-\pi', '-\pi/2', '0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
-% %                 {'-360', '-270', '-180', '-90', '0', '90', '180', '270', '360'};
-%             title({'Head direction',sprintf('time = %d ',obj.time)});
-%             subplot(131);
-%             imagesc(reshape(obj.activation,obj.nY,obj.nX));
-%             axis square
-%             title('Population activity')
-%             set(gca,'ydir','normal')
-%             subplot(132);
-%             imagesc(obj.spikes./obj.occupancy);
-%             axis square
-%             set(gca,'ydir','normal')
-%             t = obj.time*obj.dt; 
-%             title({sprintf('t = %.1f ms',t),'Rate map'})
-%             subplot(133);
-%             plot(obj.position(1,1:obj.time),obj.position(2,1:obj.time));
-%             hold on;
-%             if ~isempty(obj.spikeCoords)
-%             plot(obj.spikeCoords(2:obj.spikeind,1), ... 
-%             obj.spikeCoords(2:obj.spikeind,2),'r.')
-%             end
-%             title({'Trajectory (blue)','and spikes (red)'})
-%             axis square
             drawnow
         end        
     end

@@ -111,8 +111,7 @@ classdef ExperimentControllerTest < AbstractTest
                  'betaGain','betaGain.increment','betaGain.max', ...
                  'featureLearningRate','featureLearningRate.increment','featureLearningRate.max', ...
                  'normalizedWeight','normalizedWeight.increment','normalizedWeight.max', ...
-                 'sigmaAngularWeight','sigmaAngularWeight.increment','sigmaAngularWeight.max', ...
-                 'sigmaHeadWeight','sigmaHeadWeight.increment','sigmaHeadWeight.max'});
+                 'sigmaAngularWeight','sigmaAngularWeight.increment','sigmaAngularWeight.max'});
             controller.buildChartSystemPropertyMap(); 
             testCase.assertEqual(... 
                 controller.chartSystemPropertyMap.keys, ...
@@ -123,13 +122,12 @@ classdef ExperimentControllerTest < AbstractTest
                  'featureLearningRate','featureLearningRate.increment','featureLearningRate.max', ...
                  'normalizedWeight','normalizedWeight.increment','normalizedWeight.max', ...
                  'sigmaAngularWeight','sigmaAngularWeight.increment','sigmaAngularWeight.max', ...
-                 'sigmaHeadWeight','sigmaHeadWeight.increment','sigmaHeadWeight.max', ...
                  'sigmaWeightPattern','sigmaWeightPattern.increment','sigmaWeightPattern.max'});
         end
         function testPropertyMapsBuiltByDefault(testCase)
             controller = ExperimentController(); 
-            testCase.assertEqual(controller.headDirectionSystemPropertyMap.Count, uint64(24));
-            testCase.assertEqual(controller.chartSystemPropertyMap.Count, uint64(24));
+            testCase.assertEqual(controller.headDirectionSystemPropertyMap.Count, uint64(21));
+            testCase.assertEqual(controller.chartSystemPropertyMap.Count, uint64(21));
         end
         function testPropertyRangesAppliedToSystemAndGathersStats(testCase)
             controller = TestingExperimentController(); 
@@ -171,7 +169,7 @@ classdef ExperimentControllerTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             controller = ExperimentController(); 
-            record = [1 5.077490624715358 4.30861806429603 0.000001 1 1.00000000181092 0 0.4 0.01 0.5 0 5 10 0.6]; 
+            record = [1 5.077490624715358 4.30861806429603 0.000001 1 1.00000000181092 0 0.4 0.01 0.5 0 5 0.6]; 
             controller.totalSteps = 20; 
             controller.rerunChartSystem(record);
             testCase.assertThat(controller.chartStatisticsDetail(1,:), ... 
@@ -180,7 +178,7 @@ classdef ExperimentControllerTest < AbstractTest
                 {'iteration', 'weightSum', 'maxActivation', ... 
                 'deltaMaxMin', 'numMax', 'maxSlope', 'alphaOffset', ...
                 'betaGain', 'CInhibitionOffset', 'featureLearningRate', ...
-                'normalizedWeight', 'sigmaAngularWeight', 'sigmaHeadWeight', ... 
+                'normalizedWeight', 'sigmaAngularWeight', ... 
                 'sigmaWeightPattern'});             
         end
         function testSystemIsRunWithGui(testCase)
@@ -208,9 +206,3 @@ classdef ExperimentControllerTest < AbstractTest
         end
     end
 end
-% function network = createHebbMarrNetwork(dimension)
-%     network = HebbMarrNetwork(dimension);    
-%     network.weightType = 'binary'; %weights are binary
-%     network.buildNetwork(); 
-% end
-
