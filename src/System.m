@@ -14,6 +14,7 @@ classdef System < handle
             obj.eventMap(time) = event; 
         end
         function events(obj)
+%             disp(obj.eventMap.keys()); 
             if obj.eventMap.isKey(obj.time)
                eval(obj.eventMap(obj.time));  
 %                disp([obj.time,obj.eventMap(obj.time)]); 

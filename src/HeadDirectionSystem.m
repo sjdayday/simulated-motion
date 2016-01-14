@@ -42,6 +42,7 @@ classdef HeadDirectionSystem < System
         xAxisValues
         xAxis
         Ahist
+        forceWeights
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -70,6 +71,7 @@ classdef HeadDirectionSystem < System
             obj.sigmaWeightPattern = 2*pi/10; 
             obj.CInhibitionOffset = 0.35; % was 0.5 
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
+            obj.forceWeights = 0; 
         end
         function initializeActivation(obj, random)
            if random
@@ -111,11 +113,17 @@ classdef HeadDirectionSystem < System
             % most of the activation range, tops out about 0.35, which acts
             % as an implementation of "Wmax"
             % see Skaggs, figure 4, "f()".  
+%             activation = zeros(1, obj.nHeadDirectionCells); 
+%             activation(1,find(obj.uActivation == max(obj.uActivation))) = 0.3; 
+%             newWeights = (obj.featuresDetected' * activation); 
             activation = 1./(1+exp(-obj.uActivation.*10)) -0.65; 
             newWeights = (obj.featuresDetected' * activation) - obj.featureWeights;  
             % only update rows where features were detected
             for ii = 1:length(obj.featuresDetected)
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
+            end
+            if obj.forceWeights
+               newWeights = zeros(obj.nHeadDirectionCells);  
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end

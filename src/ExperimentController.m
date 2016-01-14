@@ -71,8 +71,17 @@ classdef ExperimentController < handle
             rebuildHeadDirectionSystem(obj); 
         end
         function rebuildHeadDirectionSystem(obj) 
+            tempMap = []; 
+            if not(isempty(obj.headDirectionSystem))
+                if not(isempty(obj.headDirectionSystem.eventMap))
+                    tempMap = obj.headDirectionSystem.eventMap; 
+                end                
+            end
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
-            obj.headDirectionSystem.animal = obj.animal; 
+            obj.headDirectionSystem.animal = obj.animal;
+            if not(isempty(tempMap))
+                obj.headDirectionSystem.eventMap = tempMap; 
+            end
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
             if obj.visual
                 obj.headDirectionSystem.h = obj.h; 
