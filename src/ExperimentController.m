@@ -26,9 +26,11 @@ classdef ExperimentController < handle
         yy
         randomHeadDirection
         stepPause
+        eventMap
     end
     methods
         function obj = ExperimentController()
+            obj.eventMap = containers.Map('KeyType','double','ValueType','char');
 %             obj.hFigures = figure; 
             obj.nChartSystemSingleDimensionCells = 10;  % default
             obj.nHeadDirectionCells = 60;  %default
@@ -112,6 +114,7 @@ classdef ExperimentController < handle
             runBareSystem(obj, system); 
         end
         function step(obj, system)
+           events(obj); 
            system.step();
            obj.animal.step(); 
            obj.currentStep = obj.currentStep + 1; 
@@ -206,6 +209,17 @@ classdef ExperimentController < handle
         function addAnimalEvent(obj, time, event)
            obj.animal.addEvent(time, event); 
         end
+        function addControllerEvent(obj, step, event)
+            obj.eventMap(step) = event; 
+        end
+        function events(obj)
+%             disp(obj.eventMap.keys()); 
+            if obj.eventMap.isKey(obj.currentStep)
+               eval(obj.eventMap(obj.currentStep));  
+%                disp([obj.time,obj.eventMap(obj.time)]); 
+            end
+        end
+
         function buildHeadDirectionSystemPropertyMap(obj)
             addHeadDirectionSystemProperty(obj, 'alphaOffset');
             addHeadDirectionSystemProperty(obj, 'angularWeightOffset');
