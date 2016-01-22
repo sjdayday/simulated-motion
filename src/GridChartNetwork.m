@@ -45,6 +45,7 @@ classdef GridChartNetwork < handle
         time
         firstPlot
         h
+        gh
         Ahist
         AhistAll
     end
@@ -68,6 +69,7 @@ classdef GridChartNetwork < handle
             % obj.stabilizationTime = 80; % no-velocity time for pattern to form, ms
             obj.velocity = [0; 0]; % v--velocity, m/ms  
             obj.firstPlot = 1; % first call to plot opens the figure
+%             obj.gh = [];  % override 
             obj.time = 0; % time step 
             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
@@ -226,33 +228,60 @@ classdef GridChartNetwork < handle
             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
         end
+        function plotActivation(obj)
+            figure(obj.h);
+            imagesc(reshape(obj.activation,obj.nY,obj.nX));
+            axis square
+            title('Population activity')
+            set(gca,'ydir','normal')            
+        end
+        function plotRateMap(obj)
+            figure(obj.h);
+            imagesc(obj.spikes./obj.occupancy);
+            axis square
+            set(gca,'ydir','normal')
+            t = obj.time*obj.dt; 
+            title({sprintf('t = %.1f ms',t),'Rate map'});
+        end
+        function plotTrajectory(obj)
+            figure(obj.h);
+            plot(obj.position(1,1:obj.time),obj.position(2,1:obj.time));
+            hold on;
+            if ~isempty(obj.spikeCoords)
+                plot(obj.spikeCoords(2:obj.spikeind,1), ... 
+                obj.spikeCoords(2:obj.spikeind,2),'r.')
+            end
+            title({'Trajectory (blue)','and spikes (red)'})
+            axis square
+        end
+        function plotAll(obj, rowIndex)
+            figure(obj.h);
+            subplot(obj.gh(rowIndex,1));
+            plotActivation(obj);
+            subplot(obj.gh(rowIndex,2));
+            plotRateMap(obj)
+            subplot(obj.gh(rowIndex,3));
+            plotTrajectory(obj)
+            drawnow
+        end        
         function plot(obj)
             if obj.firstPlot
                 obj.h = figure('color','w');
                 drawnow
                 obj.firstPlot = 0;
+                obj.gh = gobjects(1,3); 
+                obj.gh(1,1) = subplot(1,3,1); 
+                obj.gh(1,2) = subplot(1,3,2); 
+                obj.gh(1,3) = subplot(1,3,3);                 
             end
-            figure(obj.h);
-            subplot(131);
-            imagesc(reshape(obj.activation,obj.nY,obj.nX));
-            axis square
-            title('Population activity')
-            set(gca,'ydir','normal')
-            subplot(132);
-            imagesc(obj.spikes./obj.occupancy);
-            axis square
-            set(gca,'ydir','normal')
-            t = obj.time*obj.dt; 
-            title({sprintf('t = %.1f ms',t),'Rate map'})
-            subplot(133);
-            plot(obj.position(1,1:obj.time),obj.position(2,1:obj.time));
-            hold on;
-            if ~isempty(obj.spikeCoords)
-            plot(obj.spikeCoords(2:obj.spikeind,1), ... 
-            obj.spikeCoords(2:obj.spikeind,2),'r.')
-            end
-            title({'Trajectory (blue)','and spikes (red)'})
-            axis square
+            plotAll(obj,1); 
+%             figure(obj.h);
+%             subplot(131);
+%             plotActivation(obj);
+%             subplot(132);
+%             plotRateMap(obj)
+%             subplot(133);
+%             plotTrajectory(obj)
             drawnow
         end        
     end
