@@ -42,7 +42,7 @@ classdef HeadDirectionSystem < System
         xAxisValues
         xAxis
         Ahist
-        forceWeights
+        readMode
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -71,7 +71,7 @@ classdef HeadDirectionSystem < System
             obj.sigmaWeightPattern = 2*pi/10; 
             obj.CInhibitionOffset = 0.35; % was 0.5 
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
-            obj.forceWeights = 0; 
+            obj.readMode = 0; 
         end
         function initializeActivation(obj, random)
            if random
@@ -129,7 +129,7 @@ classdef HeadDirectionSystem < System
 %             if obj.time > 10 
 %                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
 %             end
-            if obj.forceWeights
+            if obj.readMode
                newWeights = zeros(obj.nHeadDirectionCells);  
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
