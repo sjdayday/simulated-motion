@@ -122,6 +122,13 @@ classdef HeadDirectionSystem < System
             for ii = 1:length(obj.featuresDetected)
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
             end
+            rrow = obj.featureWeights(30,:);
+%             disp([' ',max(rrow)]); 
+%             disp(find(rrow == max(rrow)));
+%             disp(find(obj.uActivation == max(obj.uActivation)));
+%             if obj.time > 10 
+%                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
+%             end
             if obj.forceWeights
                newWeights = zeros(obj.nHeadDirectionCells);  
             end

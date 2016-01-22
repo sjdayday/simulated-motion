@@ -13,6 +13,7 @@ cr.setupDisplay();
 cr.stepPause = 0.3;
 cr.totalSteps = 50;
 cr.randomHeadDirection = true;
+cr.addControllerEvent(3, 'pause(30); ')
 cr.addAnimalEvent(5, 'obj.clockwiseVelocity = -obj.minimumVelocity;'); 
 cr.addAnimalEvent(20, 'obj.clockwiseVelocity = 0;'); 
 cr.addAnimalEvent(25, 'obj.counterClockwiseVelocity = obj.minimumVelocity*2;'); 

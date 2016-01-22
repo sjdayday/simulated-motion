@@ -136,7 +136,7 @@ classdef ExperimentController < handle
             end
             obj.iteration = obj.iteration + 1;
             if obj.monitor
-                disp([obj.iteration length(obj.chartStatisticsDetail)]); 
+%                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
             end
         end
         function continueHeadDirectionSystem(obj)
