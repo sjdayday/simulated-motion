@@ -45,6 +45,18 @@ classdef GridChartNetworkTest < AbstractTest
                 IsEqualTo(verticalNegative, 'Within', RelativeTolerance(.00000001)));         
         end
         function testWeightInputCallsHorizontalAndVerticalWeights(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            gridNet = GridChartNetwork(6,5); 
+            gridNet.motionInputWeights = 1; 
+            gridNet.buildNetwork();
+            gridNet.step();             
+            squaredPairwiseDists = gridNet.squaredPairwiseDists; 
+            gridNet.step(); 
+%             assertEqual(gridNet.squaredPairwiseDists, squaredPairwiseDists); 
+            testCase.assertThat(gridNet.squaredPairwiseDists, ...
+                IsEqualTo(squaredPairwiseDists, 'Within', RelativeTolerance(.00000001)));         
+            
            % assert base weights are same after subsequent calls  
         end
         function testWeightOffset(testCase)
