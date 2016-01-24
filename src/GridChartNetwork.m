@@ -20,6 +20,15 @@ classdef GridChartNetwork < handle
         peakSynapticStrength
         shiftInhibitoryTail
         normalizedWeight
+        positiveHorizontalWeights
+        negativeHorizontalWeights
+        positiveVerticalWeights
+        negativeVerticalWeights
+        horizonalWeightInputVector
+        verticalWeightInputVector
+        maxMotionWeight
+        sigmaMotionWeight
+        motionWeightOffset
         dt
         % stabilizationTime 
         velocity
@@ -71,9 +80,19 @@ classdef GridChartNetwork < handle
             obj.firstPlot = 1; % first call to plot opens the figure
 %             obj.gh = [];  % override 
             obj.time = 0; % time step 
+            obj.maxMotionWeight = 1; 
+            obj.sigmaMotionWeight = 2; 
+            obj.horizonalWeightInputVector = obj.maxMotionWeight* ...
+                (normpdf(0:obj.nX-1,0,obj.sigmaMotionWeight)+ ...
+                normpdf(0:obj.nX-1,obj.nX,obj.sigmaMotionWeight));
+            obj.verticalWeightInputVector = obj.maxMotionWeight* ...
+                (normpdf(0:obj.nY-1,0,obj.sigmaMotionWeight)+ ...
+                normpdf(0:obj.nY-1,obj.nX,obj.sigmaMotionWeight));
+            obj.motionWeightOffset = 1; 
             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
 %             obj.AhistAll = zeros(1000, obj.nCells); 
+
         end
         function buildNetwork(obj)
             % A--activation of each cell
@@ -122,7 +141,37 @@ classdef GridChartNetwork < handle
             obj.iX = reshape(ix,1,[]);
             obj.jY = reshape(jy,1,[]);
             obj.iY = reshape(iy,1,[]);
-            obj.weights = ones(obj.nCells); % W          
+            obj.weights = ones(obj.nCells); % W 
+            
+%                     positiveHorizontalWeights
+%         negativeHorizontalWeights
+%         positiveVerticalWeights
+%         negativeVerticalWeights
+%         horizonalWeightInputVector
+%         verticalWeightInputVector
+%         maxMotionWeight
+%         sigmaMotionWeight
+            [obj.positiveHorizontalWeights, obj.negativeHorizontalWeights] = ... 
+                buildMotionWeights(obj, obj.horizonalWeightInputVector);
+
+%             buildMotionWeights(obj, obj.positiveHorizontalWeights, ... 
+%                 obj.negativeHorizontalWeights, obj.horizonalWeightInputVector);
+            % negative weights first because after transposition,
+            % "increasing" means moving the row to the left (negative)
+%             buildMotionWeights(obj, obj.negativeVerticalWeights, ... 
+%                 obj.positiveVerticalWeights, obj.verticalWeightInputVector);
+            [obj.negativeVerticalWeights, obj.positiveVerticalWeights] = ...
+                buildMotionWeights(obj, obj.verticalWeightInputVector);
+        end
+        function [positiveWeights, negativeWeights] = buildMotionWeights(obj, inputVector)
+            positiveWeights = toeplitz(inputVector); 
+            negativeWeights = positiveWeights ; 
+            positiveWeights = ... 
+                [positiveWeights((1+obj.motionWeightOffset):end,:); ...
+                positiveWeights(1:obj.motionWeightOffset,:)];
+            negativeWeights = ... 
+                [negativeWeights((end-obj.motionWeightOffset+1):end,:); ...
+                negativeWeights(1:end-obj.motionWeightOffset,:)];  
         end
         function loadTrajectory(obj)
           load 'data/HaftingTraj_centimeters_seconds.mat' pos;  
@@ -177,6 +226,10 @@ classdef GridChartNetwork < handle
               squaredPairwiseDists = min(squaredPairwiseDists);
               squaredPairwiseDists = reshape(squaredPairwiseDists,obj.nCells,obj.nCells)';
 
+              
+%               clockwiseInput =
+%               obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights);
+%               % from HDS
               % Weights have an excitatory center that peaks at 
               % I-T (peakSynapticStrength-shiftInhibitoryTail) and if T>0, the
               % weights are inhibitory for sufficiently high distances; specifically,
