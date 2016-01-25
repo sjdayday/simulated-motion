@@ -85,11 +85,11 @@ classdef GridChartNetwork < handle
             obj.maxMotionWeight = 1; 
             obj.sigmaMotionWeight = 2; 
             obj.horizonalWeightInputVector = obj.maxMotionWeight* ...
-                (normpdf(0:obj.nX-1,0,obj.sigmaMotionWeight)+ ...
-                normpdf(0:obj.nX-1,obj.nX,obj.sigmaMotionWeight));
-            obj.verticalWeightInputVector = obj.maxMotionWeight* ...
                 (normpdf(0:obj.nY-1,0,obj.sigmaMotionWeight)+ ...
                 normpdf(0:obj.nY-1,obj.nX,obj.sigmaMotionWeight));
+            obj.verticalWeightInputVector = obj.maxMotionWeight* ...
+                (normpdf(0:obj.nX-1,0,obj.sigmaMotionWeight)+ ...
+                normpdf(0:obj.nX-1,obj.nX,obj.sigmaMotionWeight));
             obj.motionWeightOffset = 1; 
             obj.motionInputWeights = 0; 
             obj.squaredPairwiseDists = []; 
@@ -254,16 +254,72 @@ classdef GridChartNetwork < handle
             end
 
         end
-        function  step(obj)
-              obj.time = obj.time+1;
-              obj.velocity = obj.velocities(:,obj.time); % m/s
-              %% Generate new weight matrix for current velocity
+        function horizontalInput = calculateHorizontalInput(obj)
+            % build the input one row at a time; more efficient
+            % suggestions welcomed!
+            activationMatrix = reshape(obj.activation,obj.nX,obj.nY);
+            horizontalInput = zeros(obj.nX,obj.nY); 
+            horizontalVelocity = obj.velocity(1,1); 
+            if horizontalVelocity >= 0 
+                horizontalWeights = obj.positiveHorizontalWeights;
+            else
+                horizontalWeights = obj.negativeHorizontalWeights;
+            end
+            for ii = 1:obj.nY
+                horizontalInput(ii,:) = activationMatrix(ii,:) * ...
+                    abs(horizontalVelocity) * horizontalWeights;
+            end
+        end
+        function verticalInput = calculateVerticalInput(obj)
+            % transpose so that vertical changes processed by row
+            activationMatrix = reshape(obj.activation,obj.nX,obj.nY);
+            transposedActivation = activationMatrix'; 
+            verticalInput = zeros(obj.nY,obj.nX); 
+            verticalVelocity = obj.velocity(2,1); 
+            if verticalVelocity >= 0 
+                verticalWeights = obj.positiveVerticalWeights;
+            else
+                verticalWeights = obj.negativeVerticalWeights;
+            end
+            for ii = 1:obj.nY
+                verticalInput(ii,:) = transposedActivation(ii,:) * ...
+                    abs(verticalVelocity) * verticalWeights;
+            end
+            verticalInput = verticalInput'; 
+%             build the shifted matrix one row at a time: 
+% aa = [0 0 0 1 0 0 0 1 2 1 0 1 2 3 2 0 0 1 2 1 0 0 0 1 0];
+% bb = reshape(aa,5,5)
+% ww = [0 1 2 1 0; 0 0 1 2 1; 1 0 0 1 2; 2 1 0 0 1; 1 2 1 0 0];
+% ww
+% bb
+% zz = zeros(5)
+% zz(1,:) = bb(1,:) * ww;
+% zz(2,:) = bb(2,:) * ww;
+% zz(3,:) = bb(3,:) * ww;
+% zz(4,:) = bb(4,:) * ww;
+% zz(5,:) = bb(5,:) * ww;
+% bbt = bb?
+% zz = zeros(5)
+% zz(1,:) = bbt(1,:) * ww;
+% zz(2,:) = bbt(2,:) * ww;
+% zz(3,:) = bbt(3,:) * ww;
+% zz(4,:) = bbt(4,:) * ww;
+% zz(5,:) = bbt(5,:) * ww;
+% zz?
 
+        end
+        function buildVelocity(obj)
+              obj.velocity = obj.velocities(:,obj.time); % m/s            
               % to change the grid orientation, this model rotates the velocity input
               obj.velocity = obj.directionInput*obj.velocity;
+        end
+        function  step(obj)
+            obj.time = obj.time+1;
+            buildVelocity(obj);
+            %% Generate new weight matrix for current velocity
 
-
-              buildSquaredPairwiseDists(obj);
+            buildSquaredPairwiseDists(obj);
+        
 %               clockwiseInput =
 %               obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights);
 %               % from HDS
@@ -271,11 +327,19 @@ classdef GridChartNetwork < handle
               % I-T (peakSynapticStrength-shiftInhibitoryTail) and if T>0, the
               % weights are inhibitory for sufficiently high distances; specifically,
               % for distance > sigma*sqrt(-log(T/I)).
-              obj.weights = obj.peakSynapticStrength * ... 
-                  exp(-obj.squaredPairwiseDists/obj.weightStdDev^2) - ... 
-                  obj.shiftInhibitoryTail;
-              
-              synapticInput = obj.activation*obj.weights';
+              % self-activation
+%             activationFunction(obj); 
+%             clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
+%             counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
+%             featureInput = obj.featuresDetected * obj.featureWeights; 
+%             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
+%                 clockwiseInput + counterClockwiseInput + featureInput; 
+             
+            obj.weights = obj.peakSynapticStrength * ... 
+            exp(-obj.squaredPairwiseDists/obj.weightStdDev^2) - ... 
+            obj.shiftInhibitoryTail;
+
+            synapticInput = obj.activation*obj.weights';
 
               % Activity based on the synaptic input.
               % Notice synapticInput/sum(activation) is equivalent to 
@@ -285,15 +349,15 @@ classdef GridChartNetwork < handle
               % the full synaptic activity. normalizedWeight is between 0 and 1 and weights
               % whether the input is completely normalized (normalizedWeight=1) or completely
               % "raw" or unnormalized (normalizedWeight=0).
-              obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
-                  obj.normalizedWeight*(synapticInput/sum(obj.activation));
+            obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
+              obj.normalizedWeight*(synapticInput/sum(obj.activation));
 
               % Save activity of one cell for nostalgia's sake
 %               obj.Ahist(obj.time) = obj.activation(1,1);
 %               obj.AhistAll(obj.time,:) = obj.activation; 
               % Zero out negative activities
-              obj.activation(obj.activation<0) = 0;
-              saveStatistics(obj); 
+            obj.activation(obj.activation<0) = 0;
+            saveStatistics(obj); 
         end
 
         function saveStatistics(obj)
