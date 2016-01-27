@@ -85,11 +85,11 @@ classdef GridChartNetwork < handle
             obj.maxMotionWeight = 1; 
             obj.sigmaMotionWeight = 2; 
             obj.horizonalWeightInputVector = obj.maxMotionWeight* ...
-                (normpdf(0:obj.nY-1,0,obj.sigmaMotionWeight)+ ...
-                normpdf(0:obj.nY-1,obj.nX,obj.sigmaMotionWeight));
-            obj.verticalWeightInputVector = obj.maxMotionWeight* ...
                 (normpdf(0:obj.nX-1,0,obj.sigmaMotionWeight)+ ...
                 normpdf(0:obj.nX-1,obj.nX,obj.sigmaMotionWeight));
+            obj.verticalWeightInputVector = obj.maxMotionWeight* ...
+                (normpdf(0:obj.nY-1,0,obj.sigmaMotionWeight)+ ...
+                normpdf(0:obj.nY-1,obj.nY,obj.sigmaMotionWeight));
             obj.motionWeightOffset = 1; 
             obj.motionInputWeights = 0; 
             obj.squaredPairwiseDists = []; 
@@ -257,8 +257,8 @@ classdef GridChartNetwork < handle
         function horizontalInput = calculateHorizontalInput(obj)
             % build the input one row at a time; more efficient
             % suggestions welcomed!
-            activationMatrix = reshape(obj.activation,obj.nX,obj.nY);
-            horizontalInput = zeros(obj.nX,obj.nY); 
+            activationMatrix = reshape(obj.activation,obj.nY,obj.nX);
+            horizontalInput = zeros(obj.nY,obj.nX); 
             horizontalVelocity = obj.velocity(1,1); 
             if horizontalVelocity >= 0 
                 horizontalWeights = obj.positiveHorizontalWeights;
@@ -272,41 +272,20 @@ classdef GridChartNetwork < handle
         end
         function verticalInput = calculateVerticalInput(obj)
             % transpose so that vertical changes processed by row
-            activationMatrix = reshape(obj.activation,obj.nX,obj.nY);
+            activationMatrix = reshape(obj.activation,obj.nY,obj.nX);
             transposedActivation = activationMatrix'; 
-            verticalInput = zeros(obj.nY,obj.nX); 
+            verticalInput = zeros(obj.nX,obj.nY); 
             verticalVelocity = obj.velocity(2,1); 
             if verticalVelocity >= 0 
                 verticalWeights = obj.positiveVerticalWeights;
             else
                 verticalWeights = obj.negativeVerticalWeights;
             end
-            for ii = 1:obj.nY
+            for ii = 1:obj.nX
                 verticalInput(ii,:) = transposedActivation(ii,:) * ...
                     abs(verticalVelocity) * verticalWeights;
             end
             verticalInput = verticalInput'; 
-%             build the shifted matrix one row at a time: 
-% aa = [0 0 0 1 0 0 0 1 2 1 0 1 2 3 2 0 0 1 2 1 0 0 0 1 0];
-% bb = reshape(aa,5,5)
-% ww = [0 1 2 1 0; 0 0 1 2 1; 1 0 0 1 2; 2 1 0 0 1; 1 2 1 0 0];
-% ww
-% bb
-% zz = zeros(5)
-% zz(1,:) = bb(1,:) * ww;
-% zz(2,:) = bb(2,:) * ww;
-% zz(3,:) = bb(3,:) * ww;
-% zz(4,:) = bb(4,:) * ww;
-% zz(5,:) = bb(5,:) * ww;
-% bbt = bb?
-% zz = zeros(5)
-% zz(1,:) = bbt(1,:) * ww;
-% zz(2,:) = bbt(2,:) * ww;
-% zz(3,:) = bbt(3,:) * ww;
-% zz(4,:) = bbt(4,:) * ww;
-% zz(5,:) = bbt(5,:) * ww;
-% zz?
-
         end
         function buildVelocity(obj)
               obj.velocity = obj.velocities(:,obj.time); % m/s            
@@ -340,7 +319,16 @@ classdef GridChartNetwork < handle
             obj.shiftInhibitoryTail;
 
             synapticInput = obj.activation*obj.weights';
-
+            
+            if obj.motionInputWeights == true
+                horizontalInput = reshape(calculateHorizontalInput(obj), ...
+                    1,obj.nCells); 
+                verticalInput = reshape(calculateVerticalInput(obj), ...
+                    1,obj.nCells); 
+                synapticInput = synapticInput + horizontalInput + ...
+                    verticalInput;
+            end
+            
               % Activity based on the synaptic input.
               % Notice synapticInput/sum(activation) is equivalent to 
               % (activation/sum(activation))*weights', so the second
