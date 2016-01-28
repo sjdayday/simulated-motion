@@ -195,5 +195,41 @@ classdef GridChartNetworkTest < AbstractTest
 %                 end
 %             end
 %         end
+        function testCreateNetwork(testCase)
+            h = figure; 
+            colsp = 3;
+            rowsp = 2;  
+            gh = gobjects(rowsp,colsp);
+            rowOffset = 0; 
+            for kk = 1:rowsp
+                for ll = 1:colsp
+                    indPlot = ll+(rowOffset * colsp);
+%                     disp([kk,ll,indPlot]); 
+                    gh(kk,ll) = subplot(colsp,rowsp,indPlot); 
+                end
+                rowOffset = rowOffset + 1; 
+            end
+            network = GridChartNetwork(6,5);
+            network.h = h; 
+            network.gh = gh; 
+            network2 = GridChartNetwork(6,5);
+            network2.h = h; 
+            network2.gh = gh;  
+            network2.motionInputWeights = 1;
+%             network2.inputDirectionBias = pi/4; 
+            network2.buildNetwork(); 
+            for ii = 1:100
+                for jj = 1:10
+                    network.step();
+                    network2.step();
+                    if jj == 10
+                        figure(h);
+                        network.plotAll(1); 
+                        network2.plotAll(2); 
+                        drawnow; 
+                    end
+                end
+            end
+        end
     end
 end

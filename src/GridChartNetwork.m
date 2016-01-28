@@ -325,8 +325,9 @@ classdef GridChartNetwork < handle
                     1,obj.nCells); 
                 verticalInput = reshape(calculateVerticalInput(obj), ...
                     1,obj.nCells); 
-                synapticInput = synapticInput + horizontalInput + ...
-                    verticalInput;
+                disp([max(synapticInput) max(horizontalInput) max(verticalInput)]);
+                synapticInput = synapticInput + horizontalInput*1000 + ...
+                    verticalInput*1000;
             end
             
               % Activity based on the synaptic input.
