@@ -5,41 +5,41 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.nX, 6, '6 cols'); 
             testCase.assertEqual(gridNet.nY, 5, '5 rows'); 
         end
-        function testPositiveAndNegativeMotionWeights(testCase)
-            import matlab.unittest.constraints.IsEqualTo
-            import matlab.unittest.constraints.RelativeTolerance
-            gridNet = GridChartNetwork(6,5); 
-            gridNet.buildNetwork();
-            testCase.assertEqual(length(gridNet.horizonalWeightInputVector), 6, ...
-                'weights operate row at a time, until/unless I figure out how to process 5X6 matrix in one pass');
-            testCase.assertEqual(length(gridNet.verticalWeightInputVector), 5);
-            testCase.assertEqual(size(gridNet.positiveHorizontalWeights), [6 6 ]);
-            testCase.assertEqual(size(gridNet.negativeHorizontalWeights), [6 6]);
-            testCase.assertEqual(size(gridNet.positiveVerticalWeights), [5 5]);
-            testCase.assertEqual(size(gridNet.negativeVerticalWeights), [5 5]);
-            % assumes row at a time processing
-%             horizontalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];            
-            horizontalPositive = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
-            testCase.assertThat(gridNet.positiveHorizontalWeights(1,:), ...
-                IsEqualTo(horizontalPositive, 'Within', RelativeTolerance(.0000000001)));         
-%             horizontalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-            horizontalNegative = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-            testCase.assertThat(gridNet.negativeHorizontalWeights(1,:), ...
-                IsEqualTo(horizontalNegative, 'Within', RelativeTolerance(.0000000001)));         
-            % vertical processing, after transposition, implies shift
-            % to the left to make numbers be more positive after transpose back 
-%             verticalPositive = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-            verticalPositive = [0.203028146638744   0.185744160092518   0.185744160092518   0.203028146638744   0.208235290447501];
-
-%             verticalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];
-            testCase.assertThat(gridNet.positiveVerticalWeights(1,:), ...
-                IsEqualTo(verticalPositive, 'Within', RelativeTolerance(.00000001)));         
-%             verticalNegative = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
-            verticalNegative = [0.203028146638744   0.208235290447501 0.203028146638744   0.185744160092518   0.185744160092518];
-%             verticalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-            testCase.assertThat(gridNet.negativeVerticalWeights(1,:), ...
-                IsEqualTo(verticalNegative, 'Within', RelativeTolerance(.00000001)));         
-        end
+%         function testPositiveAndNegativeMotionWeights(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+%             gridNet = GridChartNetwork(6,5); 
+%             gridNet.buildNetwork();
+%             testCase.assertEqual(length(gridNet.horizonalWeightInputVector), 6, ...
+%                 'weights operate row at a time, until/unless I figure out how to process 5X6 matrix in one pass');
+%             testCase.assertEqual(length(gridNet.verticalWeightInputVector), 5);
+%             testCase.assertEqual(size(gridNet.positiveHorizontalWeights), [6 6 ]);
+%             testCase.assertEqual(size(gridNet.negativeHorizontalWeights), [6 6]);
+%             testCase.assertEqual(size(gridNet.positiveVerticalWeights), [5 5]);
+%             testCase.assertEqual(size(gridNet.negativeVerticalWeights), [5 5]);
+%             % assumes row at a time processing
+% %             horizontalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];            
+%             horizontalPositive = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
+%             testCase.assertThat(gridNet.positiveHorizontalWeights(1,:), ...
+%                 IsEqualTo(horizontalPositive, 'Within', RelativeTolerance(.0000000001)));         
+% %             horizontalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
+%             horizontalNegative = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
+%             testCase.assertThat(gridNet.negativeHorizontalWeights(1,:), ...
+%                 IsEqualTo(horizontalNegative, 'Within', RelativeTolerance(.0000000001)));         
+%             % vertical processing, after transposition, implies shift
+%             % to the left to make numbers be more positive after transpose back 
+% %             verticalPositive = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
+%             verticalPositive = [0.203028146638744   0.185744160092518   0.185744160092518   0.203028146638744   0.208235290447501];
+% 
+% %             verticalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];
+%             testCase.assertThat(gridNet.positiveVerticalWeights(1,:), ...
+%                 IsEqualTo(verticalPositive, 'Within', RelativeTolerance(.00000001)));         
+% %             verticalNegative = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
+%             verticalNegative = [0.203028146638744   0.208235290447501 0.203028146638744   0.185744160092518   0.185744160092518];
+% %             verticalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
+%             testCase.assertThat(gridNet.negativeVerticalWeights(1,:), ...
+%                 IsEqualTo(verticalNegative, 'Within', RelativeTolerance(.00000001)));         
+%         end
         function testMotionInputsLeavePairwiseDistancesConstant(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -52,71 +52,71 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertThat(gridNet.squaredPairwiseDists, ...
                 IsEqualTo(squaredPairwiseDists, 'Within', RelativeTolerance(.00000001)));         
         end
-        function testBuildsHorizontalMotionSynapticInput(testCase)
-            import matlab.unittest.constraints.IsEqualTo
-            import matlab.unittest.constraints.RelativeTolerance
-            gridNet = GridChartNetwork(6,5); 
-            gridNet.motionInputWeights = 1; 
-            gridNet.buildNetwork();
-            gridNet.activation = ...
-                [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
-            % looks like:
-%             0     0     0     0     0     0
-%             0     0     0     1     0     0
-%             0     0     1     2     1     0
-%             0     0     0     1     0     0
-%             0     0     0     0     0     0
-            gridNet.velocity = [ 0.3; 0.2]; 
-            % shifted right
-            horizontalInput = ...
-                   [0   0   0   0   0   0;
-                    0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
-                    0.183082830098147   0.166499064709234   0.183082830098147   0.215778461154216   0.231890326821372   0.215778461154216;
-                    0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
-                    0   0   0   0   0   0; ];
-            testCase.assertThat(gridNet.calculateHorizontalInput(), ...
-            IsEqualTo(horizontalInput, 'Within', RelativeTolerance(.00000001)));         
-        end
-        function testBuildsVerticalMotionSynapticInput(testCase)
-            import matlab.unittest.constraints.IsEqualTo
-            import matlab.unittest.constraints.RelativeTolerance
-            gridNet = GridChartNetwork(6,5); 
-            gridNet.motionInputWeights = 1; 
-            gridNet.buildNetwork();
-            gridNet.activation = ...
-                [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
-                        % looks like:
-%             0     0     0     0     0     0
-%             0     0     0     1     0     0
-%             0     0     1     2     1     0
-%             0     0     0     1     0     0
-%             0     0     0     0     0     0
-
-            gridNet.velocity = [ 0.3; 0.2]; 
-            % shifted up
-            verticalInput = ...
-              [0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0; 
-               0                   0   0.041647058089500   0.164505374834498   0.041647058089500                   0;
-               0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0;
-               0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0;
-               0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0];            
-           testCase.assertThat(gridNet.calculateVerticalInput(), ...
-                IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
-            reshapeInput = reshape(verticalInput,1,gridNet.nCells);
-            verticalInputReshaped = reshape(reshapeInput,gridNet.nY,gridNet.nX); 
-            testCase.assertThat(verticalInputReshaped, ...
-                IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
-            
-        end
-        function testWeightOffset(testCase)
-            
-        end
-        function testWeightOrientation(testCase)
-            
-        end
-        function testWeightGain(testCase)
-            
-        end
+%         function testBuildsHorizontalMotionSynapticInput(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+%             gridNet = GridChartNetwork(6,5); 
+%             gridNet.motionInputWeights = 1; 
+%             gridNet.buildNetwork();
+%             gridNet.activation = ...
+%                 [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
+%             % looks like:
+% %             0     0     0     0     0     0
+% %             0     0     0     1     0     0
+% %             0     0     1     2     1     0
+% %             0     0     0     1     0     0
+% %             0     0     0     0     0     0
+%             gridNet.velocity = [ 0.3; 0.2]; 
+%             % shifted right
+%             horizontalInput = ...
+%                    [0   0   0   0   0   0;
+%                     0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
+%                     0.183082830098147   0.166499064709234   0.183082830098147   0.215778461154216   0.231890326821372   0.215778461154216;
+%                     0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
+%                     0   0   0   0   0   0; ];
+%             testCase.assertThat(gridNet.calculateHorizontalInput(), ...
+%             IsEqualTo(horizontalInput, 'Within', RelativeTolerance(.00000001)));         
+%         end
+%         function testBuildsVerticalMotionSynapticInput(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+%             gridNet = GridChartNetwork(6,5); 
+%             gridNet.motionInputWeights = 1; 
+%             gridNet.buildNetwork();
+%             gridNet.activation = ...
+%                 [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
+%                         % looks like:
+% %             0     0     0     0     0     0
+% %             0     0     0     1     0     0
+% %             0     0     1     2     1     0
+% %             0     0     0     1     0     0
+% %             0     0     0     0     0     0
+% 
+%             gridNet.velocity = [ 0.3; 0.2]; 
+%             % shifted up
+%             verticalInput = ...
+%               [0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0; 
+%                0                   0   0.041647058089500   0.164505374834498   0.041647058089500                   0;
+%                0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0;
+%                0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0;
+%                0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0];            
+%            testCase.assertThat(gridNet.calculateVerticalInput(), ...
+%                 IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
+%             reshapeInput = reshape(verticalInput,1,gridNet.nCells);
+%             verticalInputReshaped = reshape(reshapeInput,gridNet.nY,gridNet.nX); 
+%             testCase.assertThat(verticalInputReshaped, ...
+%                 IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
+%             
+%         end
+%         function testWeightOffset(testCase)
+%             
+%         end
+%         function testWeightOrientation(testCase)
+%             
+%         end
+%         function testWeightGain(testCase)
+%             
+%         end
 %         function testSingle(testCase)
 %             gridNet = GridChartNetwork(6,5);
 %             gridNet.motionInputWeights = 1;
