@@ -29,6 +29,8 @@ classdef GridChartNetwork < handle
         maxMotionWeight
         sigmaMotionWeight
         motionWeightOffset
+        horizontalInput
+        verticalInput
         dt
         % stabilizationTime 
         velocity
@@ -282,10 +284,14 @@ classdef GridChartNetwork < handle
                 verticalWeights = obj.negativeVerticalWeights;
             end
             for ii = 1:obj.nX
-                verticalInput(ii,:) = transposedActivation(ii,:) * ...
+                verticalTemp = transposedActivation(ii,:) * ...
                     abs(verticalVelocity) * verticalWeights;
+                verticalInput(ii,:) = verticalTemp;
+                
+%                 verticalInput(ii,:) = transposedActivation(ii,:) * ...
+%                     abs(verticalVelocity) * verticalWeights;
             end
-            verticalInput = verticalInput'; 
+%             verticalInput = verticalInput'; 
         end
         function buildVelocity(obj)
               obj.velocity = obj.velocities(:,obj.time); % m/s            
@@ -321,13 +327,32 @@ classdef GridChartNetwork < handle
             synapticInput = obj.activation*obj.weights';
             
             if obj.motionInputWeights == true
-                horizontalInput = reshape(calculateHorizontalInput(obj), ...
-                    1,obj.nCells); 
-                verticalInput = reshape(calculateVerticalInput(obj), ...
-                    1,obj.nCells); 
-                disp([max(synapticInput) max(horizontalInput) max(verticalInput)]);
-                synapticInput = synapticInput + horizontalInput*1000 + ...
-                    verticalInput*1000;
+                synapticInputHorizontalShape = reshape(synapticInput,obj.nY,obj.nX); 
+                obj.horizontalInput = calculateHorizontalInput(obj)*2000; 
+                synapticInputHorizontal = synapticInputHorizontalShape + ...
+                    obj.horizontalInput;
+                synapticInputVerticalShape = synapticInputHorizontal'; 
+                obj.verticalInput = calculateVerticalInput(obj)*2000; 
+                synapticInputHorizontalVertical = synapticInputVerticalShape + ...
+                    obj.verticalInput;
+                synapticInputNormal = reshape(synapticInputHorizontalVertical',1,obj.nCells);
+                
+                obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
+                  obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
+                
+%                 obj.horizontalInput = reshape(calculateHorizontalInput(obj), ...
+%                     1,obj.nCells)*2000; 
+%                 obj.verticalInput = reshape(calculateVerticalInput(obj), ...
+%                     1,obj.nCells)*2000; 
+%                 disp([max(synapticInput) max(obj.horizontalInput) max(obj.verticalInput)]);
+%                 synapticInput = synapticInput + obj.horizontalInput;
+% %                     obj.verticalInput;
+%                 synapticInput = synapticInput + obj.horizontalInput + ...
+%                     obj.verticalInput;
+            else
+                obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
+                  obj.normalizedWeight*(synapticInput/sum(obj.activation));
+                
             end
             
               % Activity based on the synaptic input.
@@ -338,8 +363,8 @@ classdef GridChartNetwork < handle
               % the full synaptic activity. normalizedWeight is between 0 and 1 and weights
               % whether the input is completely normalized (normalizedWeight=1) or completely
               % "raw" or unnormalized (normalizedWeight=0).
-            obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
-              obj.normalizedWeight*(synapticInput/sum(obj.activation));
+%             obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
+%               obj.normalizedWeight*(synapticInput/sum(obj.activation));
 
               % Save activity of one cell for nostalgia's sake
 %               obj.Ahist(obj.time) = obj.activation(1,1);
@@ -406,7 +431,16 @@ classdef GridChartNetwork < handle
             subplot(obj.gh(rowIndex,3));
             plotTrajectory(obj)
             drawnow
-        end        
+        end    
+        function plotDetail(obj, rowIndex)
+            figure(obj.h);
+            subplot(obj.gh(rowIndex,2));
+            imagesc(reshape(obj.horizontalInput,obj.nY,obj.nX))
+            title('horizontal input'); 
+            subplot(obj.gh(rowIndex,1));
+            imagesc(reshape(obj.verticalInput,obj.nY,obj.nX))
+            title('vertical input'); 
+        end
         function plot(obj)
             if obj.firstPlot
                 obj.h = figure('color','w');
