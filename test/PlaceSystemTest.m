@@ -2,24 +2,38 @@ classdef PlaceSystemTest < AbstractTest
     methods (Test)
         % testBinaryPerforantInputsStrengthenWeightsOnDirectPath
         function testPlaceSystemCreatedWithDGConnectedToCA3(testCase)
-            outputMecLength = 50; 
-            outputLecLength = 50; 
+            outputMecLength = 10; 
+            outputLecLength = 10; 
             placeSystem = PlaceSystem(outputMecLength, outputLecLength); 
-            testCase.assertEqual(placeSystem.nMEC, 50); 
-            testCase.assertEqual(placeSystem.nLEC, 50); 
-            testCase.assertEqual(placeSystem.nDGInput, 100); 
-            testCase.assertEqual(placeSystem.nCA3, 100);             
+            testCase.assertEqual(placeSystem.nMEC, 10); 
+            testCase.assertEqual(placeSystem.nLEC, 10); 
+            testCase.assertEqual(placeSystem.nDGInput, 20); 
+            testCase.assertEqual(placeSystem.nCA3, 20);
+            MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
+            LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
+            fired = placeSystem.step(MecOutput, LecOutput); 
+            testCase.assertEqual(placeSystem.DGOutput, ...
+             [ 1 1 0 0 1 1 0 1 0 0 0 0 0 0 1 1 0 0 1 0 ]);
+            testCase.assertEqual(fired, ...
+             [ 1 1 0 0 1 1 0 1 0 0 0 0 0 0 1 1 0 0 1 0 ], ...
+              'input orthogonalized through DG, then fired as detonator synapses');
+            testCase.assertEqual(placeSystem.ECOutput, ...
+             [ 1 1 1 1 1 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 ], ...
+              'original MEC + LEC input');         
         end
-%         function testPositiveAndNegativeMotionWeights(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.buildNetwork();
-%             testCase.assertEqual(length(gridNet.horizonalWeightInputVector), 6, ...
-%                 'weights operate row at a time, until/unless I figure out how to process 5X6 matrix in one pass');
-%             testCase.assertEqual(length(gridNet.verticalWeightInputVector), 5);
-%             testCase.assertEqual(size(gridNet.positiveHorizontalWeights), [6 6 ]);
-%             testCase.assertEqual(size(gridNet.negativeHorizontalWeights), [6 6]);
-%             testCase.assertEqual(size(gridNet.positiveVerticalWeights), [5 5]);
+        function testPlaceSystemReturnsCa3OutputsFromFragmentaryEcOutputs(testCase)
+            outputMecLength = 10; 
+            outputLecLength = 10; 
+            placeSystem = PlaceSystem(outputMecLength, outputLecLength); 
+            MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
+            LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
+            fired = placeSystem.step(MecOutput, LecOutput); 
+            Ca3Output = [ 1 1 0 0 1 1 0 1 0 0 0 0 0 0 1 1 0 0 1 0 ]; 
+            testCase.assertEqual(fired, Ca3Output); 
+            MecOutputPartial = [ 1 0 0 1 1 0 0 0 0 0];             
+            LecOutputPartial = [ 0 0 1 0 1 0 0 0 1 0]; 
+            testCase.assertEqual(...
+                placeSystem.read([MecOutputPartial, LecOutputPartial]), Ca3Output); 
+        end
     end
 end
