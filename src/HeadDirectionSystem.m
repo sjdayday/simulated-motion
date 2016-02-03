@@ -122,7 +122,7 @@ classdef HeadDirectionSystem < System
             for ii = 1:length(obj.featuresDetected)
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
             end
-            rrow = obj.featureWeights(30,:);
+%             rrow = obj.featureWeights(30,:);
 %             disp([' ',max(rrow)]); 
 %             disp(find(rrow == max(rrow)));
 %             disp(find(obj.uActivation == max(obj.uActivation)));

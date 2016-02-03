@@ -13,6 +13,7 @@ classdef OrthogonalizingNetwork < handle
         wiringOutput
         network     
         weightType
+        rebuildConnections
     end
     methods
         function obj = OrthogonalizingNetwork(synapses, neurons)
@@ -21,12 +22,14 @@ classdef OrthogonalizingNetwork < handle
             obj.weightType = 'binary';  % weights are 0 or 1
             obj.wiringInput = OrthogonalizingWiring([synapses neurons]); 
             obj.wiringOutput = OrthogonalizingWiring([neurons synapses]); 
+            obj.rebuildConnections = false;
         end
         % buildNetwork must be called after constructor is called and any 
         % properties are overridden. 
         function buildNetwork(obj)
             obj.network = zeros(obj.nSynapses,obj.nNeurons); 
-%             buildWeightFunction(obj);
+            obj.wiringInput.rebuildConnections = obj.rebuildConnections; 
+            obj.wiringOutput.rebuildConnections = obj.rebuildConnections; %             buildWeightFunction(obj);
         end
         function fired = step(obj, input)
             verifyInputs(obj,input); 

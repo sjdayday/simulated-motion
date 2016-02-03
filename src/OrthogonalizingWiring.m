@@ -15,11 +15,13 @@ classdef OrthogonalizingWiring < Wiring
         inputIndices
         connnectionListLength
         inputLength
+        rebuildConnections
     end
     methods
         function obj = OrthogonalizingWiring(dimensions)
            obj = obj@Wiring(dimensions); 
            obj.seed = 0;
+           obj.rebuildConnections = false; 
         end
         function buildConnectionList(obj)
            obj.connnectionListLength = obj.dimensions(1,2); 
@@ -37,7 +39,9 @@ classdef OrthogonalizingWiring < Wiring
         end
         function output = connect(obj, input)
             obj.inputIndices = find(input == 1);
-            obj.buildConnectionList();            
+            if obj.rebuildConnections 
+                obj.buildConnectionList();
+            end
             output = zeros(1,obj.connnectionListLength); 
             for ii = obj.inputIndices
                 output(1,obj.connectionList(1,ii)) = 1;  

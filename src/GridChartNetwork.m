@@ -67,7 +67,8 @@ classdef GridChartNetwork < handle
             obj.nY = nY; % number of cells in y direction
             obj.nCells = nX*nY;
             % grid spacing is approx 1.02 - 0.48*log2(alpha), pg 236
-            obj.inputGain = 30; % alpha
+%             obj.inputGain = 30; % alpha
+            obj.inputGain = 1500; % alpha            
             obj.inputDirectionBias = 0; % beta--(grid orientation), radians
             obj.weightStdDev = 0.24; % 0.24 sigma--exponential weight std. deviation
             obj.peakSynapticStrength = 0.3; % 0.3 I 
@@ -288,14 +289,14 @@ classdef GridChartNetwork < handle
             synapticInput = obj.activation*obj.weights';
             
             if obj.motionInputWeights == true
-                obj.horizontalInput = calculateHorizontalInput(obj)*1000; 
+                obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
                 synapticInputHorizontal = synapticInput + ...
                     obj.horizontalInput;
                 synapticInputHorizontalShape = ... 
                     reshape(synapticInputHorizontal,obj.nY,obj.nX); 
                 synapticInputVerticalShape = synapticInputHorizontalShape'; 
                 synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
-                obj.verticalInput = calculateVerticalInput(obj)*1000; 
+                obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
                 synapticInputHorizontalVertical = synapticInputVertical + ...
                     obj.verticalInput;
                 synapticInputVertical2 = ... 
@@ -379,11 +380,13 @@ classdef GridChartNetwork < handle
             subplot(obj.gh(rowIndex,2));
             imagesc(reshape(obj.horizontalInput,obj.nY,obj.nX))
             title('horizontal input'); 
+            axis square
             set(gca,'ydir','normal') 
             subplot(obj.gh(rowIndex,1));
-            imagesc(reshape(obj.verticalInput,obj.nY,obj.nX))
+            imagesc(reshape(obj.verticalInput,obj.nX,obj.nY))
             set(gca,'ydir','normal') 
             title('vertical input'); 
+            axis square
         end
         function plot(obj)
             if obj.firstPlot

@@ -135,6 +135,7 @@ classdef GridChartNetworkTest < AbstractTest
 %                 end
 %             end
 %         end
+
 %         function testCreateNetwork(testCase)
 %             h = figure; 
 %             colsp = 3;
@@ -195,44 +196,66 @@ classdef GridChartNetworkTest < AbstractTest
 %                 end
 %             end
 %         end
-        function testCreateNetwork(testCase)
-            h = figure; 
-            colsp = 3;
-            rowsp = 3;  
-            gh = gobjects(rowsp,colsp);
-            rowOffset = 0; 
-            for kk = 1:rowsp
-                for ll = 1:colsp
-                    indPlot = ll+(rowOffset * colsp);
-%                     disp([kk,ll,indPlot]); 
-                    gh(kk,ll) = subplot(rowsp,colsp, indPlot); 
-                end
-                rowOffset = rowOffset + 1; 
-            end
-            network = GridChartNetwork(10,9);
-            network.h = h; 
-            network.gh = gh; 
-            network2 = GridChartNetwork(10,9);
-            network2.h = h; 
-            network2.gh = gh;  
-            network2.motionInputWeights = 1;
-            network2.motionWeightOffset = 2; 
-%             network2.inputDirectionBias = pi/4; 
-            network2.buildNetwork(); 
-            for ii = 1:100
-                for jj = 1:10
-                    network.step();
-                    network2.step();
-                    if jj == 10
-                        figure(h);
-                        network.plotAll(1); 
-                        network2.plotAll(2);
-                        network2.plotDetail(3); 
-                        drawnow; 
-%                         pause(0.2); 
-                    end
-                end
-            end
-        end
+
+%         function testCreateNetwork(testCase)
+%             h = figure; 
+%             colsp = 3;
+%             rowsp = 3;  
+%             gh = gobjects(rowsp,colsp);
+%             rowOffset = 0; 
+%             for kk = 1:rowsp
+%                 for ll = 1:colsp
+%                     indPlot = ll+(rowOffset * colsp);
+% %                     disp([kk,ll,indPlot]); 
+%                     gh(kk,ll) = subplot(rowsp,colsp, indPlot); 
+%                 end
+%                 rowOffset = rowOffset + 1; 
+%             end
+%             network = GridChartNetwork(10,9);
+%             network.h = h; 
+%             network.gh = gh; 
+%             network.inputGain = 30; 
+%             network.buildNetwork();             
+%             network2 = GridChartNetwork(10,9);
+%             network2.h = h; 
+%             network2.gh = gh;  
+%             network2.motionInputWeights = 1;
+%             network2.motionWeightOffset = 4; 
+% %             network2.inputDirectionBias = pi/4; 
+%             network2.buildNetwork(); 
+%             network3 = GridChartNetwork(10,9);
+%             network3.h = h; 
+%             network3.gh = gh;  
+%             network3.motionInputWeights = 1;
+%             network3.inputGain = 2000; 
+%             network3.motionWeightOffset = 4; 
+% %             network3.inputDirectionBias = pi/4; 
+%             network3.buildNetwork(); 
+%             network4 = GridChartNetwork(10,9);
+%             network4.h = h; 
+%             network4.gh = gh;  
+%             network4.motionInputWeights = 1;
+%             network4.motionWeightOffset = 4; 
+%             network4.inputDirectionBias = pi/4; 
+%             network4.buildNetwork(); 
+%             for ii = 1:1000
+%                 for jj = 1:10
+%                     network.step();
+%                     network2.step();
+% %                     network3.step();
+% %                     network4.step();
+%                     if jj == 10
+%                         figure(h);
+%                         network.plotAll(1); 
+%                         network2.plotAll(2);
+%                         network2.plotDetail(3); 
+% %                         network3.plotAll(3);
+% %                         network4.plotAll(5);
+%                         drawnow; 
+% %                         pause(0.2); 
+%                     end
+%                 end
+%             end
+%         end
     end
 end

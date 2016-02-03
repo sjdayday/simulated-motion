@@ -12,10 +12,33 @@ classdef OrthogonalizingNetworkTest < AbstractTest
         end
         function testInputsPropagatedToInternalNetwork(testCase)
             network = createOrthogonalizingNetwork(10,100); 
+            network.rebuildConnections = true; 
+            network.buildNetwork(); 
             input = [1 1 1 1 1 0 0 0 0 0];
             fired = network.step(input); 
             testCase.assertEqual(fired, [1 0 1 0 0 0 0 1 1 1]);             
-            
+            fired2 = network.step(input); 
+            testCase.assertEqual(fired2, [1 0 1 0 0 0 0 1 1 1]);             
+            fired3 = network.step(input); 
+            testCase.assertEqual(fired3, [1 0 1 0 0 0 0 1 1 1]);             
+        end
+        function testSimilarInputsActivateSimilarRandomOutputs(testCase)
+            network = createOrthogonalizingNetwork(10,100); 
+            input = [1 1 1 1 1 0 0 0 0 0];
+            input2 = [1 0 1 1 1 0 0 0 0 0];
+            input3 = [1 1 1 1 1 0 0 0 0 1];
+            inputDifferent = [0 0 0 0 0 1 1 1 1 1];            
+            fired = network.step(input); 
+            testCase.assertEqual(fired, [1 0 0 0 0 0 1 0 1 1]);             
+            fired2 = network.step(input2); 
+            testCase.assertEqual(fired2, [1 0 0 0 0 0 1 0 1 1], ...
+                'some inputs may not be transmitted');             
+            fired3 = network.step(input3); 
+            testCase.assertEqual(fired3, [1 0 0 0 0 1 1 0 1 1], ...
+                'additional input bit just adds to previous input');             
+            firedDifferent = network.step(inputDifferent); 
+            testCase.assertEqual(firedDifferent , [0 1 0 1 0 1 0 0 0 1], ...
+                'different inputs produce different outputs');             
         end
     end
 end
