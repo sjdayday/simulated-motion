@@ -109,7 +109,7 @@ classdef ExperimentController < handle
                load '../rngDefaultSettings';
                rng(rngDefault);    
             end
-            system.buildWeights(); 
+            system.build(); 
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
         end

@@ -82,7 +82,7 @@ classdef HeadDirectionSystem < System
                obj.uActivation(1,60) = 0.8; 
            end
         end
-        function buildWeights(obj)
+        function build(obj)
             for loc=1:obj.nHeadDirectionCells
                 i = (1:obj.nHeadDirectionCells)'; 
                 dis = min(abs(i-loc),obj.nHeadDirectionCells-abs(i-loc));

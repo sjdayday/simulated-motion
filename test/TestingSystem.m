@@ -9,7 +9,7 @@ classdef TestingSystem < System
             obj = obj@System(); 
             obj.testProperty = 2;
         end
-        function buildWeights(obj)
+        function build(obj)
         end
         %% Single time step 
         function  step(obj)

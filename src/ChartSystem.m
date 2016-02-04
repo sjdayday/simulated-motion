@@ -66,7 +66,7 @@ classdef ChartSystem < System
             obj.eventMap(time) = event; 
         end
 
-        function buildWeights(obj)
+        function build(obj)
             obj.location = zeros(obj.totalCells,2); 
             index = 1;
             for ii = 1:obj.nSingleDimensionCells

@@ -26,7 +26,7 @@ classdef System < handle
         end
     end
     methods (Abstract)
-        buildWeights(obj)
+        build(obj)
         %% Single time step 
 %         step(obj)
         plot(obj)

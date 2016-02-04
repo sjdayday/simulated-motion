@@ -30,7 +30,7 @@ classdef Animal < System
             obj.showFeatures = 0; 
             obj.justOriented = 0; 
         end
-        function buildWeights(obj)
+        function build(obj)
            % inherited from System; unused. 
         end
         %% Single time step 
