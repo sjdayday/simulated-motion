@@ -61,11 +61,16 @@ classdef GridChartNetwork < handle
     end
     methods
         function obj = GridChartNetwork(nX, nY)
-            % number of cells in X direction; suggest 10*k, k positive int
-            obj.nX = nX; 
-            % number of cells in Y direction; suggest 9*k 
-            obj.nY = nY; % number of cells in y direction
-            obj.nCells = nX*nY;
+            if nargin < 2
+                obj.nX = 10; 
+                obj.nY = 9; 
+            else
+                % number of cells in X direction; suggest 10*k, k positive int
+                obj.nX = nX; 
+                % number of cells in Y direction; suggest 9*k 
+                obj.nY = nY; % number of cells in y direction
+            end
+            obj.nCells = obj.nX*obj.nY;
             % grid spacing is approx 1.02 - 0.48*log2(alpha), pg 236
 %             obj.inputGain = 30; % alpha
             obj.inputGain = 1500; % alpha            

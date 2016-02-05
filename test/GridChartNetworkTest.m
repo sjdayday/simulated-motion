@@ -5,6 +5,14 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.nX, 6, '6 cols'); 
             testCase.assertEqual(gridNet.nY, 5, '5 rows'); 
         end
+        function testCreateArrayOfGridChartNetwork(testCase)
+            grids(1,3) = GridChartNetwork(6,5); 
+            testCase.assertEqual(grids(1,3).nX, 6, ...
+                'last object in array is initialized with 6,5'); 
+            testCase.assertEqual(grids(1,1).nX, 10, ...
+                'other objects initialized with default 10,9'); 
+        end
+        
 %         function testPositiveAndNegativeMotionWeights(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
 %             import matlab.unittest.constraints.RelativeTolerance

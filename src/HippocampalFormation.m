@@ -9,7 +9,10 @@ classdef HippocampalFormation < System
         nGrids
         nGridOrientations
         nGridGains
+        grids
+        baseGain
         gridSize
+        gridDirectionBiasIncrement
         nFeatures
         distanceUnits
         rewardInput
@@ -26,9 +29,11 @@ classdef HippocampalFormation < System
             obj = obj@System(); 
             obj.nHeadDirectionCells = 12; 
             obj.nGridOrientations = 1; 
+            obj.gridDirectionBiasIncrement = pi/6;
             obj.nGridGains = 1; 
             obj.gridSize = [10,9];
             obj.nFeatures = 1; 
+            obj.baseGain = 1000; 
             obj.distanceUnits = 5; 
             obj.rewardInput = false; 
             obj.reward = []; 
@@ -41,10 +46,28 @@ classdef HippocampalFormation < System
         end
             
         function buildGrids(obj) 
-            obj.nGrids = obj.nGridOrientations + obj.nGridGains - 1; 
-            gridLength = obj.gridSize(1,1) * obj.gridSize(1,2); 
+            obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
+            grids(1,obj.nGrids) = GridChartNetwork();
+            obj.grids = grids; 
+            nX = obj.gridSize(1,1);
+            nY = obj.gridSize(1,2);
+            gridLength = nX * nY; 
             obj.mecOutput = zeros(1,obj.nGrids * gridLength); 
             obj.nMecOutput = length(obj.mecOutput); 
+            gain = obj.baseGain; 
+            index = 0; 
+            for ii = 1:obj.nGridGains
+                bias = 0; 
+                for jj = 1:obj.nGridOrientations
+                    kk = index*obj.nGridOrientations+jj; 
+                    obj.grids(1,kk) = GridChartNetwork(nX, nY); 
+                    obj.grids(1,kk).inputDirectionBias = bias; 
+                    obj.grids(1,kk).inputGain = gain; 
+                    bias = bias + obj.gridDirectionBiasIncrement;
+                end
+                gain = gain * 1.42; 
+                index = index + 1; 
+            end
         end
         function buildLec(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
