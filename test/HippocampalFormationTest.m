@@ -89,25 +89,28 @@ classdef HippocampalFormationTest < AbstractTest
             system.nHeadDirectionCells = 60; 
             system.build();  
             system.headDirectionSystem.pullVelocity = false;  
+            system.step(); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 2); 
+            system.updateAngularVelocity(pi/10); 
+            for ii = 1:10     
+                system.step(); 
+            end
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 57); 
+        end
+        function testLinearVelocityAndOrientationToHorizontalVerticalVelocity(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.build();  
+            system.headDirectionSystem.pullVelocity = false;  
             system.updateAngularVelocity(0); 
             system.step(); 
-%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 0); 
-%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, 0); 
-%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 12); 
-%             system.updateAngularVelocity(pi/10); 
-%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, pi/10);             
-%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 0); 
-%             for ii = 1:3;     
-%                 system.step(); 
-%             end
-%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 4); 
-%             system.updateAngularVelocity(-2*pi/10); 
-%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, 0);             
-%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 2*pi/10); 
-%             for ii = 1:3;     
-%                 system.step(); 
-%             end
-%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 16); 
+            system.step(); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 8); 
+            system.updateLinearVelocity(0.0005); 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0.000334565303179, -0.000371572412738 ], 'Within', RelativeTolerance(.00000000001)));         
         end
     end
 end

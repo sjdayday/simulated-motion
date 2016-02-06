@@ -24,6 +24,8 @@ classdef HippocampalFormation < System
         headDirectionSystem
         featureOutput
         nLecOutput
+        linearVelocity
+        angularVelocity
     end
     methods
         function obj = HippocampalFormation()
@@ -37,8 +39,10 @@ classdef HippocampalFormation < System
             obj.baseGain = 1000; 
             obj.distanceUnits = 5; 
             obj.rewardInput = false; 
-            obj.reward = []; 
-        end
+            obj.reward = [];
+            obj.angularVelocity = 0; 
+            obj.linearVelocity = 0; 
+         end
         function build(obj)
             buildHeadDirectionSystem(obj); 
             buildGrids(obj); 
@@ -100,9 +104,19 @@ classdef HippocampalFormation < System
             end            
         end
         function updateAngularVelocity(obj, velocity)
-            obj.headDirectionSystem.updateAngularVelocity(velocity); 
+            obj.headDirectionSystem.updateAngularVelocity(velocity);
+            obj.angularVelocity = velocity; 
         end
-
+        function updateLinearVelocity(obj, velocity)
+            obj.linearVelocity = velocity; 
+        end
+        function cartesianVelocity =  calculateCartesianVelocity(obj)
+            currentHeadDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
+            radians = (currentHeadDirection/obj.nHeadDirectionCells)*(-2*pi); 
+            x = cos(radians); 
+            y = sin(radians); 
+            cartesianVelocity = [x*obj.linearVelocity, y*obj.linearVelocity]; 
+        end
 %         %% Single time step 
 % %         step(obj)
 %         plot(obj)
