@@ -31,6 +31,8 @@ classdef GridChartNetwork < handle
         dt
         % stabilizationTime 
         velocity
+        externalVelocity
+        currentVelocity
         activation
         watchCell
         nSpatialBins
@@ -93,8 +95,9 @@ classdef GridChartNetwork < handle
                 (normpdf(0:obj.nCells-1,0,obj.sigmaMotionWeight)+ ...
                 normpdf(0:obj.nCells-1,obj.nCells,obj.sigmaMotionWeight));
             obj.motionWeightOffset = 5; 
-            obj.motionInputWeights = 0; 
+            obj.motionInputWeights = false; 
             obj.squaredPairwiseDists = []; 
+            obj.externalVelocity = false;
             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
 %             obj.AhistAll = zeros(1000, obj.nCells); 
@@ -119,7 +122,13 @@ classdef GridChartNetwork < handle
                 sin(obj.inputDirectionBias) ... 
                 cos(obj.inputDirectionBias)]; % R
             buildWeightMatrix(obj);
-            loadTrajectory(obj);
+            if obj.externalVelocity
+                obj.currentVelocity = [0;0]; 
+            else
+                loadTrajectory(obj);
+            end
+            
+
         end
         function buildWeightMatrix(obj) 
             %% Comments from Zilli: 
@@ -270,10 +279,17 @@ classdef GridChartNetwork < handle
             verticalInput = tempActivation * ...
                 abs(verticalVelocity) * verticalWeights;
         end
+        function updateVelocity(obj, xVelocity, yVelocity)
+           obj.currentVelocity = [xVelocity; yVelocity]; 
+        end
         function buildVelocity(obj)
-              obj.velocity = obj.velocities(:,obj.time); % m/s            
-              % to change the grid orientation, this model rotates the velocity input
-              obj.velocity = obj.directionInput*obj.velocity;
+            if obj.externalVelocity
+                obj.velocity = obj.currentVelocity;  
+            else
+                obj.velocity = obj.velocities(:,obj.time); % m/s            
+            end
+            % to change the grid orientation, this model rotates the velocity input
+            obj.velocity = obj.directionInput*obj.velocity;
         end
         function  step(obj)
             obj.time = obj.time+1;

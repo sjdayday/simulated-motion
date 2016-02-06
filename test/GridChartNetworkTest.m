@@ -52,7 +52,7 @@ classdef GridChartNetworkTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             gridNet = GridChartNetwork(6,5); 
-            gridNet.motionInputWeights = 1; 
+            gridNet.motionInputWeights = true; 
             gridNet.buildNetwork();
             gridNet.step();             
             squaredPairwiseDists = gridNet.squaredPairwiseDists; 
@@ -60,6 +60,62 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertThat(gridNet.squaredPairwiseDists, ...
                 IsEqualTo(squaredPairwiseDists, 'Within', RelativeTolerance(.00000001)));         
         end
+        function testVelocityProvidedExternally(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            gridNet = GridChartNetwork(10,9); 
+            gridNet.externalVelocity = true; 
+            gridNet.buildNetwork();
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            gridNet.step(); 
+%             gridNet.plot(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 25); 
+            gridNet.updateVelocity(0.00005, -0.00005); % down & right
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 24, 'slow'); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 32); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 41); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 49); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 48); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 56); 
+            gridNet.updateVelocity(-0.00005, 0); % left only 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 47); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());             
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 47); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 38); 
+            gridNet.step(); 
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 29); 
+            % motion downward to right, remembering that y-axis is low to
+            % high indices:
+            %  9 18 27 36 45 54 63 72 81 90
+            %      *25*  \
+            %        \   *41*  
+            %         \    \ 
+            %         *32*  *49*
+            %         29<\38<47<56* 
+            %  1 10 19 28 37 46 55 64 73 82
+            %
+            %  1  2  3  4  5  6  7  8  9 10
+        end
+        
 %         function testBuildsHorizontalMotionSynapticInput(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
 %             import matlab.unittest.constraints.RelativeTolerance
