@@ -321,7 +321,9 @@ classdef GridChartNetwork < handle
             obj.activation(obj.activation<0) = 0;
             saveStatistics(obj); 
         end
-
+        function maxIndex = getMaxActivationIndex(obj)
+            maxIndex = find(obj.activation==max(obj.activation));
+        end
         function saveStatistics(obj)
           % Save firing field information
 %               if useRealTrajectory

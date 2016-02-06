@@ -13,6 +13,7 @@ classdef HippocampalFormation < System
         baseGain
         gridSize
         gridDirectionBiasIncrement
+        gridLength
         nFeatures
         distanceUnits
         rewardInput
@@ -51,9 +52,8 @@ classdef HippocampalFormation < System
             obj.grids = grids; 
             nX = obj.gridSize(1,1);
             nY = obj.gridSize(1,2);
-            gridLength = nX * nY; 
-            obj.mecOutput = zeros(1,obj.nGrids * gridLength); 
-            obj.nMecOutput = length(obj.mecOutput); 
+            obj.gridLength = nX * nY; 
+            obj.nMecOutput = obj.nGrids * obj.gridLength; 
             gain = obj.baseGain; 
             index = 0; 
             for ii = 1:obj.nGridGains
@@ -76,6 +76,16 @@ classdef HippocampalFormation < System
                obj.reward = zeros(1,5);  
             end
             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
+        end
+        function step(obj)
+            obj.mecOutput = zeros(1,obj.nMecOutput); 
+            index = 0; 
+            for ii = 1:obj.nGrids
+                obj.grids(1,ii).step(); 
+                max = obj.grids(1,ii).getMaxActivationIndex(); 
+                obj.mecOutput(1,index+max) = 1; 
+                index = index + obj.gridLength;     
+            end
         end
 
 %         %% Single time step 

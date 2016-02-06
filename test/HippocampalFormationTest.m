@@ -54,12 +54,37 @@ classdef HippocampalFormationTest < AbstractTest
                 system.grids(1,1).inputGain*1.42);             
             testCase.assertEqual(system.grids(1,8).inputGain, ... 
                 system.grids(1,1).inputGain*1.42);             
-            %             testCase.assertEqual(system.nMecOutput, 630, ... 
-%                 '90 per grid x 7 grids'); 
-%             testCase.assertEqual(system.nLecOutput, 215, ... 
-%                 '3 features, each 60 orientation + 10 distance; 5 for reward'); 
-%             testCase.assertEqual(system.placeSystem.nDGInput, 845); 
-%             testCase.assertEqual(system.placeSystem.nCA3, 845);
+        end
+        function testHippocampalFormationGridsUpdateMecOutputEachStep(testCase)
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.nGridOrientations = 3; 
+            system.gridDirectionBiasIncrement = pi/4;             
+            system.nGridGains = 1; 
+            system.gridSize = [6,5];
+            system.build();  
+            system.step(); 
+%             act = system.grids(1,1).activation;
+%             max1 = find(act==max(act));
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 10); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 4); 
+            testCase.assertEqual(system.mecOutput, ...
+                [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  ]); 
+            for ii = 1:20;     
+                system.step(); 
+            end
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 14); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 19); 
+            testCase.assertEqual(system.mecOutput, ...
+                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 ...
+                  ]); 
         end
     end
 end
