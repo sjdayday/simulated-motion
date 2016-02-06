@@ -14,6 +14,7 @@ classdef HippocampalFormation < System
         gridSize
         gridDirectionBiasIncrement
         gridLength
+        gridExternalVelocity
         nFeatures
         distanceUnits
         rewardInput
@@ -42,6 +43,7 @@ classdef HippocampalFormation < System
             obj.reward = [];
             obj.angularVelocity = 0; 
             obj.linearVelocity = 0; 
+            obj.gridExternalVelocity = true; 
          end
         function build(obj)
             buildHeadDirectionSystem(obj); 
@@ -74,7 +76,8 @@ classdef HippocampalFormation < System
                     kk = index*obj.nGridOrientations+jj; 
                     obj.grids(1,kk) = GridChartNetwork(nX, nY); 
                     obj.grids(1,kk).inputDirectionBias = bias; 
-                    obj.grids(1,kk).inputGain = gain; 
+                    obj.grids(1,kk).inputGain = gain;
+                    obj.grids(1,kk).externalVelocity = obj.gridExternalVelocity; 
                     bias = bias + obj.gridDirectionBiasIncrement;
                 end
                 gain = gain * 1.42; 
@@ -96,7 +99,9 @@ classdef HippocampalFormation < System
         function stepMec(obj)
             obj.mecOutput = zeros(1,obj.nMecOutput); 
             index = 0; 
+            v =  calculateCartesianVelocity(obj);
             for ii = 1:obj.nGrids
+                obj.grids(1,ii).updateVelocity(v(1),v(2)); 
                 obj.grids(1,ii).step(); 
                 max = obj.grids(1,ii).getMaxActivationIndex(); 
                 obj.mecOutput(1,index+max) = 1; 
