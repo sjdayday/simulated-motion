@@ -110,6 +110,16 @@ classdef HippocampalFormation < System
         function updateLinearVelocity(obj, velocity)
             obj.linearVelocity = velocity; 
         end
+        function updateAngularAndLinearVelocity(obj, angularVelocity, linearVelocity)
+            if (angularVelocity == 0) || (linearVelocity == 0)
+                updateAngularVelocity(obj, angularVelocity); 
+                updateLinearVelocity(obj, linearVelocity);
+            else
+                error('HippocampalFormation:VelocitiesNonZero', ...
+                    'updateAngularAndLinearVelocity() requires one argument to be zero.') ;
+            end
+        end
+        
         function cartesianVelocity =  calculateCartesianVelocity(obj)
             currentHeadDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
             radians = (currentHeadDirection/obj.nHeadDirectionCells)*(-2*pi); 

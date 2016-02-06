@@ -112,5 +112,19 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertThat(system.calculateCartesianVelocity(), ...            
                 IsEqualTo([0.000334565303179, -0.000371572412738 ], 'Within', RelativeTolerance(.00000000001)));         
         end
+        function testBothAngularAndLinearVelocityCantBeNonZero(testCase)
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.build();  
+            system.updateAngularAndLinearVelocity(-pi/10, 0);             
+            system.updateAngularAndLinearVelocity(0, 0.0005);             
+            try 
+                system.updateAngularAndLinearVelocity(-pi/10, 0.0005); 
+            catch  ME
+                testCase.assertEqual(ME.identifier, 'HippocampalFormation:VelocitiesNonZero'); 
+                testCase.assertEqual(ME.message, 'updateAngularAndLinearVelocity() requires one argument to be zero.'); 
+            end
+        end
+        
     end
 end
