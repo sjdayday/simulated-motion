@@ -38,11 +38,13 @@ classdef HeadDirectionSystem < System
         CInhibitionOffset
         dx
         marker
+        % TODO:  don't pull from Animal; push instead
         animal
         xAxisValues
         xAxis
         Ahist
         readMode
+        pullVelocity
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -71,7 +73,8 @@ classdef HeadDirectionSystem < System
             obj.sigmaWeightPattern = 2*pi/10; 
             obj.CInhibitionOffset = 0.35; % was 0.5 
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
-            obj.readMode = 0; 
+            obj.readMode = 0;
+            obj.pullVelocity = true;
         end
         function initializeActivation(obj, random)
            if random
@@ -134,9 +137,22 @@ classdef HeadDirectionSystem < System
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
+        function updateAngularVelocity(obj, velocity)
+           obj.pullVelocity = false; 
+           if velocity >= 0 
+               obj.counterClockwiseVelocity = velocity; 
+               obj.clockwiseVelocity = 0; 
+           else
+               obj.clockwiseVelocity = -velocity; 
+               obj.counterClockwiseVelocity = 0; 
+           end
+        end
         function  updateVelocity(obj)
-           obj.clockwiseVelocity = -obj.animal.clockwiseVelocity;  
-           obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity;             
+            if obj.pullVelocity 
+               obj.clockwiseVelocity = -obj.animal.clockwiseVelocity;  
+               obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity;             
+            % else someone is calling updateAngularVelocity(obj, velocity)
+            end
         end
 
         %% Trappenberg sigmoidal activation function (equation 7.2)
@@ -161,6 +177,9 @@ classdef HeadDirectionSystem < System
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
             obj.Ahist(obj.time) =  obj.currentActivationRatio ; 
+        end
+        function maxIndex = getMaxActivationIndex(obj)
+            maxIndex = find(obj.uActivation==max(obj.uActivation)); 
         end
         function plotCircle(obj)
             figure(obj.h)

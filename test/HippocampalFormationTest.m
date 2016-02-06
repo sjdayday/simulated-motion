@@ -63,28 +63,51 @@ classdef HippocampalFormationTest < AbstractTest
             system.nGridGains = 1; 
             system.gridSize = [6,5];
             system.build();  
-            system.step(); 
-%             act = system.grids(1,1).activation;
-%             max1 = find(act==max(act));
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 8); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 10); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 4); 
+            system.stepMec(); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 4); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 15); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 24); 
             testCase.assertEqual(system.mecOutput, ...
-                [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
                   ]); 
             for ii = 1:20;     
-                system.step(); 
+                system.stepMec(); 
             end
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 17); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 14); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 19); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 19); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 25); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 8); 
             testCase.assertEqual(system.mecOutput, ...
-                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 ...
+                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ]); 
+        end
+        function testHeadDirectionUpdatedByAngularVelocityAtEachStep(testCase)
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.build();  
+            system.headDirectionSystem.pullVelocity = false;  
+            system.updateAngularVelocity(0); 
+            system.step(); 
+%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 0); 
+%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, 0); 
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 12); 
+%             system.updateAngularVelocity(pi/10); 
+%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, pi/10);             
+%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 0); 
+%             for ii = 1:3;     
+%                 system.step(); 
+%             end
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 4); 
+%             system.updateAngularVelocity(-2*pi/10); 
+%             testCase.assertEqual(system.headDirectionSystem.counterClockwiseVelocity, 0);             
+%             testCase.assertEqual(system.headDirectionSystem.clockwiseVelocity, 2*pi/10); 
+%             for ii = 1:3;     
+%                 system.step(); 
+%             end
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 16); 
         end
     end
 end

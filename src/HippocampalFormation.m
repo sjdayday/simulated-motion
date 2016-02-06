@@ -40,12 +40,20 @@ classdef HippocampalFormation < System
             obj.reward = []; 
         end
         function build(obj)
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
+            buildHeadDirectionSystem(obj); 
             buildGrids(obj); 
             buildLec(obj); 
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput); 
         end
-            
+        function buildHeadDirectionSystem(obj)
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
+            % TODO: remove once HDS no longer depends on Animal
+            obj.headDirectionSystem.animal = Animal();  
+            randomHeadDirection = true; 
+            obj.headDirectionSystem.initializeActivation(randomHeadDirection);
+            obj.headDirectionSystem.pullVelocity = false;              
+            obj.headDirectionSystem.build(); 
+        end
         function buildGrids(obj) 
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
             grids(1,obj.nGrids) = GridChartNetwork();
@@ -78,6 +86,10 @@ classdef HippocampalFormation < System
             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
         end
         function step(obj)
+            stepMec(obj); 
+            obj.headDirectionSystem.step(); 
+        end
+        function stepMec(obj)
             obj.mecOutput = zeros(1,obj.nMecOutput); 
             index = 0; 
             for ii = 1:obj.nGrids
@@ -85,7 +97,10 @@ classdef HippocampalFormation < System
                 max = obj.grids(1,ii).getMaxActivationIndex(); 
                 obj.mecOutput(1,index+max) = 1; 
                 index = index + obj.gridLength;     
-            end
+            end            
+        end
+        function updateAngularVelocity(obj, velocity)
+            obj.headDirectionSystem.updateAngularVelocity(velocity); 
         end
 
 %         %% Single time step 

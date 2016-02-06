@@ -1,32 +1,43 @@
 classdef HeadDirectionSystemTest < AbstractTest
     methods (Test)
-%         function testCreateToeplitzWeights(testCase)
-%             headDirectionSystem = HeadDirectionSystem(5); 
-%             headDirectionSystem.weightInputVector = [1 2 3 4 5]; 
-%             headDirectionSystem.buildWeights(); 
-%             testCase.assertEqual(headDirectionSystem.headDirectionWeights, ...
-%                [1 2 3 4 5; ...
-%                 2 1 2 3 4; ...
-%                 3 2 1 2 3; ...
-%                 4 3 2 1 2; ...
-%                 5 4 3 2 1]); 
-% %             testCase.assertEqual(headDirectionSystem.headDirectionWeights, ...
-% %                [1 5 4 3 2; ...
-% %                 2 1 5 4 3; ...
-% %                 3 2 1 5 4; ...
-% %                 4 3 2 1 5; ...
-% %                 5 4 3 2 1]); 
-%         end
-%         function testCreateWeightInputVector(testCase)
-%             headDirectionSystem = HeadDirectionSystem(60); 
-%             headDirectionSystem.buildWeights(); 
-%             testCase.assertEqual(headDirectionSystem.headDirectionWeights, ...
-%                [1 5 4 3 2; ...
-%                 2 1 5 4 3; ...
-%                 3 2 1 5 4; ...
-%                 4 3 2 1 5; ...
-%                 5 4 3 2 1]); 
-%         end
+        function testCreateHeadDirectionSystem(testCase)
+            headDirectionSystem = HeadDirectionSystem(60); 
+            randomHeadDirection = true; 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            headDirectionSystem.build();
+            % TODO remove once HDS takes external input instead of pulling
+            % from Animal.
+            headDirectionSystem.animal = Animal; 
+%             headDirectionSystem.h = figure(); 
+            headDirectionSystem.pullVelocity = false;  
+            headDirectionSystem.step(); 
+%             headDirectionSystem.plotActivation(); 
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 2); 
+            headDirectionSystem.updateAngularVelocity(pi/10); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, pi/10);             
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
+            for ii = 1:10     
+                headDirectionSystem.step(); 
+%                 headDirectionSystem.plotActivation();
+%                 pause(0.5); 
+%                 disp(headDirectionSystem.getMaxActivationIndex()); 
+            end
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 57); 
+            headDirectionSystem.updateAngularVelocity(-2*pi/10); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);             
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 2*pi/10); 
+%                 disp('reversing'); 
+            for ii = 1:10    
+                headDirectionSystem.step(); 
+%                 headDirectionSystem.plotActivation(); 
+%                 pause(0.5); 
+%                 disp(headDirectionSystem.getMaxActivationIndex()); 
+            end
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 35); 
+
+        end
         % testWithoutAdditionalInputActivationAmplitudeDifferencesVanish
         % testActivationCanBeMaintainedWithRandomInputButAttractorMovesRandomly
         % test...activation increases amplitude??
