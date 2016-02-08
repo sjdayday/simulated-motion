@@ -10,7 +10,7 @@ clear all
 cr = ExperimentController();
 cr.visualize(true);
 cr.setupDisplay(); 
-cr.stepPause = 0.5;
+cr.stepPause = 0.25;
 cr.totalSteps = 50;
 cr.randomHeadDirection = true;
 % cr.addControllerEvent(3, 'pause(30); ')

@@ -29,6 +29,7 @@ classdef HeadDirectionSystem < System
         clockwiseWeights
         counterClockwiseWeights  
         featuresDetected
+        nFeatureDetectors
         featureLearningRate
         rate
         betaGain
@@ -64,8 +65,9 @@ classdef HeadDirectionSystem < System
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 
-            obj.featuresDetected = zeros(1,obj.nHeadDirectionCells);
-            obj.featureWeights = zeros(obj.nHeadDirectionCells); 
+            obj.nFeatureDetectors = 100;             
+            obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+            obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
             obj.featureLearningRate = 0.5; 
             % activation function parameters 
             obj.betaGain = 1; 
@@ -75,6 +77,7 @@ classdef HeadDirectionSystem < System
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
             obj.readMode = 0;
             obj.pullVelocity = true;
+
         end
         function initializeActivation(obj, random)
            if random
@@ -106,16 +109,19 @@ classdef HeadDirectionSystem < System
         end
         function updateFeatureWeights(obj)
             if isempty(obj.animal.features)
-                obj.featuresDetected = zeros(1,obj.nHeadDirectionCells);
+                % TODO:  why needed? 
+                obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
             else
                 for ii = obj.animal.features
                     obj.featuresDetected(1,ii) = 1; 
                 end
             end
-            % sigmoidal, negative at small activation values, linear over 
-            % most of the activation range, tops out about 0.35, which acts
+            % approximation of Skaggs, figure 4, "f()".  
+            % based on sigmoidal function, negative at small activation 
+            % values, linear over most of the activation range, 
+            % topping out about 0.35, which acts
             % as an implementation of "Wmax"
-            % see Skaggs, figure 4, "f()".  
+
 %             activation = zeros(1, obj.nHeadDirectionCells); 
 %             activation(1,find(obj.uActivation == max(obj.uActivation))) = 0.3; 
 %             newWeights = (obj.featuresDetected' * activation); 
@@ -133,7 +139,8 @@ classdef HeadDirectionSystem < System
 %                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
 %             end
             if obj.readMode
-               newWeights = zeros(obj.nHeadDirectionCells);  
+               newWeights = zeros(size(obj.featureWeights));  
+%                newWeights = zeros(obj.nHeadDirectionCells);  
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
