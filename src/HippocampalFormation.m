@@ -10,6 +10,8 @@ classdef HippocampalFormation < System
         nGridOrientations
         nGridGains
         grids
+        nX
+        nY
         baseGain
         gridSize
         gridDirectionBiasIncrement
@@ -48,10 +50,27 @@ classdef HippocampalFormation < System
             obj.gridExternalVelocity = true; 
          end
         function build(obj)
+            calculateSizes(obj); 
             buildHeadDirectionSystem(obj); 
             buildGrids(obj); 
             buildLec(obj); 
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput); 
+        end
+        function calculateSizes(obj)
+            obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
+            grids(1,obj.nGrids) = GridChartNetwork();
+            obj.grids = grids; 
+            obj.nX = obj.gridSize(1,1);
+            obj.nY = obj.gridSize(1,2);
+            obj.gridLength = obj.nX * obj.nY; 
+            obj.nMecOutput = obj.nGrids * obj.gridLength; 
+            featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
+            obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
+            if obj.rewardInput 
+               obj.reward = zeros(1,5);  
+            end
+            obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
+            
         end
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
@@ -59,24 +78,18 @@ classdef HippocampalFormation < System
             obj.headDirectionSystem.animal = Animal();  
             randomHeadDirection = true; 
             obj.headDirectionSystem.initializeActivation(randomHeadDirection);
-            obj.headDirectionSystem.pullVelocity = false;              
+            obj.headDirectionSystem.pullVelocity = false;  
+            obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput; 
             obj.headDirectionSystem.build(); 
         end
         function buildGrids(obj) 
-            obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
-            grids(1,obj.nGrids) = GridChartNetwork();
-            obj.grids = grids; 
-            nX = obj.gridSize(1,1);
-            nY = obj.gridSize(1,2);
-            obj.gridLength = nX * nY; 
-            obj.nMecOutput = obj.nGrids * obj.gridLength; 
             gain = obj.baseGain; 
             index = 0; 
             for ii = 1:obj.nGridGains
                 bias = 0; 
                 for jj = 1:obj.nGridOrientations
                     kk = index*obj.nGridOrientations+jj; 
-                    obj.grids(1,kk) = GridChartNetwork(nX, nY); 
+                    obj.grids(1,kk) = GridChartNetwork(obj.nX, obj.nY); 
                     obj.grids(1,kk).inputDirectionBias = bias; 
                     obj.grids(1,kk).inputGain = gain;
                     obj.grids(1,kk).externalVelocity = obj.gridExternalVelocity; 
@@ -87,12 +100,6 @@ classdef HippocampalFormation < System
             end
         end
         function buildLec(obj)
-            featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
-            obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
-            if obj.rewardInput 
-               obj.reward = zeros(1,5);  
-            end
-            obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
             obj.lecOutput = zeros(1, obj.nLecOutput) ;
         end
         function step(obj)
@@ -117,6 +124,7 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
+           obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
         function updateAngularVelocity(obj, velocity)
             obj.headDirectionSystem.updateAngularVelocity(velocity);

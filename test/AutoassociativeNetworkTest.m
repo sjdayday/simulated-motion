@@ -1,7 +1,7 @@
 classdef AutoassociativeNetworkTest < AbstractTest
     methods (Test)
         function testIdenticalInputsAreRetrievedWhenIncompleteOrCorrupted(testCase)
-            network = createAutoassociativeNetwork(5);
+             network = createAutoassociativeNetwork(5);
             inputY = [1 0 1 0 1];  % detonator synapses
             inputX = [1 0 1 0 1]; 
             fired = network.step(inputX, inputY); 
@@ -10,6 +10,18 @@ classdef AutoassociativeNetworkTest < AbstractTest
             testCase.assertEqual(retrieved, inputY); 
             retrieved = network.read([1 0 1 1 0]); %corrupted
             testCase.assertEqual(retrieved, inputY);             
+        end
+        function testShortOutputIsNonZeroIndices(testCase)
+            network = createAutoassociativeNetwork(5);
+            inputY = [1 0 1 0 1];  % detonator synapses
+            inputX = [1 0 1 0 1]; 
+            network.step(inputX, inputY); 
+            testCase.assertEqual(network.outputIndices(), [1 3 5]);
+            network.read(inputY); 
+            testCase.assertEqual(network.outputIndices(), [1 3 5]);
+            network.read([0 1 0 1 0]); 
+            disp(network.outputIndices()); 
+            testCase.assertEqual(network.outputIndices(), zeros(1,0));            
         end
         function testRetrievesPatternsInOriginalSequence(testCase)
             network = createAutoassociativeNetwork(6);

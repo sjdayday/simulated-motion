@@ -39,5 +39,14 @@ classdef PlaceSystemTest < AbstractTest
                 placeSystem.read([MecOutputMissing, LecOutput]), Ca3Output, ...
                 'retrieve places from LEC input only'); 
         end
+        function testPlaceSystemShortOutputReturnsNonZeroIndices(testCase)
+            outputMecLength = 10; 
+            outputLecLength = 10; 
+            placeSystem = PlaceSystem(outputMecLength, outputLecLength); 
+            MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
+            LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
+            placeSystem.step(MecOutput, LecOutput);
+            testCase.assertEqual(placeSystem.outputIndices(), [1 2 5 6 8 15 16 19]); 
+        end
     end
 end

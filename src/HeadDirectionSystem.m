@@ -46,6 +46,7 @@ classdef HeadDirectionSystem < System
         Ahist
         readMode
         pullVelocity
+        pullFeatures
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -66,8 +67,8 @@ classdef HeadDirectionSystem < System
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 
             obj.nFeatureDetectors = 100;             
-            obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
-            obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
+%             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+%             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
             obj.featureLearningRate = 0.5; 
             % activation function parameters 
             obj.betaGain = 1; 
@@ -77,6 +78,7 @@ classdef HeadDirectionSystem < System
             obj.dx = 2*pi/obj.nHeadDirectionCells; 
             obj.readMode = 0;
             obj.pullVelocity = true;
+            obj.pullFeatures = true; 
 
         end
         function initializeActivation(obj, random)
@@ -106,16 +108,26 @@ classdef HeadDirectionSystem < System
             obj.counterClockwiseWeights = ... 
                 [obj.counterClockwiseWeights((end-obj.angularWeightOffset+1):end,:); ...
                 obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
+            obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+            obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
+
+        end
+        function updateFeaturesDetected(obj)
+           if obj.pullFeatures 
+                if isempty(obj.animal.features)
+                    % TODO:  why needed? 
+                    obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+                else
+                    for ii = obj.animal.features
+                        obj.featuresDetected(1,ii) = 1; 
+                    end
+                end               
+           else
+               % hippocampalFormation has pushed new obj.featuresDetected
+           end
         end
         function updateFeatureWeights(obj)
-            if isempty(obj.animal.features)
-                % TODO:  why needed? 
-                obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
-            else
-                for ii = obj.animal.features
-                    obj.featuresDetected(1,ii) = 1; 
-                end
-            end
+            updateFeaturesDetected(obj); 
             % approximation of Skaggs, figure 4, "f()".  
             % based on sigmoidal function, negative at small activation 
             % values, linear over most of the activation range, 

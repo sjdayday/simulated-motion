@@ -24,8 +24,7 @@ classdef PlaceSystem < AutoassociativeNetwork
             obj.DG = OrthogonalizingNetwork(obj.nDGInput,obj.nDGInput * 10);
             obj.DG.buildNetwork(); 
             obj.weightType = 'binary'; %weights are binary
-            obj.buildNetwork(); 
-
+            obj.buildNetwork();
 %             obj.wiring = SequentialWiring(dimension); 
 %             obj.currentInputX = zeros(1,dimension); 
 %             outputMecLength = 50; 

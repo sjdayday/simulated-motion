@@ -8,6 +8,7 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
     properties
         wiring
         currentInputX
+        currentOutput
     end
     methods
         function obj = AutoassociativeNetwork(dimension)
@@ -21,6 +22,7 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
             end
             fired = step@HebbMarrNetwork(obj, inputX, inputY); 
             obj.currentInputX = obj.wiring.connect(fired);
+            obj.currentOutput = fired; 
         end        
         function retrieved = read(obj, inputX)
             retrieved = zeros(1,obj.nNeurons); 
@@ -33,9 +35,13 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
                 end
                 totalActivation = totalActivation - 1; 
             end
+            obj.currentOutput = retrieved; 
         end
         function inputX = getCurrentInputX(obj)
             inputX = obj.currentInputX; 
+        end
+        function shortOutput = outputIndices(obj)
+            shortOutput = find(obj.currentOutput == 1); 
         end
     end
 end
