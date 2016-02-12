@@ -20,10 +20,12 @@ classdef HippocampalFormation < System
         rewardInput
         reward
         placeSystem
+        placeOutput
         mecOutput
         nMecOutput
         headDirectionSystem
         featureOutput
+        lecOutput
         nLecOutput
         linearVelocity
         angularVelocity
@@ -91,9 +93,14 @@ classdef HippocampalFormation < System
                obj.reward = zeros(1,5);  
             end
             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
+            obj.lecOutput = zeros(1, obj.nLecOutput) ;
         end
         function step(obj)
+            stepHds(obj); 
             stepMec(obj); 
+            stepPlace(obj); 
+        end
+        function stepHds(obj)
             obj.headDirectionSystem.step(); 
         end
         function stepMec(obj)
@@ -107,6 +114,9 @@ classdef HippocampalFormation < System
                 obj.mecOutput(1,index+max) = 1; 
                 index = index + obj.gridLength;     
             end            
+        end
+        function stepPlace(obj)
+           obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
         end
         function updateAngularVelocity(obj, velocity)
             obj.headDirectionSystem.updateAngularVelocity(velocity);

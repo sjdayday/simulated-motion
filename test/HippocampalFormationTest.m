@@ -150,21 +150,21 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 45, ...
                 'wraps to mid-top grid');             
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
-%             system.grids(1,3).plot(); pause(1);             
-            system.step();                                     
+%             system.grids(1,3).plot(); pause(1);   
+            system.step(); 
             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 31); 
             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 40); 
             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 54);     
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 31); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 49);
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 62);
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 30); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 48);
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 53);
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 39); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 38); 
             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 48);
             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 61);
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
@@ -174,6 +174,27 @@ classdef HippocampalFormationTest < AbstractTest
 %                 system.grids(1,3).plot(); pause(1); 
 %                 disp(system.grids(1,3).getMaxActivationIndex()); 
 %             end
+        end
+        function testMecOutputUpdatesPlaceSystem(testCase)
+            system = HippocampalFormation();
+            system.nGridOrientations = 3; 
+            system.nHeadDirectionCells = 60; 
+            system.gridDirectionBiasIncrement = pi/4;   
+            system.gridExternalVelocity = false; 
+            system.nGridGains = 1; 
+            system.gridSize = [6,5];
+            system.build();  
+            system.stepMec(); 
+            mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+                  ];
+            testCase.assertEqual(system.mecOutput, mecOutput); 
+            system.stepPlace(); 
+            placeOutput = system.placeOutput; 
+            mecLecOutput = [mecOutput, zeros(1,system.nLecOutput)]; 
+            testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
+                placeOutput, 'use MEC output to retrieved saved place output'); 
         end
         
     end
