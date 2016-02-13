@@ -18,6 +18,8 @@ classdef HeadDirectionSystem < System
         angularWeightOffset
         wHeadDirectionWeights
         featureWeights
+        featureGain
+        featureOffset       
         firstPlot
         firstCirclePlot
         h
@@ -70,6 +72,9 @@ classdef HeadDirectionSystem < System
 %             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
 %             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
             obj.featureLearningRate = 0.5; 
+            obj.featureGain = 10;
+            obj.featureOffset = 0.65; 
+            
             % activation function parameters 
             obj.betaGain = 1; 
             obj.alphaOffset = 0; 
@@ -137,7 +142,8 @@ classdef HeadDirectionSystem < System
 %             activation = zeros(1, obj.nHeadDirectionCells); 
 %             activation(1,find(obj.uActivation == max(obj.uActivation))) = 0.3; 
 %             newWeights = (obj.featuresDetected' * activation); 
-            activation = 1./(1+exp(-obj.uActivation.*10)) -0.65; 
+            activation = 1./(1+exp(-obj.uActivation.*obj.featureGain)) ...
+                - obj.featureOffset; 
             newWeights = (obj.featuresDetected' * activation) - obj.featureWeights;  
             % only update rows where features were detected
             for ii = 1:length(obj.featuresDetected)

@@ -12,7 +12,49 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(grids(1,1).nX, 10, ...
                 'other objects initialized with default 10,9'); 
         end
-        
+        function testActivationFollowsPreviouslyActivatedFeatures(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            gridNet = GridChartNetwork(6,5); 
+            gridNet.externalVelocity = true; 
+            gridNet.nFeatureDetectors = 5; 
+            gridNet.featureGain = 3;
+            gridNet.featureOffset = 0.15;             
+            gridNet.buildNetwork();
+            gridNet.step(); 
+            for ii = 1:7
+                gridNet.step();            
+            end
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+                18, 'stable; now present features'); 
+            gridNet.featuresDetected = [0 0 1 0 0]; 
+            for ii = 1:5
+                gridNet.step();            
+            end
+            w = gridNet.featureWeights; 
+            testCase.assertEqual(max(w(1,:)), 0); 
+            testCase.assertThat(max(w(3,:)), ...            
+                IsEqualTo(0.488275478428257, 'Within', RelativeTolerance(.00000000001))); 
+%             % randomly "place" animal elsewhere
+            gridNet.initializeActivation(); 
+            gridNet.featuresDetected = [0 0 0 0 0]; 
+            gridNet.step();            
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+                25, 'stable activation at new random orientation'); 
+            gridNet.featuresDetected = [0 0 1 0 0]; 
+            gridNet.readMode = 1; 
+            % features now drive us back to the orientation at which they 
+            % were perceived: 18
+            gridNet.step(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 19); 
+            gridNet.step(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
+            gridNet.step(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
+            gridNet.step(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
+        end
+
 %         function testPositiveAndNegativeMotionWeights(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
 %             import matlab.unittest.constraints.RelativeTolerance

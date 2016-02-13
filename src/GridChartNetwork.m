@@ -1,4 +1,4 @@
-% GridChartNetwork class:  model a network of grid cells as a single chart
+%% GridChartNetwork class:  model a network of grid cells as a single chart
 % From code by eric zilli - 20110829 - v1.01:
 % http://senselab.med.yale.edu/ModelDb/showModel.cshtml?model=144006&file=/grid%20models%20package%20v1.007/GuanellaEtAl2007.m
 % Zilli, E. A. (2012). Models of grid cell spatial firing published 2005?2011. 
@@ -8,6 +8,8 @@
 % Guanella, A., Kiper, D., & Verschure, P. (2007). 
 % A model of grid cells based on a twisted torus topology. 
 % International journal of neural systems, 17(04), 231-240.
+% 
+% Feature detection logic from HeadDirectionSystem.m
 classdef GridChartNetwork < handle 
 
     properties
@@ -29,6 +31,12 @@ classdef GridChartNetwork < handle
         horizontalInput
         verticalInput
         dt
+        featuresDetected
+        nFeatureDetectors
+        featureLearningRate
+        featureWeights
+        featureGain
+        featureOffset
         % stabilizationTime 
         velocity
         externalVelocity
@@ -60,6 +68,7 @@ classdef GridChartNetwork < handle
         AhistAll
         motionInputWeights
         squaredPairwiseDists
+        readMode
     end
     methods
         function obj = GridChartNetwork(nX, nY)
@@ -98,14 +107,22 @@ classdef GridChartNetwork < handle
             obj.motionInputWeights = false; 
             obj.squaredPairwiseDists = []; 
             obj.externalVelocity = false;
+            obj.nFeatureDetectors = 100;             
+            obj.featureLearningRate = 0.5; 
+            obj.featureGain = 3;
+            obj.featureOffset = 0.15; 
+            obj.readMode = false; 
             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
 %             obj.AhistAll = zeros(1000, obj.nCells); 
 
         end
-        function buildNetwork(obj)
+        function initializeActivation(obj)
             % A--activation of each cell
-            obj.activation = rand(1,obj.nCells)/sqrt(obj.nCells); 
+            obj.activation = rand(1,obj.nCells)/sqrt(obj.nCells);             
+        end
+        function buildNetwork(obj)
+            initializeActivation(obj);
             % which cell's spatial activity will be plotted?
             obj.watchCell = round(obj.nCells/2-obj.nY/2); 
             obj.nSpatialBins = 60;
@@ -127,6 +144,8 @@ classdef GridChartNetwork < handle
             else
                 loadTrajectory(obj);
             end
+            obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+            obj.featureWeights = zeros(length(obj.featuresDetected),obj.nCells); 
             
 
         end
@@ -291,9 +310,36 @@ classdef GridChartNetwork < handle
             % to change the grid orientation, this model rotates the velocity input
             obj.velocity = obj.directionInput*obj.velocity;
         end
+        function updateFeatureWeights(obj)
+            % from HeadDirectionSystem.m 
+            % assumes that obj.featuresDetected is updated externally, e.g., 
+            % by HippocampalFormaton
+
+            newActivation = 1./(1+exp(-obj.activation.*obj.featureGain)) ...
+                - obj.featureOffset; 
+            newWeights = (obj.featuresDetected' * newActivation) - obj.featureWeights;  
+            % only update rows where features were detected
+            for ii = 1:length(obj.featuresDetected)
+                newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
+            end
+%             rrow = obj.featureWeights(30,:);
+%             disp([' ',max(rrow)]); 
+%             disp(find(rrow == max(rrow)));
+%             disp(find(obj.uActivation == max(obj.uActivation)));
+%             if obj.time > 10 
+%                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
+%             end
+            if obj.readMode
+               newWeights = zeros(size(obj.featureWeights));  
+%                newWeights = zeros(obj.nHeadDirectionCells);  
+            end
+            obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
+        end
+        
         function  step(obj)
             obj.time = obj.time+1;
             buildVelocity(obj);
+            updateFeatureWeights(obj);            
             %% Generate new weight matrix for current velocity
 
             buildSquaredPairwiseDists(obj);
@@ -307,7 +353,9 @@ classdef GridChartNetwork < handle
             exp(-obj.squaredPairwiseDists/obj.weightStdDev^2) - ... 
             obj.shiftInhibitoryTail;
 
-            synapticInput = obj.activation*obj.weights';
+            motionSynapticInput = obj.activation*obj.weights';
+            featureInput = obj.featuresDetected * obj.featureWeights; 
+            synapticInput = motionSynapticInput + featureInput; 
             
             if obj.motionInputWeights == true
                 obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
