@@ -1,6 +1,6 @@
 classdef HeadDirectionSystemTest < AbstractTest
     methods (Test)
-        function testCreateHeadDirectionSystem(testCase)
+        function testHeadDirectionSystemActivationMovedByAngularVelocity(testCase)
             headDirectionSystem = HeadDirectionSystem(60); 
             randomHeadDirection = true; 
             headDirectionSystem.initializeActivation(randomHeadDirection)            
@@ -38,6 +38,56 @@ classdef HeadDirectionSystemTest < AbstractTest
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 35); 
 
         end
+        function testActivationFollowsPreviouslyActivatedFeatures(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            headDirectionSystem = HeadDirectionSystem(60); 
+            randomHeadDirection = true; 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            headDirectionSystem.pullVelocity = false;  
+            headDirectionSystem.pullFeatures = false; 
+            headDirectionSystem.nFeatureDetectors = 5; 
+            headDirectionSystem.build();
+            for ii = 1:7
+                headDirectionSystem.step();            
+            end
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+                10, 'stable; now present features'); 
+            headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+            headDirectionSystem.step();            
+            w = headDirectionSystem.featureWeights; 
+            testCase.assertEqual(max(w(1,:)), 0); 
+            testCase.assertThat(max(w(3,:)), ...            
+                IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
+            % randomly "place" animal elsewhere
+            headDirectionSystem.initializeActivation(true);
+            headDirectionSystem.initializeActivation(true); 
+            headDirectionSystem.featuresDetected = [0 0 0 0 0]; 
+            headDirectionSystem.step();            
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+                20, 'stable activation at new random orientation'); 
+            headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+            headDirectionSystem.readMode = 1; 
+            % features now drive us back to the orientation at which they 
+            % were perceived: 10
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 18); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 12); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+        end
+
+        
+        
         % testWithoutAdditionalInputActivationAmplitudeDifferencesVanish
         % testActivationCanBeMaintainedWithRandomInputButAttractorMovesRandomly
         % test...activation increases amplitude??

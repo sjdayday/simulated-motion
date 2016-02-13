@@ -216,14 +216,9 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3));                         
             system.step(); 
+            testCase.assertEqual(system.placeSystem.outputIndices(), [30 88 90]);             
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
             testCase.assertEqual(featureIndices, [30 88 90]);             
-            testCase.assertEqual(system.placeSystem.outputIndices(), [30 88 90]);             
-% placeOutput = system.placeOutput; 
-%             mecLecOutput = [mecOutput, zeros(1,system.nLecOutput)]; 
-%             testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
-%                 placeOutput, 'use MEC output to retrieved saved place output'); 
-%             disp(placeOutput); 
         end
         
     end
