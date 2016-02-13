@@ -27,6 +27,7 @@ classdef HippocampalFormation < System
         nMecOutput
         headDirectionSystem
         featureOutput
+        lecSystem
         lecOutput
         nLecOutput
         linearVelocity
@@ -51,10 +52,11 @@ classdef HippocampalFormation < System
          end
         function build(obj)
             calculateSizes(obj); 
+            buildLec(obj); 
             buildHeadDirectionSystem(obj); 
             buildGrids(obj); 
-            buildLec(obj); 
-            obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput); 
+%             buildLec(obj); 
+            buildPlaceSystem(obj);
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -64,12 +66,12 @@ classdef HippocampalFormation < System
             obj.nY = obj.gridSize(1,2);
             obj.gridLength = obj.nX * obj.nY; 
             obj.nMecOutput = obj.nGrids * obj.gridLength; 
-            featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
-            obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
-            if obj.rewardInput 
-               obj.reward = zeros(1,5);  
-            end
-            obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
+%             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
+%             obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
+%             if obj.rewardInput 
+%                obj.reward = zeros(1,5);  
+%             end
+%             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
             
         end
         function buildHeadDirectionSystem(obj)
@@ -100,7 +102,22 @@ classdef HippocampalFormation < System
             end
         end
         function buildLec(obj)
+            obj.lecSystem = LecSystem();
+            obj.lecSystem.distanceUnits = obj.distanceUnits;
+            obj.lecSystem.nHeadDirectionCells = obj.nHeadDirectionCells;
+            obj.lecSystem.nFeatures = obj.nFeatures; 
+            if obj.rewardInput 
+                obj.lecSystem.rewardUnits = 5;
+            else
+                obj.lecSystem.rewardUnits = 0; 
+            end
+            obj.lecSystem.build(); 
+            obj.nLecOutput = obj.lecSystem.nOutput;
+            
             obj.lecOutput = zeros(1, obj.nLecOutput) ;
+        end
+        function buildPlaceSystem(obj)
+            obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);             
         end
         function step(obj)
             stepHds(obj); 
