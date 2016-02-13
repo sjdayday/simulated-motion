@@ -8,7 +8,15 @@ classdef LecSystemTest < AbstractTest
             lec.rewardUnits = 5; 
             lec.build(); 
             testCase.assertEqual(lec.nOutput, 209); 
-
+        end
+        function testCreateLecSystem2(testCase)
+            lec = LecSystem();
+            lec.distanceUnits = 8;
+            lec.nHeadDirectionCells = 60;
+            lec.nFeatures = 3; 
+            lec.rewardUnits = 5; 
+            lec.build(); 
+            testCase.assertEqual(lec.nOutput, 209); 
         end
 %         function testCreateArrayOfGridChartNetwork(testCase)
 %             grids(1,3) = GridChartNetwork(6,5); 
