@@ -54,6 +54,37 @@ classdef EnvironmentTest < AbstractTest
             env.setPosition([1 0.95]); 
             testCase.assertEqual(env.closestWallRelativeDistance(), 2);
         end
+        function testCalculatesAbsoluteAngleFromDirectionToCue(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.addCue([0 4]); 
+            env.addCue([-2 0]); 
+            env.addCue([0.5 -0.5]); 
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build(); 
+            env.setPosition([1 1]); 
+            env.setDirection(pi/4); 
+            testCase.assertThat(env.cueDirection(1), ...            
+                IsEqualTo(1.107148717794091, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertThat(env.cueDirection(2), ...            
+                IsEqualTo(2.677945044588987, 'Within', RelativeTolerance(.00000000001))); 
+            env.setDirection(0); 
+            % direction given in radians counter-clockwise in 0 - 2*pi
+            testCase.assertThat(env.cueDirection(2), ...            
+                IsEqualTo(3.463343207986435, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertThat(env.cueDirection(3), ...            
+                IsEqualTo(4.390638425988048, 'Within', RelativeTolerance(.00000000001))); 
+            env.setPosition([0 0]); 
+            testCase.assertThat(env.cueDirection(3), ...            
+                IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
+        end
 %         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
 %             gridNet = GridChartNetwork(6,5); 
 %             gridNet.externalVelocity = true; 

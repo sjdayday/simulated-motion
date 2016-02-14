@@ -10,6 +10,8 @@ classdef Environment < System
         distanceIntervals
         center
         relativeDistanceInterval
+        direction
+        directionIntervals
     end
     methods
         function obj = Environment()
@@ -21,7 +23,9 @@ classdef Environment < System
             obj.position = [0 0]; 
             obj.distanceIntervals = 8;
             obj.center = [0 0]; 
-            obj.relativeDistanceInterval = 0;           
+            obj.relativeDistanceInterval = 0; 
+            obj.direction = 0; 
+            obj.directionIntervals = 60; 
         end
         function build(obj)
             maxDistance = calculateMaxDistanceFromCenter(obj);
@@ -52,6 +56,9 @@ classdef Environment < System
         end
         function setPosition(obj, position)
            obj.position = position;  
+        end
+        function setDirection(obj, direction)
+           obj.direction = direction;  
         end
         function distance = closestWallDistance(obj)
             distances = zeros(1,obj.nWalls);  
@@ -92,6 +99,19 @@ classdef Environment < System
             distance = closestWallDistance(obj); 
             relativeDistance = calculateRelativeDistance(obj, distance);
         end
+        function direction = cueDirection(obj, cueIndex)
+           direction = pointDirection(obj, obj.cues(cueIndex,:));   
+        end
+        function direction = pointDirection(obj, target) 
+           % again, thanks to Roger Stafford: 
+           % http://www.mathworks.com/matlabcentral/newsreader/view_thread/151925#849830
+           % 11 Dec, 2007
+           v = [target(1)-obj.position(1) target(2)-obj.position(2) 0];
+           u = [cos(obj.direction) sin(obj.direction) 0];
+           direction = mod(atan2(u(1)*v(2)-v(1)*u(2),u(1)*v(1)+u(2)*v(2)),2*pi);
+%            direction = atan2(norm(cross(u,v)), dot(u,v)); % 3D
+        end
+
         %% Single time step 
         function plot(obj)
             figure(obj.h)
