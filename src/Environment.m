@@ -25,10 +25,20 @@ classdef Environment < System
         end
         function build(obj)
             maxDistance = calculateMaxDistanceFromCenter(obj);
-            obj.relativeDistanceInterval=maxDistance/obj.distanceIntervals; 
+            obj.relativeDistanceInterval= ... 
+                (maxDistance*2)/(obj.distanceIntervals-1); 
         end
-        function max = calculateMaxDistanceFromCenter(obj)
-            max = 0; 
+        function maxDistance = calculateMaxDistanceFromCenter(obj)
+            distances = []; 
+            for ii = 1:obj.nCues
+               distances = [distances; centerDistance(obj, obj.cues(ii,:))];   
+            end
+            for jj = 1:obj.nWalls
+               wall = obj.walls(jj,:); 
+               distances = [distances; centerDistance(obj, [wall(1) wall(2)])];   
+               distances = [distances; centerDistance(obj, [wall(3) wall(4)])];   
+            end
+            maxDistance = max(distances); 
         end
         function addWall(obj, startPosition, endPosition)
             wall = [startPosition, endPosition]; 
@@ -61,12 +71,26 @@ classdef Environment < System
         function distance = cueDistance(obj, cueIndex)
            distance = pointDistance(obj, obj.position, obj.cues(cueIndex,:));   
         end
+        function distance = centerDistance(obj, endPoint)
+           distance = pointDistance(obj, obj.center, endPoint);
+        end
         function distance = pointDistance(obj, startPoint, endPoint)
            x = endPoint(1);  
            y = endPoint(2); 
            px = startPoint(1); 
            py = startPoint(2); 
            distance = sqrt((x-px)^2 + (y-py)^2);             
+        end
+        function relativeDistance = calculateRelativeDistance(obj, distance)
+            relativeDistance = fix(distance/obj.relativeDistanceInterval)+1; 
+        end
+        function relativeDistance = cueRelativeDistance(obj, cueIndex)
+            distance = pointDistance(obj, obj.position, obj.cues(cueIndex,:)); 
+            relativeDistance = calculateRelativeDistance(obj, distance);
+        end
+        function relativeDistance = closestWallRelativeDistance(obj)
+            distance = closestWallDistance(obj); 
+            relativeDistance = calculateRelativeDistance(obj, distance);
         end
         %% Single time step 
         function plot(obj)

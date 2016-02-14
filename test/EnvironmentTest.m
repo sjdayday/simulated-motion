@@ -35,10 +35,24 @@ classdef EnvironmentTest < AbstractTest
             env.setPosition([0 0]); 
             testCase.assertEqual(env.cueDistance(1), 4);             
             testCase.assertEqual(env.cueDistance(2), 2);
-%             testCase.assertThat(env.relativeDistanceInterval, ...            
-%                 IsEqualTo(0.395284707521047, 'Within', RelativeTolerance(.00000000001))); 
-%             
-%             testCase.assertEqual(env.cueRelativeDistance(1), 2);
+            % worst case assumed to be twice distance from center to
+            % farthest cue.
+            testCase.assertThat(env.relativeDistanceInterval, ...            
+                IsEqualTo(2*0.451753951452626, 'Within', RelativeTolerance(.00000000001))); 
+            env.setPosition([2 -2]); 
+            testCase.assertEqual(env.cueRelativeDistance(1), 8);
+            env.setPosition([1 1]); 
+            testCase.assertEqual(env.cueRelativeDistance(1), 4);
+            env.setPosition([0 3.5]); 
+            testCase.assertEqual(env.cueRelativeDistance(1), 1);
+            env.setPosition([0 3]); 
+            testCase.assertEqual(env.cueRelativeDistance(1), 2);
+            env.setPosition([0 1]); 
+            testCase.assertEqual(env.closestWallRelativeDistance(), 1);
+            env.setPosition([0.5 0.25]); 
+            testCase.assertEqual(env.closestWallRelativeDistance(), 1);
+            env.setPosition([1 0.95]); 
+            testCase.assertEqual(env.closestWallRelativeDistance(), 2);
         end
 %         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
 %             gridNet = GridChartNetwork(6,5); 
