@@ -60,13 +60,23 @@ classdef Environment < System
         function setDirection(obj, direction)
            obj.direction = direction;  
         end
-        function distance = closestWallDistance(obj)
+        function [wallIndex,distance] = closestWall(obj)
             distances = zeros(1,obj.nWalls);  
             for ii = 1:obj.nWalls;
                 currentDistance = distanceToWall(obj,ii);
                 distances(ii) = currentDistance; 
             end
             distance = min(distances); 
+            wallIndex = find(distances == distance); 
+        end
+        function distance = closestWallDistance(obj)
+            [~, distance] = closestWall(obj); 
+%             distances = zeros(1,obj.nWalls);  
+%             for ii = 1:obj.nWalls;
+%                 currentDistance = distanceToWall(obj,ii);
+%                 distances(ii) = currentDistance; 
+%             end
+%             distance = min(distances); 
         end
         function distance = distanceToWall(obj, index)
             q1 = [obj.walls(index,1), obj.walls(index,2)]; 
@@ -111,7 +121,31 @@ classdef Environment < System
            direction = mod(atan2(u(1)*v(2)-v(1)*u(2),u(1)*v(1)+u(2)*v(2)),2*pi);
 %            direction = atan2(norm(cross(u,v)), dot(u,v)); % 3D
         end
-
+        function direction = wallDirection(obj, wall)
+           % jdbertron: line CD perpendicular to wall AB, C=obj.position 
+           % http://stackoverflow.com/questions/10301001/perpendicular-on-a-line-segment-from-a-given-point
+           Ax = wall(1); 
+           Ay = wall(2);
+           Bx = wall(3); 
+           By = wall(4); 
+           Cx = obj.position(1); 
+           Cy = obj.position(2); 
+           t=((Cx-Ax)*(Bx-Ax)+(Cy-Ay)*(By-Ay))/((Bx-Ax)^2+(By-Ay)^2); 
+           Dx=Ax+t*(Bx-Ax);
+           Dy=Ay+t*(By-Ay); 
+           direction = pointDirection(obj, [Dx Dy]); 
+        end
+        function rejection = rejectionWall(obj, wall)
+           b = [wall(3)-wall(1) wall(4)-wall(2)];
+           disp(b); 
+           a = [cos(obj.direction) sin(obj.direction)]; 
+           rejection = a - (dot(a,b)/dot(b,b))*b;
+           disp(mod(atan2(a(1)*b(2)-b(1)*a(2),a(1)*b(1)+a(2)*b(2)),2*pi));
+        end
+        function direction = closestWallDirection(obj)
+            [wallIndex, ~] = closestWall(obj); 
+            direction = wallDirection(obj, obj.walls(wallIndex,:)); 
+        end
         %% Single time step 
         function plot(obj)
             figure(obj.h)

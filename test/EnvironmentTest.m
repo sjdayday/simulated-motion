@@ -54,7 +54,7 @@ classdef EnvironmentTest < AbstractTest
             env.setPosition([1 0.95]); 
             testCase.assertEqual(env.closestWallRelativeDistance(), 2);
         end
-        function testCalculatesAbsoluteAngleFromDirectionToCue(testCase)
+        function testCalculatesAngleFromDirectionToCue(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             env = Environment();
@@ -85,27 +85,35 @@ classdef EnvironmentTest < AbstractTest
             testCase.assertThat(env.cueDirection(3), ...            
                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
         end
-%         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.externalVelocity = true; 
-%             gridNet.nFeatureDetectors = 5; 
-%             gridNet.featureGain = 3;
-%             gridNet.featureOffset = 0.15;             
-%             gridNet.buildNetwork();
-%             gridNet.step(); 
-%             for ii = 1:7
-%                 gridNet.step();            
-%             end
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
-%                 18, 'stable; now present features'); 
-%             gridNet.featuresDetected = [0 0 1 0 0]; 
-%             for ii = 1:5
-%                 gridNet.step();            
-%             end
-%             w = gridNet.featureWeights; 
-%             testCase.assertEqual(max(w(1,:)), 0); 
-% %             % randomly "place" animal elsewhere
-%         end
-
+        function testCalculatesAngleFromDirectionToClosestWall(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build(); 
+            env.setPosition([0.5 1]); 
+            env.setDirection(pi/4);
+            % 3*pi/4
+            testCase.assertThat(env.closestWallDirection(), ...            
+                IsEqualTo(2.356194490192345, 'Within', RelativeTolerance(.00000000001))); 
+            % pi/4
+            env.setPosition([1 1.5]);             
+            testCase.assertThat(env.closestWallDirection(), ...            
+                IsEqualTo(0.785398163397448, 'Within', RelativeTolerance(.00000000001))); 
+            % 7*pi/4
+            env.setPosition([1.5 1]);             
+            testCase.assertThat(env.closestWallDirection(), ...            
+                IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
+            % 5*pi/4
+            env.setPosition([1 0.5]);             
+            testCase.assertThat(env.closestWallDirection(), ...            
+                IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
+        end
     end
 end
