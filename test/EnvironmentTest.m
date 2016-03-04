@@ -115,5 +115,39 @@ classdef EnvironmentTest < AbstractTest
             testCase.assertThat(env.closestWallDirection(), ...            
                 IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
         end
+        function testCalculatesHeadDirectionCellOffsetToCueFromCurrentDirection(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();  
+            env.setPosition([1 1.5]);             
+%             env.setPosition([0.5 1]); 
+            env.setDirection(pi/4);
+            % 60 9 8 7 6 5 4 3 2 1 0 9 8 7 6 45
+            % 3*pi/4
+            % pi/4            
+            testCase.assertEqual(env.relativeDirection(env.closestWallDirection()), 53);
+%             testCase.assertThat(env.closestWallDirection(), ...            
+%                 IsEqualTo(2.356194490192345, 'Within', RelativeTolerance(.00000000001))); 
+%             % pi/4
+%             env.setPosition([1 1.5]);             
+%             testCase.assertThat(env.closestWallDirection(), ...            
+%                 IsEqualTo(0.785398163397448, 'Within', RelativeTolerance(.00000000001))); 
+%             % 7*pi/4
+%             env.setPosition([1.5 1]);             
+%             testCase.assertThat(env.closestWallDirection(), ...            
+%                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
+%             % 5*pi/4
+%             env.setPosition([1 0.5]);             
+%             testCase.assertThat(env.closestWallDirection(), ...            
+%                 IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
+        end
     end
 end
