@@ -65,26 +65,6 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
-        <place id="FoundReward">
-            <graphics>
-                <position x="498.0" y="135.0"/>
-            </graphics>
-            <name>
-                <value>P5</value>
-                <graphics>
-                    <offset x="47.0" y="-3.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
         <place id="Move.Run">
             <graphics>
                 <position x="149.0" y="432.0"/>
@@ -123,26 +103,6 @@
                     <offset x="0.0" y="0.0"/>
                 </graphics>
                 <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="Move.Simulated">
-            <graphics>
-                <position x="713.0" y="91.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="53.0" y="-4.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
             </initialMarking>
         </place>
         <place id="Planned">
@@ -245,14 +205,14 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
-        <place id="Move.CounterClockwise">
+        <place id="Ripples">
             <graphics>
-                <position x="294.0" y="554.0"/>
+                <position x="661.0" y="190.0"/>
             </graphics>
             <name>
-                <value>P4</value>
+                <value>P6</value>
                 <graphics>
-                    <offset x="81.0" y="47.0"/>
+                    <offset x="30.0" y="47.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -265,14 +225,14 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="Ripples">
+        <place id="Move.CounterClockwise">
             <graphics>
-                <position x="661.0" y="190.0"/>
+                <position x="294.0" y="554.0"/>
             </graphics>
             <name>
-                <value>P6</value>
+                <value>P4</value>
                 <graphics>
-                    <offset x="30.0" y="47.0"/>
+                    <offset x="81.0" y="47.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -323,6 +283,26 @@
                     <offset x="0.0" y="0.0"/>
                 </graphics>
                 <value></value>
+            </initialMarking>
+        </place>
+        <place id="RewardFound">
+            <graphics>
+                <position x="498.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>P5</value>
+                <graphics>
+                    <offset x="47.0" y="-3.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
             </initialMarking>
         </place>
         <place id="Move.Done">
@@ -771,7 +751,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO Finish" source="FoundReward" target="FinishNovel">
+        <arc id="P5 TO Finish" source="RewardFound" target="FinishNovel">
             <arcpath id="" x="519.0" y="164.0" curvePoint="false"/>
             <arcpath id="" x="585.0" y="304.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -782,14 +762,6 @@
         <arc id="P9 TO T3" source="Recognized" target="FinishKnown">
             <arcpath id="" x="451.0" y="335.0" curvePoint="false"/>
             <arcpath id="" x="579.0" y="272.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="RestPending TO Execute" source="RestPending" target="Execute">
-            <arcpath id="" x="299.0" y="213.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="272.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -811,7 +783,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P5 TO T1" source="FoundReward" target="Consume">
+        <arc id="P5 TO T1" source="RewardFound" target="Consume">
             <arcpath id="" x="528.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -851,7 +823,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="FoundFood TO Rest" source="FoundReward" target="Rest">
+        <arc id="FoundFood TO Rest" source="RewardFound" target="Rest">
             <arcpath id="" x="525.0" y="159.0" curvePoint="false"/>
             <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -862,14 +834,6 @@
         <arc id="Ongoing TO Finish" source="Executing" target="FinishNovel">
             <arcpath id="" x="502.0" y="279.0" curvePoint="false"/>
             <arcpath id="" x="580.0" y="319.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Planned TO Rest" source="Planned" target="Rest">
-            <arcpath id="" x="304.0" y="269.0" curvePoint="false"/>
-            <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -899,7 +863,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T3" source="FoundReward" target="FinishKnown">
+        <arc id="P5 TO T3" source="RewardFound" target="FinishKnown">
             <arcpath id="" x="521.0" y="163.0" curvePoint="false"/>
             <arcpath id="" x="584.0" y="257.0" curvePoint="false"/>
             <type value="inhibitor"/>

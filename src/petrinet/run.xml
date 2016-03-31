@@ -19,7 +19,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,1</value>
+                <value>Default,0</value>
             </initialMarking>
         </place>
         <place id="Enabled">
@@ -62,26 +62,6 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="Speed">
-            <graphics>
-                <position x="250.0" y="409.0"/>
-            </graphics>
-            <name>
-                <value>P6</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,2</value>
-            </initialMarking>
-        </place>
         <place id="Continuing">
             <graphics>
                 <position x="367.0" y="322.0"/>
@@ -102,6 +82,26 @@
                 <value></value>
             </initialMarking>
         </place>
+        <place id="Move.Distance">
+            <graphics>
+                <position x="247.0" y="332.0"/>
+            </graphics>
+            <name>
+                <value>P5</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
         <place id="Ongoing">
             <graphics>
                 <position x="474.0" y="257.0"/>
@@ -119,27 +119,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,1</value>
-            </initialMarking>
-        </place>
-        <place id="Distance">
-            <graphics>
-                <position x="247.0" y="332.0"/>
-            </graphics>
-            <name>
-                <value>P5</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,3</value>
+                <value>Default,0</value>
             </initialMarking>
         </place>
         <place id="Running">
@@ -159,7 +139,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,1</value>
+                <value>Default,0</value>
             </initialMarking>
         </place>
         <place id="Done">
@@ -170,6 +150,26 @@
                 <value>Done</value>
                 <graphics>
                     <offset x="2.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Move.Speed">
+            <graphics>
+                <position x="250.0" y="409.0"/>
+            </graphics>
+            <name>
+                <value>P6</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -239,7 +239,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,1</value>
+                <value>Default,0</value>
             </initialMarking>
         </place>
         <transition id="Clean1">
@@ -476,7 +476,7 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="T0 TO P6" source="Step" target="Speed">
+        <arc id="T0 TO P6" source="Step" target="Move.Speed">
             <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
             <arcpath id="" x="309.0" y="441.0" curvePoint="false"/>
             <arcpath id="" x="279.0" y="429.0" curvePoint="false"/>
@@ -511,7 +511,7 @@
         </arc>
         <arc id="T0 TO Arrived" source="Stop" target="Stopped">
             <arcpath id="" x="541.0" y="467.0" curvePoint="false"/>
-            <arcpath id="" x="575.0" y="495.0" curvePoint="false"/>
+            <arcpath id="" x="574.0" y="496.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -589,7 +589,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Speed TO Step" source="Speed" target="Step">
+        <arc id="Speed TO Step" source="Move.Speed" target="Step">
             <arcpath id="" x="280.0" y="424.0" curvePoint="false"/>
             <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
             <type value="normal"/>
@@ -597,7 +597,7 @@
                 <value>Default,#(Speed)</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T0" source="Distance" target="Step">
+        <arc id="P5 TO T0" source="Move.Distance" target="Step">
             <arcpath id="" x="275.0" y="355.0" curvePoint="false"/>
             <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
             <type value="normal"/>
@@ -653,7 +653,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO T2" source="Distance" target="Arrive">
+        <arc id="Distance TO T2" source="Move.Distance" target="Arrive">
             <arcpath id="" x="271.0" y="359.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="490.0" curvePoint="false"/>
             <type value="inhibitor"/>
