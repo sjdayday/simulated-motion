@@ -25,206 +25,6 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="Move.Run">
-            <graphics>
-                <position x="149.0" y="432.0"/>
-            </graphics>
-            <name>
-                <value>P5</value>
-                <graphics>
-                    <offset x="38.0" y="47.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="QuietAwake">
-            <graphics>
-                <position x="660.0" y="135.0"/>
-            </graphics>
-            <name>
-                <value>P7</value>
-                <graphics>
-                    <offset x="50.0" y="45.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="Move.CounterClockwise">
-            <graphics>
-                <position x="294.0" y="554.0"/>
-            </graphics>
-            <name>
-                <value>P4</value>
-                <graphics>
-                    <offset x="81.0" y="47.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="Recognized">
-            <graphics>
-                <position x="422.0" y="326.0"/>
-            </graphics>
-            <name>
-                <value>P9</value>
-                <graphics>
-                    <offset x="44.0" y="48.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="RewardFound">
-            <graphics>
-                <position x="487.0" y="135.0"/>
-            </graphics>
-            <name>
-                <value>P5</value>
-                <graphics>
-                    <offset x="-2.0" y="22.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="Move.Distance">
-            <graphics>
-                <position x="223.0" y="414.0"/>
-            </graphics>
-            <name>
-                <value>P1</value>
-                <graphics>
-                    <offset x="48.0" y="47.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="Navigated">
-            <graphics>
-                <position x="659.0" y="279.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="87.0" y="31.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="KnownPlace">
-            <graphics>
-                <position x="94.0" y="257.0"/>
-            </graphics>
-            <name>
-                <value>P1</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="Move.Speed">
-            <graphics>
-                <position x="220.0" y="488.0"/>
-            </graphics>
-            <name>
-                <value>P2</value>
-                <graphics>
-                    <offset x="46.0" y="49.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="VTE">
-            <graphics>
-                <position x="868.0" y="134.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="24.0" y="46.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
         <place id="Move.Turn">
             <graphics>
                 <position x="147.0" y="497.0"/>
@@ -263,6 +63,26 @@
                     <offset x="0.0" y="0.0"/>
                 </graphics>
                 <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Move.Run">
+            <graphics>
+                <position x="149.0" y="432.0"/>
+            </graphics>
+            <name>
+                <value>P5</value>
+                <graphics>
+                    <offset x="38.0" y="47.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value></value>
             </initialMarking>
         </place>
         <place id="Executing">
@@ -313,6 +133,26 @@
                 <value>P2</value>
                 <graphics>
                     <offset x="57.0" y="-5.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="QuietAwake">
+            <graphics>
+                <position x="660.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>P7</value>
+                <graphics>
+                    <offset x="50.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -385,6 +225,86 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
+        <place id="Move.CounterClockwise">
+            <graphics>
+                <position x="294.0" y="554.0"/>
+            </graphics>
+            <name>
+                <value>P4</value>
+                <graphics>
+                    <offset x="81.0" y="47.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value></value>
+            </initialMarking>
+        </place>
+        <place id="Recognized">
+            <graphics>
+                <position x="422.0" y="326.0"/>
+            </graphics>
+            <name>
+                <value>P9</value>
+                <graphics>
+                    <offset x="44.0" y="48.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Move.Distance">
+            <graphics>
+                <position x="223.0" y="414.0"/>
+            </graphics>
+            <name>
+                <value>P1</value>
+                <graphics>
+                    <offset x="48.0" y="47.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value></value>
+            </initialMarking>
+        </place>
+        <place id="RewardFound">
+            <graphics>
+                <position x="487.0" y="135.0"/>
+            </graphics>
+            <name>
+                <value>P5</value>
+                <graphics>
+                    <offset x="-2.0" y="22.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
         <place id="Move.Done">
             <graphics>
                 <position x="527.0" y="389.0"/>
@@ -425,14 +345,14 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
-        <place id="RewardRecalled">
+        <place id="PlaceUpdateMode">
             <graphics>
-                <position x="946.0" y="136.0"/>
+                <position x="167.0" y="361.0"/>
             </graphics>
             <name>
                 <value>P0</value>
                 <graphics>
-                    <offset x="60.0" y="46.0"/>
+                    <offset x="65.0" y="43.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -445,14 +365,54 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="PlaceUpdateMode">
+        <place id="Navigated">
             <graphics>
-                <position x="167.0" y="361.0"/>
+                <position x="659.0" y="279.0"/>
             </graphics>
             <name>
                 <value>P0</value>
                 <graphics>
-                    <offset x="65.0" y="43.0"/>
+                    <offset x="87.0" y="31.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value></value>
+            </initialMarking>
+        </place>
+        <place id="KnownPlace">
+            <graphics>
+                <position x="94.0" y="257.0"/>
+            </graphics>
+            <name>
+                <value>P1</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Move.Speed">
+            <graphics>
+                <position x="220.0" y="488.0"/>
+            </graphics>
+            <name>
+                <value>P2</value>
+                <graphics>
+                    <offset x="46.0" y="49.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -487,12 +447,12 @@
         </place>
         <place id="Simulated">
             <graphics>
-                <position x="742.0" y="46.0"/>
+                <position x="742.0" y="27.0"/>
             </graphics>
             <name>
                 <value>P0</value>
                 <graphics>
-                    <offset x="42.0" y="-5.0"/>
+                    <offset x="92.0" y="21.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -605,12 +565,12 @@
         </transition>
         <transition id="ExitSimulation">
             <graphics>
-                <position x="878.0" y="46.0"/>
+                <position x="578.0" y="79.0"/>
             </graphics>
             <name>
                 <value>T0</value>
                 <graphics>
-                    <offset x="37.0" y="-8.0"/>
+                    <offset x="38.0" y="-3.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -735,7 +695,7 @@
         </transition>
         <transition id="UseEnergy">
             <graphics>
-                <position x="405.0" y="28.0"/>
+                <position x="404.0" y="14.0"/>
             </graphics>
             <name>
                 <value>T0</value>
@@ -792,33 +752,7 @@
             <name>
                 <value>T1</value>
                 <graphics>
-                    <offset x="33.0" y="-7.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="SimulateVTE">
-            <graphics>
-                <position x="813.0" y="134.0"/>
-            </graphics>
-            <name>
-                <value>T2</value>
-                <graphics>
-                    <offset x="66.0" y="-8.0"/>
+                    <offset x="31.0" y="-3.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -839,7 +773,7 @@
         </transition>
         <transition id="NotUseEnergy">
             <graphics>
-                <position x="364.0" y="46.0"/>
+                <position x="377.0" y="27.0"/>
             </graphics>
             <name>
                 <value>T1</value>
@@ -915,17 +849,55 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="T3 TO Move.Simulated" source="SimulateQuiet" target="Simulated">
-            <arcpath id="" x="757.0" y="145.0" curvePoint="false"/>
-            <arcpath id="" x="757.0" y="76.0" curvePoint="false"/>
+        <arc id="Finish TO Enabled" source="FinishNovel" target="NovelPlace">
+            <arcpath id="" x="590.0" y="319.0" curvePoint="false"/>
+            <arcpath id="" x="855.0" y="319.0" curvePoint="false"/>
+            <arcpath id="" x="855.0" y="622.0" curvePoint="false"/>
+            <arcpath id="" x="109.0" y="622.0" curvePoint="false"/>
+            <arcpath id="" x="109.0" y="336.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="UseEnergy TO P0" source="UseEnergy" target="Resources">
-            <arcpath id="" x="410.0" y="48.0" curvePoint="false"/>
-            <arcpath id="" x="386.0" y="133.0" curvePoint="false"/>
+        <arc id="T3 TO P1" source="FinishKnown" target="KnownPlace">
+            <arcpath id="" x="589.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="852.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="852.0" y="17.0" curvePoint="false"/>
+            <arcpath id="" x="109.0" y="17.0" curvePoint="false"/>
+            <arcpath id="" x="109.0" y="257.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="T1 TO P7" source="Consume" target="QuietAwake">
+            <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
+            <arcpath id="" x="660.0" y="150.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="T3 TO Move.Simulated" source="SimulateQuiet" target="Simulated">
+            <arcpath id="" x="757.0" y="145.0" curvePoint="false"/>
+            <arcpath id="" x="757.0" y="57.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="T1 TO P6" source="Consume" target="Ripples">
+            <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
+            <arcpath id="" x="663.0" y="197.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,5</value>
+            </inscription>
+        </arc>
+        <arc id="Prepare TO P0" source="RandomPlan" target="PlaceUpdateMode">
+            <arcpath id="" x="182.0" y="336.0" curvePoint="false"/>
+            <arcpath id="" x="182.0" y="361.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -939,9 +911,17 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Prepare TO P0" source="RandomPlan" target="PlaceUpdateMode">
-            <arcpath id="" x="182.0" y="336.0" curvePoint="false"/>
-            <arcpath id="" x="182.0" y="361.0" curvePoint="false"/>
+        <arc id="UseEnergy TO P0" source="UseEnergy" target="Resources">
+            <arcpath id="" x="409.0" y="34.0" curvePoint="false"/>
+            <arcpath id="" x="385.0" y="132.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="NotUseEnergy TO Move.Simulated" source="NotUseEnergy" target="Simulated">
+            <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
+            <arcpath id="" x="742.0" y="42.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -955,6 +935,14 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="T3 TO QuietAwake" source="SimulateQuiet" target="QuietAwake">
+            <arcpath id="" x="742.0" y="150.0" curvePoint="false"/>
+            <arcpath id="" x="690.0" y="150.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
         <arc id="Rest TO Ripples" source="Rest" target="Ripples">
             <arcpath id="" x="589.0" y="205.0" curvePoint="false"/>
             <arcpath id="" x="661.0" y="205.0" curvePoint="false"/>
@@ -963,9 +951,9 @@
                 <value>Default,5</value>
             </inscription>
         </arc>
-        <arc id="T2 TO Move.Simulated" source="SimulateVTE" target="Simulated">
-            <arcpath id="" x="818.0" y="134.0" curvePoint="false"/>
-            <arcpath id="" x="766.0" y="73.0" curvePoint="false"/>
+        <arc id="NotUseEnergy TO P0" source="NotUseEnergy" target="Resources">
+            <arcpath id="" x="382.0" y="47.0" curvePoint="false"/>
+            <arcpath id="" x="382.0" y="132.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -980,9 +968,18 @@
                 <value>Default,5</value>
             </inscription>
         </arc>
-        <arc id="Start TO Ongoing" source="Execute" target="Executing">
-            <arcpath id="" x="387.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="474.0" y="272.0" curvePoint="false"/>
+        <arc id="T1 TO P4" source="Consume" target="Energy">
+            <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
+            <arcpath id="" x="530.0" y="104.0" curvePoint="false"/>
+            <arcpath id="" x="486.0" y="93.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,10</value>
+            </inscription>
+        </arc>
+        <arc id="FinishNovel TO P0" source="FinishNovel" target="Navigated">
+            <arcpath id="" x="590.0" y="319.0" curvePoint="false"/>
+            <arcpath id="" x="660.0" y="298.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -996,9 +993,9 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="FinishNovel TO P0" source="FinishNovel" target="Navigated">
-            <arcpath id="" x="590.0" y="319.0" curvePoint="false"/>
-            <arcpath id="" x="660.0" y="298.0" curvePoint="false"/>
+        <arc id="Start TO Ongoing" source="Execute" target="Executing">
+            <arcpath id="" x="387.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="474.0" y="272.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1044,104 +1041,17 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T1 TO P7" source="Consume" target="QuietAwake">
-            <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
-            <arcpath id="" x="660.0" y="150.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T3 TO P1" source="FinishKnown" target="KnownPlace">
-            <arcpath id="" x="589.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="1011.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="1011.0" y="17.0" curvePoint="false"/>
-            <arcpath id="" x="109.0" y="17.0" curvePoint="false"/>
-            <arcpath id="" x="109.0" y="257.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Finish TO Enabled" source="FinishNovel" target="NovelPlace">
-            <arcpath id="" x="590.0" y="319.0" curvePoint="false"/>
-            <arcpath id="" x="855.0" y="319.0" curvePoint="false"/>
-            <arcpath id="" x="855.0" y="622.0" curvePoint="false"/>
-            <arcpath id="" x="109.0" y="622.0" curvePoint="false"/>
-            <arcpath id="" x="109.0" y="336.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T1 TO P6" source="Consume" target="Ripples">
-            <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
-            <arcpath id="" x="663.0" y="197.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,5</value>
-            </inscription>
-        </arc>
-        <arc id="NotUseEnergy TO Move.Simulated" source="NotUseEnergy" target="Simulated">
-            <arcpath id="" x="384.0" y="61.0" curvePoint="false"/>
-            <arcpath id="" x="742.0" y="61.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T2 TO VTE" source="SimulateVTE" target="VTE">
-            <arcpath id="" x="823.0" y="149.0" curvePoint="false"/>
-            <arcpath id="" x="868.0" y="149.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T3 TO QuietAwake" source="SimulateQuiet" target="QuietAwake">
-            <arcpath id="" x="742.0" y="150.0" curvePoint="false"/>
-            <arcpath id="" x="690.0" y="150.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="NotUseEnergy TO P0" source="NotUseEnergy" target="Resources">
-            <arcpath id="" x="369.0" y="66.0" curvePoint="false"/>
-            <arcpath id="" x="380.0" y="132.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T1 TO P4" source="Consume" target="Energy">
-            <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
-            <arcpath id="" x="530.0" y="104.0" curvePoint="false"/>
-            <arcpath id="" x="486.0" y="93.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,10</value>
-            </inscription>
-        </arc>
         <arc id="NotUseEnergy TO Energy" source="NotUseEnergy" target="Energy">
-            <arcpath id="" x="384.0" y="61.0" curvePoint="false"/>
-            <arcpath id="" x="457.0" y="86.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="RewardRecalled TO ExitSimulation" source="RewardRecalled" target="ExitSimulation">
-            <arcpath id="" x="951.0" y="140.0" curvePoint="false"/>
-            <arcpath id="" x="883.0" y="76.0" curvePoint="false"/>
+            <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
+            <arcpath id="" x="458.0" y="82.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Move.Simulated TO ExitSimulation" source="Simulated" target="ExitSimulation">
-            <arcpath id="" x="772.0" y="61.0" curvePoint="false"/>
-            <arcpath id="" x="878.0" y="61.0" curvePoint="false"/>
+            <arcpath id="" x="743.0" y="46.0" curvePoint="false"/>
+            <arcpath id="" x="588.0" y="94.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Simulated)</value>
@@ -1150,6 +1060,14 @@
         <arc id="P0 TO SimulateQuiet" source="Navigated" target="SimulateQuiet">
             <arcpath id="" x="681.0" y="281.0" curvePoint="false"/>
             <arcpath id="" x="757.0" y="155.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="RewardFound TO ExitSimulation" source="RewardFound" target="ExitSimulation">
+            <arcpath id="" x="514.0" y="141.0" curvePoint="false"/>
+            <arcpath id="" x="578.0" y="94.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1166,14 +1084,6 @@
         <arc id="Ready TO Start" source="Planned" target="Execute">
             <arcpath id="" x="304.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="377.0" y="272.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="VTE TO T2" source="VTE" target="SimulateVTE">
-            <arcpath id="" x="868.0" y="149.0" curvePoint="false"/>
-            <arcpath id="" x="823.0" y="149.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1204,8 +1114,8 @@
             </inscription>
         </arc>
         <arc id="Resources TO UseEnergy" source="Resources" target="UseEnergy">
-            <arcpath id="" x="386.0" y="133.0" curvePoint="false"/>
-            <arcpath id="" x="410.0" y="48.0" curvePoint="false"/>
+            <arcpath id="" x="386.0" y="132.0" curvePoint="false"/>
+            <arcpath id="" x="409.0" y="34.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
@@ -1244,8 +1154,8 @@
             </inscription>
         </arc>
         <arc id="Energy TO UseEnergy" source="Energy" target="UseEnergy">
-            <arcpath id="" x="459.0" y="81.0" curvePoint="false"/>
-            <arcpath id="" x="425.0" y="43.0" curvePoint="false"/>
+            <arcpath id="" x="462.0" y="78.0" curvePoint="false"/>
+            <arcpath id="" x="424.0" y="29.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1260,16 +1170,16 @@
             </inscription>
         </arc>
         <arc id="Energy TO NotUseEnergy" source="Energy" target="NotUseEnergy">
-            <arcpath id="" x="457.0" y="86.0" curvePoint="false"/>
-            <arcpath id="" x="384.0" y="61.0" curvePoint="false"/>
+            <arcpath id="" x="458.0" y="82.0" curvePoint="false"/>
+            <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Move.Simulated TO UseEnergy" source="Simulated" target="UseEnergy">
-            <arcpath id="" x="742.0" y="60.0" curvePoint="false"/>
-            <arcpath id="" x="425.0" y="43.0" curvePoint="false"/>
+            <arcpath id="" x="742.0" y="41.0" curvePoint="false"/>
+            <arcpath id="" x="424.0" y="29.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
@@ -1278,14 +1188,6 @@
         <arc id="P8 TO Finish" source="Move.Done" target="FinishNovel">
             <arcpath id="" x="549.0" y="391.0" curvePoint="false"/>
             <arcpath id="" x="585.0" y="334.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="VTE TO ExitSimulation" source="VTE" target="ExitSimulation">
-            <arcpath id="" x="883.0" y="134.0" curvePoint="false"/>
-            <arcpath id="" x="883.0" y="76.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1315,20 +1217,20 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Energy TO Rest" source="Energy" target="Rest">
-            <arcpath id="" x="482.0" y="101.0" curvePoint="false"/>
-            <arcpath id="" x="584.0" y="190.0" curvePoint="false"/>
-            <type value="inhibitor"/>
-            <inscription>
-                <value></value>
-            </inscription>
-        </arc>
         <arc id="P5 TO T1" source="RewardFound" target="Consume">
             <arcpath id="" x="517.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Energy TO Rest" source="Energy" target="Rest">
+            <arcpath id="" x="482.0" y="101.0" curvePoint="false"/>
+            <arcpath id="" x="584.0" y="190.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="P3 TO T2" source="RestPending" target="Rest">
@@ -1340,8 +1242,8 @@
             </inscription>
         </arc>
         <arc id="QuietAwake TO ExitSimulation" source="QuietAwake" target="ExitSimulation">
-            <arcpath id="" x="689.0" y="144.0" curvePoint="false"/>
-            <arcpath id="" x="878.0" y="61.0" curvePoint="false"/>
+            <arcpath id="" x="662.0" y="142.0" curvePoint="false"/>
+            <arcpath id="" x="588.0" y="94.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1356,8 +1258,8 @@
             </inscription>
         </arc>
         <arc id="Move.Simulated TO NotUseEnergy" source="Simulated" target="NotUseEnergy">
-            <arcpath id="" x="742.0" y="61.0" curvePoint="false"/>
-            <arcpath id="" x="384.0" y="61.0" curvePoint="false"/>
+            <arcpath id="" x="742.0" y="42.0" curvePoint="false"/>
+            <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1372,8 +1274,8 @@
             </inscription>
         </arc>
         <arc id="Simulated TO ExitQuietAwake" source="Simulated" target="ExitQuietAwake">
-            <arcpath id="" x="745.0" y="70.0" curvePoint="false"/>
-            <arcpath id="" x="716.0" y="97.0" curvePoint="false"/>
+            <arcpath id="" x="746.0" y="52.0" curvePoint="false"/>
+            <arcpath id="" x="711.0" y="82.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Simulated)</value>
@@ -1388,15 +1290,15 @@
             </inscription>
         </arc>
         <arc id="Resources TO NotUseEnergy" source="Resources" target="NotUseEnergy">
-            <arcpath id="" x="380.0" y="132.0" curvePoint="false"/>
-            <arcpath id="" x="369.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="382.0" y="132.0" curvePoint="false"/>
+            <arcpath id="" x="382.0" y="47.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
         <arc id="Simulated TO T0" source="Simulated" target="ExitNavigation">
-            <arcpath id="" x="760.0" y="76.0" curvePoint="false"/>
+            <arcpath id="" x="760.0" y="57.0" curvePoint="false"/>
             <arcpath id="" x="809.0" y="279.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
