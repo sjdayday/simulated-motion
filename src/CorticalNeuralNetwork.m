@@ -60,9 +60,9 @@ classdef CorticalNeuralNetwork < handle
            hiddenLayerSize = obj.numberHiddenLayer;
            net = patternnet(hiddenLayerSize);
            % Setup Division of Data for Training, Validation, Testing
-           net.divideParam.trainRatio = 80/100;
-           net.divideParam.valRatio = 10/100;
-           net.divideParam.testRatio = 10/100;
+           net.divideParam.trainRatio = 100/100;
+           net.divideParam.valRatio = 0/100;
+           net.divideParam.testRatio = 0/100;
            net.trainParam.showWindow=0;  % suppress nntraintool window
 
            % Train the Network
