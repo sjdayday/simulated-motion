@@ -1,5 +1,4 @@
-%% ExperimentController class:  controller for ExperimentView
-% invokes classes as requested through the ExperimentView GUI 
+%% CorticalNeuralNetwork class:  relates representations, plans and outcomes 
 classdef CorticalNeuralNetwork < handle 
 
     properties
@@ -39,12 +38,23 @@ classdef CorticalNeuralNetwork < handle
         function add(obj,in,out)
            obj.input = [obj.input,in]; 
            obj.output = [obj.output,out];
-           obj.currentExecution = [in;out]; 
-           obj.executions = [obj.executions,obj.currentExecution]; 
+        end
+        function addExecution(obj,execution)
+            obj.currentExecution = execution; 
+            obj.executions = [obj.executions,obj.currentExecution]; 
+        end
+        function  [in,out] = parseExecution(~,~)
+            % must be overridden by superclasses
         end
         function resetSeed(~)
            load '../rngDefaultSettings';
-           rng(rngDefault);                
+           rng(rngDefault);
+%            pause(1);
+        end
+        function [in,out] = execute(obj,execution)
+            [in,out] = parseExecution(obj,execution);
+            add(obj,in,out); 
+            addExecution(obj,execution); 
         end
         function net = rebuildNetwork(obj)
            resetSeed(obj); 
