@@ -31,35 +31,25 @@ classdef CorticalNeuralNetworkTest < AbstractTest
             testCase.assertEqual(neuralNetwork.outputLength(), ...
                 2, 'length of the output vector');             
         end
-        function testInputAndOutputConstituteSingleExecution(testCase)
-            neuralNetwork = CorticalNeuralNetwork('sim',10); 
-            in = [1;1;0;0]; 
-            out = [0;1]; 
-            neuralNetwork.add(in,out);
-            testCase.assertEqual(neuralNetwork.currentExecution, ...
-                [1;1;0;0;0;1], 'append [in;out]');             
-            in = [2;1;0;0]; 
-            out = [0;2]; 
-            neuralNetwork.add(in,out);
-            testCase.assertEqual(neuralNetwork.currentExecution, ...
-                [2;1;0;0;0;2], 'append [in;out]');             
-        end
         function testRebuildNetworkAndGenerateFunctionFile(testCase)
             neuralNetwork = CorticalNeuralNetwork('sim',10); 
             in = [1;1;0;0]; 
             out = [0;1]; 
             in2 = [0;0;1;1]; 
             out2 = [1;0]; 
-%   No network created unless there are at least two different cases
+%   No network created unless there are at least two different executions
             neuralNetwork.add(in,out);
             neuralNetwork.add(in2,out2);
-            net = neuralNetwork.rebuildNetwork();             
+            net = neuralNetwork.rebuildNetwork();  
+            net.IW{1} 
             net2 = neuralNetwork.rebuildNetwork();                         
+            net2.IW{1} 
             testCase.assertEqual(net, net2, ...
                 'reset random generator each time to start from same place');             
             testCase.assertEqual(exist([neuralNetwork.neuralNetworkFunctionName,'.m'], ...
                 'file'), 2, ...
-                '2 = exists; function file created in current directory');             
+                '2 = exists; function file created in current directory');  
+            % neuralNetworkFunctionName should include .m
         end
 
     end
