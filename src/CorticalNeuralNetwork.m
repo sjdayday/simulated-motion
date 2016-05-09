@@ -8,6 +8,7 @@ classdef CorticalNeuralNetwork < handle
         output
         currentExecution
         executions
+        network
     end
     methods
         function obj = CorticalNeuralNetwork(prefix, hiddenLayer)
@@ -81,7 +82,7 @@ classdef CorticalNeuralNetwork < handle
            % Generate MATLAB function 
            genFunction(net,obj.neuralNetworkFunctionName,'MatrixOnly','yes',...
                'ShowLinks','no');
-
+           obj.network = net; 
         end
     end
 end

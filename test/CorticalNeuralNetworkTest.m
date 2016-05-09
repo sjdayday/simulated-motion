@@ -1,9 +1,9 @@
 classdef CorticalNeuralNetworkTest < AbstractTest
     methods (Test)
         function testCreatesCorticalNeuralNetwork(testCase)
-            neuralNetwork = CorticalNeuralNetwork('sim',10); 
+            neuralNetwork = CorticalNeuralNetwork('test',10); 
             testCase.assertEqual(neuralNetwork.neuralNetworkFunctionName, ...
-                'simNeuralNetworkFunction', 'generated function name'); 
+                'testNeuralNetworkFunction', 'generated function name'); 
             testCase.assertEqual(neuralNetwork.numberHiddenLayer, ...
                 10, 'size of the hidden layer'); 
             neuralNetwork = CorticalNeuralNetwork('',0); 
@@ -13,7 +13,7 @@ classdef CorticalNeuralNetworkTest < AbstractTest
                 4, 'default size of the hidden layer'); 
         end
         function testAppendAnInputAndOutputColumnVector(testCase)
-            neuralNetwork = CorticalNeuralNetwork('sim',10); 
+            neuralNetwork = CorticalNeuralNetwork('test',10); 
             testCase.assertEqual(neuralNetwork.inputLength(), ...
                 0, 'length of the input vector');             
             testCase.assertEqual(neuralNetwork.outputLength(), ...
@@ -32,7 +32,7 @@ classdef CorticalNeuralNetworkTest < AbstractTest
                 2, 'length of the output vector');             
         end
         function testRebuildNetworkAndGenerateFunctionFile(testCase)
-            neuralNetwork = CorticalNeuralNetwork('sim',10); 
+            neuralNetwork = CorticalNeuralNetwork('test',10); 
             in = [1;1;0;0]; 
             out = [0;1]; 
             in2 = [0;0;1;1]; 

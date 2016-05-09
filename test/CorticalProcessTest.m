@@ -21,23 +21,26 @@ classdef CorticalProcessTest < AbstractTest
             cortex = Cortex(motorCortex);             
             corticalProcess = TestingCorticalProcess(cortex,0.1,1,2,3); 
             testCase.assertEqual(length(corticalProcess.results), ...
-                 0, 'no results yet');  
+                 0, 'no results yet'); 
+            % force the simulationsRun counter 
             corticalProcess.simulationsRun = 4; 
             execution = corticalProcess.process(); 
-            disp(execution); 
+%             disp(execution); 
             testCase.assertEqual(length(corticalProcess.results), ...
                  1, 'one result');                      
 %           Expecting result: 2 - (0.1 * 4) - 1 = 0.6                 
             testCase.assertThat(corticalProcess.currentResult(), ...            
                 IsEqualTo(0.6, 'Within', RelativeTolerance(.0000001))); 
+            % force the simulationsRun counter
             corticalProcess.simulationsRun = 0; 
             execution = corticalProcess.process(); 
-            disp(execution);
+%             disp(execution);
             testCase.assertEqual(length(corticalProcess.results), ...
-                 2, 'one result');                      
+                 2, '2nd result');                      
 %           Expecting result: 0.6 + (0 - (0.2 * 0) - 1) = -0.4                 
             testCase.assertThat(corticalProcess.currentResult(), ...            
                 IsEqualTo(-0.4, 'Within', RelativeTolerance(.0000001))); 
+%             disp(corticalProcess.results);
         end
 
     end

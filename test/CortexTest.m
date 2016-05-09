@@ -16,7 +16,22 @@ classdef CortexTest < AbstractTest
             execution = cortex.randomMotorExecution(); 
             testCase.assertEqual(execution, [1;0;0;0;1;0;1;0]);             
         end
+        function testLoadExecutionsAndBuildNetwork(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex); 
+            cortex.loadNetworks(20); 
+            testCase.assertEqual( ... 
+                length(cortex.simulationNeuralNetwork.executions), 20);
+            netWeights = cortex.simulationNeuralNetwork.network.IW{1}; 
+            testCase.assertThat(netWeights(1,1), ...            
+                IsEqualTo(1.5636, 'Within', RelativeTolerance(.0001))); 
+%             disp(netWeights); 
+        end
         
+            % force the simulationsRun counter
+
 %             testCase.assertEqual(neuralNetwork.outputLength(), ...
 %                 0, 'length of the output vector');             
 %             in = [1;1;0;0]; 

@@ -17,6 +17,15 @@ classdef Cortex < handle
         function execution = randomMotorExecution(obj)
            execution = obj.motorCortex.randomMotorExecution();  
         end
+        function loadNetworks(obj, numberExecutions)
+           for ii = 1:numberExecutions
+               execution = randomMotorExecution(obj); 
+               obj.simulationNeuralNetwork.execute(execution); 
+               obj.planNeuralNetwork.execute(execution);                
+           end
+           obj.simulationNeuralNetwork.rebuildNetwork(); 
+           obj.planNeuralNetwork.rebuildNetwork(); 
+        end
 %         function len = inputLength(obj)
 %            len = arrayLength(obj,obj.input);  
 %         end
