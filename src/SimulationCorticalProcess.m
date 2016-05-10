@@ -6,6 +6,8 @@ classdef SimulationCorticalProcess < CorticalProcess
         predictions
         predictionThreshold
         simulation
+        representationMap
+        currentRepresentation
     end
     methods
         function obj = SimulationCorticalProcess(cortex, simulation,physical, ...
@@ -16,13 +18,24 @@ classdef SimulationCorticalProcess < CorticalProcess
             obj.predictions = []; 
             obj.predictionThreshold = 0.9; 
             obj.neuralNetworkFunction = obj.cortex.simulationNeuralNetwork.neuralNetworkFunctionName; 
+            buildRepresentationMap(obj);
+            obj.currentRepresentation = '';             
         end
+        function buildRepresentationMap(obj)
+            obj.representationMap = containers.Map();
+            obj.representationMap('FoundRewardAway') = [1;0]; 
+            obj.representationMap('FoundRewardHome') = [0;1];             
+        end
+        
         function simulate(obj)
             obj.simulationsRun = 0; 
             obj.simulations = []; 
             obj.predictions = []; 
+            input = obj.representationMap(obj.currentRepresentation);  
             for ii = 1:obj.numberSimulations
-               obj.simulation = obj.cortex.randomMotorExecution();  
+               obj.simulation = obj.cortex.randomDrawByPartialInput(input);
+%                disp(obj.simulation); 
+%                obj.simulation = obj.cortex.randomMotorExecution();  
                obj.simulationsRun = obj.simulationsRun + 1;                
                obj.simulations = [obj.simulations, obj.simulation];
                [in,~] = obj.cortex.simulationNeuralNetwork.parseExecution(obj.simulation);

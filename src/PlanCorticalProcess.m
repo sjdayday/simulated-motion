@@ -41,33 +41,8 @@ classdef PlanCorticalProcess < CorticalProcess
             plans = zeros(4,1); 
             plans(obj.motorPlan) = 1; 
             partialInput = [input(1:2,:);plans];
-%             disp(partialInput); 
             execution = obj.cortex.randomDrawByPartialInput(partialInput);  
-%             disp(execution); 
         end         
-
-%         function simulate(obj)
-%             obj.simulationsRun = 0; 
-%             obj.simulations = []; 
-%             obj.predictions = []; 
-%             for ii = 1:obj.numberSimulations
-%                obj.simulation = obj.cortex.randomMotorExecution();  
-%                obj.simulationsRun = obj.simulationsRun + 1;                
-%                obj.simulations = [obj.simulations, obj.simulation];
-%                [in,~] = obj.cortex.simulationNeuralNetwork.parseExecution(obj.simulation);
-%                eval(['prediction = ',obj.neuralNetworkFunction,'(in);']); 
-%                obj.predictions = [obj.predictions, prediction];
-%                if predictedReward(obj, prediction) 
-%                    break; 
-%                end
-%             end
-%         end
-%         function rewarding = predictedReward(obj, prediction)
-%             rewarding = 0; 
-%             if prediction(1,1) > obj.tolerance
-%                 rewarding = 1; 
-%             end
-%         end
          
     end
 end
