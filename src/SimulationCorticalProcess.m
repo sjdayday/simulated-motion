@@ -46,6 +46,9 @@ classdef SimulationCorticalProcess < CorticalProcess
                end
             end
         end
+        function execute(obj, execution)
+            obj.cortex.simulationExecuteAndRebuild(execution); 
+        end
         function rewarding = predictedReward(obj, prediction)
             rewarding = 0; 
             if prediction(1,1) > obj.predictionThreshold

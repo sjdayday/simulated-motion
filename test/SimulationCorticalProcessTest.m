@@ -39,11 +39,13 @@ classdef SimulationCorticalProcessTest < AbstractTest
             motorCortex = TestingMotorExecutions; 
             cortex = Cortex(motorCortex);  
             cortex.loadNetworks(20); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 1);                                  
             corticalProcess = SimulationCorticalProcess(cortex,0.1,1,2,5); 
             testCase.assertEqual(length(corticalProcess.results), ...
                  0, 'no results yet'); 
             corticalProcess.currentRepresentation = 'FoundRewardAway';                
             execution = corticalProcess.process(); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 2);                                  
             simulations = corticalProcess.simulations;           
             testCase.assertEqual(size(corticalProcess.simulations,2), 3);                      
             testCase.assertEqual(corticalProcess.simulations(:,3), ...

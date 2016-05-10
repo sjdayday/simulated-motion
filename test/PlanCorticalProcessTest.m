@@ -40,9 +40,11 @@ classdef PlanCorticalProcessTest < AbstractTest
             motorCortex = TestingMotorExecutions; 
             cortex = Cortex(motorCortex);  
             cortex.loadNetworks(20); 
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 1);                                                          
             corticalProcess = PlanCorticalProcess(cortex,1,2);
             corticalProcess.currentRepresentation = 'FoundRewardAway';   
             execution = corticalProcess.process(); 
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 2);                                              
             testCase.assertEqual(corticalProcess.motorPlan, 3);
             testCase.assertEqual(execution, [1;0;0;0;1;0;1;0]);             
             testCase.assertThat(corticalProcess.currentResult(), ...            

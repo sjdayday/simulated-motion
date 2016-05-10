@@ -27,10 +27,14 @@ classdef CorticalProcess < handle
         function execution = process(obj)
             simulate(obj);
             execution = draw(obj); 
+            execute(obj, execution); 
             updateResults(obj, execution); 
         end
-        function simulate(obj)
+        function simulate(~)
            %override if needed  
+        end
+        function execute(~, ~)
+           % must be overridden by subclasses  
         end
         function execution = draw(~)
             execution = zeros(8,1); 

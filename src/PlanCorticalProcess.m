@@ -43,6 +43,9 @@ classdef PlanCorticalProcess < CorticalProcess
             partialInput = [input(1:2,:);plans];
             execution = obj.cortex.randomDrawByPartialInput(partialInput);  
         end         
+        function execute(obj, execution)
+            obj.cortex.planExecuteAndRebuild(execution); 
+        end
          
     end
 end
