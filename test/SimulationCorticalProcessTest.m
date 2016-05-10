@@ -8,7 +8,9 @@ classdef SimulationCorticalProcessTest < AbstractTest
             cortex = Cortex(motorCortex);  
             cortex.loadNetworks(20); 
             corticalProcess = SimulationCorticalProcess(cortex,0.2,1,2,5);
-            corticalProcess.tolerance = 1; % no simulations will be skipped
+            testCase.assertEqual(corticalProcess.predictionThreshold, ...
+                 0.9, 'default');             
+            corticalProcess.predictionThreshold = 1; % no simulations will be skipped
             testCase.assertEqual(length(corticalProcess.results), ...
                  0, 'no results yet'); 
             execution = corticalProcess.process(); 
@@ -40,7 +42,7 @@ classdef SimulationCorticalProcessTest < AbstractTest
             testCase.assertEqual(length(corticalProcess.results), ...
                  0, 'no results yet'); 
             execution = corticalProcess.process(); 
-            simulations = corticalProcess.simulations; 
+            simulations = corticalProcess.simulations;           
             testCase.assertEqual(size(corticalProcess.simulations,2), 4);                      
             testCase.assertEqual(corticalProcess.simulations(:,4), ...
                  [1;0;0;0;1;0;1;0]);                      

@@ -4,7 +4,7 @@ classdef SimulationCorticalProcess < CorticalProcess
     properties
         simulations
         predictions
-        tolerance
+        predictionThreshold
         simulation
     end
     methods
@@ -14,7 +14,7 @@ classdef SimulationCorticalProcess < CorticalProcess
                 reward, numberSimulations);
             obj.simulations = []; 
             obj.predictions = []; 
-            obj.tolerance = 0.9; 
+            obj.predictionThreshold = 0.9; 
             obj.neuralNetworkFunction = obj.cortex.simulationNeuralNetwork.neuralNetworkFunctionName; 
         end
         function simulate(obj)
@@ -35,7 +35,7 @@ classdef SimulationCorticalProcess < CorticalProcess
         end
         function rewarding = predictedReward(obj, prediction)
             rewarding = 0; 
-            if prediction(1,1) > obj.tolerance
+            if prediction(1,1) > obj.predictionThreshold
                 rewarding = 1; 
             end
         end
