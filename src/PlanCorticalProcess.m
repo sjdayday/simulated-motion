@@ -5,6 +5,7 @@ classdef PlanCorticalProcess < CorticalProcess
         weightMap
         representationMap
         currentRepresentation
+        motorPlan
     end
     methods
         function obj = PlanCorticalProcess(cortex,physical, reward)
@@ -36,11 +37,13 @@ classdef PlanCorticalProcess < CorticalProcess
             eval(['predictedPlans = ',obj.neuralNetworkFunction,'(input);']);
             weightedPlans = predictedPlans'; 
             obj.weightMap(obj.currentRepresentation) = weightedPlans; 
-            plan = randsample([1 2 3 4], 1, true, weightedPlans);
-            execution = obj.cortex.randomMotorExecution();  
-            % executing the plan means draw for the plan + representation,
-            % until we match, then 
-            % see whether we get a reward or not 
+            obj.motorPlan = randsample([1 2 3 4], 1, true, weightedPlans);
+            plans = zeros(4,1); 
+            plans(obj.motorPlan) = 1; 
+            partialInput = [input(1:2,:);plans];
+%             disp(partialInput); 
+            execution = obj.cortex.randomDrawByPartialInput(partialInput);  
+%             disp(execution); 
         end         
 
 %         function simulate(obj)
@@ -59,12 +62,12 @@ classdef PlanCorticalProcess < CorticalProcess
 %                end
 %             end
 %         end
-        function rewarding = predictedReward(obj, prediction)
-            rewarding = 0; 
-            if prediction(1,1) > obj.tolerance
-                rewarding = 1; 
-            end
-        end
+%         function rewarding = predictedReward(obj, prediction)
+%             rewarding = 0; 
+%             if prediction(1,1) > obj.tolerance
+%                 rewarding = 1; 
+%             end
+%         end
          
     end
 end

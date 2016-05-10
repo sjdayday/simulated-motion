@@ -16,7 +16,19 @@ classdef CortexTest < AbstractTest
             execution = cortex.randomMotorExecution(); 
             testCase.assertEqual(execution, [1;0;0;0;1;0;1;0]);             
         end
+        function testRandomDrawByPartialInput(testCase)
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex); 
+            execution = cortex.randomDrawByPartialInput([1;0]); 
+            testCase.assertEqual(execution, [1;0;0;0;1;0;1;0]);             
+%             disp(execution); 
+            execution = cortex.randomDrawByPartialInput([0;1]); 
+%             disp(execution); 
+            testCase.assertEqual(execution, [0;1;0;1;0;0;0;1]); 
+        end        
         function testLoadExecutionsAndBuildNetwork(testCase)
+            % FIXME:  weights vary depending on side effects, e.g, other
+            % tests
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             motorCortex = TestingMotorExecutions; 
@@ -27,6 +39,8 @@ classdef CortexTest < AbstractTest
             netWeights = cortex.simulationNeuralNetwork.network.IW{1}; 
             testCase.assertThat(netWeights(1,1), ...            
                 IsEqualTo(1.5636, 'Within', RelativeTolerance(.0001))); 
+%                 IsEqualTo(-1.24078, 'Within', RelativeTolerance(.0001))); 
+            
 %             disp(netWeights); 
         end
         

@@ -17,6 +17,16 @@ classdef Cortex < handle
         function execution = randomMotorExecution(obj)
            execution = obj.motorCortex.randomMotorExecution();  
         end
+        function execution = randomDrawByPartialInput(obj, representation) 
+           done = false; 
+           len = length(representation); 
+           while ~done
+               execution = obj.motorCortex.randomMotorExecution();
+               if execution(1:len,:) == representation
+                   done = true; 
+               end
+           end
+        end
         function loadNetworks(obj, numberExecutions)
            for ii = 1:numberExecutions
                execution = randomMotorExecution(obj); 
