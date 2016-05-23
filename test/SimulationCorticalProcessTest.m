@@ -78,11 +78,11 @@ classdef SimulationCorticalProcessTest < AbstractTest
             testingCorticalProcess.forcedExecution=[1;0;1;0;0;0;1;0]; % Plan A, rewarding
             simCorticalProcess.currentRepresentation = 'FoundRewardAway';                
             
-            execution = simCorticalProcess.process(); 
+            simCorticalProcess.process(); 
             testCase.assertEqual(cortex.simulationNetworkRebuildCount, 2);                                  
             simulations = simCorticalProcess.simulations;           
-            testCase.assertEqual(size(simCorticalProcess.simulations,2), 1);                      
-            testCase.assertEqual(simCorticalProcess.simulations(:,1), ...
+            testCase.assertEqual(size(simulations,2), 1);                      
+            testCase.assertEqual(simulations(:,1), ...
                  [1;0;1;0;0;0;1;0]);                                  
         end
     end

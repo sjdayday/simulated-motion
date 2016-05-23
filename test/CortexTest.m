@@ -39,58 +39,29 @@ classdef CortexTest < AbstractTest
             netWeights = cortex.simulationNeuralNetwork.network.IW{1}; 
             testCase.assertThat(netWeights(1,1), ...            
                 IsEqualTo(1.5636, 'Within', RelativeTolerance(.0001))); 
-%                 IsEqualTo(-1.24078, 'Within', RelativeTolerance(.0001))); 
+%                 IsEqualTo(-1.24078, 'Within', RelativeTolerance(.0001)));             
             
 %             disp(netWeights); 
         end
-        
-            % force the simulationsRun counter
-
-%             testCase.assertEqual(neuralNetwork.outputLength(), ...
-%                 0, 'length of the output vector');             
-%             in = [1;1;0;0]; 
-%             out = [0;1]; 
-%             neuralNetwork.add(in,out);
-%             testCase.assertEqual(neuralNetwork.inputLength(), ...
-%                 1, 'length of the input vector');             
-%             testCase.assertEqual(neuralNetwork.outputLength(), ...
-%                 1, 'length of the output vector');             
-%             neuralNetwork.add(in,out);
-%             testCase.assertEqual(neuralNetwork.inputLength(), ...
-%                 2, 'length of the input vector');             
-%             testCase.assertEqual(neuralNetwork.outputLength(), ...
-%                 2, 'length of the output vector');             
-%         end
-%         function testInputAndOutputConstituteSingleExecution(testCase)
-%             neuralNetwork = CorticalNeuralNetwork('sim',10); 
-%             in = [1;1;0;0]; 
-%             out = [0;1]; 
-%             neuralNetwork.add(in,out);
-%             testCase.assertEqual(neuralNetwork.currentExecution, ...
-%                 [1;1;0;0;0;1], 'append [in;out]');             
-%             in = [2;1;0;0]; 
-%             out = [0;2]; 
-%             neuralNetwork.add(in,out);
-%             testCase.assertEqual(neuralNetwork.currentExecution, ...
-%                 [2;1;0;0;0;2], 'append [in;out]');             
-%         end
-%         function testRebuildNetworkAndGenerateFunctionFile(testCase)
-%             neuralNetwork = CorticalNeuralNetwork('sim',10); 
-%             in = [1;1;0;0]; 
-%             out = [0;1]; 
-%             in2 = [0;0;1;1]; 
-%             out2 = [1;0]; 
-% %   No network created unless there are at least two different cases
-%             neuralNetwork.add(in,out);
-%             neuralNetwork.add(in2,out2);
-%             net = neuralNetwork.rebuildNetwork();             
-%             net2 = neuralNetwork.rebuildNetwork();                         
-%             testCase.assertEqual(net, net2, ...
-%                 'reset random generator each time to start from same place');             
-%             testCase.assertEqual(exist([neuralNetwork.neuralNetworkFunctionName,'.m'], ...
-%                 'file'), 2, ...
-%                 '2 = exists; function file created in current directory');             
-%         end
+        function testRebuildNetworksSinglyOrAllAtOnce(testCase)
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 0);
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 0);            
+            cortex.loadNetworks(10); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 1);
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 1);            
+            cortex.simulationRebuild(); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 2);
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 1);            
+            cortex.planRebuild(); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 2);
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 2);   
+            cortex.rebuildAll(); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 3);
+            testCase.assertEqual(cortex.planNetworkRebuildCount, 3);   
+        end
+        % TODO: consider executing network calls rebuildAll()
 
     end
 end

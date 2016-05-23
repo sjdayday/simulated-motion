@@ -47,6 +47,10 @@ classdef Cortex < handle
             obj.planNeuralNetwork.rebuildNetwork(); 
             obj.planNetworkRebuildCount = obj.planNetworkRebuildCount + 1;             
         end
+        function rebuildAll(obj)
+            planRebuild(obj);
+            simulationRebuild(obj);
+        end
         function loadNetworks(obj, numberExecutions)
            for ii = 1:numberExecutions
                execution = randomMotorExecution(obj); 
