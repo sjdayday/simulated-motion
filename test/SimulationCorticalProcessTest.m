@@ -57,6 +57,6 @@ classdef SimulationCorticalProcessTest < AbstractTest
                 IsEqualTo(0.7, 'Within', RelativeTolerance(.0000001))); 
             
         end
-
+% test using planCorticalProcess to drive simulation
     end
 end

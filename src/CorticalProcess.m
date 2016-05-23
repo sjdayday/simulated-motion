@@ -12,6 +12,7 @@ classdef CorticalProcess < handle
         results
         totalCost
         neuralNetworkFunction
+        currentRepresentation
     end
     methods
         function obj = CorticalProcess(cortex, simulation,physical,reward,numberSimulations)
@@ -23,6 +24,7 @@ classdef CorticalProcess < handle
             obj.simulationsRun = 0; 
             obj.results = [];
             obj.totalCost = 0; 
+            obj.currentRepresentation = '';                         
         end
         function execution = process(obj)
             simulate(obj);

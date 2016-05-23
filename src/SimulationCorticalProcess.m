@@ -7,7 +7,8 @@ classdef SimulationCorticalProcess < CorticalProcess
         predictionThreshold
         simulation
         representationMap
-        currentRepresentation
+        planCorticalProcess
+        usePlanCorticalProcess
     end
     methods
         function obj = SimulationCorticalProcess(cortex, simulation,physical, ...
@@ -19,7 +20,7 @@ classdef SimulationCorticalProcess < CorticalProcess
             obj.predictionThreshold = 0.9; 
             obj.neuralNetworkFunction = obj.cortex.simulationNeuralNetwork.neuralNetworkFunctionName; 
             buildRepresentationMap(obj);
-            obj.currentRepresentation = '';             
+            obj.usePlanCorticalProcess = 0; 
         end
         function buildRepresentationMap(obj)
             obj.representationMap = containers.Map();
@@ -33,17 +34,21 @@ classdef SimulationCorticalProcess < CorticalProcess
             obj.predictions = []; 
             input = obj.representationMap(obj.currentRepresentation);  
             for ii = 1:obj.numberSimulations
-               obj.simulation = obj.cortex.randomDrawByPartialInput(input);
+                if obj.usePlanCorticalProcess
+                    obj.simulation = obj.planCorticalProcess.draw();  % pCP assumes input set to same as this
+                else
+                    obj.simulation = obj.cortex.randomDrawByPartialInput(input);
+                end
 %                disp(obj.simulation); 
 %                obj.simulation = obj.cortex.randomMotorExecution();  
-               obj.simulationsRun = obj.simulationsRun + 1;                
-               obj.simulations = [obj.simulations, obj.simulation];
-               [in,~] = obj.cortex.simulationNeuralNetwork.parseExecution(obj.simulation);
-               eval(['prediction = ',obj.neuralNetworkFunction,'(in);']); 
-               obj.predictions = [obj.predictions, prediction];
-               if predictedReward(obj, prediction) 
-                   break; 
-               end
+                obj.simulationsRun = obj.simulationsRun + 1;                
+                obj.simulations = [obj.simulations, obj.simulation];
+                [in,~] = obj.cortex.simulationNeuralNetwork.parseExecution(obj.simulation);
+                eval(['prediction = ',obj.neuralNetworkFunction,'(in);']); 
+                obj.predictions = [obj.predictions, prediction];
+                if predictedReward(obj, prediction) 
+                    break; 
+                end
             end
         end
         function execute(obj, execution)

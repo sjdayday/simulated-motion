@@ -4,7 +4,6 @@ classdef PlanCorticalProcess < CorticalProcess
     properties
         weightMap
         representationMap
-        currentRepresentation
         motorPlan
     end
     methods
@@ -13,7 +12,6 @@ classdef PlanCorticalProcess < CorticalProcess
             obj.neuralNetworkFunction = ... 
                 obj.cortex.planNeuralNetwork.neuralNetworkFunctionName; 
             buildMaps(obj); 
-            obj.currentRepresentation = ''; 
         end
         function buildMaps(obj)
             buildWeightMap(obj);
