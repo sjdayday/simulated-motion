@@ -14,6 +14,17 @@ classdef CorticalProcessTest < AbstractTest
             testCase.assertEqual(corticalProcess.numberSimulations, ...
                 3, 'number of quiet awake simulations'); 
         end
+        function testTestingCorticalProcessSupportsForcedExecution(testCase)
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex);             
+            corticalProcess = TestingCorticalProcess(cortex,0.1,1,2,3); 
+            corticalProcess.force = true;
+            testCase.assertEqual(corticalProcess.draw(), ...
+                 [0; 0; 0; 0; 0; 0; 0; 0], 'default');
+            corticalProcess.forcedExecution = [1; 0; 1; 0; 1; 0; 1; 0]; 
+            testCase.assertEqual(corticalProcess.draw(), ...
+                 [1; 0; 1; 0; 1; 0; 1; 0], 'as forced');             
+        end
         function testProcessAndUpdateResult(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance

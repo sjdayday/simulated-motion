@@ -36,6 +36,8 @@ classdef PlanCorticalProcess < CorticalProcess
             weightedPlans = predictedPlans'; 
             obj.weightMap(obj.currentRepresentation) = weightedPlans; 
             obj.motorPlan = randsample([1 2 3 4], 1, true, weightedPlans);
+%             disp([obj.neuralNetworkFunction(:,1:3),' plan weightedPlans: ', ...
+%                 num2str(weightedPlans)]);
             plans = zeros(4,1); 
             plans(obj.motorPlan) = 1; 
             partialInput = [input(1:2,:);plans];

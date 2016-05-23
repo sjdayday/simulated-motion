@@ -24,7 +24,7 @@ classdef CorticalProcess < handle
             obj.simulationsRun = 0; 
             obj.results = [];
             obj.totalCost = 0; 
-            obj.currentRepresentation = '';                         
+            obj.currentRepresentation = '';  
         end
         function execution = process(obj)
             simulate(obj);
@@ -47,6 +47,9 @@ classdef CorticalProcess < handle
                 (obj.simulationCost*obj.simulationsRun) - obj.physicalCost;
             obj.totalCost = obj.totalCost + cost; 
             obj.results = [obj.results,obj.totalCost]; 
+%             disp([obj.neuralNetworkFunction(:,1:3),' cost: ',num2str(cost), ...
+%                 ' representation: ', obj.currentRepresentation(:,12:end), ...
+%                 ' execution: ',num2str(execution')]);
         end
         function reward = calculateReward(obj, execution)
            if execution(7,1) == 1

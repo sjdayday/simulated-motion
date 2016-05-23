@@ -35,21 +35,26 @@ classdef SimulationCorticalProcess < CorticalProcess
             input = obj.representationMap(obj.currentRepresentation);  
             for ii = 1:obj.numberSimulations
                 if obj.usePlanCorticalProcess
-                    obj.simulation = obj.planCorticalProcess.draw();  % pCP assumes input set to same as this
+                    obj.simulation = obj.planCorticalProcess.draw();  % pCP assumes representation set to same as this
+%                     disp([obj.neuralNetworkFunction(:,1:3), ...
+%                         ' simulation just drew from planCorticalProcess: ', ...
+%                         num2str(obj.simulation')]);
                 else
                     obj.simulation = obj.cortex.randomDrawByPartialInput(input);
                 end
-%                disp(obj.simulation); 
-%                obj.simulation = obj.cortex.randomMotorExecution();  
                 obj.simulationsRun = obj.simulationsRun + 1;                
                 obj.simulations = [obj.simulations, obj.simulation];
                 [in,~] = obj.cortex.simulationNeuralNetwork.parseExecution(obj.simulation);
-                eval(['prediction = ',obj.neuralNetworkFunction,'(in);']); 
-                obj.predictions = [obj.predictions, prediction];
+                prediction = predict(obj, in); 
                 if predictedReward(obj, prediction) 
                     break; 
                 end
             end
+        end
+        function prediction = predict(obj, in)
+                eval(['prediction = ',obj.neuralNetworkFunction,'(in);']); 
+%                 disp(['sim prediction: ',num2str(prediction')]);
+                obj.predictions = [obj.predictions, prediction];            
         end
         function execute(obj, execution)
             obj.cortex.simulationExecuteAndRebuild(execution); 

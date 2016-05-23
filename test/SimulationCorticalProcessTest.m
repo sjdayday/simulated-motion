@@ -57,6 +57,33 @@ classdef SimulationCorticalProcessTest < AbstractTest
                 IsEqualTo(0.7, 'Within', RelativeTolerance(.0000001))); 
             
         end
-% test using planCorticalProcess to drive simulation
+        function testUsesPlanCorticalProcessToDriveSimulation(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            import matlab.unittest.constraints.AbsoluteTolerance
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex);  
+            cortex.loadNetworks(20); 
+            testingCorticalProcess = TestingCorticalProcess(cortex,0.1,1,2,3); 
+            testingCorticalProcess.force = true; 
+%             planCorticalProcess = PlanCorticalProcess(cortex,1,2);     
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 1);                                  
+            simulationCost = 0.1; 
+            simCorticalProcess = SimulationCorticalProcess(cortex,simulationCost,1,2,5); 
+            simCorticalProcess.predictionThreshold = 0.5; 
+            % use what planCorticalProcess knows about motor plans to suggest one to
+            % simulate
+            simCorticalProcess.planCorticalProcess = testingCorticalProcess; 
+            simCorticalProcess.usePlanCorticalProcess = 1;
+            testingCorticalProcess.forcedExecution=[1;0;1;0;0;0;1;0]; % Plan A, rewarding
+            simCorticalProcess.currentRepresentation = 'FoundRewardAway';                
+            
+            execution = simCorticalProcess.process(); 
+            testCase.assertEqual(cortex.simulationNetworkRebuildCount, 2);                                  
+            simulations = simCorticalProcess.simulations;           
+            testCase.assertEqual(size(simCorticalProcess.simulations,2), 1);                      
+            testCase.assertEqual(simCorticalProcess.simulations(:,1), ...
+                 [1;0;1;0;0;0;1;0]);                                  
+        end
     end
 end
