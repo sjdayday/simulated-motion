@@ -14,6 +14,8 @@ classdef CombinedCorticalProcess < handle
         planCorticalProcess
         simulationCorticalProcess
         currentRepresentation
+        simulationPredictionThreshold
+        usePlanCorticalProcess
     end
     methods
         function obj = CombinedCorticalProcess(cortex)
@@ -26,6 +28,8 @@ classdef CombinedCorticalProcess < handle
             obj.results = [];
             obj.totalCost = 0; 
             obj.currentRepresentation = '';  
+            obj.simulationPredictionThreshold = 0; 
+            obj.usePlanCorticalProcess = 0; 
         end
         function build(obj)
             obj.planCorticalProcess = PlanCorticalProcess(obj.cortex, ... 
@@ -33,13 +37,14 @@ classdef CombinedCorticalProcess < handle
             obj.simulationCorticalProcess = SimulationCorticalProcess( ... 
                 obj.cortex,obj.simulationCost,obj.physicalCost, ... 
                 obj.rewardPayoff,obj.numberSimulations); 
-%         simulationCorticalProcess.predictionThreshold = 0.5; 
-%         steps = 70; 
-%         % use what planCorticalProcess knows about motor plans to suggest one to
-%         % simulate
-%         simulationCorticalProcess.planCorticalProcess = planCorticalProcess; 
-%         simulationCorticalProcess.usePlanCorticalProcess = 1;
-%  
+            obj.simulationCorticalProcess.predictionThreshold = ...
+                obj.simulationPredictionThreshold; 
+            if obj.usePlanCorticalProcess
+                obj.simulationCorticalProcess.usePlanCorticalProcess = ... 
+                    obj.usePlanCorticalProcess;
+                obj.simulationCorticalProcess.planCorticalProcess = ...
+                    obj.planCorticalProcess; 
+            end
         end
         function execution = process(obj)
             simulate(obj);

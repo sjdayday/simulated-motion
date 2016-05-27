@@ -7,7 +7,10 @@ classdef CombinedCorticalProcessTest < AbstractTest
             corticalProcess.simulationCost = 0.1;
             corticalProcess.physicalCost = 1;
             corticalProcess.rewardPayoff = 2;            
-            corticalProcess.numberSimulations = 5;            
+            corticalProcess.numberSimulations = 5; 
+            corticalProcess.simulationPredictionThreshold = 0.5;
+            corticalProcess.usePlanCorticalProcess = 1;
+            
             corticalProcess.build(); 
             testCase.assertClass(corticalProcess.simulationCorticalProcess, ... 
                 'SimulationCorticalProcess');             
@@ -29,13 +32,12 @@ classdef CombinedCorticalProcessTest < AbstractTest
                 5, 'number of quiet awake simulations'); 
             testCase.assertEqual(corticalProcess.planCorticalProcess.numberSimulations, ...
                 0, 'number of quiet awake simulations'); 
-% start here
-            %         simulationCorticalProcess.predictionThreshold = 0.5; 
-%         steps = 70; 
-%         % use what planCorticalProcess knows about motor plans to suggest one to
-%         % simulate
-%         simulationCorticalProcess.planCorticalProcess = planCorticalProcess; 
-%         simulationCorticalProcess.usePlanCorticalProcess = 1;
+            testCase.assertEqual(corticalProcess.simulationCorticalProcess.predictionThreshold, ...
+                0.5, 'threshold above which the probability of a predicted reward is treated as high enough to select'); 
+            testCase.assertEqual(corticalProcess.simulationCorticalProcess.usePlanCorticalProcess, ...
+                1, 'planCorticalProcess to be used during simulation'); 
+            testCase.assertClass(corticalProcess.simulationCorticalProcess.planCorticalProcess, ... 
+                'PlanCorticalProcess');             
 
         end
 %         function testProcessAndUpdateResult(testCase)
