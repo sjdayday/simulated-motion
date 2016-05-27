@@ -38,9 +38,9 @@ classdef CortexTest < AbstractTest
                 length(cortex.simulationNeuralNetwork.executions), 20);
             netWeights = cortex.simulationNeuralNetwork.network.IW{1}; 
             testCase.assertThat(netWeights(1,1), ...            
-                IsEqualTo(1.5636, 'Within', RelativeTolerance(.0001))); 
-%                 IsEqualTo(-1.24078, 'Within', RelativeTolerance(.0001)));             
-            
+                IsEqualTo(-1.24078, 'Within', RelativeTolerance(.0001)));             
+  %                 IsEqualTo(1.5636, 'Within', RelativeTolerance(.0001))); 
+          
 %             disp(netWeights); 
         end
         function testRebuildNetworksSinglyOrAllAtOnce(testCase)

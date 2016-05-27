@@ -46,40 +46,17 @@ classdef CombinedCorticalProcess < handle
                     obj.planCorticalProcess; 
             end
         end
-        function execution = process(obj)
-            simulate(obj);
-            execution = draw(obj); 
-            execute(obj, execution); 
-            updateResults(obj, execution); 
-        end
-        function simulate(~)
-           %override if needed  
-        end
-        function execute(~, ~)
-           % must be overridden by subclasses  
-        end
-        function execution = draw(~)
-            execution = zeros(8,1); 
-           % must be overridden by subclasses 
-        end
-        function updateResults(obj, execution)
-            cost = calculateReward(obj, execution) - ...
-                (obj.simulationCost*obj.simulationsRun) - obj.physicalCost;
-            obj.totalCost = obj.totalCost + cost; 
-            obj.results = [obj.results,obj.totalCost]; 
-%             disp([obj.neuralNetworkFunction(:,1:3),' cost: ',num2str(cost), ...
-%                 ' representation: ', obj.currentRepresentation(:,12:end), ...
-%                 ' execution: ',num2str(execution')]);
-        end
-        function reward = calculateReward(obj, execution)
-           if execution(7,1) == 1
-               reward = obj.rewardPayoff;
-           else
-               reward = 0; 
-           end
-        end
-        function result = currentResult(obj)
-           result = obj.results(end);  
+        function process(obj)
+            obj.planCorticalProcess.currentRepresentation = ...
+                obj.currentRepresentation; 
+            obj.simulationCorticalProcess.currentRepresentation =  ... 
+                obj.currentRepresentation; 
+            obj.planCorticalProcess.process(); 
+            obj.simulationCorticalProcess.process(); 
+%             simulate(obj);
+%             execution = draw(obj); 
+%             execute(obj, execution); 
+%             updateResults(obj, execution); 
         end
             
     end

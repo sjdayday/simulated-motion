@@ -40,11 +40,42 @@ classdef CombinedCorticalProcessTest < AbstractTest
                 'PlanCorticalProcess');             
 
         end
-%         function testProcessAndUpdateResult(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             motorCortex = TestingMotorExecutions; 
-%             cortex = Cortex(motorCortex);             
+        
+        
+%                     planCorticalProcess.currentRepresentation = 'FoundRewardAway';
+%             simCorticalProcess.currentRepresentation = 'FoundRewardAway';                
+%             planCorticalProcess.process(); 
+%             simCorticalProcess.process(); 
+
+        function testCurrentRepresentationDrivesBothProcesses(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex);  
+            cortex.loadNetworks(20);             
+            corticalProcess = CombinedCorticalProcess(cortex);
+            corticalProcess.simulationCost = 0.1;
+            corticalProcess.physicalCost = 1;
+            corticalProcess.rewardPayoff = 2;            
+            corticalProcess.numberSimulations = 5; 
+            corticalProcess.simulationPredictionThreshold = 0.5;
+            corticalProcess.usePlanCorticalProcess = 1;
+            
+            corticalProcess.build(); 
+            testCase.assertEqual(length(... 
+                corticalProcess.planCorticalProcess.results), 0, 'no results yet'); 
+            testCase.assertEqual(length(... 
+                corticalProcess.simulationCorticalProcess.results), 0, 'no results yet'); 
+            
+            corticalProcess.currentRepresentation = 'FoundRewardAway';
+            corticalProcess.process();    
+            testCase.assertEqual(length(... 
+                corticalProcess.planCorticalProcess.results), 1, ... 
+                'both processes now have results'); 
+            testCase.assertEqual(length(... 
+                corticalProcess.simulationCorticalProcess.results), 1, ... 
+                'both processes now have results'); 
+            
 %             corticalProcess = TestingCorticalProcess(cortex,0.1,1,2,3); 
 %             testCase.assertEqual(length(corticalProcess.results), ...
 %                  0, 'no results yet'); 
@@ -67,7 +98,7 @@ classdef CombinedCorticalProcessTest < AbstractTest
 %             testCase.assertThat(corticalProcess.currentResult(), ...            
 %                 IsEqualTo(-0.4, 'Within', RelativeTolerance(.0000001))); 
 % %             disp(corticalProcess.results);
-%         end
+        end
 
     end
 end
