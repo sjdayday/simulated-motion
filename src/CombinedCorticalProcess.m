@@ -52,12 +52,17 @@ classdef CombinedCorticalProcess < handle
             obj.simulationCorticalProcess.currentRepresentation =  ... 
                 obj.currentRepresentation; 
             obj.planCorticalProcess.process(); 
-            obj.simulationCorticalProcess.process(); 
-%             simulate(obj);
-%             execution = draw(obj); 
-%             execute(obj, execution); 
-%             updateResults(obj, execution); 
+            obj.simulationCorticalProcess.process();
+            updateResults(obj); 
         end
-            
+        function updateResults(obj)
+            cost = obj.simulationCorticalProcess.results(end) - ...
+                obj.planCorticalProcess.results(end); 
+            obj.totalCost = obj.totalCost + cost; 
+            obj.results = [obj.results,cost];  
+        end
+        function meanResult = meanCost(obj)
+            meanResult = mean(obj.results);  
+        end
     end
 end

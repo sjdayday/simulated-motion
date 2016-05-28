@@ -42,14 +42,19 @@ classdef CorticalProcessTest < AbstractTest
 %           Expecting result: 2 - (0.1 * 4) - 1 = 0.6                 
             testCase.assertThat(corticalProcess.currentResult(), ...            
                 IsEqualTo(0.6, 'Within', RelativeTolerance(.0000001))); 
+            testCase.assertThat(corticalProcess.totalCost, ...            
+                IsEqualTo(0.6, 'Within', RelativeTolerance(.0000001))); 
             % force the simulationsRun counter
             corticalProcess.simulationsRun = 0; 
             execution = corticalProcess.process(); 
 %             disp(execution);
             testCase.assertEqual(length(corticalProcess.results), ...
                  2, '2nd result');                      
-%           Expecting result: 0.6 + (0 - (0.2 * 0) - 1) = -0.4                 
+%           Expecting result: (0 - (0.2 * 0) - 1) = -1.0                             
             testCase.assertThat(corticalProcess.currentResult(), ...            
+                IsEqualTo(-1.0, 'Within', RelativeTolerance(.0000001))); 
+%           Expecting result: 0.6 + (-1.0) = -0.4                 
+            testCase.assertThat(corticalProcess.totalCost, ...            
                 IsEqualTo(-0.4, 'Within', RelativeTolerance(.0000001))); 
 %             disp(corticalProcess.results);
         end

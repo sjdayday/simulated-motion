@@ -10,6 +10,7 @@ classdef CorticalProcess < handle
         numberSimulations
         simulationsRun
         results
+        cumulativeResults
         totalCost
         neuralNetworkFunction
         currentRepresentation
@@ -23,6 +24,7 @@ classdef CorticalProcess < handle
             obj.numberSimulations = numberSimulations; 
             obj.simulationsRun = 0; 
             obj.results = [];
+            obj.cumulativeResults = [];            
             obj.totalCost = 0; 
             obj.currentRepresentation = '';  
         end
@@ -46,7 +48,8 @@ classdef CorticalProcess < handle
             cost = calculateReward(obj, execution) - ...
                 (obj.simulationCost*obj.simulationsRun) - obj.physicalCost;
             obj.totalCost = obj.totalCost + cost; 
-            obj.results = [obj.results,obj.totalCost]; 
+            obj.results = [obj.results,cost]; 
+            obj.cumulativeResults = [obj.cumulativeResults,obj.totalCost]; 
 %             disp([obj.neuralNetworkFunction(:,1:3),' cost: ',num2str(cost), ...
 %                 ' representation: ', obj.currentRepresentation(:,12:end), ...
 %                 ' execution: ',num2str(execution')]);

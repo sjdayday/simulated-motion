@@ -25,8 +25,8 @@ for ii = 1:1
             simCorticalProcess.currentRepresentation = 'FoundRewardHome';                
             planCorticalProcess.process(); 
             simCorticalProcess.process(); 
-            simResults = simCorticalProcess.results; 
-            planResults = planCorticalProcess.results;
+            simResults = simCorticalProcess.cumulativeResults;   % was results
+            planResults = planCorticalProcess.cumulativeResults;
             save 'savedResults' simResults planResults
             display(['sim rebuilds: ',num2str(cortex.simulationNetworkRebuildCount)]);     
             display(['plan rebuilds: ',num2str(cortex.planNetworkRebuildCount)]);     

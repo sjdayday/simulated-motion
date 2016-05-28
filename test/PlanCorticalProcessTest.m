@@ -47,7 +47,7 @@ classdef PlanCorticalProcessTest < AbstractTest
             testCase.assertEqual(cortex.planNetworkRebuildCount, 2);                                              
             testCase.assertEqual(corticalProcess.motorPlan, 3);
             testCase.assertEqual(execution, [1;0;0;0;1;0;1;0]);             
-            testCase.assertThat(corticalProcess.currentResult(), ...            
+            testCase.assertThat(corticalProcess.totalCost, ...            
                 IsEqualTo(1.0, 'Within', RelativeTolerance(.0000001))); 
         end
     end
