@@ -32,8 +32,6 @@ classdef CorticalNeuralNetwork < handle
         function len = arrayLength(~,targetArray)
             s = size(targetArray); 
             len = s(2); 
-%             disp(len);
-%             disp(s); 
         end
         function add(obj,in,out)
            obj.input = [obj.input,in]; 
