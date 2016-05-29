@@ -1,4 +1,5 @@
-%% TestingCorticalProcess class:  test class for CorticalProcess
+%% PlanCorticalProcess class:  chooses execution based on weights of motor plans 
+% contrast to SimulationCorticalProcess
 classdef PlanCorticalProcess < CorticalProcess 
 
     properties
@@ -44,7 +45,8 @@ classdef PlanCorticalProcess < CorticalProcess
             execution = obj.cortex.randomDrawByPartialInput(partialInput);  
         end         
         function execute(obj, execution)
-            obj.cortex.planExecuteAndRebuild(execution); 
+%             obj.cortex.planExecuteAndRebuild(execution); 
+            obj.cortex.executeAndRebuildAll(execution); 
         end
          
     end

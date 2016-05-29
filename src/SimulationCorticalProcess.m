@@ -57,7 +57,8 @@ classdef SimulationCorticalProcess < CorticalProcess
                 obj.predictions = [obj.predictions, prediction];            
         end
         function execute(obj, execution)
-            obj.cortex.simulationExecuteAndRebuild(execution); 
+%             obj.cortex.simulationExecuteAndRebuild(execution); 
+            obj.cortex.executeAndRebuildAll(execution); 
         end
         function rewarding = predictedReward(obj, prediction)
             rewarding = 0; 

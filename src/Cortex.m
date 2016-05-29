@@ -31,6 +31,11 @@ classdef Cortex < handle
                end
            end
         end
+        function executeAndRebuildAll(obj, execution)
+            obj.simulationNeuralNetwork.execute(execution); 
+            obj.planNeuralNetwork.execute(execution); 
+            rebuildAll(obj);
+        end
         function simulationExecuteAndRebuild(obj, execution)
             obj.simulationNeuralNetwork.execute(execution); 
             simulationRebuild(obj);

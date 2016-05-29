@@ -22,7 +22,6 @@ classdef CorticalNeuralNetwork < handle
             else
                 obj.numberHiddenLayer = hiddenLayer;
             end
-%             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
         end
         function len = inputLength(obj)
            len = arrayLength(obj,obj.input);  
