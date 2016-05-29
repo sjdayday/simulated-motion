@@ -85,5 +85,19 @@ classdef SimulationCorticalProcessTest < AbstractTest
             testCase.assertEqual(simulations(:,1), ...
                  [1;0;1;0;0;0;1;0]);                                  
         end
+        function testAddArbitraryRepresentationEntry(testCase)
+            motorCortex = TestingMotorExecutions; 
+            cortex = Cortex(motorCortex);  
+            corticalProcess = SimulationCorticalProcess(cortex,0.1,1,2,5); 
+            testCase.assertEqual(corticalProcess.representationMap('FoundRewardAway'), ...
+                [1;0], 'default');             
+            corticalProcess.addRepresentationEntry('A', [1;0;0]);
+            corticalProcess.addRepresentationEntry('FoundRewardAway', [0;1;1]);
+            testCase.assertEqual(corticalProcess.representationMap('A'), ...
+                [1;0;0], 'new vector');             
+            testCase.assertEqual(corticalProcess.representationMap('FoundRewardAway'), ...
+                [0;1;1], 'override previous vector');             
+        end
+        
     end
 end

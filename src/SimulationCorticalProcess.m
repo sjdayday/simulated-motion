@@ -19,15 +19,17 @@ classdef SimulationCorticalProcess < CorticalProcess
             obj.predictions = []; 
             obj.predictionThreshold = 0.9; 
             obj.neuralNetworkFunction = obj.cortex.simulationNeuralNetwork.neuralNetworkFunctionName; 
-            buildRepresentationMap(obj);
+            buildDefaultRepresentationMap(obj);
             obj.usePlanCorticalProcess = 0; 
         end
-        function buildRepresentationMap(obj)
+        function buildDefaultRepresentationMap(obj)
             obj.representationMap = containers.Map();
             obj.representationMap('FoundRewardAway') = [1;0]; 
             obj.representationMap('FoundRewardHome') = [0;1];             
         end
-        
+        function addRepresentationEntry(obj, representationKey, representationVector)
+            obj.representationMap(representationKey) = representationVector; 
+        end
         function simulate(obj)
             obj.simulationsRun = 0; 
             obj.simulations = []; 

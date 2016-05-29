@@ -15,15 +15,22 @@ classdef PlanCorticalProcess < CorticalProcess
             buildMaps(obj); 
         end
         function buildMaps(obj)
-            buildWeightMap(obj);
-            buildRepresentationMap(obj);
+            buildDefaultWeightMap(obj);
+            buildDefaultRepresentationMap(obj);
         end
-        function buildRepresentationMap(obj)
+        function buildDefaultRepresentationMap(obj)
             obj.representationMap = containers.Map();
             obj.representationMap('FoundRewardAway') = [1;0;1;0]; 
             obj.representationMap('FoundRewardHome') = [0;1;1;0];             
         end
-        function buildWeightMap(obj)
+        function addRepresentationEntry(obj, representationKey, representationVector)
+            entries = length(representationVector); 
+            defaultEntry = 1/entries; 
+            obj.representationMap(representationKey) = representationVector; 
+            obj.weightMap(representationKey) = repmat(defaultEntry,1,entries); 
+        end
+
+        function buildDefaultWeightMap(obj)
             obj.weightMap = containers.Map();
             obj.weightMap('FoundRewardAway') = [0.25,0.25,0.25,0.25]; 
             obj.weightMap('FoundRewardHome') = [0.25,0.25,0.25,0.25];             
