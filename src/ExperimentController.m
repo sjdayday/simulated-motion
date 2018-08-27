@@ -27,6 +27,8 @@ classdef ExperimentController < handle
         randomHeadDirection
         stepPause
         eventMap
+        runner
+        listener
     end
     methods
         function obj = ExperimentController()
@@ -38,6 +40,7 @@ classdef ExperimentController < handle
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
+
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
@@ -51,6 +54,30 @@ classdef ExperimentController < handle
             obj.randomHeadDirection = true; 
             obj.stepPause = 0.1; 
         end
+        function buildRunner(obj)
+            import uk.ac.imperial.pipe.runner.*
+            obj.runner = PetriNetRunner('/Users/steve/Documents/MATLAB/simpleNet2.xml');
+            obj.listener = BooleanPlaceListener('P1');
+            obj.runner.markPlace('P0','Default',1);
+            obj.runner.listenForTokenChanges(obj.listener,'P1');
+            set(obj.listener,'PropertyChangeCallback',@obj.showEvent);
+            obj.runner.setFiringLimit(10);
+            obj.runner.setWaitForExternalInput(true);
+            obj.runner.run();
+            
+        end
+        function evt = showEvent(obj, source, evt )
+            disp('show Event')
+            disp(source)
+            disp('evt: ')
+            disp(evt)
+            disp(evt.getPropertyName())
+            disp(evt.getOldValue())
+            obj.runner.setWaitForExternalInput(false);
+            obj.runner.run();
+            % disp(javaMethod('getOldValue',evt))
+        end
+
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
         end

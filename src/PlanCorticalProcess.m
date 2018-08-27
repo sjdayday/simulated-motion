@@ -39,6 +39,7 @@ classdef PlanCorticalProcess < CorticalProcess
             weights = obj.weightMap(representation); 
         end
         function execution = draw(obj)
+            % start here
             input = obj.representationMap(obj.currentRepresentation); 
             eval(['predictedPlans = ',obj.neuralNetworkFunction,'(input);']);
             weightedPlans = predictedPlans'; 
