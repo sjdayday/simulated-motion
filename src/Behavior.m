@@ -15,13 +15,15 @@ classdef Behavior < handle
         defaultPetriNet
         petriNet
         isDone
+        prefix
     end
     methods
-         function obj = Behavior()
+         function obj = Behavior(prefix)
             import uk.ac.imperial.pipe.runner.*;
             obj.petriNetPath = [cd, '/petrinet/'];
             obj.defaultPetriNet = 'base-control.xml';
-            obj.isDone = false;             
+            obj.isDone = false;
+            obj.prefix = prefix; 
         end
 %         function evt = showEvent(obj, source, evt )
 %             disp('show Event')
@@ -38,12 +40,12 @@ classdef Behavior < handle
             import uk.ac.imperial.pipe.runner.*;
             obj.runner = PetriNetRunner(buildPetriNetName(obj));
             obj.enable();
-            obj.listenPlace('Move.Turn.Done', @obj.done); 
+            obj.listenPlace([obj.prefix,'Done'], @obj.done); 
             obj.runner.setFiringLimit(1000);
             obj.waitForInput(true)
         end
         function enable(obj)
-            obj.markPlace('Move.Turn.Enabled'); 
+            obj.markPlace([obj.prefix,'Enabled']); 
         end
         function waitForInput(obj, wait)
             obj.runner.setWaitForExternalInput(wait);
