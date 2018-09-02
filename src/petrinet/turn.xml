@@ -2,7 +2,7 @@
 <pnml>
     <net>
         <token id="Default" red="0" green="0" blue="0"/>
-        <place id="Move.Turn.CounterClockwise">
+        <place id="CounterClockwise">
             <graphics>
                 <position x="187.0" y="452.0"/>
             </graphics>
@@ -23,7 +23,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -183,7 +183,7 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="Move.Turn.Distance">
+        <place id="Distance">
             <graphics>
                 <position x="188.0" y="356.0"/>
             </graphics>
@@ -204,7 +204,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -270,7 +270,7 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Move.Turn.Clockwise">
+        <place id="Clockwise">
             <graphics>
                 <position x="188.0" y="306.0"/>
             </graphics>
@@ -291,7 +291,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -338,7 +338,7 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Move.Turn.Speed">
+        <place id="Speed">
             <graphics>
                 <position x="186.0" y="407.0"/>
             </graphics>
@@ -359,7 +359,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -708,12 +708,12 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="TurnCCW TO Speed" source="TurnCCW" target="Move.Turn.Speed">
+        <arc id="TurnCCW TO Speed" source="TurnCCW" target="Speed">
             <arcpath id="" x="319.0" y="422.0" curvePoint="false"/>
             <arcpath id="" x="216.0" y="422.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Turn.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
         <arc id="Stop TO CleaningUp" source="Stop" target="CleaningUp">
@@ -724,12 +724,12 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="TurnCW TO Speed" source="TurnCW" target="Move.Turn.Speed">
+        <arc id="TurnCW TO Speed" source="TurnCW" target="Speed">
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <arcpath id="" x="216.0" y="419.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Turn.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
         <arc id="T1 TO P0" source="Continue" target="Continuing">
@@ -772,7 +772,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="ClockWise TO TurnCCW" source="Move.Turn.Clockwise" target="TurnCCW">
+        <arc id="ClockWise TO TurnCCW" source="Clockwise" target="TurnCCW">
             <arcpath id="" x="215.0" y="330.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="422.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -820,15 +820,15 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="Speed TO TurnCW" source="Move.Turn.Speed" target="TurnCW">
+        <arc id="Speed TO TurnCW" source="Speed" target="TurnCW">
             <arcpath id="" x="216.0" y="419.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Turn.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T0" source="Move.Turn.Distance" target="TurnCW">
+        <arc id="P5 TO T0" source="Distance" target="TurnCW">
             <arcpath id="" x="218.0" y="374.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <type value="normal"/>
@@ -860,15 +860,15 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Speed TO TurnCCW" source="Move.Turn.Speed" target="TurnCCW">
+        <arc id="Speed TO TurnCCW" source="Speed" target="TurnCCW">
             <arcpath id="" x="216.0" y="422.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="422.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Turn.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
-        <arc id="Distance TO TurnCCW" source="Move.Turn.Distance" target="TurnCCW">
+        <arc id="Distance TO TurnCCW" source="Distance" target="TurnCCW">
             <arcpath id="" x="217.0" y="376.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="422.0" curvePoint="false"/>
             <type value="normal"/>
@@ -876,7 +876,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO T2" source="Move.Turn.Distance" target="Arrive">
+        <arc id="Distance TO T2" source="Distance" target="Arrive">
             <arcpath id="" x="214.0" y="381.0" curvePoint="false"/>
             <arcpath id="" x="378.0" y="526.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -948,7 +948,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="CounterClockWise TO TurnCW" source="Move.Turn.CounterClockwise" target="TurnCW">
+        <arc id="CounterClockWise TO TurnCW" source="CounterClockwise" target="TurnCW">
             <arcpath id="" x="215.0" y="460.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <type value="inhibitor"/>

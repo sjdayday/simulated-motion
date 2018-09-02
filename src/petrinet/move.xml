@@ -82,12 +82,12 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="Distance">
+        <place id="Turn.Distance">
             <graphics>
                 <position x="79.0" y="374.0"/>
             </graphics>
             <name>
-                <value>Distance</value>
+                <value>Turn.Distance</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -103,7 +103,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="home"/>
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -170,12 +170,12 @@
                 <value></value>
             </initialMarking>
         </place>
-        <place id="CounterClockwise">
+        <place id="Turn.CounterClockwise">
             <graphics>
                 <position x="77.0" y="517.0"/>
             </graphics>
             <name>
-                <value>CounterClockwise</value>
+                <value>Turn.CounterClockwise</value>
                 <graphics>
                     <offset x="27.0" y="45.0"/>
                 </graphics>
@@ -191,7 +191,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="home"/>
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -224,12 +224,12 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
-        <place id="Speed">
+        <place id="Turn.Speed">
             <graphics>
                 <position x="78.0" y="425.0"/>
             </graphics>
             <name>
-                <value>Speed</value>
+                <value>Turn.Speed</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -245,7 +245,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="home"/>
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -258,12 +258,12 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Clockwise">
+        <place id="Turn.Clockwise">
             <graphics>
                 <position x="78.0" y="473.0"/>
             </graphics>
             <name>
-                <value>Clockwise</value>
+                <value>Turn.Clockwise</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -279,7 +279,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="home"/>
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
