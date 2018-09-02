@@ -713,7 +713,7 @@
             <arcpath id="" x="216.0" y="422.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
         <arc id="Stop TO CleaningUp" source="Stop" target="CleaningUp">
@@ -729,7 +729,7 @@
             <arcpath id="" x="216.0" y="419.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
         <arc id="T1 TO P0" source="Continue" target="Continuing">
@@ -825,7 +825,7 @@
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
         <arc id="P5 TO T0" source="Distance" target="TurnCW">
@@ -865,7 +865,7 @@
             <arcpath id="" x="319.0" y="422.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
         <arc id="Distance TO TurnCCW" source="Distance" target="TurnCCW">

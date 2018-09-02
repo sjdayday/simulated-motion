@@ -10,69 +10,40 @@ classdef Behavior < handle
         visualCortex
         subCortex
         runner
-        listener
+%         listener
         petriNetPath
         defaultPetriNet
         petriNet
         isDone
     end
     methods
-        function obj = Behavior()
+         function obj = Behavior()
             import uk.ac.imperial.pipe.runner.*;
             obj.petriNetPath = [cd, '/petrinet/'];
             obj.defaultPetriNet = 'base-control.xml';
-            buildStandardSemantics(obj);
-            obj.isDone = false; 
-            
-%             obj.eventMap = containers.Map('KeyType','double','ValueType','char');
-% %             obj.hFigures = figure; 
-%             obj.nChartSystemSingleDimensionCells = 10;  % default
-%             obj.nHeadDirectionCells = 60;  %default
-%             obj.currentStep = 1; 
-%             obj.resetSeed = true; 
-%             obj.iteration = 0; 
-%             obj.nChartStats = 6;
-% 
-%             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
-%             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
-%             obj.headDirectionSystemPropertyMap = containers.Map(); 
-%             obj.chartSystemPropertyMap = containers.Map(); 
-%             buildChartSystemPropertyMap(obj);
-%             buildHeadDirectionSystemPropertyMap(obj);
-%             obj.chartStatisticsHeader = {}; 
-%             obj.animal = Animal(); 
+            obj.isDone = false;             
         end
-%         function buildRunner(obj)
-%             import uk.ac.imperial.pipe.runner.*
-%             obj.runner = PetriNetRunner('/Users/steve/Documents/MATLAB/simpleNet2.xml');
-%             obj.listener = BooleanPlaceListener('P1');
-%             obj.runner.markPlace('P0','Default',1);
-%             obj.runner.listenForTokenChanges(obj.listener,'P1');
-%             set(obj.listener,'PropertyChangeCallback',@obj.showEvent);
-%             obj.runner.setFiringLimit(10);
-%             obj.runner.setWaitForExternalInput(true);
+%         function evt = showEvent(obj, source, evt )
+%             disp('show Event')
+%             disp(source)
+%             disp('evt: ')
+%             disp(evt)
+%             disp(evt.getPropertyName())
+%             disp(evt.getOldValue())
+%             obj.runner.setWaitForExternalInput(false);
 %             obj.runner.run();
-%             
+%             % disp(javaMethod('getOldValue',evt))
 %         end
-        function evt = showEvent(obj, source, evt )
-            disp('show Event')
-            disp(source)
-            disp('evt: ')
-            disp(evt)
-            disp(evt.getPropertyName())
-            disp(evt.getOldValue())
-            obj.runner.setWaitForExternalInput(false);
-            obj.runner.run();
-            % disp(javaMethod('getOldValue',evt))
-        end
         function buildStandardSemantics(obj)
             import uk.ac.imperial.pipe.runner.*;
             obj.runner = PetriNetRunner(buildPetriNetName(obj));
-            obj.markPlace('Enabled'); 
-            obj.listenPlace('Done', @obj.done); 
-  %     obj.runner.markPlace('P0','Default',1);
-            obj.runner.setFiringLimit(10);
+            obj.enable();
+            obj.listenPlace('Move.Turn.Done', @obj.done); 
+            obj.runner.setFiringLimit(1000);
             obj.waitForInput(true)
+        end
+        function enable(obj)
+            obj.markPlace('Move.Turn.Enabled'); 
         end
         function waitForInput(obj, wait)
             obj.runner.setWaitForExternalInput(wait);
@@ -82,10 +53,16 @@ classdef Behavior < handle
         end
         function listenPlace(obj, place, evaluator)
             import uk.ac.imperial.pipe.runner.*;
-            obj.listener = BooleanPlaceListener(place);
-            obj.runner.listenForTokenChanges(obj.listener,place);
-            set(obj.listener,'PropertyChangeCallback',evaluator);
+            listener = BooleanPlaceListener(place);
+            obj.runner.listenForTokenChanges(listener,place);
+            set(listener,'PropertyChangeCallback',evaluator);
         end
+%         function listenPlace(obj, place, evaluator)
+%             import uk.ac.imperial.pipe.runner.*;
+%             obj.listener = BooleanPlaceListener(place);
+%             obj.runner.listenForTokenChanges(obj.listener,place);
+%             set(obj.listener,'PropertyChangeCallback',evaluator);
+%         end
         function done(obj, ~, ~)
            obj.isDone = true;
            disp('isdone: ');
@@ -94,7 +71,11 @@ classdef Behavior < handle
            obj.run();
         end
         function markPlace(obj, place)
-           obj.runner.markPlace(place, 'Default', 1); 
+           obj.markPlaceMultipleTokens(place, 1);
+%            obj.runner.markPlace(place, 'Default', 1); 
+        end
+        function markPlaceMultipleTokens(obj, place, tokens)
+           obj.runner.markPlace(place,'Default', tokens); 
         end
         function petriNet = buildPetriNetName(obj)
             if (isempty(obj.petriNet)) 
