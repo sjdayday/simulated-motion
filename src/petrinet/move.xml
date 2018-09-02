@@ -27,7 +27,7 @@
                 <position x="255.0" y="420.0"/>
             </graphics>
             <name>
-                <value>P7</value>
+                <value>Turn</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -47,7 +47,7 @@
                 <position x="571.0" y="332.0"/>
             </graphics>
             <name>
-                <value>P12</value>
+                <value>Finishing</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -67,7 +67,7 @@
                 <position x="367.0" y="330.0"/>
             </graphics>
             <name>
-                <value>P5</value>
+                <value>Moving</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -87,7 +87,7 @@
                 <position x="79.0" y="374.0"/>
             </graphics>
             <name>
-                <value>P1</value>
+                <value>Distance</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -101,13 +101,27 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Turn.Done">
             <graphics>
                 <position x="553.0" y="524.0"/>
             </graphics>
             <name>
-                <value>P10</value>
+                <value>Turn.Done</value>
                 <graphics>
                     <offset x="33.0" y="47.0"/>
                 </graphics>
@@ -121,13 +135,27 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>            
         </place>
         <place id="Run.Enabled">
             <graphics>
                 <position x="392.0" y="513.0"/>
             </graphics>
             <name>
-                <value>P9</value>
+                <value>Run.Enabled</value>
                 <graphics>
                     <offset x="62.0" y="46.0"/>
                 </graphics>
@@ -147,7 +175,7 @@
                 <position x="77.0" y="517.0"/>
             </graphics>
             <name>
-                <value>P4</value>
+                <value>CounterClockwise</value>
                 <graphics>
                     <offset x="27.0" y="45.0"/>
                 </graphics>
@@ -161,6 +189,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Ready">
             <graphics>
@@ -187,7 +229,7 @@
                 <position x="78.0" y="425.0"/>
             </graphics>
             <name>
-                <value>P2</value>
+                <value>Speed</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -201,13 +243,27 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Clockwise">
             <graphics>
                 <position x="78.0" y="473.0"/>
             </graphics>
             <name>
-                <value>P3</value>
+                <value>Clockwise</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -221,6 +277,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Ongoing">
             <graphics>
@@ -247,7 +317,7 @@
                 <position x="349.0" y="513.0"/>
             </graphics>
             <name>
-                <value>P8</value>
+                <value>Turn.Enabled</value>
                 <graphics>
                     <offset x="27.0" y="44.0"/>
                 </graphics>
@@ -261,6 +331,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Done">
             <graphics>
@@ -287,7 +371,7 @@
                 <position x="601.0" y="523.0"/>
             </graphics>
             <name>
-                <value>P11</value>
+                <value>Run.Done</value>
                 <graphics>
                     <offset x="56.0" y="47.0"/>
                 </graphics>
@@ -307,7 +391,7 @@
                 <position x="254.0" y="328.0"/>
             </graphics>
             <name>
-                <value>P6</value>
+                <value>Run</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -327,7 +411,7 @@
                 <position x="78.0" y="319.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Simulated</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -347,7 +431,7 @@
                 <position x="611.0" y="424.0"/>
             </graphics>
             <name>
-                <value>T3</value>
+                <value>FinishRun</value>
                 <graphics>
                     <offset x="71.0" y="31.0"/>
                 </graphics>
@@ -399,7 +483,7 @@
                 <position x="563.0" y="423.0"/>
             </graphics>
             <name>
-                <value>T2</value>
+                <value>FinishTurn</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -451,7 +535,7 @@
                 <position x="402.0" y="419.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>EnableRun</value>
                 <graphics>
                     <offset x="70.0" y="20.0"/>
                 </graphics>
@@ -503,7 +587,7 @@
                 <position x="359.0" y="420.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>EnableTurn</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -524,7 +608,7 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="T1 TO P9" source="EnableRun" target="Run.Enabled">
+        <arc id="EnableRun TO Run.Enabled" source="EnableRun" target="Run.Enabled">
             <arcpath id="" x="407.0" y="449.0" curvePoint="false"/>
             <arcpath id="" x="407.0" y="513.0" curvePoint="false"/>
             <type value="normal"/>
@@ -532,7 +616,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T2 TO P12" source="FinishTurn" target="Finishing">
+        <arc id="FinishTurn TO Finishing" source="FinishTurn" target="Finishing">
             <arcpath id="" x="568.0" y="423.0" curvePoint="false"/>
             <arcpath id="" x="583.0" y="362.0" curvePoint="false"/>
             <type value="normal"/>
@@ -548,7 +632,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Start TO P5" source="Start" target="Moving">
+        <arc id="Start TO Moving" source="Start" target="Moving">
             <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="330.0" curvePoint="false"/>
             <type value="normal"/>
@@ -556,7 +640,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T3 TO P12" source="FinishRun" target="Finishing">
+        <arc id="FinishRun TO Finishing" source="FinishRun" target="Finishing">
             <arcpath id="" x="616.0" y="424.0" curvePoint="false"/>
             <arcpath id="" x="591.0" y="361.0" curvePoint="false"/>
             <type value="normal"/>
@@ -564,7 +648,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO P8" source="EnableTurn" target="Turn.Enabled">
+        <arc id="EnableTurn TO Turn.Enabled" source="EnableTurn" target="Turn.Enabled">
             <arcpath id="" x="364.0" y="450.0" curvePoint="false"/>
             <arcpath id="" x="364.0" y="513.0" curvePoint="false"/>
             <type value="normal"/>
@@ -588,7 +672,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T0" source="Moving" target="EnableTurn">
+        <arc id="Moving TO EnableTurn" source="Moving" target="EnableTurn">
             <arcpath id="" x="378.0" y="360.0" curvePoint="false"/>
             <arcpath id="" x="364.0" y="420.0" curvePoint="false"/>
             <type value="normal"/>
@@ -596,7 +680,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P12 TO Finish" source="Finishing" target="Finish">
+        <arc id="Finishing TO Finish" source="Finishing" target="Finish">
             <arcpath id="" x="586.0" y="332.0" curvePoint="false"/>
             <arcpath id="" x="586.0" y="287.0" curvePoint="false"/>
             <type value="normal"/>
@@ -604,7 +688,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T1" source="Moving" target="EnableRun">
+        <arc id="Moving TO EnableRun" source="Moving" target="EnableRun">
             <arcpath id="" x="387.0" y="359.0" curvePoint="false"/>
             <arcpath id="" x="407.0" y="419.0" curvePoint="false"/>
             <type value="normal"/>
@@ -612,7 +696,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P6 TO T1" source="Run" target="EnableRun">
+        <arc id="Run TO EnableRun" source="Run" target="EnableRun">
             <arcpath id="" x="281.0" y="351.0" curvePoint="false"/>
             <arcpath id="" x="402.0" y="434.0" curvePoint="false"/>
             <type value="normal"/>
@@ -628,7 +712,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P7 TO T0" source="Turn" target="EnableTurn">
+        <arc id="Turn TO EnableTurn" source="Turn" target="EnableTurn">
             <arcpath id="" x="285.0" y="435.0" curvePoint="false"/>
             <arcpath id="" x="359.0" y="435.0" curvePoint="false"/>
             <type value="normal"/>
@@ -636,7 +720,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P11 TO T3" source="Run.Done" target="FinishRun">
+        <arc id="Run.Done TO FinishRun" source="Run.Done" target="FinishRun">
             <arcpath id="" x="616.0" y="523.0" curvePoint="false"/>
             <arcpath id="" x="616.0" y="454.0" curvePoint="false"/>
             <type value="normal"/>
@@ -644,7 +728,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P10 TO T2" source="Turn.Done" target="FinishTurn">
+        <arc id="Turn.Done TO FinishTurn" source="Turn.Done" target="FinishTurn">
             <arcpath id="" x="568.0" y="524.0" curvePoint="false"/>
             <arcpath id="" x="568.0" y="453.0" curvePoint="false"/>
             <type value="normal"/>
