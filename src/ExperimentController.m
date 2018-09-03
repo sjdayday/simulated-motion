@@ -48,12 +48,17 @@ classdef ExperimentController < System
             obj.chartSystemPropertyMap = containers.Map(); 
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
-            obj.chartStatisticsHeader = {}; 
-            obj.animal = Animal(); 
+            obj.chartStatisticsHeader = {};
+            buildAnimal(obj); 
             obj.visual = false; 
             obj.monitor = false; 
             obj.randomHeadDirection = true; 
             obj.stepPause = 0.1;             
+        end
+        function buildAnimal(obj)
+            obj.animal = Animal(); 
+            obj.animal.headDirectionSystem = obj.headDirectionSystem; 
+            obj.animal.chartSystem = obj.chartSystem; 
         end
 %         function buildRunner(obj)
 %             import uk.ac.imperial.pipe.runner.*

@@ -1,5 +1,10 @@
 classdef AnimalTest < AbstractTest
     methods (Test)
+        function testPWD(testCase)
+            disp('show pwd ');
+            pwd
+            cd
+        end
 %         function testCalculatesRelativeDistanceToCues(testCase)
 %             lec = LecSystem();
 %             lec.distanceUnits = 8;

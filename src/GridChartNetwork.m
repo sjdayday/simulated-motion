@@ -199,7 +199,7 @@ classdef GridChartNetwork < handle
                 negativeWeights(1:end-obj.motionWeightOffset,:)];  
         end
         function loadTrajectory(obj)
-          load 'data/HaftingTraj_centimeters_seconds.mat' pos;  
+          load '../test/data/HaftingTraj_centimeters_seconds.mat' pos;  
           obj.position = pos; 
           %load data/HaftingTraj_centimeters_seconds.mat pos;
           % our time units are in ms so:

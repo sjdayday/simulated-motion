@@ -2,6 +2,13 @@
 classdef Animal < System
 
     properties
+        placeSystem
+        cortex
+        motorCortex
+        visualCortex
+        subCortex
+        headDirectionSystem
+        chartSystem
         firstPlot
         h
         clockwiseVelocity

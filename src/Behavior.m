@@ -9,6 +9,8 @@ classdef Behavior < handle
         motorCortex
         visualCortex
         subCortex
+        headDirectionSystem
+        chartSystem
         runner
 %         listener
         petriNetPath

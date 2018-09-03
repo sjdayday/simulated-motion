@@ -10,6 +10,7 @@ cr.totalSteps = 30;
 cr.randomHeadDirection = false;
 cr.addAnimalEvent(5, 'obj.showFeatures = 1; obj.features = [30 52];'); 
 cr.addAnimalEvent(7, 'obj.showFeatures = 0; obj.features = [];'); 
+% force repeatable results 
 cr.addControllerEvent(10, 'obj.loadFixedRandom();');
 cr.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
 cr.addAnimalEvent(10, 'obj.orientAnimal(pi/4); obj.clockwiseVelocity = -obj.minimumVelocity;'); 

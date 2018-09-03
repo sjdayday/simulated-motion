@@ -4,6 +4,7 @@ classdef AbstractTest < matlab.unittest.TestCase
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random number generator back to default
 %             disp('loaded rng')
+            cd('/Users/steve/oldmac/stevedoubleday/git/simulated-motion/src')
         end
     end
 end
