@@ -204,5 +204,17 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.testingSystem.testProperty, 7, ...
                 'event processed at t=4' );
         end
+        function testControllerIsAlsoSystemAndProcessesEvents(testCase)
+            controller = TestingExperimentController(); 
+            controller.addControllerEvent(3, 'obj.testingField = 1;');
+            testCase.assertEqual(controller.testingField, 0); 
+            controller.step(controller.testingSystem); 
+            testCase.assertEqual(controller.testingField, 0); 
+            controller.step(controller.testingSystem); 
+            testCase.assertEqual(controller.testingField, 0); 
+            controller.step(controller.testingSystem); 
+            testCase.assertEqual(controller.testingField, 1); 
+        end
+        
     end
 end

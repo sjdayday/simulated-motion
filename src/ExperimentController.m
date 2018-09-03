@@ -1,6 +1,6 @@
 %% ExperimentController class:  controller for ExperimentView
 % invokes classes as requested through the ExperimentView GUI 
-classdef ExperimentController < handle 
+classdef ExperimentController < System 
 
     properties
         chartSystem
@@ -26,14 +26,15 @@ classdef ExperimentController < handle
         yy
         randomHeadDirection
         stepPause
-        eventMap
         runner
         listener
     end
     methods
         function obj = ExperimentController()
-            obj.eventMap = containers.Map('KeyType','double','ValueType','char');
-%             obj.hFigures = figure; 
+            obj.build(); 
+        end
+        function build(obj)
+  %             obj.hFigures = figure; 
             obj.nChartSystemSingleDimensionCells = 10;  % default
             obj.nHeadDirectionCells = 60;  %default
             obj.currentStep = 1; 
@@ -52,31 +53,31 @@ classdef ExperimentController < handle
             obj.visual = false; 
             obj.monitor = false; 
             obj.randomHeadDirection = true; 
-            obj.stepPause = 0.1; 
+            obj.stepPause = 0.1;             
         end
-        function buildRunner(obj)
-            import uk.ac.imperial.pipe.runner.*
-            obj.runner = PetriNetRunner('/Users/steve/Documents/MATLAB/simpleNet2.xml');
-            obj.listener = BooleanPlaceListener('P1');
-            obj.runner.markPlace('P0','Default',1);
-            obj.runner.listenForTokenChanges(obj.listener,'P1');
-            set(obj.listener,'PropertyChangeCallback',@obj.showEvent);
-            obj.runner.setFiringLimit(10);
-            obj.runner.setWaitForExternalInput(true);
-            obj.runner.run();
-            
-        end
-        function evt = showEvent(obj, source, evt )
-            disp('show Event')
-            disp(source)
-            disp('evt: ')
-            disp(evt)
-            disp(evt.getPropertyName())
-            disp(evt.getOldValue())
-            obj.runner.setWaitForExternalInput(false);
-            obj.runner.run();
-            % disp(javaMethod('getOldValue',evt))
-        end
+%         function buildRunner(obj)
+%             import uk.ac.imperial.pipe.runner.*
+%             obj.runner = PetriNetRunner('/Users/steve/Documents/MATLAB/simpleNet2.xml');
+%             obj.listener = BooleanPlaceListener('P1');
+%             obj.runner.markPlace('P0','Default',1);
+%             obj.runner.listenForTokenChanges(obj.listener,'P1');
+%             set(obj.listener,'PropertyChangeCallback',@obj.showEvent);
+%             obj.runner.setFiringLimit(10);
+%             obj.runner.setWaitForExternalInput(true);
+%             obj.runner.run();
+%             
+%         end
+%         function evt = showEvent(obj, source, evt )
+%             disp('show Event')
+%             disp(source)
+%             disp('evt: ')
+%             disp(evt)
+%             disp(evt.getPropertyName())
+%             disp(evt.getOldValue())
+%             obj.runner.setWaitForExternalInput(false);
+%             obj.runner.run();
+%             % disp(javaMethod('getOldValue',evt))
+%         end
 
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -133,12 +134,15 @@ classdef ExperimentController < handle
         end
         function runSystem(obj, system)
             if obj.resetSeed
-               load '../rngDefaultSettings';
-               rng(rngDefault);    
+                obj.loadFixedRandom(); 
             end
             system.build(); 
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
+        end
+        function loadFixedRandom(~)
+               load '../rngDefaultSettings';
+               rng(rngDefault);                
         end
         function step(obj, system)
            events(obj); 
@@ -153,13 +157,6 @@ classdef ExperimentController < handle
         function runBareSystem(obj, system)
             for ii = obj.currentStep:obj.totalSteps
                 step(obj, system); 
-%                system.step();
-%                obj.animal.step(); 
-%                obj.currentStep = obj.currentStep + 1; 
-%                if obj.visual
-%                    plot(obj);  
-%                    pause(0.1); 
-%                end
             end
             obj.iteration = obj.iteration + 1;
             if obj.monitor
@@ -191,7 +188,7 @@ classdef ExperimentController < handle
         function addSystemProperty(obj, map, property, system) 
             setSystemProperties(obj, map, property, system.(property)); 
         end
-        function setSystemProperties(obj, map, property, value) 
+        function setSystemProperties(~, map, property, value) 
             map(property) = value; 
             increment = [property,'.increment'];
             map(increment) = 1; 
@@ -205,7 +202,7 @@ classdef ExperimentController < handle
         function value = getChartSystemProperty(obj, property)
             value = getSystemProperty(obj, obj.chartSystemPropertyMap, property);
         end
-        function value = getSystemProperty(obj, map, property) 
+        function value = getSystemProperty(~, map, property) 
             value = map(property); 
         end
         function setChartSystemProperty(obj, property, value) 
@@ -215,16 +212,16 @@ classdef ExperimentController < handle
             setSystemProperty(obj, obj.headDirectionSystemPropertyMap, property, value); 
         end
         % perhaps: map is property name:  obj.(map)(property) = value
-        function setSystemProperty(obj, map, property, value) 
+        function setSystemProperty(~, map, property, value) 
             map(property) = value; 
         end
-        function updateSystemWithPropertyValue(obj, system, property, value)
+        function updateSystemWithPropertyValue(~, system, property, value)
             system.(property) = value;  
         end
         function updateChartSystemWithPropertyValue(obj, property, value)
             updateSystemWithPropertyValue(obj, obj.chartSystem, property, value); 
         end
-        function addEvent(obj, system, time, event)
+        function addEvent(~, system, time, event)
             system.addEvent(time, event); 
         end
         function addHeadDirectionSystemEvent(obj, time, event)
@@ -240,10 +237,12 @@ classdef ExperimentController < handle
             obj.eventMap(step) = event; 
         end
         function events(obj)
-%             disp(obj.eventMap.keys()); 
+%             disp('experiment controller keys: '); 
+%             disp(obj.eventMap.keys());
             if obj.eventMap.isKey(obj.currentStep)
-               eval(obj.eventMap(obj.currentStep));  
-%                disp([obj.time,obj.eventMap(obj.time)]); 
+               eval(obj.eventMap(obj.currentStep));
+%                  disp('experiment controller event: ') 
+%                  disp([num2str(obj.currentStep),obj.eventMap(obj.currentStep)]); 
             end
         end
 

@@ -89,6 +89,8 @@ classdef HeadDirectionSystem < System
         function initializeActivation(obj, random)
            if random
                obj.uActivation = rand(1,obj.nHeadDirectionCells); 
+%                disp('random uActivation:');
+%                disp(obj.uActivation); 
            else
                obj.uActivation = zeros(1,obj.nHeadDirectionCells);
                obj.uActivation = obj.uActivation + 0.25;
