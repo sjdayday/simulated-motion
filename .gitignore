@@ -1,5 +1,5 @@
 test/diary.txt
-test/simNeuralNetworkFunction.m
-test/planNeuralNetworkFunction.m
-test/testNeuralNetworkFunction.m
-test/savedResults.mat
+*/simNeuralNetworkFunction.m
+*/planNeuralNetworkFunction.m
+*/testNeuralNetworkFunction.m
+*/savedResults.mat
