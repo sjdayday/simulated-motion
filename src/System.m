@@ -25,6 +25,10 @@ classdef System < handle
             obj.time = obj.time+1;
             events(obj); 
         end
+        function loadFixedRandom(~)
+           load '../rngDefaultSettings';
+           rng(rngDefault);                
+        end
     end
     methods (Abstract)
         build(obj)

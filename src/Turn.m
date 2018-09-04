@@ -6,9 +6,9 @@ classdef Turn <  Behavior
          distanceTurned
     end
     methods
-        function obj = Turn(prefix)
+        function obj = Turn(prefix, animal)
             import uk.ac.imperial.pipe.runner.*;
-            obj = obj@Behavior(prefix);
+            obj = obj@Behavior(prefix, animal);
             obj.defaultPetriNet = 'include-move-turn.xml';
             obj.buildStandardSemantics();
             obj.listenPlace('Move.Turn.Turned', @obj.turned); 

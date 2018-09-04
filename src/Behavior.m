@@ -20,13 +20,24 @@ classdef Behavior < handle
         prefix
     end
     methods
-         function obj = Behavior(prefix)
+         function obj = Behavior(prefix, animal)
             import uk.ac.imperial.pipe.runner.*;
             obj.petriNetPath = [cd, '/petrinet/'];
             obj.defaultPetriNet = 'base-control.xml';
             obj.isDone = false;
             obj.prefix = prefix; 
-        end
+            obj.animal = animal; 
+            getSystemsFromAnimal(obj); 
+         end
+         function getSystemsFromAnimal(obj)     
+            obj.placeSystem = obj.animal.placeSystem; 
+            obj.cortex = obj.animal.cortex;
+            obj.motorCortex = obj.animal.motorCortex;
+            obj.visualCortex = obj.animal.visualCortex;
+            obj.subCortex = obj.animal.subCortex;
+            obj.headDirectionSystem = obj.animal.headDirectionSystem;
+            obj.chartSystem = obj.animal.chartSystem;
+         end
 %         function evt = showEvent(obj, source, evt )
 %             disp('show Event')
 %             disp(source)

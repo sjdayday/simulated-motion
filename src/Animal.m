@@ -2,6 +2,8 @@
 classdef Animal < System
 
     properties
+        environment
+        hippocampalFormation
         placeSystem
         cortex
         motorCortex
@@ -11,6 +13,9 @@ classdef Animal < System
         chartSystem
         firstPlot
         h
+        visual
+        nHeadDirectionCells
+        randomHeadDirection
         clockwiseVelocity
         counterClockwiseVelocity
         directions
@@ -35,11 +40,41 @@ classdef Animal < System
             obj.counterClockwiseVelocity = 0; 
             obj.features = [];
             obj.showFeatures = 0; 
-            obj.justOriented = 0; 
+            obj.justOriented = 0;
+            obj.visual = false; 
+            obj.nHeadDirectionCells = 60; 
+            obj.randomHeadDirection = true; 
+            build(obj);
         end
         function build(obj)
-           % inherited from System; unused. 
+            % rather than build HDS directly, build HippocampalFormation
+            buildDefaultHeadDirectionSystem(obj); 
         end
+        function buildDefaultHeadDirectionSystem(obj)
+            buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
+        end
+        function buildHeadDirectionSystem(obj, nHeadDirectionCells)
+            obj.nHeadDirectionCells = nHeadDirectionCells;
+            rebuildHeadDirectionSystem(obj); 
+        end
+        function rebuildHeadDirectionSystem(obj) 
+            tempMap = []; 
+            if not(isempty(obj.headDirectionSystem))
+                if not(isempty(obj.headDirectionSystem.eventMap))
+                    tempMap = obj.headDirectionSystem.eventMap; 
+                end                
+            end
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
+            obj.headDirectionSystem.animal = obj;
+            if not(isempty(tempMap))
+                obj.headDirectionSystem.eventMap = tempMap; 
+            end
+            obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
+            if obj.visual
+                obj.headDirectionSystem.h = obj.h; 
+            end
+        end
+
         %% Single time step 
         function  step(obj)
             step@System(obj); 
@@ -48,6 +83,13 @@ classdef Animal < System
             obj.currentDirection = direction; 
             updatePosition(obj); 
             obj.justOriented = 1; 
+        end
+        function place(obj, environment, x, y)
+            obj.environment = environment;
+            obj.environment.setPosition([x y]); 
+        end
+        function distance = closestWallDistance(obj)
+            distance = obj.environment.closestWallDistance(); 
         end
         function updatePosition(obj)
             obj.currentPosition = [cos(obj.currentDirection) sin(obj.currentDirection)];

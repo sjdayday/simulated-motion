@@ -1,7 +1,7 @@
 classdef TurnTest < AbstractTest
     methods (Test)
         function testTurnsForMarkedDistanceThenDone(testCase)
-            turn = Turn('Move.Turn.'); 
+            turn = Turn('Move.Turn.', Animal()); 
             turn.markPlace('Move.Turn.Clockwise');
             turn.markPlace('Move.Turn.Speed');
             turn.markPlaceMultipleTokens('Move.Turn.Distance', 3); 

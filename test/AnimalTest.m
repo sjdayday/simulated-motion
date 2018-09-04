@@ -1,9 +1,15 @@
 classdef AnimalTest < AbstractTest
     methods (Test)
-        function testPWD(testCase)
-            disp('show pwd ');
-            pwd
-            cd
+        function testAnimalKnowsItsEnvironment(testCase)
+            environment = Environment();
+            environment.addWall([0 0],[0 2]); 
+            environment.addWall([0 2],[2 2]); 
+            environment.addWall([0 0],[2 0]); 
+            environment.addWall([2 0],[2 2]);
+            environment.build();
+            animal = Animal();
+            animal.place(environment, 0.5, 0.25);  
+            testCase.assertEqual(animal.closestWallDistance(), 0.25);                         
         end
 %         function testCalculatesRelativeDistanceToCues(testCase)
 %             lec = LecSystem();

@@ -36,28 +36,28 @@ classdef ExperimentController < System
         function build(obj)
   %             obj.hFigures = figure; 
             obj.nChartSystemSingleDimensionCells = 10;  % default
-            obj.nHeadDirectionCells = 60;  %default
+%             obj.nHeadDirectionCells = 60;  %default
             obj.currentStep = 1; 
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
+            buildAnimal(obj); 
 
-            buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
+%             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
             obj.chartStatisticsHeader = {};
-            buildAnimal(obj); 
             obj.visual = false; 
             obj.monitor = false; 
-            obj.randomHeadDirection = true; 
-            obj.stepPause = 0.1;             
+            obj.stepPause = 0.1;          
         end
         function buildAnimal(obj)
-            obj.animal = Animal(); 
-            obj.animal.headDirectionSystem = obj.headDirectionSystem; 
+            obj.animal = Animal();
+            obj.randomHeadDirection = obj.animal.randomHeadDirection; 
+            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
         end
 %         function buildRunner(obj)
@@ -102,25 +102,27 @@ classdef ExperimentController < System
             end
         end
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
-            obj.nHeadDirectionCells = nHeadDirectionCells;
+            obj.animal.nHeadDirectionCells = nHeadDirectionCells;
             rebuildHeadDirectionSystem(obj); 
         end
         function rebuildHeadDirectionSystem(obj) 
-            tempMap = []; 
-            if not(isempty(obj.headDirectionSystem))
-                if not(isempty(obj.headDirectionSystem.eventMap))
-                    tempMap = obj.headDirectionSystem.eventMap; 
-                end                
-            end
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
-            obj.headDirectionSystem.animal = obj.animal;
-            if not(isempty(tempMap))
-                obj.headDirectionSystem.eventMap = tempMap; 
-            end
-            obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
-            if obj.visual
-                obj.headDirectionSystem.h = obj.h; 
-            end
+            obj.animal.rebuildHeadDirectionSystem(); 
+            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
+%             tempMap = []; 
+%             if not(isempty(obj.headDirectionSystem))
+%                 if not(isempty(obj.headDirectionSystem.eventMap))
+%                     tempMap = obj.headDirectionSystem.eventMap; 
+%                 end                
+%             end
+%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
+%             obj.headDirectionSystem.animal = obj.animal;
+%             if not(isempty(tempMap))
+%                 obj.headDirectionSystem.eventMap = tempMap; 
+%             end
+%             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
+%             if obj.visual
+%                 obj.headDirectionSystem.h = obj.h; 
+%             end
         end
         function buildChartSystem(obj, nChartSystemSingleDimensionCells)
             obj.nChartSystemSingleDimensionCells = nChartSystemSingleDimensionCells;
@@ -144,10 +146,6 @@ classdef ExperimentController < System
             system.build(); 
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
-        end
-        function loadFixedRandom(~)
-               load '../rngDefaultSettings';
-               rng(rngDefault);                
         end
         function step(obj, system)
            events(obj); 

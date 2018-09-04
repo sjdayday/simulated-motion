@@ -1,4 +1,5 @@
-% Animal class:  model movement and depiction of the physical animal
+% Environment class:  models a physical arena and cues.  
+% The Animal interacts with the Environment. 
 classdef Environment < System
 
     properties
@@ -62,7 +63,7 @@ classdef Environment < System
         end
         function [wallIndex,distance] = closestWall(obj)
             distances = zeros(1,obj.nWalls);  
-            for ii = 1:obj.nWalls;
+            for ii = 1:obj.nWalls
                 currentDistance = distanceToWall(obj,ii);
                 distances(ii) = currentDistance; 
             end
@@ -91,7 +92,7 @@ classdef Environment < System
         function distance = centerDistance(obj, endPoint)
            distance = pointDistance(obj, obj.center, endPoint);
         end
-        function distance = pointDistance(obj, startPoint, endPoint)
+        function distance = pointDistance(~, startPoint, endPoint)
            x = endPoint(1);  
            y = endPoint(2); 
            px = startPoint(1); 
@@ -151,7 +152,7 @@ classdef Environment < System
             figure(obj.h)
             if obj.firstPlot
                 direction = 0; 
-                orientAnimal(obj, direction);
+                orientAnimal(obj, direction);  % probably not used; function is in Animal
                 setupMarkers(obj); 
                 obj.firstPlot = 0;
             end

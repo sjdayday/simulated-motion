@@ -5,6 +5,7 @@ classdef HippocampalFormation < System
     properties
 %         wiring
 %         currentInputX
+        animal
         nHeadDirectionCells
         nGrids
         nGridOrientations
@@ -49,6 +50,8 @@ classdef HippocampalFormation < System
             obj.angularVelocity = 0; 
             obj.linearVelocity = 0; 
             obj.gridExternalVelocity = true; 
+            obj.animal = Animal();
+            obj.loadFixedRandom();
          end
         function build(obj)
             calculateSizes(obj); 
@@ -75,10 +78,10 @@ classdef HippocampalFormation < System
             
         end
         function buildHeadDirectionSystem(obj)
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
-            % TODO: remove once HDS no longer depends on Animal
-            obj.headDirectionSystem.animal = Animal();  
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
+            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
             randomHeadDirection = true; 
+            obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
             obj.headDirectionSystem.initializeActivation(randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = false;  
             obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput; 
