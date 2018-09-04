@@ -85,7 +85,6 @@ classdef HippocampalFormation < System
         end
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
-%             obj.headDirectionSystem = obj.animal.headDirectionSystem; 
             obj.headDirectionSystem.animal = obj.animal; 
             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);

@@ -8,6 +8,7 @@ classdef AnimalTest < AbstractTest
             environment.addWall([2 0],[2 2]);
             environment.build();
             animal = Animal();
+            animal.build(); 
             animal.place(environment, 0.5, 0.25);  
             testCase.assertEqual(animal.closestWallDistance(), 0.25);                         
         end

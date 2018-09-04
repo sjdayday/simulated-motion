@@ -8,6 +8,7 @@ classdef MotorCortexTest < AbstractTest
             env.addWall([2 0],[2 2]);
             env.build();
             animal = Animal(); 
+            animal.build(); 
             animal.place(env, 1, 1);
 %             motorCortex = TestingMotorExecutions; 
 %             cortex = Cortex(motorCortex); 

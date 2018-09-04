@@ -12,7 +12,8 @@ classdef BehaviorTest < AbstractTest
         end
         function testBehaviorHasAccessToAnimalsSystems(testCase)
             animal = Animal();
-            animal.headDirectionSystem = HeadDirectionSystem(60); 
+            animal.build(); 
+%             animal.headDirectionSystem = HeadDirectionSystem(60); 
             behavior = Behavior('', animal);
             testCase.assertEqual(behavior.headDirectionSystem, animal.headDirectionSystem);
         end

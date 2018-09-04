@@ -36,14 +36,11 @@ classdef ExperimentController < System
         function build(obj)
   %             obj.hFigures = figure; 
             obj.nChartSystemSingleDimensionCells = 10;  % default
-%             obj.nHeadDirectionCells = 60;  %default
             obj.currentStep = 1; 
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
             buildAnimal(obj); 
-
-%             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells);
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
@@ -56,6 +53,7 @@ classdef ExperimentController < System
         end
         function buildAnimal(obj)
             obj.animal = Animal();
+            obj.animal.build(); 
             obj.randomHeadDirection = obj.animal.randomHeadDirection; 
             obj.headDirectionSystem = obj.animal.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
@@ -101,6 +99,7 @@ classdef ExperimentController < System
                 end
             end
         end
+        % ExperimentControllerTest only caller
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
             obj.animal.nHeadDirectionCells = nHeadDirectionCells;
             rebuildHeadDirectionSystem(obj); 
@@ -131,6 +130,7 @@ classdef ExperimentController < System
         function rebuildChartSystem(obj) 
             obj.chartSystem = ChartSystem(obj.nChartSystemSingleDimensionCells); 
         end
+        % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
             rebuildHeadDirectionSystem(obj);
             runSystem(obj,obj.headDirectionSystem); 

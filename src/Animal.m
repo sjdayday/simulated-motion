@@ -17,6 +17,7 @@ classdef Animal < System
         nHeadDirectionCells
         randomHeadDirection
         defaultFeatureDetectors
+        pullVelocityFromAnimal
         clockwiseVelocity
         counterClockwiseVelocity
         directions
@@ -45,27 +46,18 @@ classdef Animal < System
             obj.visual = false; 
             obj.nHeadDirectionCells = 60; 
             obj.randomHeadDirection = true; 
+            obj.pullVelocityFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
-%             build(obj);
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
+            obj.hippocampalFormation.animal = obj; 
             obj.hippocampalFormation.defaultFeatureDetectors = obj.defaultFeatureDetectors; 
+            obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
             obj.hippocampalFormation.build();  
-%             obj.hippocampalFormation.headDirectionSystem.pullVelocity = false; 
-            % rather than build HDS directly, build HippocampalFormation
-            buildDefaultHeadDirectionSystem(obj); 
-            
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
-            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
-            randomHeadDirection = true; 
-%             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
-            obj.headDirectionSystem.initializeActivation(randomHeadDirection);
-            obj.headDirectionSystem.pullVelocity = false;
-            % how to override?
-            obj.headDirectionSystem.build(); 
-
+            obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem;  
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
