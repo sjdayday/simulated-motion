@@ -16,6 +16,7 @@ classdef Animal < System
         visual
         nHeadDirectionCells
         randomHeadDirection
+        defaultFeatureDetectors
         clockwiseVelocity
         counterClockwiseVelocity
         directions
@@ -44,11 +45,27 @@ classdef Animal < System
             obj.visual = false; 
             obj.nHeadDirectionCells = 60; 
             obj.randomHeadDirection = true; 
-            build(obj);
+            obj.defaultFeatureDetectors = true; 
+%             build(obj);
         end
         function build(obj)
+            obj.hippocampalFormation = HippocampalFormation();
+            obj.hippocampalFormation.defaultFeatureDetectors = obj.defaultFeatureDetectors; 
+            obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.hippocampalFormation.build();  
+%             obj.hippocampalFormation.headDirectionSystem.pullVelocity = false; 
             % rather than build HDS directly, build HippocampalFormation
             buildDefaultHeadDirectionSystem(obj); 
+            
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
+            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
+            randomHeadDirection = true; 
+%             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
+            obj.headDirectionSystem.initializeActivation(randomHeadDirection);
+            obj.headDirectionSystem.pullVelocity = false;
+            % how to override?
+            obj.headDirectionSystem.build(); 
+
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 

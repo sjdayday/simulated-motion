@@ -33,6 +33,9 @@ classdef HippocampalFormation < System
         nLecOutput
         linearVelocity
         angularVelocity
+        defaultFeatureDetectors
+        randomHeadDirection
+        pullVelocity
     end
     methods
         function obj = HippocampalFormation()
@@ -50,6 +53,9 @@ classdef HippocampalFormation < System
             obj.angularVelocity = 0; 
             obj.linearVelocity = 0; 
             obj.gridExternalVelocity = true; 
+            obj.defaultFeatureDetectors = true; 
+            obj.randomHeadDirection = true; 
+            obj.pullVelocity = true; 
             obj.animal = Animal();
             obj.loadFixedRandom();
          end
@@ -79,12 +85,14 @@ classdef HippocampalFormation < System
         end
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
-            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
-            randomHeadDirection = true; 
+%             obj.headDirectionSystem = obj.animal.headDirectionSystem; 
+            obj.headDirectionSystem.animal = obj.animal; 
             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
-            obj.headDirectionSystem.initializeActivation(randomHeadDirection);
-            obj.headDirectionSystem.pullVelocity = false;  
-            obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput; 
+            obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
+            obj.headDirectionSystem.pullVelocity = obj.pullVelocity;   
+            if not(obj.defaultFeatureDetectors)
+                obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput;             
+            end
             obj.headDirectionSystem.build(); 
         end
         function buildGrids(obj) 

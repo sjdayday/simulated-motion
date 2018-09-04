@@ -88,8 +88,9 @@ classdef HippocampalFormationTest < AbstractTest
         function testHeadDirectionUpdatedByAngularVelocityAtEachStep(testCase)
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
+            system.pullVelocity = false; 
             system.build();  
-            system.headDirectionSystem.pullVelocity = false;  
+%             system.headDirectionSystem.pullVelocity = false;  
             system.step(); 
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 54); 
             system.updateAngularVelocity(pi/10); 
@@ -103,8 +104,9 @@ classdef HippocampalFormationTest < AbstractTest
             import matlab.unittest.constraints.RelativeTolerance
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
+            system.pullVelocity = false;             
             system.build();  
-            system.headDirectionSystem.pullVelocity = false;  
+%             system.headDirectionSystem.pullVelocity = false;  
             system.updateAngularVelocity(0); 
             system.step(); 
             system.step(); 
@@ -120,6 +122,7 @@ classdef HippocampalFormationTest < AbstractTest
         function testBothAngularAndLinearVelocityCantBeNonZero(testCase)
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
+            system.pullVelocity = false; 
             system.build();  
             system.updateAngularAndLinearVelocity(-pi/10, 0);             
             system.updateAngularAndLinearVelocity(0, 0.0005);             
@@ -138,7 +141,8 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridDirectionBiasIncrement = pi/4;             
             system.nGridGains = 1; 
             system.gridSize = [10,9];
-            system.headDirectionSystem.pullVelocity = false;  
+%             system.headDirectionSystem.pullVelocity = false;  
+            system.pullVelocity = false; 
             system.build();  
             system.updateAngularVelocity(0); 
             system.step(); 
@@ -190,6 +194,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridExternalVelocity = false; 
             system.nGridGains = 1; 
             system.gridSize = [6,5];
+            system.pullVelocity = false; 
             system.build();  
             system.stepMec(); 
             mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
@@ -212,6 +217,8 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridExternalVelocity = false; 
             system.nGridGains = 1; 
             system.gridSize = [6,5];
+            system.pullVelocity = false; 
+            system.defaultFeatureDetectors = false; 
             system.build();  
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3));                         
