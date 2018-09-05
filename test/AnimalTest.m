@@ -9,9 +9,21 @@ classdef AnimalTest < AbstractTest
             environment.build();
             animal = Animal();
             animal.build(); 
-            animal.place(environment, 0.5, 0.25);  
+            animal.place(environment, 0.5, 0.25, 0);  
             testCase.assertEqual(animal.closestWallDistance(), 0.25);                         
         end
+        function testAnimalHasSubsystems(testCase)
+            animal = Animal(); 
+            animal.build(); 
+            testCase.assertEqual(animal.motorCortex.animal, animal);                         
+        end
+%         function testCurrentDirection(testCase)
+%             animal = Animal(); 
+%             animal.build(); 
+%             animal.
+%             testCase.assertEqual(animal.motorCortex.animal, animal);                         
+%         end
+        
 %         function testCalculatesRelativeDistanceToCues(testCase)
 %             lec = LecSystem();
 %             lec.distanceUnits = 8;

@@ -9,15 +9,17 @@ classdef MotorCortexTest < AbstractTest
             env.build();
             animal = Animal(); 
             animal.build(); 
-            animal.place(env, 1, 1);
-%             motorCortex = TestingMotorExecutions; 
-%             cortex = Cortex(motorCortex); 
-%             testCase.assertClass(cortex.simulationNeuralNetwork, ...
-%                 'SimulationCorticalNeuralNetwork'); 
-%             testCase.assertClass(cortex.planNeuralNetwork, ...
-%                 'PlanCorticalNeuralNetwork');            
-%             testCase.assertEqual(length(cortex.motorCortex.testingExecutions), ...
-%                 1600, 'number of test executions'); 
+            animal.place(env, 1, 1, 0);
+            motorCortex = animal.motorCortex; 
+            motorCortex.moveDistance = 15;
+            motorCortex.counterClockwiseTurn();
+            testCase.assertClass(motorCortex.currentPlan, 'Turn');
+            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 15);
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+%             testCase.assertThat(animal.currentDirection, ...            
+%                 IsEqualTo(0.785398, 'Within', RelativeTolerance(.00001))); 
+%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 15); 
         end
 %         function testDrawRandomExecution(testCase)
 %             motorCortex = TestingMotorExecutions; 

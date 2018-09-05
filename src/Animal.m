@@ -23,7 +23,7 @@ classdef Animal < System
         directions
         positions
         currentDirection
-        currentPosition
+        unitCirclePosition
         minimumVelocity
         markers
         features
@@ -48,6 +48,7 @@ classdef Animal < System
             obj.randomHeadDirection = true; 
             obj.pullVelocityFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
+            obj.motorCortex = MotorCortex(obj); 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -81,6 +82,7 @@ classdef Animal < System
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
             if obj.visual
                 obj.headDirectionSystem.h = obj.h; 
+                obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
             end
         end
 
@@ -90,26 +92,27 @@ classdef Animal < System
         end
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
-            updatePosition(obj); 
+            updateUnitCirclePosition(obj); 
             obj.justOriented = 1; 
         end
-        function place(obj, environment, x, y)
+        function place(obj, environment, x, y, direction)
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
+            obj.currentDirection = direction; 
         end
         function distance = closestWallDistance(obj)
             distance = obj.environment.closestWallDistance(); 
         end
-        function updatePosition(obj)
-            obj.currentPosition = [cos(obj.currentDirection) sin(obj.currentDirection)];
+        function updateUnitCirclePosition(obj)
+            obj.unitCirclePosition = [cos(obj.currentDirection) sin(obj.currentDirection)];
         end
         function setupMarkers(obj)
             hold on;
-            obj.markers(3) = plot(obj.currentPosition(1), obj.currentPosition(2), ...
+            obj.markers(3) = plot(obj.unitCirclePosition(1), obj.unitCirclePosition(2), ...
                 'o','MarkerFaceColor',[0.75 0.75 0.75],'MarkerSize',10,'MarkerEdgeColor',[0.75 0.75 0.75]);
-            obj.markers(2) = plot(obj.currentPosition(1), obj.currentPosition(2), ...
+            obj.markers(2) = plot(obj.unitCirclePosition(1), obj.unitCirclePosition(2), ...
                 'o','MarkerFaceColor',[0.5 0.5 0.5],'MarkerSize',10,'MarkerEdgeColor',[0.5 0.5 0.5]);
-            obj.markers(1) = plot(obj.currentPosition(1), obj.currentPosition(2), ...
+            obj.markers(1) = plot(obj.unitCirclePosition(1), obj.unitCirclePosition(2), ...
                 'o','MarkerFaceColor','black','MarkerSize',10,'MarkerEdgeColor','black');
                 drawnow;
             pause(1); 
@@ -120,7 +123,7 @@ classdef Animal < System
             obj.directions(1) = obj.currentDirection;              
             obj.positions(3,:) = obj.positions(2,:);  
             obj.positions(2,:) = obj.positions(1,:);  
-            obj.positions(1,:) = obj.currentPosition;              
+            obj.positions(1,:) = obj.unitCirclePosition;              
         end
         function markerUpdate(obj, position1, position2, position3)
             obj.markers(1).XData = position1(1); 
@@ -133,10 +136,10 @@ classdef Animal < System
             drawnow;            
         end
         function movingMarkerUpdate(obj)
-            markerUpdate(obj, obj.currentPosition, obj.positions(1,:), obj.positions(2,:)); 
+            markerUpdate(obj, obj.unitCirclePosition, obj.positions(1,:), obj.positions(2,:)); 
         end
         function notMovingMarkerUpdate(obj)
-            markerUpdate(obj, obj.currentPosition, obj.currentPosition, obj.currentPosition); 
+            markerUpdate(obj, obj.unitCirclePosition, obj.unitCirclePosition, obj.unitCirclePosition); 
         end
         function updateOrientation(obj)
             if obj.justOriented                
@@ -144,7 +147,7 @@ classdef Animal < System
             else
                 obj.currentDirection = obj.directions(1) + ... 
                     obj.clockwiseVelocity + obj.counterClockwiseVelocity;
-                updatePosition(obj);                 
+                updateUnitCirclePosition(obj);                 
             end
             if obj.currentDirection == obj.directions(1)
                notMovingMarkerUpdate(obj);  

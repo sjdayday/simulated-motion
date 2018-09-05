@@ -2,6 +2,7 @@
 classdef MotorCortex < System 
 
     properties
+        animal
         distanceUnits
         nHeadDirectionCells
         nFeatures
@@ -9,15 +10,30 @@ classdef MotorCortex < System
         reward
         nOutput
         featureOutput
+        moveDistance
+        currentPlan
+        turnPrefix
+        turnSpeed
+        turnDirection
+        clockwise  % read-only 
+        counterClockwise % read-only
+        
     end
     methods
-        function obj = MotorCortex()
+        function obj = MotorCortex(animal)
             obj = obj@System(); 
             obj.distanceUnits = 8;
             obj.nHeadDirectionCells = 60;
             obj.nFeatures = 3; 
             obj.rewardUnits = 5; 
-            obj.build();            
+            obj.build();
+            obj.moveDistance = 0; 
+            obj.animal = animal; 
+            obj.turnPrefix = 'Move.Turn.'; 
+            obj.clockwise = -1;
+            obj.counterClockwise = 1; 
+            obj.turnSpeed = 1;
+            obj.turnDirection = obj.counterClockwise; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -25,6 +41,17 @@ classdef MotorCortex < System
             obj.reward = zeros(1,obj.rewardUnits);  
             obj.nOutput = length(obj.featureOutput) + obj.rewardUnits; 
 
+        end
+        function counterClockwiseTurn(obj)
+            obj.turnDirection = obj.counterClockwise; 
+            obj.currentPlan = obj.turn(); 
+        end
+        function clockwiseTurn(obj)
+            obj.turnDirection = obj.clockwise; 
+            obj.currentPlan = obj.turn(); 
+        end
+        function aTurn = turn(obj)
+            aTurn = Turn(obj.turnPrefix, obj.animal, obj.turnDirection, obj.turnSpeed, obj.moveDistance); 
         end
         %% Single time step 
         function  step(obj)

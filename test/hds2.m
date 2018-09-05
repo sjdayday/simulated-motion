@@ -1,4 +1,4 @@
-pwd% hds2: 
+pwd % hds2: 
 close all
 clear all
 cr = ExperimentController();

@@ -53,6 +53,7 @@ classdef ExperimentController < System
         end
         function buildAnimal(obj)
             obj.animal = Animal();
+            obj.animal.visual = true; 
             obj.animal.build(); 
             obj.randomHeadDirection = obj.animal.randomHeadDirection; 
             obj.headDirectionSystem = obj.animal.headDirectionSystem; 
@@ -92,6 +93,7 @@ classdef ExperimentController < System
                 obj.chartSystem.h = obj.h;
                 obj.headDirectionSystem.h = obj.h; 
                 obj.animal.h = obj.h; 
+                obj.animal.headDirectionSystem.h = obj.h; 
 %                 setupDisplay(obj);  % do later
             else
                 if isvalid(obj.h) 

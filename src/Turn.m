@@ -6,16 +6,37 @@ classdef Turn <  Behavior
          distanceTurned
     end
     methods
-        function obj = Turn(prefix, animal)
+%         function obj = Turn(prefix, animal)
+%             import uk.ac.imperial.pipe.runner.*;
+%             obj = obj@Behavior(prefix, animal);
+%             obj.defaultPetriNet = 'include-move-turn.xml';
+%             obj.buildStandardSemantics();
+%             obj.listenPlace('Move.Turn.Turned', @obj.turned); 
+%             obj.distanceTurned = 0; 
+% %             fired = step@AutoassociativeNetwork(obj, obj.ECOutput, obj.DGOutput); 
+%                        
+%         end
+        function obj = Turn(prefix, animal, direction, speed, distance)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal);
             obj.defaultPetriNet = 'include-move-turn.xml';
             obj.buildStandardSemantics();
-            obj.listenPlace('Move.Turn.Turned', @obj.turned); 
+            obj.listenPlace([prefix, 'Turned'], @obj.turned); 
+            if (direction == 1)
+                obj.markPlace([prefix, 'CounterClockwise']);
+            end 
+            if (direction == -1)
+                obj.markPlace([prefix, 'Clockwise']);                
+            end
+            obj.markPlaceMultipleTokens([prefix, 'Speed'], speed); 
+            obj.markPlaceMultipleTokens([prefix, 'Distance'], distance); 
             obj.distanceTurned = 0; 
-%             fired = step@AutoassociativeNetwork(obj, obj.ECOutput, obj.DGOutput); 
-                       
+            obj.run();
+            pause(1); 
+           
         end
+        
+%         Turn('Move.Turn.', Animal(), -1, 1, 3);
         function turned(obj, ~, ~) 
             obj.distanceTurned = obj.distanceTurned + 1; 
         end
