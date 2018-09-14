@@ -230,7 +230,7 @@ classdef ExperimentController < System
             system.addEvent(time, event); 
         end
         function addHeadDirectionSystemEvent(obj, time, event)
-           obj.headDirectionSystem.addEvent(time, event); 
+           obj.animal.headDirectionSystem.addEvent(time, event); 
         end
         function addChartSystemEvent(obj, time, event)
            obj.chartSystem.addEvent(time, event); 
