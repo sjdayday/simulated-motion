@@ -10,10 +10,10 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testOverridesDefaultHeadDirectionAndChartSystemsSizes(testCase)
             controller = ExperimentController(); 
-            testCase.assertEqual(controller.animal.headDirectionSystem.nHeadDirectionCells, ...
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.nHeadDirectionCells, ...
                 60, 'default number of head direction cells'); 
             controller.buildHeadDirectionSystem(20); 
-            testCase.assertEqual(controller.animal.headDirectionSystem.nHeadDirectionCells, ...
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.nHeadDirectionCells, ...
                 20, 'new number of head direction cells'); 
             testCase.assertClass(controller.chartSystem, ...
                 'ChartSystem'); 
@@ -54,11 +54,11 @@ classdef ExperimentControllerTest < AbstractTest
             controller = ExperimentController(); 
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
-            firstSystem = controller.animal.headDirectionSystem; 
+            firstSystem = controller.animal.hippocampalFormation.headDirectionSystem; 
             testCase.assertEqual(controller.currentStep, 21);
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertNotSameHandle(controller.animal.headDirectionSystem, firstSystem);
+            testCase.assertNotSameHandle(controller.animal.hippocampalFormation.headDirectionSystem, firstSystem);
         end
         function testContinueInvokesRunIfNoPreviousRun(testCase)
             controller = ExperimentController(); 

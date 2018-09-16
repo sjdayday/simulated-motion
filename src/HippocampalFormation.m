@@ -36,6 +36,8 @@ classdef HippocampalFormation < System
         defaultFeatureDetectors
         randomHeadDirection
         pullVelocity
+        visual
+        h
     end
     methods
         function obj = HippocampalFormation()
@@ -56,13 +58,15 @@ classdef HippocampalFormation < System
             obj.defaultFeatureDetectors = true; 
             obj.randomHeadDirection = true; 
             obj.pullVelocity = true; 
+            obj.visual = false; 
             obj.animal = Animal();
             obj.loadFixedRandom();
          end
         function build(obj)
             calculateSizes(obj); 
             buildLec(obj); 
-            buildHeadDirectionSystem(obj); 
+            rebuildHeadDirectionSystem(obj); 
+%             buildHeadDirectionSystem(obj); 
             buildGrids(obj); 
 %             buildLec(obj); 
             buildPlaceSystem(obj);
@@ -83,10 +87,30 @@ classdef HippocampalFormation < System
 %             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
             
         end
+        function rebuildHeadDirectionSystem(obj) 
+            tempMap = []; 
+            if not(isempty(obj.headDirectionSystem))
+                if not(isempty(obj.headDirectionSystem.eventMap))
+                    tempMap = obj.headDirectionSystem.eventMap; 
+                end                
+            end
+            buildHeadDirectionSystem(obj); 
+%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
+%             obj.headDirectionSystem.animal = obj;
+            if not(isempty(tempMap))
+                obj.headDirectionSystem.eventMap = tempMap; 
+            end
+%             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
+            if obj.visual
+                obj.headDirectionSystem.h = obj.h; 
+%                 obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
+            end
+        end
+
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
             obj.headDirectionSystem.animal = obj.animal; 
-            obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
+%             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity;   
             if not(obj.defaultFeatureDetectors)

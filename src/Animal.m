@@ -57,6 +57,9 @@ classdef Animal < System
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
             obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
+            obj.hippocampalFormation.visual = obj.visual; 
+            obj.hippocampalFormation.h = obj.h; 
+            
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem;  
         end
@@ -64,26 +67,28 @@ classdef Animal < System
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
         end
         function buildHeadDirectionSystem(obj, nHeadDirectionCells)
-            obj.nHeadDirectionCells = nHeadDirectionCells;
+            obj.nHeadDirectionCells = nHeadDirectionCells;          
             rebuildHeadDirectionSystem(obj); 
         end
-        function rebuildHeadDirectionSystem(obj) 
-            tempMap = []; 
-            if not(isempty(obj.headDirectionSystem))
-                if not(isempty(obj.headDirectionSystem.eventMap))
-                    tempMap = obj.headDirectionSystem.eventMap; 
-                end                
-            end
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
-            obj.headDirectionSystem.animal = obj;
-            if not(isempty(tempMap))
-                obj.headDirectionSystem.eventMap = tempMap; 
-            end
-            obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
-            if obj.visual
-                obj.headDirectionSystem.h = obj.h; 
-                obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
-            end
+        function rebuildHeadDirectionSystem(obj)
+            obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells;
+            obj.hippocampalFormation.rebuildHeadDirectionSystem(); 
+%             tempMap = []; 
+%             if not(isempty(obj.hippocampalFormation.headDirectionSystem))
+%                 if not(isempty(obj.headDirectionSystem.eventMap))
+%                     tempMap = obj.headDirectionSystem.eventMap; 
+%                 end                
+%             end
+%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
+%             obj.headDirectionSystem.animal = obj;
+%             if not(isempty(tempMap))
+%                 obj.headDirectionSystem.eventMap = tempMap; 
+%             end
+%             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
+%             if obj.visual
+%                 obj.headDirectionSystem.h = obj.h; 
+%                 obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
+%             end
         end
 
         %% Single time step 
