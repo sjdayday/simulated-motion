@@ -29,7 +29,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 1);
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertEqual(controller.animal.headDirectionSystem.time, 20);
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.time, 20);
         end
         function testRunsSystemsSeparatelyEachForTotalStepsResettingCurrentStep(testCase)
             controller = ExperimentController(); 
@@ -38,7 +38,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             controller.runChartSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertEqual(controller.animal.headDirectionSystem.time, 20);
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.time, 20);
             testCase.assertEqual(controller.chartSystem.time, 20);           
         end
         function testContinuesFromWhereRunLeftOff(testCase)
@@ -48,7 +48,7 @@ classdef ExperimentControllerTest < AbstractTest
             controller.totalSteps = 25; 
             controller.continueHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 26);
-            testCase.assertEqual(controller.animal.headDirectionSystem.time, 25);
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.time, 25);
         end
         function testSecondRunStartsOver(testCase)
             controller = ExperimentController(); 

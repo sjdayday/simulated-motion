@@ -56,7 +56,7 @@ classdef ExperimentController < System
             obj.animal.visual = true; 
             obj.animal.build(); 
             obj.randomHeadDirection = obj.animal.randomHeadDirection; 
-            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
+            obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
         end
 %         function buildRunner(obj)
@@ -93,7 +93,8 @@ classdef ExperimentController < System
                 obj.chartSystem.h = obj.h;
                 obj.headDirectionSystem.h = obj.h; 
                 obj.animal.h = obj.h; 
-                obj.animal.headDirectionSystem.h = obj.h; 
+                obj.animal.hippocampalFormation.h = obj.h; 
+                obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
 %                 setupDisplay(obj);  % do later
             else
                 if isvalid(obj.h) 
@@ -120,7 +121,7 @@ classdef ExperimentController < System
         % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
             rebuildHeadDirectionSystem(obj);
-            runSystem(obj,obj.animal.headDirectionSystem); 
+            runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
         end
         function runChartSystem(obj)
             rebuildChartSystem(obj);
@@ -157,7 +158,7 @@ classdef ExperimentController < System
             if obj.currentStep == 1
                 runHeadDirectionSystem(obj);
             else
-                runBareSystem(obj,obj.animal.headDirectionSystem);             
+                runBareSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem);             
             end
         end
         function continueChartSystem(obj)
@@ -215,7 +216,7 @@ classdef ExperimentController < System
             system.addEvent(time, event); 
         end
         function addHeadDirectionSystemEvent(obj, time, event)
-           obj.animal.headDirectionSystem.addEvent(time, event); 
+           obj.animal.hippocampalFormation.headDirectionSystem.addEvent(time, event); 
         end
         function addChartSystemEvent(obj, time, event)
            obj.chartSystem.addEvent(time, event); 
@@ -359,9 +360,9 @@ classdef ExperimentController < System
             obj.animal.plot(); 
             subplot(222);
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
-            obj.animal.headDirectionSystem.plotCircle(); 
+            obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
             subplot(224);
-            obj.animal.headDirectionSystem.plotActivation(); 
+            obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
             hold on; 
             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
             drawnow
