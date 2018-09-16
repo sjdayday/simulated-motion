@@ -108,22 +108,7 @@ classdef ExperimentController < System
         end
         function rebuildHeadDirectionSystem(obj) 
             obj.animal.rebuildHeadDirectionSystem(); 
-            obj.headDirectionSystem = obj.animal.headDirectionSystem; 
-%             tempMap = []; 
-%             if not(isempty(obj.headDirectionSystem))
-%                 if not(isempty(obj.headDirectionSystem.eventMap))
-%                     tempMap = obj.headDirectionSystem.eventMap; 
-%                 end                
-%             end
-%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
-%             obj.headDirectionSystem.animal = obj.animal;
-%             if not(isempty(tempMap))
-%                 obj.headDirectionSystem.eventMap = tempMap; 
-%             end
-%             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
-%             if obj.visual
-%                 obj.headDirectionSystem.h = obj.h; 
-%             end
+%             obj.headDirectionSystem = obj.animal.headDirectionSystem; 
         end
         function buildChartSystem(obj, nChartSystemSingleDimensionCells)
             obj.nChartSystemSingleDimensionCells = nChartSystemSingleDimensionCells;
@@ -135,7 +120,7 @@ classdef ExperimentController < System
         % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
             rebuildHeadDirectionSystem(obj);
-            runSystem(obj,obj.headDirectionSystem); 
+            runSystem(obj,obj.animal.headDirectionSystem); 
         end
         function runChartSystem(obj)
             rebuildChartSystem(obj);
@@ -149,6 +134,15 @@ classdef ExperimentController < System
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
         end
+        function runBareSystem(obj, system)
+            for ii = obj.currentStep:obj.totalSteps
+                step(obj, system); 
+            end
+            obj.iteration = obj.iteration + 1;
+            if obj.monitor
+%                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
+            end
+        end
         function step(obj, system)
            events(obj); 
            system.step();
@@ -159,20 +153,11 @@ classdef ExperimentController < System
                pause(obj.stepPause); 
            end            
         end
-        function runBareSystem(obj, system)
-            for ii = obj.currentStep:obj.totalSteps
-                step(obj, system); 
-            end
-            obj.iteration = obj.iteration + 1;
-            if obj.monitor
-%                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
-            end
-        end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
                 runHeadDirectionSystem(obj);
             else
-                runBareSystem(obj,obj.headDirectionSystem);             
+                runBareSystem(obj,obj.animal.headDirectionSystem);             
             end
         end
         function continueChartSystem(obj)
@@ -374,9 +359,9 @@ classdef ExperimentController < System
             obj.animal.plot(); 
             subplot(222);
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
-            obj.headDirectionSystem.plotCircle(); 
+            obj.animal.headDirectionSystem.plotCircle(); 
             subplot(224);
-            obj.headDirectionSystem.plotActivation(); 
+            obj.animal.headDirectionSystem.plotActivation(); 
             hold on; 
             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
             drawnow

@@ -3,17 +3,17 @@ classdef ExperimentControllerTest < AbstractTest
         function testCreatesControllerWithDefaultHeadDirectionAndChartSystems(testCase)
             controller = ExperimentController(); 
 %             headDirectionSystem = HeadDirectionSystem(5); 
-            testCase.assertClass(controller.headDirectionSystem, ...
+            testCase.assertClass(controller.animal.headDirectionSystem, ...
                 'HeadDirectionSystem'); 
             testCase.assertClass(controller.chartSystem, ...
                 'ChartSystem'); 
         end
         function testOverridesDefaultHeadDirectionAndChartSystemsSizes(testCase)
             controller = ExperimentController(); 
-            testCase.assertEqual(controller.headDirectionSystem.nHeadDirectionCells, ...
+            testCase.assertEqual(controller.animal.headDirectionSystem.nHeadDirectionCells, ...
                 60, 'default number of head direction cells'); 
             controller.buildHeadDirectionSystem(20); 
-            testCase.assertEqual(controller.headDirectionSystem.nHeadDirectionCells, ...
+            testCase.assertEqual(controller.animal.headDirectionSystem.nHeadDirectionCells, ...
                 20, 'new number of head direction cells'); 
             testCase.assertClass(controller.chartSystem, ...
                 'ChartSystem'); 
@@ -29,7 +29,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 1);
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertEqual(controller.headDirectionSystem.time, 20);
+            testCase.assertEqual(controller.animal.headDirectionSystem.time, 20);
         end
         function testRunsSystemsSeparatelyEachForTotalStepsResettingCurrentStep(testCase)
             controller = ExperimentController(); 
@@ -38,7 +38,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             controller.runChartSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertEqual(controller.headDirectionSystem.time, 20);
+            testCase.assertEqual(controller.animal.headDirectionSystem.time, 20);
             testCase.assertEqual(controller.chartSystem.time, 20);           
         end
         function testContinuesFromWhereRunLeftOff(testCase)
@@ -48,17 +48,17 @@ classdef ExperimentControllerTest < AbstractTest
             controller.totalSteps = 25; 
             controller.continueHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 26);
-            testCase.assertEqual(controller.headDirectionSystem.time, 25);
+            testCase.assertEqual(controller.animal.headDirectionSystem.time, 25);
         end
         function testSecondRunStartsOver(testCase)
             controller = ExperimentController(); 
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
-            firstSystem = controller.headDirectionSystem; 
+            firstSystem = controller.animal.headDirectionSystem; 
             testCase.assertEqual(controller.currentStep, 21);
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
-            testCase.assertNotSameHandle(controller.headDirectionSystem, firstSystem);
+            testCase.assertNotSameHandle(controller.animal.headDirectionSystem, firstSystem);
         end
         function testContinueInvokesRunIfNoPreviousRun(testCase)
             controller = ExperimentController(); 
@@ -185,7 +185,7 @@ classdef ExperimentControllerTest < AbstractTest
             controller = ExperimentController(); 
             testCase.assertEqual(controller.visual, false); 
             controller.visualize(true); 
-            testCase.assertSameHandle(controller.headDirectionSystem.h, ...
+            testCase.assertSameHandle(controller.animal.headDirectionSystem.h, ...
                 controller.h);
             testCase.assertSameHandle(controller.animal.h, ...
                 controller.h);
