@@ -83,7 +83,7 @@ classdef ExperimentControllerTest < AbstractTest
                 'default is to reset seed');
             controller.resetRandomSeed(false); 
             controller.runHeadDirectionSystem(); 
-            testCase.assertEqual(round(rand()*1000)/1000, 0.962, 'different seed');
+            testCase.assertEqual(round(rand()*1000)/1000, 0.255, 'different seed');
         end
         function testAddPropertyAndSupportingKeysInMapWithValueInTargetSystem(testCase)
             controller = TestingExperimentController(); 

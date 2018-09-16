@@ -54,8 +54,8 @@ classdef ExperimentController < System
         function buildAnimal(obj)
             obj.animal = Animal();
             obj.animal.visual = true; 
+            obj.animal.randomHeadDirection = obj.randomHeadDirection; 
             obj.animal.build(); 
-            obj.randomHeadDirection = obj.animal.randomHeadDirection; 
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
         end
