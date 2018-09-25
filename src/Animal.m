@@ -37,7 +37,7 @@ classdef Animal < System
             obj.positions = zeros(3,2); 
             obj.markers = gobjects(3,1); 
             obj.firstPlot = 1; 
-            obj.minimumVelocity = pi/20; 
+            obj.minimumVelocity = pi/30; % corresponds to 60 head direction system cells  
             obj.clockwiseVelocity = 0; 
             obj.counterClockwiseVelocity = 0; 
             obj.features = [];
@@ -95,10 +95,32 @@ classdef Animal < System
         function  step(obj)
             step@System(obj); 
         end
+        function turn(obj, clockwiseNess, relativeSpeed)
+            if (clockwiseNess == 1) || (clockwiseNess == -1)
+                obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+            else
+                error('Animal:ClockwiseNess', ...
+                    'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
+            end
+        end
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
             updateUnitCirclePosition(obj); 
             obj.justOriented = 1; 
+        end
+        function updateOrientation(obj)
+            if obj.justOriented                
+                obj.justOriented = 0; 
+            else
+%                 obj.currentDirection = obj.directions(1) + ... 
+%                     obj.clockwiseVelocity + obj.counterClockwiseVelocity;
+                updateUnitCirclePosition(obj);                 
+            end
+            if obj.currentDirection == obj.directions(1)
+               notMovingMarkerUpdate(obj);  
+            else
+               movingMarkerUpdate(obj); 
+            end     
         end
         function place(obj, environment, x, y, direction)
             obj.environment = environment;
@@ -145,21 +167,6 @@ classdef Animal < System
         end
         function notMovingMarkerUpdate(obj)
             markerUpdate(obj, obj.unitCirclePosition, obj.unitCirclePosition, obj.unitCirclePosition); 
-        end
-        function updateOrientation(obj)
-            if obj.justOriented                
-                obj.justOriented = 0; 
-            else
-                obj.currentDirection = obj.directions(1) + ... 
-                    obj.clockwiseVelocity + obj.counterClockwiseVelocity;
-                updateUnitCirclePosition(obj);                 
-            end
-            if obj.currentDirection == obj.directions(1)
-               notMovingMarkerUpdate(obj);  
-            else
-               movingMarkerUpdate(obj); 
-            end
-            
         end
         function plot(obj)
             figure(obj.h)

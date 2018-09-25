@@ -17,6 +17,38 @@ classdef AnimalTest < AbstractTest
             animal.build(); 
             testCase.assertEqual(animal.motorCortex.animal, animal);                         
         end
+        function testTurn(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            animal = Animal(); 
+            animal.build();
+            animal.orientAnimal(0);
+            relativeSpeed = 1;
+            clockwiseNess = -1 ;  %clockwise  
+            animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertThat(animal.currentDirection, ...
+               IsEqualTo(-pi/30, 'Within', RelativeTolerance(.00000001)));         
+            relativeSpeed = 2;
+            clockwiseNess = 1 ;  %counterclockwise  
+            animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertThat(animal.currentDirection, ...
+               IsEqualTo(pi/30, 'Within', RelativeTolerance(.00000001)));         
+            animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertThat(animal.currentDirection, ...
+               IsEqualTo(3*pi/30, 'Within', RelativeTolerance(.00000001)));         
+        end
+        function testClockwisenessMustBeOneOrMinusOne(testCase)
+            animal = Animal(); 
+            animal.build();
+            animal.orientAnimal(0);
+            clockwiseNess = -2 ;   
+            try 
+                animal.turn(clockwiseNess, 1); 
+            catch  ME
+                testCase.assertEqual(ME.identifier, 'Animal:ClockwiseNess'); 
+                testCase.assertEqual(ME.message, 'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).'); 
+            end
+        end
 %         function testCurrentDirection(testCase)
 %             animal = Animal(); 
 %             animal.build(); 

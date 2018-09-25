@@ -1,9 +1,11 @@
-%% ExperimentController class:  controller for ExperimentView
-% invokes classes as requested through the ExperimentView GUI 
+%% Turn class:  
+% invokes turn.xml PetriNet with speed, direction and distance parameters, and tracks distance turned  
 classdef Turn <  Behavior  
 
     properties
          distanceTurned
+         clockwiseNess
+         speed
     end
     methods
 %         function obj = Turn(prefix, animal)
@@ -16,21 +18,23 @@ classdef Turn <  Behavior
 % %             fired = step@AutoassociativeNetwork(obj, obj.ECOutput, obj.DGOutput); 
 %                        
 %         end
-        function obj = Turn(prefix, animal, direction, speed, distance)
+        function obj = Turn(prefix, animal, clockwiseNess, speed, distance)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal);
             obj.defaultPetriNet = 'include-move-turn.xml';
             obj.buildStandardSemantics();
             obj.listenPlace([prefix, 'Turned'], @obj.turned); 
-            if (direction == 1)
+            if (clockwiseNess == 1)
                 obj.markPlace([prefix, 'CounterClockwise']);
             end 
-            if (direction == -1)
+            if (clockwiseNess == -1)
                 obj.markPlace([prefix, 'Clockwise']);                
             end
             obj.markPlaceMultipleTokens([prefix, 'Speed'], speed); 
             obj.markPlaceMultipleTokens([prefix, 'Distance'], distance); 
             obj.distanceTurned = 0; 
+            obj.clockwiseNess = clockwiseNess; 
+            obj.speed = speed; 
             obj.run();
             pause(1); 
            
@@ -38,7 +42,8 @@ classdef Turn <  Behavior
         
 %         Turn('Move.Turn.', Animal(), -1, 1, 3);
         function turned(obj, ~, ~) 
-            obj.distanceTurned = obj.distanceTurned + 1; 
+            obj.distanceTurned = obj.distanceTurned + 1;
+            obj.animal.turn(obj.clockwiseNess, obj.speed); 
         end
 %         function visualize(obj, visual)
 %             obj.visual = visual; 

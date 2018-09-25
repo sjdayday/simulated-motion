@@ -14,7 +14,7 @@ classdef MotorCortex < System
         currentPlan
         turnPrefix
         turnSpeed
-        turnDirection
+        clockwiseNess
         clockwise  % read-only 
         counterClockwise % read-only
         
@@ -33,7 +33,7 @@ classdef MotorCortex < System
             obj.clockwise = -1;
             obj.counterClockwise = 1; 
             obj.turnSpeed = 1;
-            obj.turnDirection = obj.counterClockwise; 
+            obj.clockwiseNess = obj.counterClockwise; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -43,15 +43,15 @@ classdef MotorCortex < System
 
         end
         function counterClockwiseTurn(obj)
-            obj.turnDirection = obj.counterClockwise; 
+            obj.clockwiseNess = obj.counterClockwise; 
             obj.currentPlan = obj.turn(); 
         end
         function clockwiseTurn(obj)
-            obj.turnDirection = obj.clockwise; 
+            obj.clockwiseNess = obj.clockwise; 
             obj.currentPlan = obj.turn(); 
         end
         function aTurn = turn(obj)
-            aTurn = Turn(obj.turnPrefix, obj.animal, obj.turnDirection, obj.turnSpeed, obj.moveDistance); 
+            aTurn = Turn(obj.turnPrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.moveDistance); 
         end
         %% Single time step 
         function  step(obj)
