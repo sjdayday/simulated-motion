@@ -1,6 +1,6 @@
 classdef MotorCortexTest < AbstractTest
     methods (Test)
-        function testTurnUpdatesAnimalPositionAndHeadDirectionSystem(testCase)
+        function testTurnUpdatesAnimalPositionAndSumsMultipleTurns(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 
             env.addWall([0 2],[2 2]); 
@@ -11,16 +11,41 @@ classdef MotorCortexTest < AbstractTest
             animal.build(); 
             animal.place(env, 1, 1, 0);
             motorCortex = animal.motorCortex; 
-            motorCortex.moveDistance = 15;
+            motorCortex.moveDistance = 10;
             motorCortex.counterClockwiseTurn();
             testCase.assertClass(motorCortex.currentPlan, 'Turn');
-            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 15);
+            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 10);
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
-%             testCase.assertThat(animal.currentDirection, ...            
-%                 IsEqualTo(0.785398, 'Within', RelativeTolerance(.00001))); 
-%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 15); 
+            testCase.assertThat(animal.currentDirection, ...            
+                 IsEqualTo(pi/3, 'Within', RelativeTolerance(.00001))); 
+
+            motorCortex.moveDistance = 15;
+            motorCortex.clockwiseTurn();
+            testCase.assertClass(motorCortex.currentPlan, 'Turn');
+            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 15);
+            testCase.assertThat(animal.currentDirection, ...            
+                 IsEqualTo(-pi/6, 'Within', RelativeTolerance(.00001))); 
         end
+%         function testTurnUpdatesHeadPositionAndSumsMultipleTurns(testCase)
+%             env = Environment();
+%             env.addWall([0 0],[0 2]); 
+%             env.addWall([0 2],[2 2]); 
+%             env.addWall([0 0],[2 0]); 
+%             env.addWall([2 0],[2 2]);
+%             env.build();
+%             animal = Animal(); 
+%             animal.build(); 
+%             animal.place(env, 1, 1, 0);
+%             motorCortex = animal.motorCortex; 
+%             motorCortex.moveDistance = 10;
+%             motorCortex.counterClockwiseTurn();
+%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 10); 
+% 
+%             motorCortex.moveDistance = 15;
+%             motorCortex.clockwiseTurn();
+%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 55); 
+%         end
 %         function testDrawRandomExecution(testCase)
 %             motorCortex = TestingMotorExecutions; 
 %             cortex = Cortex(motorCortex); 
