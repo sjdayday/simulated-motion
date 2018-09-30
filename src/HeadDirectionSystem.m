@@ -50,6 +50,7 @@ classdef HeadDirectionSystem < System
         pullVelocity
         pullFeatures
         minimumVelocity
+        animalVelocityCalibration
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -67,6 +68,7 @@ classdef HeadDirectionSystem < System
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
             obj.minimumVelocity = pi/20; 
+            obj.animalVelocityCalibration = 1.4; 
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 
@@ -110,13 +112,22 @@ classdef HeadDirectionSystem < System
             obj.wHeadDirectionWeights = obj.wHeadDirectionWeights/obj.wHeadDirectionWeights(1,1); % normalized by max value, so in [0,1]
             obj.wHeadDirectionWeights = 4*(obj.wHeadDirectionWeights-obj.CInhibitionOffset); % in [-2,2]
             obj.clockwiseWeights = toeplitz(obj.angularWeightInputVector); 
-            obj.counterClockwiseWeights = obj.clockwiseWeights ; 
-            obj.clockwiseWeights = ... 
-                [obj.clockwiseWeights((1+obj.angularWeightOffset):end,:); ...
-                obj.clockwiseWeights(1:obj.angularWeightOffset,:)];
+            obj.counterClockwiseWeights = toeplitz(obj.angularWeightInputVector); 
+            % reverse original guesses as to which set of weights
+            % corresponds to clockwiseness
             obj.counterClockwiseWeights = ... 
-                [obj.counterClockwiseWeights((end-obj.angularWeightOffset+1):end,:); ...
-                obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
+                [obj.counterClockwiseWeights((1+obj.angularWeightOffset):end,:); ...
+                obj.counterClockwiseWeights(1:obj.angularWeightOffset,:)];
+            obj.clockwiseWeights = ... 
+                [obj.clockwiseWeights((end-obj.angularWeightOffset+1):end,:); ...
+                obj.clockwiseWeights(1:end-obj.angularWeightOffset,:)];
+%             obj.counterClockwiseWeights = obj.clockwiseWeights ; 
+%             obj.clockwiseWeights = ... 
+%                 [obj.clockwiseWeights((1+obj.angularWeightOffset):end,:); ...
+%                 obj.clockwiseWeights(1:obj.angularWeightOffset,:)];
+%             obj.counterClockwiseWeights = ... 
+%                 [obj.counterClockwiseWeights((end-obj.angularWeightOffset+1):end,:); ...
+%                 obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
 %             disp('minimum velocity:'); 
@@ -182,8 +193,8 @@ classdef HeadDirectionSystem < System
         end
         function  updateVelocity(obj)
             if obj.pullVelocity 
-               obj.clockwiseVelocity = -obj.animal.clockwiseVelocity;  
-               obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity;             
+               obj.clockwiseVelocity = -obj.animal.clockwiseVelocity * obj.animalVelocityCalibration;  
+               obj.counterClockwiseVelocity = obj.animal.counterClockwiseVelocity * obj.animalVelocityCalibration;             
             % else someone is calling updateAngularVelocity(obj, velocity)
             end
         end

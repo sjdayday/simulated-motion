@@ -10,12 +10,12 @@ clear all
 cr = ExperimentController();
 cr.visualize(true);
 cr.setupDisplay(); 
-cr.stepPause = 1;  % 0.25;
+cr.stepPause = 1; % 0.25;
 cr.totalSteps = 50;
 cr.randomHeadDirection = true;
 % cr.addControllerEvent(3, 'pause(30); ')
 % expecting 2pi down to 3/2pi, then back up to 0 to pi/2
-cr.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.clockwiseVelocity = -obj.minimumVelocity; obj.turn(-1,1);'); 
+cr.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.clockwiseVelocity = -obj.minimumVelocity;'); 
 cr.addAnimalEvent(6, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(7, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(8, 'obj.turn(-1,1);'); 
@@ -30,9 +30,22 @@ cr.addAnimalEvent(16, 'obj.turn(-1,1);');
 cr.addAnimalEvent(17, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(18, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(19, 'obj.turn(-1,1);'); 
-% runs 60 up to 8 but displays as clockwise (opposite)
 cr.addAnimalEvent(20, 'obj.clockwiseVelocity = 0;'); 
 cr.addAnimalEvent(25, 'obj.counterClockwiseVelocity = obj.minimumVelocity*2;'); 
-% runs 8 down to 49 but displays as CCW
+cr.addAnimalEvent(26, 'obj.turn(1,2);'); 
+cr.addAnimalEvent(27, 'obj.turn(1,2);');
+cr.addAnimalEvent(28, 'obj.turn(1,2);');
+cr.addAnimalEvent(29, 'obj.turn(1,2);');
+cr.addAnimalEvent(30, 'obj.turn(1,2);');
+cr.addAnimalEvent(31, 'obj.turn(1,2);');
+cr.addAnimalEvent(32, 'obj.turn(1,2);');
+cr.addAnimalEvent(33, 'obj.turn(1,2);');
+cr.addAnimalEvent(34, 'obj.turn(1,2);');
+cr.addAnimalEvent(35, 'obj.turn(1,2);');
+cr.addAnimalEvent(35, 'obj.turn(1,2);');
+cr.addAnimalEvent(36, 'obj.turn(1,2);');
+cr.addAnimalEvent(37, 'obj.turn(1,2);');
+cr.addAnimalEvent(38, 'obj.turn(1,2);');
+cr.addAnimalEvent(39, 'obj.turn(1,2);');
 cr.addAnimalEvent(40, 'obj.counterClockwiseVelocity = 0;'); 
 cr.runHeadDirectionSystem();
