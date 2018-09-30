@@ -27,25 +27,28 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertThat(animal.currentDirection, ...            
                  IsEqualTo(-pi/6, 'Within', RelativeTolerance(.00001))); 
         end
-%         function testTurnUpdatesHeadPositionAndSumsMultipleTurns(testCase)
-%             env = Environment();
-%             env.addWall([0 0],[0 2]); 
-%             env.addWall([0 2],[2 2]); 
-%             env.addWall([0 0],[2 0]); 
-%             env.addWall([2 0],[2 2]);
-%             env.build();
-%             animal = Animal(); 
-%             animal.build(); 
-%             animal.place(env, 1, 1, 0);
-%             motorCortex = animal.motorCortex; 
-%             motorCortex.moveDistance = 10;
-%             motorCortex.counterClockwiseTurn();
-%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 10); 
-% 
+        function testTurnUpdatesHeadPositionAndSumsMultipleTurns(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.build();
+            animal = Animal();
+            animal.build(); 
+            animal.place(env, 1, 1, 0);
+            motorCortex = animal.motorCortex; 
+            motorCortex.moveDistance = 10;
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 18); 
+            motorCortex.counterClockwiseTurn();
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 28); 
+%  FIXME:  activation starts at 53, and drops (clockwise);
+%  clockwise:  55 to 59 moving ccw
+%  counterCW:  53 to 46 moving cw
 %             motorCortex.moveDistance = 15;
 %             motorCortex.clockwiseTurn();
-%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 55); 
-%         end
+%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 13); 
+        end
 %         function testDrawRandomExecution(testCase)
 %             motorCortex = TestingMotorExecutions; 
 %             cortex = Cortex(motorCortex); 

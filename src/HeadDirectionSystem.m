@@ -49,6 +49,7 @@ classdef HeadDirectionSystem < System
         readMode
         pullVelocity
         pullFeatures
+        minimumVelocity
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -65,6 +66,7 @@ classdef HeadDirectionSystem < System
             initializeActivation(obj, true); 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
+            obj.minimumVelocity = pi/20; 
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 
@@ -117,7 +119,8 @@ classdef HeadDirectionSystem < System
                 obj.counterClockwiseWeights(1:end-obj.angularWeightOffset,:)];
             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
-
+%             disp('minimum velocity:'); 
+%             disp(obj.minimumVelocity); 
         end
         function updateFeaturesDetected(obj)
            if obj.pullFeatures 
@@ -164,6 +167,9 @@ classdef HeadDirectionSystem < System
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
+        function updateTurnVelocity(obj, velocity)
+           obj.updateAngularVelocity(obj.minimumVelocity * velocity);
+        end
         function updateAngularVelocity(obj, velocity)
            obj.pullVelocity = false; 
            if velocity >= 0 
@@ -204,6 +210,7 @@ classdef HeadDirectionSystem < System
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
             obj.Ahist(obj.time) =  obj.currentActivationRatio ; 
+            disp(['time: ',num2str(obj.time),' activation: ',num2str(obj.getMaxActivationIndex())]); 
         end
         function maxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.uActivation==max(obj.uActivation)); 
@@ -226,8 +233,10 @@ classdef HeadDirectionSystem < System
                 pause(1);
                 obj.firstCirclePlot = 0;
             else
-                index = find(obj.uActivation==max(obj.uActivation)); 
-                radians = ((obj.nHeadDirectionCells-index)/obj.nHeadDirectionCells)*2*pi; 
+                index = obj.getMaxActivationIndex(); 
+%                 index = find(obj.uActivation==max(obj.uActivation)); 
+%                radians = ((obj.nHeadDirectionCells-index)/obj.nHeadDirectionCells)*2*pi; 
+              radians = (index/obj.nHeadDirectionCells)*2*pi; 
                 obj.marker.XData = cos(radians); 
                 obj.marker.YData = sin(radians); 
                 drawnow;
@@ -243,7 +252,8 @@ classdef HeadDirectionSystem < System
             obj.xAxis = gca; 
             obj.xAxis.XTick = [0 15 30 45 60];
             obj.xAxis.XTickLabel = ... 
-                {'2\pi', '3\pi/2', '\pi', '\pi/2', '0'};
+                {'0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
+%                {'2\pi', '3\pi/2', '\pi', '\pi/2', '0'};
         end
         function plot(obj)
             if obj.firstPlot

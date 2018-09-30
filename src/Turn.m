@@ -44,6 +44,9 @@ classdef Turn <  Behavior
         function turned(obj, ~, ~) 
             obj.distanceTurned = obj.distanceTurned + 1;
             obj.animal.turn(obj.clockwiseNess, obj.speed); 
+            obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseNess * obj.speed); 
+            obj.animal.hippocampalFormation.headDirectionSystem.step(); 
+%             disp(obj.animal.hippocampalFormation.headDirectionSystem.time); 
         end
 %         function visualize(obj, visual)
 %             obj.visual = visual; 

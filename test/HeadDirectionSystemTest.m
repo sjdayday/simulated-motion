@@ -16,13 +16,14 @@ classdef HeadDirectionSystemTest < AbstractTest
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 2); 
             headDirectionSystem.updateAngularVelocity(pi/10); 
-            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, pi/10);             
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, pi/10);              
             testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
             for ii = 1:10     
                 headDirectionSystem.step(); 
-%                 headDirectionSystem.plotActivation();
-%                 pause(0.5); 
-%                 disp(headDirectionSystem.getMaxActivationIndex()); 
+% %                  headDirectionSystem.plotActivation();
+% %                  pause(0.5); 
+%                  disp(headDirectionSystem.getMaxActivationIndex()); 
+%  moves from 7 down to 57
             end
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 57); 
             headDirectionSystem.updateAngularVelocity(-2*pi/10); 
@@ -34,9 +35,20 @@ classdef HeadDirectionSystemTest < AbstractTest
 %                 headDirectionSystem.plotActivation(); 
 %                 pause(0.5); 
 %                 disp(headDirectionSystem.getMaxActivationIndex()); 
+%  moves from 2 up to 35
             end
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 35); 
-
+        end
+        function testTurnVelocityConvertsToAngularVelocity(testCase)
+            headDirectionSystem = HeadDirectionSystem(60); 
+            minimumVelocity = headDirectionSystem.minimumVelocity; 
+            headDirectionSystem.updateTurnVelocity(1); 
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, minimumVelocity); 
+            headDirectionSystem.updateTurnVelocity(-2); 
+            
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 2*minimumVelocity); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);
         end
         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
             import matlab.unittest.constraints.IsEqualTo

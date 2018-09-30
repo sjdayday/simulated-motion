@@ -10,32 +10,29 @@ clear all
 cr = ExperimentController();
 cr.visualize(true);
 cr.setupDisplay(); 
-cr.stepPause = 0.25;
+cr.stepPause = 1;  % 0.25;
 cr.totalSteps = 50;
 cr.randomHeadDirection = true;
 % cr.addControllerEvent(3, 'pause(30); ')
-cr.addAnimalEvent(5, 'obj.clockwiseVelocity = -obj.minimumVelocity;'); 
+% expecting 2pi down to 3/2pi, then back up to 0 to pi/2
+cr.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.clockwiseVelocity = -obj.minimumVelocity; obj.turn(-1,1);'); 
+cr.addAnimalEvent(6, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(7, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(8, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(9, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(10, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(11, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(12, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(13, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(14, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(15, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(16, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(17, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(18, 'obj.turn(-1,1);'); 
+cr.addAnimalEvent(19, 'obj.turn(-1,1);'); 
+% runs 60 up to 8 but displays as clockwise (opposite)
 cr.addAnimalEvent(20, 'obj.clockwiseVelocity = 0;'); 
 cr.addAnimalEvent(25, 'obj.counterClockwiseVelocity = obj.minimumVelocity*2;'); 
+% runs 8 down to 49 but displays as CCW
 cr.addAnimalEvent(40, 'obj.counterClockwiseVelocity = 0;'); 
 cr.runHeadDirectionSystem();
-
-%             obj.time = obj.time+1;
-%             if obj.time == 3
-%                 obj.features = [30 52]; 
-%             end
-%             if obj.time == 10
-%                 obj.features = []; 
-%             end
-%             if obj.time == 5
-%                 obj.clockwiseVelocity = -obj.minimumVelocity; 
-%             end
-%             if obj.time == 18
-%                 obj.clockwiseVelocity = 0; 
-%             end
-%             if obj.time == 25
-%                 obj.counterClockwiseVelocity = obj.minimumVelocity*2; 
-%             end
-%             if obj.time == 37
-%                 obj.counterClockwiseVelocity = 0; 
-%             end
