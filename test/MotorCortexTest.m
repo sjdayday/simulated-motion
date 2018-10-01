@@ -41,13 +41,12 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.moveDistance = 10;
             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 18); 
             motorCortex.counterClockwiseTurn();
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 28); 
-%  FIXME:  activation starts at 53, and drops (clockwise);
-%  clockwise:  55 to 59 moving ccw
-%  counterCW:  53 to 46 moving cw
-%             motorCortex.moveDistance = 15;
-%             motorCortex.clockwiseTurn();
-%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 13); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 59); 
+%  55 to 59 moving ccw
+            motorCortex.moveDistance = 15;
+            motorCortex.clockwiseTurn();
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 45); 
+%  59 to 45 moving cw
         end
 %         function testDrawRandomExecution(testCase)
 %             motorCortex = TestingMotorExecutions; 

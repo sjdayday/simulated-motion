@@ -1,6 +1,6 @@
 classdef HeadDirectionSystemTest < AbstractTest
     methods (Test)
-        function testHeadDirectionSystemActivationMovedByAngularVelocity(testCase)
+        function testAngularVelocityMovesActivationCounterClockwiseAndClockwise(testCase)
             headDirectionSystem = HeadDirectionSystem(60); 
             randomHeadDirection = true; 
             headDirectionSystem.initializeActivation(randomHeadDirection)            
@@ -18,26 +18,29 @@ classdef HeadDirectionSystemTest < AbstractTest
             headDirectionSystem.updateAngularVelocity(pi/10); 
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, pi/10);              
             testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
-            for ii = 1:10     
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 9); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+            for ii = 3:10     
                 headDirectionSystem.step(); 
-% %                  headDirectionSystem.plotActivation();
-% %                  pause(0.5); 
 %                  disp(headDirectionSystem.getMaxActivationIndex()); 
-%  moves from 7 down to 57
             end
-            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 57); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 23); 
             headDirectionSystem.updateAngularVelocity(-2*pi/10); 
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);             
-            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 2*pi/10); 
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 2*pi/10);
 %                 disp('reversing'); 
-            for ii = 1:10    
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 19); 
+            headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 16); 
+            for ii = 3:10    
                 headDirectionSystem.step(); 
-%                 headDirectionSystem.plotActivation(); 
-%                 pause(0.5); 
 %                 disp(headDirectionSystem.getMaxActivationIndex()); 
-%  moves from 2 up to 35
             end
-            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 35); 
+            % moves roughly twice as far CW as CCW when velocity is 2x greater
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 45); 
         end
         function testTurnVelocityConvertsToAngularVelocity(testCase)
             headDirectionSystem = HeadDirectionSystem(60); 

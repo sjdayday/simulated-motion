@@ -91,13 +91,17 @@ classdef HippocampalFormationTest < AbstractTest
             system.pullVelocity = false; 
             system.build();  
 %             system.headDirectionSystem.pullVelocity = false;  
+            system.updateAngularVelocity(pi/10);
             system.step(); 
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 54); 
-            system.updateAngularVelocity(pi/10); 
-            for ii = 1:10     
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 55); 
+            system.step(); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 55); 
+            system.step(); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 56); 
+            for ii = 3:10     
                 system.step(); 
             end
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 38); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 8); 
         end
         function testLinearVelocityAndOrientationToHorizontalVerticalVelocity(testCase)
             import matlab.unittest.constraints.IsEqualTo
