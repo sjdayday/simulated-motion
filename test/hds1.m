@@ -10,11 +10,10 @@ clear all
 cr = ExperimentController();
 cr.visualize(true);
 cr.setupDisplay(); 
-cr.stepPause = 1; % 0.25;
-cr.totalSteps = 50;
+cr.stepPause = 0.25;
+cr.totalSteps = 45; % 61;
 cr.randomHeadDirection = true;
 % cr.addControllerEvent(3, 'pause(30); ')
-% expecting 2pi down to 3/2pi, then back up to 0 to pi/2
 cr.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.clockwiseVelocity = -obj.minimumVelocity;'); 
 cr.addAnimalEvent(6, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(7, 'obj.turn(-1,1);'); 
@@ -47,5 +46,22 @@ cr.addAnimalEvent(36, 'obj.turn(1,2);');
 cr.addAnimalEvent(37, 'obj.turn(1,2);');
 cr.addAnimalEvent(38, 'obj.turn(1,2);');
 cr.addAnimalEvent(39, 'obj.turn(1,2);');
-cr.addAnimalEvent(40, 'obj.counterClockwiseVelocity = 0;'); 
+cr.addAnimalEvent(40, 'obj.counterClockwiseVelocity = 0; '); 
+% cr.addAnimalEvent(45, 'obj.clockwiseVelocity = -obj.minimumVelocity;'); 
+% cr.addAnimalEvent(46, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(47, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(48, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(49, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(50, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(51, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(52, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(53, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(54, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(55, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(56, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(57, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(58, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(59, 'obj.turn(-1,1);'); 
+% cr.addAnimalEvent(60, 'obj.clockwiseVelocity = 0;'); 
+
 cr.runHeadDirectionSystem();
