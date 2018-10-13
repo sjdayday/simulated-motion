@@ -264,7 +264,7 @@ classdef HeadDirectionSystem < System
             obj.xAxis.XTick = [0 15 30 45 60];
             obj.xAxis.XTickLabel = ... 
                 {'0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
-%                {'2\pi', '3\pi/2', '\pi', '\pi/2', '0'};
+            title({'Head direction activation',sprintf('t = %d',obj.time+1)})
         end
         function plot(obj)
             if obj.firstPlot

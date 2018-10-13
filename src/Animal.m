@@ -168,6 +168,12 @@ classdef Animal < System
         function notMovingMarkerUpdate(obj)
             markerUpdate(obj, obj.unitCirclePosition, obj.unitCirclePosition, obj.unitCirclePosition); 
         end
+        function plotAnimal(obj)
+            figure(obj.h)
+            t=[0 1 0.5 0];
+            y=[0 0 0.5 0];
+            plot(t,y);
+        end
         function plot(obj)
             figure(obj.h)
             if obj.firstPlot

@@ -3,6 +3,7 @@
 classdef ExperimentController < System 
 
     properties
+        environment
         chartSystem
         headDirectionSystem
         chartSystemPropertyMap
@@ -49,7 +50,17 @@ classdef ExperimentController < System
             obj.chartStatisticsHeader = {};
             obj.visual = false; 
             obj.monitor = false; 
-            obj.stepPause = 0.1;          
+            obj.stepPause = 0.1;
+            buildEnvironment(obj);
+        end
+        function buildEnvironment(obj)
+            obj.environment = Environment(); 
+            obj.environment.addWall([0 0],[0 2]); 
+            obj.environment.addWall([0 2],[2 2]); 
+            obj.environment.addWall([0 0],[2 0]); 
+            obj.environment.addWall([2 0],[2 2]);
+            obj.environment.build(); 
+%             env.setPosition([0.5 0.25]); 
         end
         function buildAnimal(obj)
             obj.animal = Animal();
@@ -317,15 +328,16 @@ classdef ExperimentController < System
             addChartSystemProperty(obj, 'sigmaWeightPattern');             
         end
         function setupDisplay(obj)
-            figure(obj.h); 
             hold on;  
+            subplot(331); 
+            obj.displayArena(); 
             obj.x = -1.1:.01:1.1;
             obj.y = zeros(1,221); 
             for ii = 1:length(obj.x)
                 obj.y(1,ii) = abs(sqrt(1.21 - obj.x(1,ii)^2));
-            end;
+            end
             obj.yy = -obj.y;
-            subplot(221);
+            subplot(332); % 221
             hold on; 
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
             p = plot(obj.x,obj.y,obj.x,obj.yy);
@@ -335,7 +347,7 @@ classdef ExperimentController < System
             p(2).LineWidth = 5;
             p(2).Color = [0.5 0.5 0.5];
             p(1).Color = [0.5 0.5 0.5];
-            subplot(222);
+            subplot(333); % 222
             hold on 
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
 %             title('Internal head direction');
@@ -353,18 +365,37 @@ classdef ExperimentController < System
             
             drawnow
         end
-        function plot(obj)
+        function displayArena(obj)
             figure(obj.h);
-            subplot(221);
+            hold on;
+            for jj = 1:size(obj.environment.walls,1)
+               wall = obj.environment.walls(jj,:); 
+               L = line([wall(1) wall(3)], [wall(2) wall(4)],'Color','black','LineWidth',2); 
+            end 
+            axis off
+            axis equal
+        end
+        function plot(obj)
+%  arena  pHDS   vHDS                       
+% grid1   grid2    grid3
+% EC act  CA3 act HDS act  
+            figure(obj.h);
+            subplot(331); 
+            obj.animal.plotAnimal(); 
+            subplot(332);  % 221
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.plot(); 
-            subplot(222);
+            subplot(333);  % 222
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
-            subplot(224);
-            obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
+            subplot(337);  % 224
+            obj.animal.plotAnimal(); 
             hold on; 
-            title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
+            subplot(338); 
+            obj.animal.plotAnimal(); 
+            subplot(339); 
+%             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
+            obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
             drawnow
         end        
     end
