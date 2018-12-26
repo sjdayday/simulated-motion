@@ -28,7 +28,8 @@ classdef Animal < System
         markers
         features
         showFeatures
-        justOriented 
+        justOriented
+        vertices
     end
     methods
         function obj = Animal()
@@ -62,6 +63,7 @@ classdef Animal < System
             
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem;  
+            obj.vertices = [0.0 0.0; 0.0 0.0; 0.0 0.0];
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
@@ -94,6 +96,7 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
+            disp(['time: ',num2str(obj.time),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
         function turn(obj, clockwiseNess, relativeSpeed)
             if (clockwiseNess == 1) || (clockwiseNess == -1)
@@ -122,10 +125,37 @@ classdef Animal < System
                movingMarkerUpdate(obj); 
             end     
         end
-        function place(obj, environment, x, y, direction)
+        function place(obj, environment, x, y, radians)
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
-            obj.currentDirection = direction; 
+            obj.currentDirection = radians; 
+            calculateVertices(obj); 
+        end
+        function calculateVertices(obj)
+            radians = obj.currentDirection; 
+            width = 0.05; 
+            length = 0.2;
+            x = obj.environment.position(1); 
+            y = obj.environment.position(2); 
+            if (radians == 0) 
+                obj.vertices = [x y+width; x y-width; x+length y]; 
+%                 obj.vertices = [x-width y; x+width y; x y+length]; 
+%             testCase.assertEqual(v(1,:), [1 1.05]);  % maybe                        
+%             testCase.assertEqual(v(2,:), [1 0.95]);                         
+%             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
+            else 
+                p = antenna.Polygon('Vertices', obj.vertices); 
+                degrees = radians * 180 / pi;
+                translate(p, [-x,-y,0]);
+                rotate(p, degrees, [0,1,0], [0,0,0]); 
+                temp = p.Vertices; 
+                obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                
+    
+            end
+                            
+            
+%            p = antenna.Polygon('Vertices', [-1 0 0;-0.5 0.2 0;0 0 0])
+          %  rotate(p, -45, [0,1,0], [0,0,0])
         end
         function distance = closestWallDistance(obj)
             distance = obj.environment.closestWallDistance(); 
@@ -170,9 +200,14 @@ classdef Animal < System
         end
         function plotAnimal(obj)
             figure(obj.h)
-            t=[0 1 0.5 0];
-            y=[0 0 0.5 0];
-            plot(t,y);
+            p = antenna.Polygon('Vertices', [0.95 1; 1.05 1;1 1.2]); % [0.95 1 0; 1.05 1 0;1 1.2 0][-1 0 0;-0.5 0.2 0;0 0 0]
+            plot(p, 'Color',[0.65 0.65 0.65],'LineWidth',3)
+% rotate(p, 25, [0,1,0], [0,0,0])
+% translate(p, [-0.4, 0.3, 0])
+
+%             t=[0 1 0.5 0];
+%             y=[0 0 0.5 0];
+%             plot(t,y, 'Color','gray','LineWidth',1.5);
         end
         function plot(obj)
             figure(obj.h)

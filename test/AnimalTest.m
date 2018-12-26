@@ -12,6 +12,64 @@ classdef AnimalTest < AbstractTest
             animal.place(environment, 0.5, 0.25, 0);  
             testCase.assertEqual(animal.closestWallDistance(), 0.25);                         
         end
+        function testAnimalCalculatesItsVerticesAsPointIfNotPlacedInEnvironment(testCase)
+            environment = Environment();
+            environment.addWall([0 0],[0 2]); 
+            environment.addWall([0 2],[2 2]); 
+            environment.addWall([0 0],[2 0]); 
+            environment.addWall([2 0],[2 2]);
+            environment.build();
+            animal = Animal();
+            animal.build();
+            v = animal.vertices; 
+            testCase.assertEqual(v(1,:), [0.0 0.0]);                         
+            testCase.assertEqual(v(2,:), [0.0 0.0]);                         
+            testCase.assertEqual(v(3,:), [0.0 0.0]);    
+        end
+        function testAnimalCantTurnIfNotPlaced(testCase)
+            animal = Animal(); 
+            animal.build(); 
+            try 
+                animal.turn(1, 1); 
+            catch  ME
+                testCase.assertEqual(ME.identifier, 'Animal:NotPlaced'); 
+                testCase.assertEqual(ME.message, 'animal must be placed before it can turn or move:  place(...)'); 
+            end
+        end
+        function testAnimalCalculatesItsVertices(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            environment = Environment();
+            environment.addWall([0 0],[0 2]); 
+            environment.addWall([0 2],[2 2]); 
+            environment.addWall([0 0],[2 0]); 
+            environment.addWall([2 0],[2 2]);
+            environment.build();
+            animal = Animal();
+            animal.build();
+            animal.place(environment, 1, 1, 0);              
+            v = animal.vertices; 
+            testCase.assertEqual(v(1,:), [1 1.05]);  % maybe                        
+            testCase.assertEqual(v(2,:), [1 0.95]);                         
+            testCase.assertEqual(v(3,:), [1.2 1.0]);                         
+            animal.place(environment, 1, 1, pi/2);              
+            v = animal.vertices; 
+            testCase.assertThat(v(1,1), ...
+               IsEqualTo(0.95, 'Within', RelativeTolerance(.0001)));         
+            testCase.assertThat(v(1,2), ...
+               IsEqualTo(1.0, 'Within', RelativeTolerance(.0001)));         
+            testCase.assertThat(v(2,1), ...
+               IsEqualTo(1.05, 'Within', RelativeTolerance(.0001)));         
+            testCase.assertThat(v(2,2), ...
+               IsEqualTo(1.0, 'Within', RelativeTolerance(.0001)));         
+            testCase.assertThat(v(3,1), ...
+               IsEqualTo(1.0, 'Within', RelativeTolerance(.0001)));         
+            testCase.assertThat(v(3,2), ...
+               IsEqualTo(1.2, 'Within', RelativeTolerance(.0001)));         
+%             testCase.assertEqual(v(1,:), [0.95 1]);                         
+%             testCase.assertEqual(v(2,:), [1.05 1]);                         
+%             testCase.assertEqual(v(3,:), [1.0 1.2]);                         
+        end        
         function testAnimalHasSubsystems(testCase)
             animal = Animal(); 
             animal.build(); 
