@@ -12,7 +12,9 @@ classdef AnimalTest < AbstractTest
             animal.place(environment, 0.5, 0.25, 0);  
             testCase.assertEqual(animal.closestWallDistance(), 0.25);                         
         end
-        function testAnimalCalculatesItsVerticesAtOriginIfNotPlacedInEnvironment(testCase)
+        function testAnimalCalculatesVerticesAtOriginDirectionZeroIfNotPlaced(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
             environment = Environment();
             environment.addWall([0 0],[0 2]); 
             environment.addWall([0 2],[2 2]); 
@@ -22,9 +24,12 @@ classdef AnimalTest < AbstractTest
             animal = Animal();
             animal.build();
             v = animal.vertices; 
-            testCase.assertEqual(v(1,:), [0.0 0.0]);                         
-            testCase.assertEqual(v(2,:), [0.0 0.0]);                         
-            testCase.assertEqual(v(3,:), [0.0 0.0]);    
+            testCase.assertEqual(v(1,:), [0 0.05]);                         
+            testCase.assertEqual(v(2,:), [0 -0.05]);                         
+            testCase.assertEqual(v(3,:), [0.2 0.0]);                         
+%             testCase.assertEqual(v(1,:), [0.0 0.0]);                         
+%             testCase.assertEqual(v(2,:), [0.0 0.0]);                         
+%             testCase.assertEqual(v(3,:), [0.0 0.0]);    
         end
         function testAnimalCantTurnIfNotPlaced(testCase)
             animal = Animal(); 
@@ -51,7 +56,7 @@ classdef AnimalTest < AbstractTest
             animal.build();
             animal.place(environment, 1, 1, 0);              
             v = animal.vertices; 
-            testCase.assertEqual(v(1,:), [1 1.05]);  % maybe                        
+            testCase.assertEqual(v(1,:), [1 1.05]);                          
             testCase.assertEqual(v(2,:), [1 0.95]);                         
             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
           animal.place(environment, 1, 1, pi/2);              
@@ -68,7 +73,7 @@ classdef AnimalTest < AbstractTest
                IsEqualTo(1.0, 'Within', RelativeTolerance(.0001)));         
             testCase.assertThat(v(3,2), ...
                IsEqualTo(1.2, 'Within', RelativeTolerance(.0001)));         
-              animal.place(environment, 1, 1, 0);   % reset vertices           
+               animal.place(environment, 1, 1, 0);   % reset vertices           
               animal.place(environment, 1, 1, pi);              
             v = animal.vertices; 
             testCase.assertThat(v(1,1), ...

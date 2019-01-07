@@ -33,6 +33,9 @@ classdef Animal < System
         axisOfRotation
         width
         length
+        lastX
+        lastY
+        shape
     end
     methods
         function obj = Animal()
@@ -55,6 +58,7 @@ classdef Animal < System
             obj.motorCortex = MotorCortex(obj); 
             obj.width = 0.05; 
             obj.length = 0.2;
+            
 
         end
         function build(obj)
@@ -68,9 +72,15 @@ classdef Animal < System
             obj.hippocampalFormation.h = obj.h; 
             
             obj.hippocampalFormation.build();  
-            obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem;  
-            obj.vertices = [0.0 0.0; 0.0 0.0; 0.0 0.0];
+            obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
+            obj.buildInitialVertices(); 
+        end
+        function buildInitialVertices(obj)
+            obj.vertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
             obj.axisOfRotation = [0 0 0; 0 0 1];
+            obj.lastX = 0; 
+            obj.lastY = 0;  
+            obj.shape = antenna.Polygon('Vertices', obj.vertices); 
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
@@ -133,6 +143,7 @@ classdef Animal < System
             end     
         end
         function place(obj, environment, x, y, radians)
+            obj.buildInitialVertices(); 
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
             obj.currentDirection = radians; 
@@ -148,25 +159,13 @@ classdef Animal < System
             radians = obj.currentDirection; 
             x = obj.environment.position(1); 
             y = obj.environment.position(2); 
-            if (radians == 0) 
-                obj.vertices = [x y+obj.width; x y-obj.width; x+obj.length y]; 
-%                 obj.vertices = [x-width y; x+width y; x y+length]; 
-%             testCase.assertEqual(v(1,:), [1 1.05]);  % maybe                        
-%             testCase.assertEqual(v(2,:), [1 0.95]);                         
-%             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
-            else 
-                p = antenna.Polygon('Vertices', obj.vertices); 
-                degrees = radians * 180 / pi;
-%                 translate(p, [-x,-y,0]);
-                 rotate(p, degrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
-                temp = p.Vertices; 
-                obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                
-    
-            end
-                            
-            
-%            p = antenna.Polygon('Vertices', [-1 0 0;-0.5 0.2 0;0 0 0])
-          %  rotate(p, -45, [0,1,0], [0,0,0])
+            degrees = radians * 180 / pi;
+            translate(obj.shape, [x-obj.lastX, y-obj.lastY,0]);
+            rotate(obj.shape, degrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
+            temp = obj.shape.Vertices; 
+            obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    
+            obj.lastX = x; 
+            obj.lastY = y; 
         end
         function distance = closestWallDistance(obj)
             distance = obj.environment.closestWallDistance(); 
