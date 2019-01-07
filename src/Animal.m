@@ -30,6 +30,9 @@ classdef Animal < System
         showFeatures
         justOriented
         vertices
+        axisOfRotation
+        width
+        length
     end
     methods
         function obj = Animal()
@@ -50,6 +53,9 @@ classdef Animal < System
             obj.pullVelocityFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
             obj.motorCortex = MotorCortex(obj); 
+            obj.width = 0.05; 
+            obj.length = 0.2;
+
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -64,6 +70,7 @@ classdef Animal < System
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem;  
             obj.vertices = [0.0 0.0; 0.0 0.0; 0.0 0.0];
+            obj.axisOfRotation = [0 0 0; 0 0 1];
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
@@ -129,16 +136,20 @@ classdef Animal < System
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
             obj.currentDirection = radians; 
+            calculateAxisOfRotation(obj); 
             calculateVertices(obj); 
+        end
+        function calculateAxisOfRotation(obj)
+            x = obj.environment.position(1); 
+            y = obj.environment.position(2); 
+            obj.axisOfRotation = [x y 0; x y 1];
         end
         function calculateVertices(obj)
             radians = obj.currentDirection; 
-            width = 0.05; 
-            length = 0.2;
             x = obj.environment.position(1); 
             y = obj.environment.position(2); 
             if (radians == 0) 
-                obj.vertices = [x y+width; x y-width; x+length y]; 
+                obj.vertices = [x y+obj.width; x y-obj.width; x+obj.length y]; 
 %                 obj.vertices = [x-width y; x+width y; x y+length]; 
 %             testCase.assertEqual(v(1,:), [1 1.05]);  % maybe                        
 %             testCase.assertEqual(v(2,:), [1 0.95]);                         
@@ -146,8 +157,8 @@ classdef Animal < System
             else 
                 p = antenna.Polygon('Vertices', obj.vertices); 
                 degrees = radians * 180 / pi;
-                translate(p, [-x,-y,0]);
-                rotate(p, degrees, [0,1,0], [0,0,0]); 
+%                 translate(p, [-x,-y,0]);
+                 rotate(p, degrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
                 temp = p.Vertices; 
                 obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                
     
