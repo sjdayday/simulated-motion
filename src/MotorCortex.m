@@ -17,6 +17,7 @@ classdef MotorCortex < System
         clockwiseNess
         clockwise  % read-only 
         counterClockwise % read-only
+        markedPlaceReport
         
     end
     methods
@@ -29,11 +30,12 @@ classdef MotorCortex < System
             obj.build();
             obj.moveDistance = 0; 
             obj.animal = animal; 
-            obj.turnPrefix = 'Move.Turn.'; 
+            obj.turnPrefix = 'Move.'; % Turn. 
             obj.clockwise = -1;
             obj.counterClockwise = 1; 
             obj.turnSpeed = 1;
             obj.clockwiseNess = obj.counterClockwise; 
+            obj.markedPlaceReport = '';
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -52,6 +54,7 @@ classdef MotorCortex < System
         end
         function aTurn = turn(obj)
             aTurn = Turn(obj.turnPrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.moveDistance); 
+            obj.markedPlaceReport = aTurn.placeReport; 
         end
         %% Single time step 
         function  step(obj)

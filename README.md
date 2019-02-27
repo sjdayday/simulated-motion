@@ -57,4 +57,7 @@ Sample scripts to execute the entire system:
 hds1
 hds2
 
+Debugging of the PIPE Petri net java code may require updating the following file: 
+src/main/resources/log4j2.xml  in the PIPECore jar....
+
 Questions:  stevedoubleday@gmail.com

@@ -35,7 +35,11 @@ classdef Animal < System
         length
         lastX
         lastY
+        lastDegrees
         shape
+        placed
+        x 
+        y
     end
     methods
         function obj = Animal()
@@ -58,7 +62,7 @@ classdef Animal < System
             obj.motorCortex = MotorCortex(obj); 
             obj.width = 0.05; 
             obj.length = 0.2;
-            
+            obj.placed = 0; 
 
         end
         function build(obj)
@@ -78,8 +82,11 @@ classdef Animal < System
         function buildInitialVertices(obj)
             obj.vertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
             obj.axisOfRotation = [0 0 0; 0 0 1];
+            obj.x = 0;
+            obj.y = 0; 
             obj.lastX = 0; 
-            obj.lastY = 0;  
+            obj.lastY = 0; 
+            obj.lastDegrees = 0; 
             obj.shape = antenna.Polygon('Vertices', obj.vertices); 
         end
         function buildDefaultHeadDirectionSystem(obj)
@@ -116,11 +123,17 @@ classdef Animal < System
             disp(['time: ',num2str(obj.time),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
         function turn(obj, clockwiseNess, relativeSpeed)
-            if (clockwiseNess == 1) || (clockwiseNess == -1)
-                obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+            if obj.placed 
+                if (clockwiseNess == 1) || (clockwiseNess == -1)
+                    obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+                    calculateVertices(obj);
+                else
+                    error('Animal:ClockwiseNess', ...
+                        'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
+                end
             else
-                error('Animal:ClockwiseNess', ...
-                    'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
+                error('Animal:NotPlaced', ...
+                    'animal must be placed before it can turn or move:  place(...)') ;
             end
         end
         function orientAnimal(obj, direction)
@@ -143,6 +156,7 @@ classdef Animal < System
             end     
         end
         function place(obj, environment, x, y, radians)
+            obj.placed = 1; 
             obj.buildInitialVertices(); 
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
@@ -151,21 +165,24 @@ classdef Animal < System
             calculateVertices(obj); 
         end
         function calculateAxisOfRotation(obj)
-            x = obj.environment.position(1); 
-            y = obj.environment.position(2); 
-            obj.axisOfRotation = [x y 0; x y 1];
+            obj.x = obj.environment.position(1); 
+            obj.y = obj.environment.position(2); 
+            obj.axisOfRotation = [obj.x obj.y 0; obj.x obj.y 1];
         end
         function calculateVertices(obj)
             radians = obj.currentDirection; 
-            x = obj.environment.position(1); 
-            y = obj.environment.position(2); 
+             calculateAxisOfRotation(obj);
+%              x = obj.environment.position(1); 
+%              y = obj.environment.position(2); 
             degrees = radians * 180 / pi;
-            translate(obj.shape, [x-obj.lastX, y-obj.lastY,0]);
-            rotate(obj.shape, degrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
+            translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
+            % degrees needs to be difference between current and last
+            rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
             temp = obj.shape.Vertices; 
             obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    
-            obj.lastX = x; 
-            obj.lastY = y; 
+            obj.lastX = obj.x; 
+            obj.lastY = obj.y; 
+            obj.lastDegrees = degrees; 
         end
         function distance = closestWallDistance(obj)
             distance = obj.environment.closestWallDistance(); 

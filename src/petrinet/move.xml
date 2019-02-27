@@ -21,7 +21,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-        </place>
+                <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+    </place>
         <place id="Turn">
             <graphics>
                 <position x="255.0" y="420.0"/>
@@ -41,6 +54,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Finishing">
             <graphics>
@@ -223,6 +250,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+                <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Turn.Speed">
             <graphics>
@@ -365,6 +405,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Run.Done">
             <graphics>

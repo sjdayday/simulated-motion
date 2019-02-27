@@ -12,12 +12,16 @@ classdef Behavior < handle
         headDirectionSystem
         chartSystem
         runner
+        thread
+        threadRunner
 %         listener
         petriNetPath
         defaultPetriNet
         petriNet
         isDone
         prefix
+        acknowledging
+        placeReport
     end
     methods
          function obj = Behavior(prefix, animal)
@@ -27,6 +31,7 @@ classdef Behavior < handle
             obj.isDone = false;
             obj.prefix = prefix; 
             obj.animal = animal; 
+            obj.acknowledging = false; 
             getSystemsFromAnimal(obj); 
          end
          function getSystemsFromAnimal(obj)     
@@ -38,27 +43,33 @@ classdef Behavior < handle
             obj.headDirectionSystem = obj.animal.headDirectionSystem;
             obj.chartSystem = obj.animal.chartSystem;
          end
-%         function evt = showEvent(obj, source, evt )
-%             disp('show Event')
-%             disp(source)
-%             disp('evt: ')
-%             disp(evt)
-%             disp(evt.getPropertyName())
-%             disp(evt.getOldValue())
-%             obj.runner.setWaitForExternalInput(false);
-%             obj.runner.run();
-%             % disp(javaMethod('getOldValue',evt))
-%         end
-        function buildStandardSemantics(obj)
+         function buildRunner(obj)
             import uk.ac.imperial.pipe.runner.*;
+            import java.lang.Thread;
             obj.runner = PetriNetRunner(buildPetriNetName(obj));
+            obj.runner.setPlaceReporterParameters(true, true, 0); 
             obj.enable();
-            obj.listenPlace([obj.prefix,'Done'], @obj.done); 
             obj.runner.setFiringLimit(1000);
-            obj.waitForInput(true)
+%             obj.runner.setFiringDelay(1000);
+            obj.waitForInput(true);
+             
+         end
+        function buildStandardSemantics(obj)
+            obj.buildRunner(); 
+            obj.listenPlace([obj.prefix,'Done'], @obj.done); 
+        end
+        function buildThreadedStandardSemantics(obj)
+            import uk.ac.imperial.pipe.runner.*;
+            import java.lang.Thread;
+            obj.buildRunner(); 
+            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
+            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
+            obj.acknowledging = true; 
+            obj.threadRunner = ThreadedPetriNetRunner(obj.runner);
+            obj.thread = Thread(obj.threadRunner);             
         end
         function enable(obj)
-            obj.markPlace([obj.prefix,'Enabled']); 
+            obj.markPlace([obj.prefix,'Enabled']);            
         end
         function waitForInput(obj, wait)
             obj.runner.setWaitForExternalInput(wait);
@@ -67,23 +78,46 @@ classdef Behavior < handle
             obj.runner.run();    
         end
         function listenPlace(obj, place, evaluator)
-            import uk.ac.imperial.pipe.runner.*;
-            listener = BooleanPlaceListener(place);
-            obj.runner.listenForTokenChanges(listener,place);
-            set(listener,'PropertyChangeCallback',evaluator);
+%             f = java.lang.Boolean(false); 
+            listenPlaceBare(obj, place, evaluator, false); % false 
         end
-%         function listenPlace(obj, place, evaluator)
-%             import uk.ac.imperial.pipe.runner.*;
-%             obj.listener = BooleanPlaceListener(place);
-%             obj.runner.listenForTokenChanges(obj.listener,place);
-%             set(obj.listener,'PropertyChangeCallback',evaluator);
-%         end
+%       After dispatching this evaluator, 
+%       Runner will not proceed without explicit acknowledgement: acknowledge(obj, place)  
+        function listenPlaceWithAcknowledgement(obj, place, evaluator)
+%             t = java.lang.Boolean(true); 
+            listenPlaceBare(obj, place, evaluator, true);  % true  
+        end
+        function listenPlaceBare(obj, place, evaluator, acknowledgement)
+            import uk.ac.imperial.pipe.runner.*;
+            listener = BooleanPlaceListener(place, obj.runner, acknowledgement);
+            obj.runner.listenForTokenChanges(listener, place, acknowledgement);
+            set(listener,'PropertyChangeCallback',evaluator);
+        end           
+        function acknowledge(obj, place) 
+           obj.runner.acknowledge(place);  
+        end
+        function ready(obj, ~, ~)
+           disp('ready');
+           obj.placeReport = obj.runner.getPlaceReport();
+           if (obj.acknowledging) 
+                obj.acknowledge('Ready'); 
+           end
+
+        end
+
         function done(obj, ~, ~)
+%            disp(obj.runner.getPlaceReport()); % setMarkedPlaces(false)
+
+           obj.waitForInput(false);
+           if (obj.acknowledging) 
+                obj.acknowledge('Done'); 
+           else
+                obj.run();  % concurrentModificationException if run() here when threaded
+           end
            obj.isDone = true;
            disp('isdone: ');
            disp(obj.isDone);
-           obj.waitForInput(false);
-           obj.run();
+
         end
         function markPlace(obj, place)
            obj.markPlaceMultipleTokens(place, 1);
