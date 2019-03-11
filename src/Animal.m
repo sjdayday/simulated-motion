@@ -4,13 +4,16 @@ classdef Animal < System
     properties
         environment
         hippocampalFormation
-        placeSystem
+        % placeSystem, headDirectionSystem, chartSystem are in
+        % hippocampalFormation; properties are here as easy anchors.
+        % Consider replacing with getters against hippocampalFormation
+        placeSystem  
+        headDirectionSystem
+        chartSystem
         cortex
         motorCortex
         visualCortex
         subCortex
-        headDirectionSystem
-        chartSystem
         firstPlot
         h
         visual
@@ -120,13 +123,16 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
-            disp(['time: ',num2str(obj.time),' currentDirection: ',num2str(obj.currentDirection)]); 
+            disp(['Animal   time: ',num2str(obj.time),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
         function turn(obj, clockwiseNess, relativeSpeed)
             if obj.placed 
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
                     calculateVertices(obj);
+                    obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
+                    obj.hippocampalFormation.headDirectionSystem.step(); 
+
                 else
                     error('Animal:ClockwiseNess', ...
                         'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
@@ -227,8 +233,8 @@ classdef Animal < System
         end
         function plotAnimal(obj)
             figure(obj.h)
-            p = antenna.Polygon('Vertices', [0.95 1; 1.05 1;1 1.2]); % [0.95 1 0; 1.05 1 0;1 1.2 0][-1 0 0;-0.5 0.2 0;0 0 0]
-            plot(p, 'Color',[0.65 0.65 0.65],'LineWidth',3)
+%             p = antenna.Polygon('Vertices', [0.95 1; 1.05 1;1 1.2]); % [0.95 1 0; 1.05 1 0;1 1.2 0][-1 0 0;-0.5 0.2 0;0 0 0]
+            plot(obj.shape, 'Color',[0.65 0.65 0.65],'LineWidth',3)
 % rotate(p, 25, [0,1,0], [0,0,0])
 % translate(p, [-0.4, 0.3, 0])
 

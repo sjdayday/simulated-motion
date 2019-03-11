@@ -14,6 +14,11 @@ cr.stepPause = 0.25;
 cr.totalSteps = 45; % 61;
 cr.randomHeadDirection = true;
 % cr.addControllerEvent(3, 'pause(30); ')
+%             motorCortex = obj.animal.motorCortex; 
+%             motorCortex.moveDistance = 10;
+%             motorCortex.counterClockwiseTurn();
+
+
 cr.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.clockwiseVelocity = -obj.minimumVelocity;'); 
 cr.addAnimalEvent(6, 'obj.turn(-1,1);'); 
 cr.addAnimalEvent(7, 'obj.turn(-1,1);'); 

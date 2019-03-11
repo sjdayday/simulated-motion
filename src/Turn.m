@@ -49,8 +49,8 @@ classdef Turn <  Behavior
             obj.distanceTurned = obj.distanceTurned + 1;
              disp(['distanceTurned: ',num2str(obj.distanceTurned)]); 
             obj.animal.turn(obj.clockwiseNess, obj.speed); 
-            obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseNess * obj.speed); 
-            obj.animal.hippocampalFormation.headDirectionSystem.step(); 
+%             obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseNess * obj.speed); 
+%             obj.animal.hippocampalFormation.headDirectionSystem.step(); 
 %             disp(obj.animal.hippocampalFormation.headDirectionSystem.time); 
             obj.acknowledge('Turned'); 
             disp('exiting turned'); 

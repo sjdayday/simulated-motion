@@ -221,7 +221,7 @@ classdef HeadDirectionSystem < System
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
             obj.Ahist(obj.time) =  obj.currentActivationRatio ; 
-            disp(['time: ',num2str(obj.time),' activation: ',num2str(obj.getMaxActivationIndex())]); 
+            disp(['HeadDirectionSystem time: ',num2str(obj.time),' activation: ',num2str(obj.getMaxActivationIndex())]); 
         end
         function maxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.uActivation==max(obj.uActivation)); 

@@ -41,6 +41,7 @@ classdef ExperimentController < System
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
+            buildEnvironment(obj);
             buildAnimal(obj); 
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
@@ -51,7 +52,12 @@ classdef ExperimentController < System
             obj.visual = false; 
             obj.monitor = false; 
             obj.stepPause = 0.1;
-            buildEnvironment(obj);
+            
+%             motorCortex = obj.animal.motorCortex; 
+%             motorCortex.moveDistance = 10;
+%             motorCortex.counterClockwiseTurn();
+
+            
         end
         function buildEnvironment(obj)
             obj.environment = Environment(); 
@@ -61,14 +67,18 @@ classdef ExperimentController < System
             obj.environment.addWall([2 0],[2 2]);
             obj.environment.build(); 
 %             env.setPosition([0.5 0.25]); 
+
+
         end
         function buildAnimal(obj)
             obj.animal = Animal();
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
             obj.animal.build(); 
+            obj.animal.place(obj.environment, 1, 1, 0);  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
+
         end
 %         function buildRunner(obj)
 %             import uk.ac.imperial.pipe.runner.*
@@ -331,13 +341,14 @@ classdef ExperimentController < System
             hold on;  
             subplot(331); 
             obj.displayArena(); 
+            subplot(332); % 221
             obj.x = -1.1:.01:1.1;
             obj.y = zeros(1,221); 
             for ii = 1:length(obj.x)
                 obj.y(1,ii) = abs(sqrt(1.21 - obj.x(1,ii)^2));
             end
             obj.yy = -obj.y;
-            subplot(332); % 221
+%             subplot(332); % 221
             hold on; 
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
             p = plot(obj.x,obj.y,obj.x,obj.yy);
