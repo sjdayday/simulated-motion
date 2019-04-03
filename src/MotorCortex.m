@@ -59,6 +59,7 @@ classdef MotorCortex < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
+            obj.animal.step(); 
         end
         function plot(obj)
         end  

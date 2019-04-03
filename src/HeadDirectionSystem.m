@@ -132,7 +132,14 @@ classdef HeadDirectionSystem < System
             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
 %             disp('minimum velocity:'); 
 %             disp(obj.minimumVelocity); 
+            obj.setChildTimekeeper(obj); 
         end
+        % not necessary here, but consistent with pattern for higher-level
+        % components, e.g. HippocampalFormation
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper);  
+        end
+
         function updateFeaturesDetected(obj)
            if obj.pullFeatures 
                 if isempty(obj.animal.features)
@@ -220,8 +227,8 @@ classdef HeadDirectionSystem < System
             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
-            obj.Ahist(obj.time) =  obj.currentActivationRatio ; 
-            disp(['HeadDirectionSystem time: ',num2str(obj.time),' activation: ',num2str(obj.getMaxActivationIndex())]); 
+            obj.Ahist(obj.getTime()) =  obj.currentActivationRatio ; 
+            disp(['HeadDirectionSystem time: ',num2str(obj.getTime()),' activation: ',num2str(obj.getMaxActivationIndex())]); 
         end
         function maxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.uActivation==max(obj.uActivation)); 
@@ -264,7 +271,7 @@ classdef HeadDirectionSystem < System
             obj.xAxis.XTick = [0 15 30 45 60];
             obj.xAxis.XTickLabel = ... 
                 {'0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
-            title({'Head direction activation',sprintf('t = %d',obj.time+1)})
+            title({'Head direction activation',sprintf('t = %d',obj.getTime()+1)})
         end
         function plot(obj)
             if obj.firstPlot
@@ -278,7 +285,7 @@ classdef HeadDirectionSystem < System
             obj.xAxis.XTick = [0 15 30 45 60 75 90 105 120];
             obj.xAxis.XTickLabel = ... 
                 {'-2\pi', '-3\pi/2', '-\pi', '-\pi/2', '0', '\pi/2', '\pi', '3\pi/2', '2\pi'};
-            title({'Head direction',sprintf('time = %d ',obj.time)});
+            title({'Head direction',sprintf('time = %d ',obj.getTime())});
             drawnow
         end        
     end

@@ -70,6 +70,7 @@ classdef HippocampalFormation < System
             buildGrids(obj); 
 %             buildLec(obj); 
             buildPlaceSystem(obj);
+            % TODO: setTimekeeper for grids and placesystem 
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -105,6 +106,11 @@ classdef HippocampalFormation < System
                 obj.headDirectionSystem.h = obj.h; 
 %                 obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
             end
+            obj.setChildTimekeeper(obj); 
+        end
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper); 
+           obj.headDirectionSystem.setChildTimekeeper(timekeeper);
         end
 
         function buildHeadDirectionSystem(obj)
@@ -154,6 +160,7 @@ classdef HippocampalFormation < System
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);             
         end
         function step(obj)
+            step@System(obj); 
             stepHds(obj); 
             stepMec(obj); 
             stepPlace(obj); 

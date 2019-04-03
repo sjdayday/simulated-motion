@@ -81,6 +81,12 @@ classdef Animal < System
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 
+            
+            obj.setChildTimekeeper(obj); 
+        end
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper); 
+           obj.hippocampalFormation.setChildTimekeeper(timekeeper);  
         end
         function buildInitialVertices(obj)
             obj.vertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
@@ -123,7 +129,8 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
-            disp(['Animal   time: ',num2str(obj.time),' currentDirection: ',num2str(obj.currentDirection)]); 
+            obj.hippocampalFormation.step();
+            disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
         function turn(obj, clockwiseNess, relativeSpeed)
             if obj.placed 
@@ -131,7 +138,8 @@ classdef Animal < System
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
                     calculateVertices(obj);
                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
-                    obj.hippocampalFormation.headDirectionSystem.step(); 
+%                      obj.hippocampalFormation.headDirectionSystem.step(); 
+                     obj.step(); 
 
                 else
                     error('Animal:ClockwiseNess', ...

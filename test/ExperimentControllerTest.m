@@ -40,7 +40,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.time, 20);
             testCase.assertEqual(controller.chartSystem.time, 20);           
-% FIXME             testCase.assertEqual(controller.animal.time, 20);  
+            testCase.assertEqual(controller.animal.time, 20);  
         end
         function testContinuesFromWhereRunLeftOff(testCase)
             controller = ExperimentController(); 
