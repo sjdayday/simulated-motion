@@ -73,13 +73,13 @@ classdef ChartSystem < System
                 for jj = 1:obj.nSingleDimensionCells
                     obj.location(index,:) = [ii jj]; 
                     index = index+1;
-                end;
-            end;
+                end
+            end
             obj.wHeadDirectionWeights = zeros(obj.nSingleDimensionCells,obj.nSingleDimensionCells,obj.totalCells); 
             for kk = 1:obj.totalCells
                 loc = obj.location(kk,:); 
-                for ii = 1:obj.nSingleDimensionCells; 
-                    for jj = 1:obj.nSingleDimensionCells;
+                for ii = 1:obj.nSingleDimensionCells 
+                    for jj = 1:obj.nSingleDimensionCells
                         distanceX = min(abs(ii-loc(1)),obj.nSingleDimensionCells-abs(ii-loc(1)));
                         distanceY = min(abs(jj-loc(2)),obj.nSingleDimensionCells-abs(jj-loc(2)));
                         distance = sqrt(distanceX.^2 + distanceY.^2);
@@ -98,6 +98,12 @@ classdef ChartSystem < System
             obj.negativeDirectionWeights = ... 
                 [obj.negativeDirectionWeights((end-obj.directionWeightOffset+1):end,:); ...
                 obj.negativeDirectionWeights(1:end-obj.directionWeightOffset,:)];
+            obj.setChildTimekeeper(obj); 
+        end
+        % not necessary here, but consistent with pattern for higher-level
+        % components, e.g. HippocampalFormation
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper);  
         end
         function updateFeatureWeights(obj)
             % sigmoidal, negative at small activation values, linear over 
@@ -132,7 +138,7 @@ classdef ChartSystem < System
             activationFunction(obj); 
             synapticInput = headDirectionInput(obj); 
             obj.uActivation = synapticInput; 
-            obj.Ahist(obj.time) =  obj.currentActivationRatio ; 
+            obj.Ahist(obj.getTime()) =  obj.currentActivationRatio ; 
         end
         function [numMax , maxSlope] = getMetrics(obj)
             act = obj.uActivation; 

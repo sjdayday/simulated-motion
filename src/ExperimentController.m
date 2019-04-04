@@ -57,7 +57,11 @@ classdef ExperimentController < System
 %             motorCortex.moveDistance = 10;
 %             motorCortex.counterClockwiseTurn();
 
-            
+            obj.setChildTimekeeper(obj); 
+        end
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper); 
+           obj.animal.setChildTimekeeper(timekeeper);  
         end
         function buildEnvironment(obj)
             obj.environment = Environment(); 
@@ -153,6 +157,7 @@ classdef ExperimentController < System
                 obj.loadFixedRandom(); 
             end
             system.build(); 
+            system.setTimekeeper(obj); 
             obj.currentStep = 1;             
             runBareSystem(obj, system); 
         end
@@ -165,10 +170,11 @@ classdef ExperimentController < System
 %                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
             end
         end
-        function step(obj, system)
+        function step(obj, system)            
+           step@System(obj); 
            events(obj); 
            system.step();
-           obj.animal.step(); 
+%            obj.animal.step(); 
            obj.currentStep = obj.currentStep + 1; 
            if obj.visual
                plot(obj);  
