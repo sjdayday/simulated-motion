@@ -17,8 +17,8 @@ classdef System < handle
         end
         function events(obj)
 %              disp(obj.eventMap.keys()); 
-            if obj.eventMap.isKey(obj.time)
-               eval(obj.eventMap(obj.time));
+            if obj.eventMap.isKey(obj.getTime())
+               eval(obj.eventMap(obj.getTime()));
 %                 disp(['System at time: ',obj.time]); 
 %                 disp([obj.time,obj.eventMap(obj.time)]); 
             end

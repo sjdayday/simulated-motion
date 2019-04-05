@@ -173,8 +173,9 @@ classdef ExperimentController < System
         function step(obj, system)            
            step@System(obj); 
            events(obj); 
+           obj.animal.step(); 
            system.step();
-%            obj.animal.step(); 
+    
            obj.currentStep = obj.currentStep + 1; 
            if obj.visual
                plot(obj);  
