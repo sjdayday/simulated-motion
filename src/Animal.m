@@ -129,7 +129,8 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
-            obj.hippocampalFormation.step();
+%             obj.hippocampalFormation.step();
+            obj.hippocampalFormation.stepHds();
             disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
         function turn(obj, clockwiseNess, relativeSpeed)
