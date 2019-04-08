@@ -37,16 +37,16 @@ classdef TestingExperimentController < ExperimentController
                  runSystem(obj,obj.testingSystem);
                  obj.testingStatisticsDetail(obj.iteration,:) = [obj.iteration, aa]; 
             end
-        function step(obj, system)
-           events(obj); 
-           system.step();
-%            obj.animal.step(); 
-           obj.currentStep = obj.currentStep + 1; 
-%            if obj.visual
-%                plot(obj);  
-%                pause(obj.stepPause); 
-%            end            
-        end
+%         function step(obj, system)
+%            events(obj); 
+%            system.step();
+% %            obj.animal.step(); 
+%            obj.currentStep = obj.currentStep + 1; 
+% %            if obj.visual
+% %                plot(obj);  
+% %                pause(obj.stepPause); 
+% %            end            
+%         end
     %  for each parameter
     %     rebuildSystem
     %     set all the parameters 

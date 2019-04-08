@@ -95,7 +95,11 @@ classdef Animal < System
             obj.y = 0; 
             obj.lastX = 0; 
             obj.lastY = 0; 
-            obj.lastDegrees = 0; 
+            obj.lastDegrees = 0;
+            if ishandle(obj.h) 
+                figure(obj.h);
+                disp('figure(obj.h)'); 
+            end
             obj.shape = antenna.Polygon('Vertices', obj.vertices); 
         end
         function buildDefaultHeadDirectionSystem(obj)
@@ -190,6 +194,10 @@ classdef Animal < System
 %              x = obj.environment.position(1); 
 %              y = obj.environment.position(2); 
             degrees = radians * 180 / pi;
+            if ishandle(obj.h) 
+                figure(obj.h);
+                disp('figure(obj.h) in calculateVertices '); 
+            end
             translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
             % degrees needs to be difference between current and last
             rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 

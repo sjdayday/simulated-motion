@@ -42,6 +42,8 @@ classdef ExperimentController < System
             obj.iteration = 0; 
             obj.nChartStats = 6;
             buildEnvironment(obj);
+            obj.visual = false;
+            
             buildAnimal(obj); 
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
@@ -49,7 +51,7 @@ classdef ExperimentController < System
             buildChartSystemPropertyMap(obj);
             buildHeadDirectionSystemPropertyMap(obj);
             obj.chartStatisticsHeader = {};
-            obj.visual = false; 
+%             obj.visual = false; 
             obj.monitor = false; 
             obj.stepPause = 0.1;
             
@@ -79,34 +81,11 @@ classdef ExperimentController < System
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
             obj.animal.build(); 
-            obj.animal.place(obj.environment, 1, 1, 0);  
+            obj.animal.place(obj.environment, 1, 1, pi/2); % 0  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
 
         end
-%         function buildRunner(obj)
-%             import uk.ac.imperial.pipe.runner.*
-%             obj.runner = PetriNetRunner('/Users/steve/Documents/MATLAB/simpleNet2.xml');
-%             obj.listener = BooleanPlaceListener('P1');
-%             obj.runner.markPlace('P0','Default',1);
-%             obj.runner.listenForTokenChanges(obj.listener,'P1');
-%             set(obj.listener,'PropertyChangeCallback',@obj.showEvent);
-%             obj.runner.setFiringLimit(10);
-%             obj.runner.setWaitForExternalInput(true);
-%             obj.runner.run();
-%             
-%         end
-%         function evt = showEvent(obj, source, evt )
-%             disp('show Event')
-%             disp(source)
-%             disp('evt: ')
-%             disp(evt)
-%             disp(evt.getPropertyName())
-%             disp(evt.getOldValue())
-%             obj.runner.setWaitForExternalInput(false);
-%             obj.runner.run();
-%             % disp(javaMethod('getOldValue',evt))
-%         end
 
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
@@ -122,7 +101,7 @@ classdef ExperimentController < System
                 obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
 %                 setupDisplay(obj);  % do later
             else
-                if isvalid(obj.h) 
+                if ishandle(obj.h) 
                     close(obj.h)
                 end
             end
@@ -146,23 +125,33 @@ classdef ExperimentController < System
         % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
             rebuildHeadDirectionSystem(obj);
+            setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
             runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
         end
+ 
         function runChartSystem(obj)
             rebuildChartSystem(obj);
+            setupSystem(obj, obj.chartSystem); 
             runSystem(obj,obj.chartSystem); 
         end
-        function runSystem(obj, system)
+        function setupSystem(obj, system)
             if obj.resetSeed
                 obj.loadFixedRandom(); 
             end
             system.build(); 
             system.setTimekeeper(obj); 
-            obj.currentStep = 1;             
-            runBareSystem(obj, system); 
+            obj.currentStep = 1;                         
         end
-        function runBareSystem(obj, system)
-            for ii = obj.currentStep:obj.totalSteps
+        function runSystem(obj, system)
+            runSystemForSteps(obj, system, remainingSteps(obj));
+        end
+        function remaining=remainingSteps(obj)
+            remaining = obj.totalSteps-obj.currentStep+1;
+        end
+        function runSystemForSteps(obj, system, steps)
+            stepsToRun = min(remainingSteps(obj), steps); 
+            stepLimit = obj.currentStep+stepsToRun-1; 
+            for ii = obj.currentStep:stepLimit
                 step(obj, system); 
             end
             obj.iteration = obj.iteration + 1;
@@ -186,14 +175,14 @@ classdef ExperimentController < System
             if obj.currentStep == 1
                 runHeadDirectionSystem(obj);
             else
-                runBareSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem);             
+                runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem);             
             end
         end
         function continueChartSystem(obj)
             if obj.currentStep == 1
                 runChartSystem(obj);
             else
-                runBareSystem(obj,obj.chartSystem);             
+                runSystem(obj,obj.chartSystem);             
             end
         end
         function addHeadDirectionSystemProperty(obj, property)
@@ -316,6 +305,7 @@ classdef ExperimentController < System
                 updateChartSystemWithPropertyValue(obj, 'normalizedWeight', ee); 
                 updateChartSystemWithPropertyValue(obj, 'sigmaAngularWeight', ff); 
                 updateChartSystemWithPropertyValue(obj, 'sigmaWeightPattern', gg); 
+                setupSystem(obj, obj.chartSystem); 
                 runSystem(obj,obj.chartSystem); % runChartSystem(obj) forces rebuild
                 weightPage = obj.chartSystem.wHeadDirectionWeights(:,:,1); 
                 weightSum = sum(sum(weightPage)); 

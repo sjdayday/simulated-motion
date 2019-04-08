@@ -31,6 +31,39 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.getTime(), 20);
         end
+        function testCanRunSystemForOneOrMoreSteps(testCase)
+            controller = TestingExperimentController(); 
+            controller.totalSteps = 20; 
+            testCase.assertEqual(controller.currentStep, 1);
+            controller.runSystemForSteps(controller.testingSystem, 1); 
+            testCase.assertEqual(controller.currentStep, 2);
+            controller.runSystemForSteps(controller.testingSystem, 1);
+            testCase.assertEqual(controller.currentStep, 3);
+            controller.runSystemForSteps(controller.testingSystem, 4);
+            testCase.assertEqual(controller.currentStep, 7);
+            % let it run remainder of steps
+            controller.runSystem(controller.testingSystem);
+            testCase.assertEqual(controller.currentStep, 21);
+        end
+        function testSystemDoesNotStepBeyondTotal(testCase)
+            controller = TestingExperimentController(); 
+            controller.totalSteps = 20; 
+            controller.runSystemForSteps(controller.testingSystem, 8); 
+            testCase.assertEqual(controller.currentStep, 9);
+            controller.runSystemForSteps(controller.testingSystem, 8);
+            testCase.assertEqual(controller.currentStep, 17);
+            controller.runSystemForSteps(controller.testingSystem, 8);
+            testCase.assertEqual(controller.currentStep, 21);
+        end
+        function testOneLastStepDoesntRun(testCase)
+            controller = TestingExperimentController(); 
+            controller.totalSteps = 20; 
+            controller.runSystemForSteps(controller.testingSystem, 20); 
+            testCase.assertEqual(controller.currentStep, 21);
+            controller.runSystemForSteps(controller.testingSystem, 1);
+            testCase.assertEqual(controller.currentStep, 21);
+        end
+
         function testRunsSeparatelyEachForStepsButDoubleTimeResettingCurrentStep(testCase)
             controller = ExperimentController(); 
             controller.totalSteps = 20; 
