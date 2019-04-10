@@ -29,6 +29,7 @@ classdef ExperimentController < System
         stepPause
         runner
         listener
+        systemMap
     end
     methods
         function obj = ExperimentController()
@@ -54,7 +55,7 @@ classdef ExperimentController < System
 %             obj.visual = false; 
             obj.monitor = false; 
             obj.stepPause = 0.1;
-            
+            obj.systemMap = containers.Map('KeyType','char','ValueType','double');
 %             motorCortex = obj.animal.motorCortex; 
 %             motorCortex.moveDistance = 10;
 %             motorCortex.counterClockwiseTurn();
@@ -122,13 +123,29 @@ classdef ExperimentController < System
         function rebuildChartSystem(obj) 
             obj.chartSystem = ChartSystem(obj.nChartSystemSingleDimensionCells); 
         end
+        function currentStep=getCurrentStep(obj, systemName)
+            if obj.systemMap.isKey(systemName)
+                currentStep = obj.systemMap(systemName);  
+            else
+                currentStep = 1; 
+            end
+        end
+        function incrementCurrentStep(obj, systemName) 
+            currentStep = obj.getCurrentStep(systemName); 
+            obj.systemMap(systemName) = currentStep+1; 
+        end
         % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
             rebuildHeadDirectionSystem(obj);
             setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
             runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
         end
- 
+        function runHeadDirectionSystemForSteps(obj, steps)
+            rebuildHeadDirectionSystem(obj);
+            setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
+            runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
+        end
+
         function runChartSystem(obj)
             rebuildChartSystem(obj);
             setupSystem(obj, obj.chartSystem); 

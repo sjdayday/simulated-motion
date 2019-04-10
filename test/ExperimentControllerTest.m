@@ -63,7 +63,24 @@ classdef ExperimentControllerTest < AbstractTest
             controller.runSystemForSteps(controller.testingSystem, 1);
             testCase.assertEqual(controller.currentStep, 21);
         end
-
+        function testHdsRunsForSteps(testCase)
+            controller = ExperimentController(); 
+            controller.totalSteps = 20; 
+            controller.runHeadDirectionSystemForSteps(5); 
+            testCase.assertEqual(controller.currentStep, 6);
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(controller.currentStep, 21);
+        end
+        function testTracksCurrentStepForSystem(testCase)
+            controller = ExperimentController();
+            testCase.assertEqual(controller.getCurrentStep('HeadDirectionSystem'), 1);
+            testCase.assertEqual(controller.getCurrentStep('ChartSystem'), 1);
+        controller.incrementCurrentStep('HeadDirectionSystem');
+            controller.incrementCurrentStep('HeadDirectionSystem');
+            testCase.assertEqual(controller.getCurrentStep('HeadDirectionSystem'), 3);
+            testCase.assertEqual(controller.getCurrentStep('ChartSystem'), 1);
+        end
+        
         function testRunsSeparatelyEachForStepsButDoubleTimeResettingCurrentStep(testCase)
             controller = ExperimentController(); 
             controller.totalSteps = 20; 
