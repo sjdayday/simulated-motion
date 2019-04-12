@@ -68,6 +68,8 @@ classdef ExperimentControllerTest < AbstractTest
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystemForSteps(5); 
             testCase.assertEqual(controller.currentStep, 6);
+            controller.runHeadDirectionSystemForSteps(10); 
+            testCase.assertEqual(controller.currentStep, 16);
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
         end
@@ -75,7 +77,7 @@ classdef ExperimentControllerTest < AbstractTest
             controller = ExperimentController();
             testCase.assertEqual(controller.getCurrentStep('HeadDirectionSystem'), 1);
             testCase.assertEqual(controller.getCurrentStep('ChartSystem'), 1);
-        controller.incrementCurrentStep('HeadDirectionSystem');
+            controller.incrementCurrentStep('HeadDirectionSystem');
             controller.incrementCurrentStep('HeadDirectionSystem');
             testCase.assertEqual(controller.getCurrentStep('HeadDirectionSystem'), 3);
             testCase.assertEqual(controller.getCurrentStep('ChartSystem'), 1);
@@ -104,14 +106,16 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 26);
             testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.getTime(), 25);
         end
-        function testSecondRunStartsOver(testCase)
+        function test2ndRunStartsOverIffTotalStepsIncreasedAndMapReinitialized(testCase)
             controller = ExperimentController(); 
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
             firstSystem = controller.animal.hippocampalFormation.headDirectionSystem; 
             testCase.assertEqual(controller.currentStep, 21);
+            controller.totalSteps = 40; 
+            controller.buildSystemMap();
             controller.runHeadDirectionSystem(); 
-            testCase.assertEqual(controller.currentStep, 21);
+            testCase.assertEqual(controller.currentStep, 41);
             testCase.assertNotSameHandle(controller.animal.hippocampalFormation.headDirectionSystem, firstSystem);
         end
         function testContinueInvokesRunIfNoPreviousRun(testCase)
@@ -125,6 +129,7 @@ classdef ExperimentControllerTest < AbstractTest
             controller.totalSteps = 5; 
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.815);
+            controller.buildSystemMap(); 
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.815);
         end
@@ -135,7 +140,8 @@ classdef ExperimentControllerTest < AbstractTest
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.815, ...
                 'default is to reset seed');
-            controller.resetRandomSeed(false); 
+            controller.resetRandomSeed(false);
+            controller.buildSystemMap();
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.255, 'different seed');
         end

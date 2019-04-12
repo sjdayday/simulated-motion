@@ -55,12 +55,15 @@ classdef ExperimentController < System
 %             obj.visual = false; 
             obj.monitor = false; 
             obj.stepPause = 0.1;
-            obj.systemMap = containers.Map('KeyType','char','ValueType','double');
+            obj.buildSystemMap(); 
 %             motorCortex = obj.animal.motorCortex; 
 %             motorCortex.moveDistance = 10;
 %             motorCortex.counterClockwiseTurn();
 
             obj.setChildTimekeeper(obj); 
+        end
+        function buildSystemMap(obj)
+            obj.systemMap = containers.Map('KeyType','char','ValueType','double');
         end
         function setChildTimekeeper(obj, timekeeper) 
            obj.setTimekeeper(timekeeper); 
@@ -131,19 +134,23 @@ classdef ExperimentController < System
             end
         end
         function incrementCurrentStep(obj, systemName) 
-            currentStep = obj.getCurrentStep(systemName); 
-            obj.systemMap(systemName) = currentStep+1; 
+            current = obj.getCurrentStep(systemName);
+            obj.currentStep = current+1;
+            obj.systemMap(systemName) = obj.currentStep;  
         end
         % run by Test and HDS functions
         function runHeadDirectionSystem(obj)
-            rebuildHeadDirectionSystem(obj);
-            setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
-            runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
+            obj.runHeadDirectionSystemForSteps(obj.remainingSteps(obj.animal.hippocampalFormation.headDirectionSystem));
+%             rebuildHeadDirectionSystem(obj);
+%             setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
+%             runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
         end
         function runHeadDirectionSystemForSteps(obj, steps)
-            rebuildHeadDirectionSystem(obj);
-            setupSystem(obj, obj.animal.hippocampalFormation.headDirectionSystem); 
-            runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem); 
+            if obj.getCurrentStep(class(obj.animal.hippocampalFormation.headDirectionSystem)) == 1
+                obj.rebuildHeadDirectionSystem();
+                obj.setupSystem(obj.animal.hippocampalFormation.headDirectionSystem);         
+            end
+            obj.runSystemForSteps(obj.animal.hippocampalFormation.headDirectionSystem, steps); 
         end
 
         function runChartSystem(obj)
@@ -160,13 +167,13 @@ classdef ExperimentController < System
             obj.currentStep = 1;                         
         end
         function runSystem(obj, system)
-            runSystemForSteps(obj, system, remainingSteps(obj));
+            runSystemForSteps(obj, system, obj.remainingSteps(system));
         end
-        function remaining=remainingSteps(obj)
-            remaining = obj.totalSteps-obj.currentStep+1;
+        function remaining=remainingSteps(obj, system)
+            remaining = obj.totalSteps-obj.getCurrentStep(class(system))+1;
         end
         function runSystemForSteps(obj, system, steps)
-            stepsToRun = min(remainingSteps(obj), steps); 
+            stepsToRun = min(obj.remainingSteps(system), steps); 
             stepLimit = obj.currentStep+stepsToRun-1; 
             for ii = obj.currentStep:stepLimit
                 step(obj, system); 
@@ -181,8 +188,8 @@ classdef ExperimentController < System
            events(obj); 
            obj.animal.step(); 
            system.step();
-    
-           obj.currentStep = obj.currentStep + 1; 
+           obj.incrementCurrentStep(class(system));
+%            obj.currentStep = obj.currentStep + 1; 
            if obj.visual
                plot(obj);  
                pause(obj.stepPause); 
@@ -190,16 +197,16 @@ classdef ExperimentController < System
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
-                runHeadDirectionSystem(obj);
+                obj.runHeadDirectionSystem();
             else
-                runSystem(obj,obj.animal.hippocampalFormation.headDirectionSystem);             
+                obj.runSystem(obj.animal.hippocampalFormation.headDirectionSystem);             
             end
         end
         function continueChartSystem(obj)
             if obj.currentStep == 1
-                runChartSystem(obj);
+                obj.runChartSystem();
             else
-                runSystem(obj,obj.chartSystem);             
+                obj.runSystem(obj.chartSystem);             
             end
         end
         function addHeadDirectionSystemProperty(obj, property)
