@@ -2,6 +2,7 @@
 classdef Animal < System
 
     properties
+        controller
         environment
         hippocampalFormation
         % placeSystem, headDirectionSystem, chartSystem are in
@@ -66,7 +67,7 @@ classdef Animal < System
             obj.width = 0.05; 
             obj.length = 0.2;
             obj.placed = 0; 
-
+            obj.controller = SimpleController(obj); % default; overridden by ExperimentController
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -81,8 +82,8 @@ classdef Animal < System
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 
-            
-            obj.setChildTimekeeper(obj); 
+            obj.controller.build(); 
+%             obj.setChildTimekeeper(obj); 
         end
         function setChildTimekeeper(obj, timekeeper) 
            obj.setTimekeeper(timekeeper); 
@@ -98,9 +99,10 @@ classdef Animal < System
             obj.lastDegrees = 0;
             if ishandle(obj.h) 
                 figure(obj.h);
+%                 obj.shape = antenna.Polygon('Vertices', obj.vertices);     
                 disp('figure(obj.h)'); 
             end
-            obj.shape = antenna.Polygon('Vertices', obj.vertices); 
+             obj.shape = antenna.Polygon('Vertices', obj.vertices); 
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
@@ -144,7 +146,8 @@ classdef Animal < System
                     calculateVertices(obj);
                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
 %                      obj.hippocampalFormation.headDirectionSystem.step(); 
-                     obj.step(); 
+                    obj.controller.step(); 
+%                      obj.step(); 
 
                 else
                     error('Animal:ClockwiseNess', ...

@@ -172,6 +172,17 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(3*pi/30, 'Within', RelativeTolerance(.00000001)));         
         end
+        function testControllerIsSteppedAtEachTurn(testCase)
+            buildAnimalInEnvironment(testCase);
+            testCase.assertEqual(testCase.animal.controller.getTime(), 0); 
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+            clockwiseNess = -1;
+            relativeSpeed = 1;
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertEqual(testCase.animal.controller.getTime(), 3);             
+        end        
         function testClockwisenessMustBeOneOrMinusOne(testCase)
             buildAnimalInEnvironment(testCase);
             testCase.animal.place(testCase.environment, 1, 1, 0);

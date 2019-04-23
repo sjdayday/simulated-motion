@@ -33,7 +33,8 @@ classdef ExperimentController < System
     end
     methods
         function obj = ExperimentController()
-            obj.build(); 
+            obj.visual = false;
+%             obj.build(); 
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -43,7 +44,7 @@ classdef ExperimentController < System
             obj.iteration = 0; 
             obj.nChartStats = 6;
             buildEnvironment(obj);
-            obj.visual = false;
+            
             
             buildAnimal(obj); 
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
@@ -84,7 +85,10 @@ classdef ExperimentController < System
             obj.animal = Animal();
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
+            obj.animal.h = obj.h;
             obj.animal.build(); 
+                obj.animal.hippocampalFormation.h = obj.h; 
+                obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
             obj.animal.place(obj.environment, 1, 1, pi/2); % 0  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
@@ -98,11 +102,11 @@ classdef ExperimentController < System
             obj.visual = visual; 
             if visual
                 obj.h = figure; 
-                obj.chartSystem.h = obj.h;
-                obj.headDirectionSystem.h = obj.h; 
-                obj.animal.h = obj.h; 
-                obj.animal.hippocampalFormation.h = obj.h; 
-                obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
+%                 obj.chartSystem.h = obj.h;
+%                 obj.headDirectionSystem.h = obj.h; % not needed? 
+%                 obj.animal.h = obj.h; 
+%                 obj.animal.hippocampalFormation.h = obj.h; 
+%                 obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
 %                 setupDisplay(obj);  % do later
             else
                 if ishandle(obj.h) 
@@ -125,6 +129,7 @@ classdef ExperimentController < System
         end
         function rebuildChartSystem(obj) 
             obj.chartSystem = ChartSystem(obj.nChartSystemSingleDimensionCells); 
+            obj.chartSystem.h = obj.h;
         end
         function currentStep=getCurrentStep(obj, systemName)
             if obj.systemMap.isKey(systemName)
@@ -154,9 +159,18 @@ classdef ExperimentController < System
         end
 
         function runChartSystem(obj)
-            rebuildChartSystem(obj);
-            setupSystem(obj, obj.chartSystem); 
-            runSystem(obj,obj.chartSystem); 
+            obj.runChartSystemForSteps(obj.remainingSteps(obj.chartSystem));
+%             rebuildChartSystem(obj);
+%             setupSystem(obj, obj.chartSystem); 
+%             runSystem(obj,obj.chartSystem); 
+        end
+        % untested
+        function runChartSystemForSteps(obj, steps)
+            if obj.getCurrentStep(class(obj.chartSystem)) == 1
+                obj.rebuildChartSystem();
+                obj.setupSystem(obj.chartSystem);         
+            end
+            obj.runSystemForSteps(obj.chartSystem, steps); 
         end
         function setupSystem(obj, system)
             if obj.resetSeed
@@ -176,17 +190,19 @@ classdef ExperimentController < System
             stepsToRun = min(obj.remainingSteps(system), steps); 
             stepLimit = obj.currentStep+stepsToRun-1; 
             for ii = obj.currentStep:stepLimit
-                step(obj, system); 
+                obj.stepForSystem(system); 
+%                 step(obj, system); 
             end
             obj.iteration = obj.iteration + 1;
             if obj.monitor
 %                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
             end
         end
-        function step(obj, system)            
-           step@System(obj); 
-           events(obj); 
-           obj.animal.step(); 
+        function stepForSystem(obj, system)
+           obj.step(); 
+%            step@System(obj); 
+%            events(obj); 
+%            obj.animal.step(); 
            system.step();
            obj.incrementCurrentStep(class(system));
 %            obj.currentStep = obj.currentStep + 1; 
@@ -194,6 +210,19 @@ classdef ExperimentController < System
                plot(obj);  
                pause(obj.stepPause); 
            end            
+        end
+%         function step(obj, system)        
+        function step(obj)
+           step@System(obj); 
+           events(obj); 
+           obj.animal.step(); 
+%            system.step();
+%            obj.incrementCurrentStep(class(system));
+% %            obj.currentStep = obj.currentStep + 1; 
+%            if obj.visual
+%                plot(obj);  
+%                pause(obj.stepPause); 
+%            end            
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
@@ -269,6 +298,8 @@ classdef ExperimentController < System
             obj.eventMap(step) = event; 
         end
         function events(obj)
+            % Why is this driven off current step, and the system version
+            % is driven off time?  Why is this needed? 
 %             disp('experiment controller keys: '); 
 %             disp(obj.eventMap.keys());
             if obj.eventMap.isKey(obj.currentStep)
@@ -404,8 +435,9 @@ classdef ExperimentController < System
                wall = obj.environment.walls(jj,:); 
                L = line([wall(1) wall(3)], [wall(2) wall(4)],'Color','black','LineWidth',2); 
             end 
-            axis off
-            axis equal
+            axis ([0 2 0 2 ]);
+%             axis off
+%             axis equal
         end
         function plot(obj)
 %  arena  pHDS   vHDS                       

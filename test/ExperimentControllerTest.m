@@ -2,6 +2,7 @@ classdef ExperimentControllerTest < AbstractTest
     methods (Test)
         function testCreatesControllerWithDefaultHeadDirectionAndChartSystems(testCase)
             controller = ExperimentController(); 
+            controller.build(); 
 %             headDirectionSystem = HeadDirectionSystem(5); 
             testCase.assertClass(controller.animal.headDirectionSystem, ...
                 'HeadDirectionSystem'); 
@@ -10,6 +11,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testOverridesDefaultHeadDirectionAndChartSystemsSizes(testCase)
             controller = ExperimentController(); 
+            controller.build(); 
             testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.nHeadDirectionCells, ...
                 60, 'default number of head direction cells'); 
             controller.buildHeadDirectionSystem(20); 
@@ -25,6 +27,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testRunsHeadDirectionSystemForSpecifiedSteps(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             testCase.assertEqual(controller.currentStep, 1);
             controller.runHeadDirectionSystem(); 
@@ -33,6 +36,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testCanRunSystemForOneOrMoreSteps(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             testCase.assertEqual(controller.currentStep, 1);
             controller.runSystemForSteps(controller.testingSystem, 1); 
@@ -47,6 +51,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testSystemDoesNotStepBeyondTotal(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runSystemForSteps(controller.testingSystem, 8); 
             testCase.assertEqual(controller.currentStep, 9);
@@ -57,6 +62,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testOneLastStepDoesntRun(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runSystemForSteps(controller.testingSystem, 20); 
             testCase.assertEqual(controller.currentStep, 21);
@@ -65,6 +71,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testHdsRunsForSteps(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystemForSteps(5); 
             testCase.assertEqual(controller.currentStep, 6);
@@ -75,6 +82,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testTracksCurrentStepForSystem(testCase)
             controller = ExperimentController();
+            controller.build();
             testCase.assertEqual(controller.getCurrentStep('HeadDirectionSystem'), 1);
             testCase.assertEqual(controller.getCurrentStep('ChartSystem'), 1);
             controller.incrementCurrentStep('HeadDirectionSystem');
@@ -85,6 +93,7 @@ classdef ExperimentControllerTest < AbstractTest
         
         function testRunsSeparatelyEachForStepsButDoubleTimeResettingCurrentStep(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
@@ -99,6 +108,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testContinuesFromWhereRunLeftOff(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
             controller.totalSteps = 25; 
@@ -108,6 +118,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function test2ndRunStartsOverIffTotalStepsIncreasedAndMapReinitialized(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.runHeadDirectionSystem(); 
             firstSystem = controller.animal.hippocampalFormation.headDirectionSystem; 
@@ -120,12 +131,14 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testContinueInvokesRunIfNoPreviousRun(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 20; 
             controller.continueHeadDirectionSystem(); 
             testCase.assertEqual(controller.currentStep, 21);
         end
         function testRunUsesDefaultSeed(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 5; 
             controller.runHeadDirectionSystem(); 
             testCase.assertEqual(round(rand()*1000)/1000, 0.815);
@@ -135,6 +148,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testResetsDefaultSeed(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.totalSteps = 5; 
             controller.resetRandomSeed(true); 
             controller.runHeadDirectionSystem(); 
@@ -147,6 +161,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testAddPropertyAndSupportingKeysInMapWithValueInTargetSystem(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             targetSystem = TestingSystem(); 
             controller.addSystemProperty(controller.testingSystemPropertyMap, 'testProperty', targetSystem); 
             testCase.assertEqual(... 
@@ -161,6 +176,7 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testBuildPropertyMapsWithDefaultKeys(testCase)
             controller = ExperimentController(); 
+            controller.build();
             controller.buildHeadDirectionSystemPropertyMap(); 
             testCase.assertEqual(... 
                 controller.headDirectionSystemPropertyMap.keys, ...
@@ -186,11 +202,13 @@ classdef ExperimentControllerTest < AbstractTest
         end
         function testPropertyMapsBuiltByDefault(testCase)
             controller = ExperimentController(); 
+            controller.build();
             testCase.assertEqual(controller.headDirectionSystemPropertyMap.Count, uint64(21));
             testCase.assertEqual(controller.chartSystemPropertyMap.Count, uint64(21));
         end
         function testPropertyRangesAppliedToSystemAndGathersStats(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.totalSteps = 3; 
             testCase.assertEqual(controller.iteration, 0);
             controller.setSystemProperty(controller.testingSystemPropertyMap, ...
@@ -229,6 +247,7 @@ classdef ExperimentControllerTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             controller = ExperimentController(); 
+            controller.build();
             record = [1 5.077490624715358 4.30861806429603 0.000001 1 1.00000000181092 0 0.4 0.01 0.5 0 5 0.6]; 
             controller.totalSteps = 20; 
             controller.rerunChartSystem(record);
@@ -245,34 +264,39 @@ classdef ExperimentControllerTest < AbstractTest
             controller = ExperimentController(); 
             testCase.assertEqual(controller.visual, false); 
             controller.visualize(true); 
+            controller.build();
+            testCase.assertSameHandle(controller.animal.h, ...
+                controller.h);
             testCase.assertSameHandle(controller.animal.headDirectionSystem.h, ...
                 controller.h);
-            testCase.assertSameHandle(controller.animal.h, ...
+            testCase.assertSameHandle(controller.animal.hippocampalFormation.headDirectionSystem.h, ...
                 controller.h);
             controller.visualize(false); % close handle
         end
         function testSystemProcessesEventsAtSpecifiedTime(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.addEvent(controller.testingSystem, 4, 'obj.testProperty = 7;'); 
             testCase.assertEqual(controller.testingSystem.testProperty, 2);
-            controller.step(controller.testingSystem); 
-            controller.step(controller.testingSystem);             
-            controller.step(controller.testingSystem);             
+            controller.stepForSystem(controller.testingSystem); 
+            controller.stepForSystem(controller.testingSystem);             
+            controller.stepForSystem(controller.testingSystem);             
             testCase.assertEqual(controller.testingSystem.testProperty, 2, ...
                 'still 2 at t=3' );
-            controller.step(controller.testingSystem);             
+            controller.stepForSystem(controller.testingSystem);             
             testCase.assertEqual(controller.testingSystem.testProperty, 7, ...
                 'event processed at t=4' );
         end
         function testControllerIsAlsoSystemAndProcessesEvents(testCase)
             controller = TestingExperimentController(); 
+            controller.build();
             controller.addControllerEvent(3, 'obj.testingField = 1;');
             testCase.assertEqual(controller.testingField, 0); 
-            controller.step(controller.testingSystem); 
+            controller.stepForSystem(controller.testingSystem); 
             testCase.assertEqual(controller.testingField, 0); 
-            controller.step(controller.testingSystem); 
+            controller.stepForSystem(controller.testingSystem); 
             testCase.assertEqual(controller.testingField, 0); 
-            controller.step(controller.testingSystem); 
+            controller.stepForSystem(controller.testingSystem); 
             testCase.assertEqual(controller.testingField, 1); 
         end
         

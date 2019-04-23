@@ -18,6 +18,9 @@ classdef TestingExperimentController < ExperimentController
                 'testProperty', obj.testingSystem);
             obj.testingField = 0;  
         end
+        function build(obj)
+            build@ExperimentController(obj);
+        end
         function rebuildTestingSystem(obj) 
              obj.testingSystem = TestingSystem(); 
         end
