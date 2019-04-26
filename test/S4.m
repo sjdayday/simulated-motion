@@ -18,9 +18,10 @@ classdef S4 < handle
             obj.ec.randomHeadDirection = false;
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.showFeatures = 1; obj.features = [30 52];'); 
             obj.ec.addAnimalEvent(7, 'obj.showFeatures = 0; obj.features = [];'); 
-            obj.ec.addAnimalEvent(10, 'obj.orientAnimal(pi/4); '); 
-            % obj.ec.addControllerEvent(10, 'disp(''animal physically moved to orientation pi/4, and randomly initializing internal head direction''); pause(10); ')
             obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
+            obj.ec.addAnimalEvent(10, 'obj.orientAnimal(pi/4); obj.calculateVertices();'); 
+            % obj.ec.addControllerEvent(10, 'disp(''animal physically moved to orientation pi/4, and randomly initializing internal head direction''); pause(10); ')
+%             obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
             % obj.ec.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.turn(-1,1);');
             obj.ec.addAnimalEvent(12, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.motorCortex.moveDistance = 10; obj.motorCortex.clockwiseTurn();'); 
             % obj.ec.addAnimalEvent(12, 'obj.turn(-1,1);'); 

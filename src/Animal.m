@@ -44,6 +44,8 @@ classdef Animal < System
         placed
         x 
         y
+        subplotAxes
+        axesSet
     end
     methods
         function obj = Animal()
@@ -67,6 +69,7 @@ classdef Animal < System
             obj.width = 0.05; 
             obj.length = 0.2;
             obj.placed = 0; 
+            obj.axesSet = 0;
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
         end
         function build(obj)
@@ -161,7 +164,8 @@ classdef Animal < System
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
             updateUnitCirclePosition(obj); 
-            obj.justOriented = 1; 
+            obj.justOriented = 1;
+%             obj.calculateVertices(); 
         end
         function updateOrientation(obj)
             if obj.justOriented                
@@ -183,8 +187,12 @@ classdef Animal < System
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
             obj.currentDirection = radians; 
-            calculateAxisOfRotation(obj); 
-            calculateVertices(obj); 
+            obj.calculateAxisOfRotation(); 
+            obj.calculateVertices(); 
+        end
+        function setAxes(obj, axes)
+           obj.subplotAxes = axes;
+           obj.axesSet = 1; 
         end
         function calculateAxisOfRotation(obj)
             obj.x = obj.environment.position(1); 
@@ -199,11 +207,15 @@ classdef Animal < System
             degrees = radians * 180 / pi;
             if ishandle(obj.h) 
                 figure(obj.h);
-                disp('figure(obj.h) in calculateVertices '); 
+                if obj.axesSet
+                   subplot(obj.subplotAxes); 
+                   disp('subplot(obj.subplotAxes) in calculateVertices '); 
+                end
+                
             end
-            translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
+            obj.shape = translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
             % degrees needs to be difference between current and last
-            rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
+            obj.shape = rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
             temp = obj.shape.Vertices; 
             obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    
             obj.lastX = obj.x; 

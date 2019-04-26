@@ -89,10 +89,10 @@ classdef ExperimentController < System
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 
                 obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
-            obj.animal.place(obj.environment, 1, 1, pi/2); % 0  
+            obj.animal.place(obj.environment, 1, 1, 0); % pi/2  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
-
+            obj.animal.controller = obj;
         end
 
         function resetRandomSeed(obj, reset)
@@ -444,7 +444,8 @@ classdef ExperimentController < System
 % grid1   grid2    grid3
 % EC act  CA3 act HDS act  
             figure(obj.h);
-            subplot(331); 
+            axes = subplot(331); 
+            obj.animal.setAxes(axes);
             obj.animal.plotAnimal(); 
             subplot(332);  % 221
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
@@ -453,10 +454,10 @@ classdef ExperimentController < System
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
             subplot(337);  % 224
-            obj.animal.plotAnimal(); 
+%             obj.animal.plotAnimal(); 
             hold on; 
             subplot(338); 
-            obj.animal.plotAnimal(); 
+%             obj.animal.plotAnimal(); 
             subplot(339); 
 %             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 

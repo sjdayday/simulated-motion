@@ -55,19 +55,5 @@ classdef Turn <  Behavior
             obj.acknowledge('Turned'); 
             disp('exiting turned'); 
         end
-%         function visualize(obj, visual)
-%             obj.visual = visual; 
-%             if visual
-%                 obj.h = figure; 
-%                 obj.chartSystem.h = obj.h;
-%                 obj.headDirectionSystem.h = obj.h; 
-%                 obj.animal.h = obj.h; 
-% %                 setupDisplay(obj);  % do later
-%             else
-%                 if isvalid(obj.h) 
-%                     close(obj.h)
-%                 end
-%             end
-%         end
     end
 end
