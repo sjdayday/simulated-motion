@@ -30,6 +30,7 @@ classdef ExperimentController < System
         runner
         listener
         systemMap
+        lastSystem
     end
     methods
         function obj = ExperimentController()
@@ -155,6 +156,7 @@ classdef ExperimentController < System
                 obj.rebuildHeadDirectionSystem();
                 obj.setupSystem(obj.animal.hippocampalFormation.headDirectionSystem);         
             end
+            obj.lastSystem = obj.animal.hippocampalFormation.headDirectionSystem;
             obj.runSystemForSteps(obj.animal.hippocampalFormation.headDirectionSystem, steps); 
         end
 
@@ -198,24 +200,36 @@ classdef ExperimentController < System
 %                 disp([obj.iteration length(obj.chartStatisticsDetail)]); 
             end
         end
-        function stepForSystem(obj, system)
-           obj.step(); 
-%            step@System(obj); 
-%            events(obj); 
-%            obj.animal.step(); 
+        function doStep(obj, system)
            system.step();
            obj.incrementCurrentStep(class(system));
 %            obj.currentStep = obj.currentStep + 1; 
            if obj.visual
                plot(obj);  
                pause(obj.stepPause); 
-           end            
+           end                        
+        end
+        % FIXME
+        function stepForSystem(obj, system)
+           obj.step(); 
+%            step@System(obj); 
+%            events(obj); 
+%            obj.animal.step(); 
+%            system.step();
+%            obj.incrementCurrentStep(class(system));
+% %            obj.currentStep = obj.currentStep + 1; 
+%            if obj.visual
+%                plot(obj);  
+%                pause(obj.stepPause); 
+%            end
+            obj.lastSystem = system; 
         end
 %         function step(obj, system)        
         function step(obj)
            step@System(obj); 
            events(obj); 
            obj.animal.step(); 
+           obj.doStep(obj.lastSystem); 
 %            system.step();
 %            obj.incrementCurrentStep(class(system));
 % %            obj.currentStep = obj.currentStep + 1; 

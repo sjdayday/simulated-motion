@@ -11,7 +11,7 @@ classdef S4Test < AbstractTest
             script = S4(); 
             script.run(12);
 %             turn x 10
-            pause(30);
+            pause(10);
             testCase.assertEqual(script.ec.getTime(), 22); 
         end
         function testOrientAnimalDisplaysCorrectly(testCase)
