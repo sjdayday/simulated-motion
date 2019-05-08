@@ -51,7 +51,7 @@ Open allTests.m; as noted in the comments, you may need to run:
 
 At the Matlab prompt:
  allTests
-The tests take a couple of minutes and should run without errors. 
+The tests take a few minutes and should run without errors. 
 
 Sample scripts to execute the entire system:  
 hds1
@@ -59,5 +59,6 @@ hds2
 
 Debugging of the PIPE Petri net java code may require updating the following file: 
 src/main/resources/log4j2.xml  in the PIPECore jar....
+(I haven't figured out a way to override it by putting it in the matlab path, e.g., src/log4j2.xml doesn't work.)
 
 Questions:  stevedoubleday@gmail.com

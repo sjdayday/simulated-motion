@@ -3,3 +3,5 @@ test/diary.txt
 */planNeuralNetworkFunction.m
 */testNeuralNetworkFunction.m
 */savedResults.mat
+*/*.m~
+*/pathdef.m
