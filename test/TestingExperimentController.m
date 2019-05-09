@@ -12,7 +12,8 @@ classdef TestingExperimentController < ExperimentController
     methods
         function obj = TestingExperimentController()
             obj = obj@ExperimentController(); 
-            obj.testingSystem = TestingSystem(); 
+            obj.rebuildTestingSystem();
+%             obj.testingSystem = TestingSystem(); 
             obj.testingSystemPropertyMap = containers.Map(); 
             addSystemProperty(obj, obj.testingSystemPropertyMap, ... 
                 'testProperty', obj.testingSystem);
@@ -23,6 +24,7 @@ classdef TestingExperimentController < ExperimentController
         end
         function rebuildTestingSystem(obj) 
              obj.testingSystem = TestingSystem(); 
+             obj.lastSystem = obj.testingSystem ; 
         end
         
         function value = getTestingSystemProperty(obj, property)

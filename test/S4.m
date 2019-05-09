@@ -15,7 +15,7 @@ classdef S4 < handle
             obj.ec.stepPause = 0.5;
             obj.ec.resetSeed = false; 
             obj.ec.totalSteps = 40;
-            obj.ec.randomHeadDirection = false;
+%             obj.ec.randomHeadDirection = false; % no effect?  
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/20; obj.showFeatures = 1; obj.features = [30 52];'); 
             obj.ec.addAnimalEvent(7, 'obj.showFeatures = 0; obj.features = [];'); 
             obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 

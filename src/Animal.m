@@ -34,6 +34,7 @@ classdef Animal < System
         showFeatures
         justOriented
         vertices
+        lastVertices
         axisOfRotation
         width
         length
@@ -41,11 +42,13 @@ classdef Animal < System
         lastY
         lastDegrees
         shape
+        lastShape
         placed
         x 
         y
         subplotAxes
         axesSet
+        skipFirstPlot
     end
     methods
         function obj = Animal()
@@ -70,6 +73,7 @@ classdef Animal < System
             obj.length = 0.2;
             obj.placed = 0; 
             obj.axesSet = 0;
+            obj.skipFirstPlot = 1; 
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
         end
         function build(obj)
@@ -94,6 +98,7 @@ classdef Animal < System
         end
         function buildInitialVertices(obj)
             obj.vertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
+            obj.lastVertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
             obj.axisOfRotation = [0 0 0; 0 0 1];
             obj.x = 0;
             obj.y = 0; 
@@ -106,6 +111,7 @@ classdef Animal < System
                 disp('figure(obj.h)'); 
             end
              obj.shape = antenna.Polygon('Vertices', obj.vertices); 
+             obj.lastShape = antenna.Polygon('Vertices', obj.lastVertices); 
         end
         function buildDefaultHeadDirectionSystem(obj)
             buildHeadDirectionSystem(obj, obj.nHeadDirectionCells); 
@@ -189,6 +195,7 @@ classdef Animal < System
             obj.currentDirection = radians; 
             obj.calculateAxisOfRotation(); 
             obj.calculateVertices(); 
+            obj.lastShape.Vertices = obj.updateVerticesFromShape(); 
         end
         function setAxes(obj, axes)
            obj.subplotAxes = axes;
@@ -205,22 +212,18 @@ classdef Animal < System
 %              x = obj.environment.position(1); 
 %              y = obj.environment.position(2); 
             degrees = radians * 180 / pi;
-            if ishandle(obj.h) 
-                figure(obj.h);
-                if obj.axesSet
-                   subplot(obj.subplotAxes); 
-                   disp('subplot(obj.subplotAxes) in calculateVertices '); 
-                end
-                
-            end
+            obj.lastShape.Vertices = obj.updateVerticesFromShape();             
             obj.shape = translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
             % degrees needs to be difference between current and last
             obj.shape = rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
-            temp = obj.shape.Vertices; 
-            obj.vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    
+            obj.vertices = obj.updateVerticesFromShape();
             obj.lastX = obj.x; 
             obj.lastY = obj.y; 
             obj.lastDegrees = degrees; 
+        end
+        function vertices=updateVerticesFromShape(obj)
+            temp = obj.shape.Vertices; 
+            vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    
         end
         function distance = closestWallDistance(obj)
             distance = obj.environment.closestWallDistance(); 
@@ -264,15 +267,9 @@ classdef Animal < System
             markerUpdate(obj, obj.unitCirclePosition, obj.unitCirclePosition, obj.unitCirclePosition); 
         end
         function plotAnimal(obj)
-            figure(obj.h)
-%             p = antenna.Polygon('Vertices', [0.95 1; 1.05 1;1 1.2]); % [0.95 1 0; 1.05 1 0;1 1.2 0][-1 0 0;-0.5 0.2 0;0 0 0]
-            plot(obj.shape, 'Color',[0.65 0.65 0.65],'LineWidth',3)
-% rotate(p, 25, [0,1,0], [0,0,0])
-% translate(p, [-0.4, 0.3, 0])
-
-%             t=[0 1 0.5 0];
-%             y=[0 0 0.5 0];
-%             plot(t,y, 'Color','gray','LineWidth',1.5);
+            figure(obj.h);
+            plot(obj.lastShape, 'Color','white','LineWidth',3); 
+            plot(obj.shape, 'Color',[0.65 0.65 0.65],'LineWidth',3);            
         end
         function plot(obj)
             figure(obj.h)

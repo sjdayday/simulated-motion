@@ -103,6 +103,7 @@ classdef ExperimentController < System
             obj.visual = visual; 
             if visual
                 obj.h = figure; 
+                set(gcf,'color','w');
 %                 obj.chartSystem.h = obj.h;
 %                 obj.headDirectionSystem.h = obj.h; % not needed? 
 %                 obj.animal.h = obj.h; 
@@ -172,6 +173,7 @@ classdef ExperimentController < System
                 obj.rebuildChartSystem();
                 obj.setupSystem(obj.chartSystem);         
             end
+            obj.lastSystem = obj.chartSystem;
             obj.runSystemForSteps(obj.chartSystem, steps); 
         end
         function setupSystem(obj, system)
@@ -366,7 +368,8 @@ classdef ExperimentController < System
             for ee = gCSP(obj, 'normalizedWeight'):gCSPi(obj, 'normalizedWeight'):gCSPx(obj, 'normalizedWeight')
             for ff = gCSP(obj, 'sigmaAngularWeight'):gCSPi(obj, 'sigmaAngularWeight'):gCSPx(obj, 'sigmaAngularWeight')
             for gg = gCSP(obj, 'sigmaWeightPattern'):gCSPi(obj, 'sigmaWeightPattern'):gCSPx(obj, 'sigmaWeightPattern')
-                rebuildChartSystem(obj); 
+                rebuildChartSystem(obj);
+                obj.lastSystem = obj.chartSystem;
                 updateChartSystemWithPropertyValue(obj, 'alphaOffset', aa); 
                 updateChartSystemWithPropertyValue(obj, 'betaGain', bb); 
                 updateChartSystemWithPropertyValue(obj, 'CInhibitionOffset', cc); 
@@ -449,8 +452,8 @@ classdef ExperimentController < System
                wall = obj.environment.walls(jj,:); 
                L = line([wall(1) wall(3)], [wall(2) wall(4)],'Color','black','LineWidth',2); 
             end 
-            axis ([0 2 0 2 ]);
-%             axis off
+%             axis ([0 2 0 2 ]);
+             axis off
 %             axis equal
         end
         function plot(obj)
@@ -458,22 +461,21 @@ classdef ExperimentController < System
 % grid1   grid2    grid3
 % EC act  CA3 act HDS act  
             figure(obj.h);
-            axes = subplot(331); 
-            obj.animal.setAxes(axes);
+            subplot(331); 
+            title({'Animal in the arena'})
             obj.animal.plotAnimal(); 
-            subplot(332);  % 221
+            subplot(332);  
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.plot(); 
-            subplot(333);  % 222
+            subplot(333);  
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
-            subplot(337);  % 224
+            subplot(337); 
 %             obj.animal.plotAnimal(); 
             hold on; 
-            subplot(338); 
+             subplot(338); 
 %             obj.animal.plotAnimal(); 
-            subplot(339); 
-%             title({'Head direction activation',sprintf('t = %d',obj.currentStep)})
+             subplot(339); 
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
             drawnow
         end        
