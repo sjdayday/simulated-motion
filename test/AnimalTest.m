@@ -26,7 +26,7 @@ classdef AnimalTest < AbstractTest
                 testCase.assertFail('should throw'); 
             catch  ME
                 testCase.assertEqual(ME.identifier, 'Animal:NotPlaced'); 
-                testCase.assertEqual(ME.message, 'animal must be placed before it can turn or move:  place(...)'); 
+                testCase.assertEqual(ME.message, 'animal must be placed before it can move (turn or run):  place(...)'); 
             end
         end
         % turns accumulate 

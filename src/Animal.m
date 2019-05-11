@@ -148,27 +148,29 @@ classdef Animal < System
             obj.hippocampalFormation.stepHds();
             disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection)]); 
         end
+        function checkPlaced(obj)
+           if (~obj.placed)  
+                error('Animal:NotPlaced', ...
+                    'animal must be placed before it can move (turn or run):  place(...)') ;
+           end
+        end
         function turn(obj, clockwiseNess, relativeSpeed)
-            if obj.placed 
+            obj.checkPlaced(); 
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
                     calculateVertices(obj);
                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
-%                      obj.hippocampalFormation.headDirectionSystem.step(); 
+    %                      obj.hippocampalFormation.headDirectionSystem.step(); 
                     obj.controller.step(); 
-%                      obj.step(); 
+    %                      obj.step(); 
 
                 else
                     error('Animal:ClockwiseNess', ...
                         'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
                 end
-            else
-                error('Animal:NotPlaced', ...
-                    'animal must be placed before it can turn or move:  place(...)') ;
-            end
         end
         function run(obj, relativeSpeed)
-            if obj.placed 
+            obj.checkPlaced(); 
 %                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
 %                     calculateVertices(obj);
 %                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
@@ -176,10 +178,6 @@ classdef Animal < System
                     obj.controller.step(); 
 %                      obj.step(); 
 
-            else
-                error('Animal:NotPlaced', ...
-                    'animal must be placed before it can turn or move:  place(...)') ;
-            end
         end
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
