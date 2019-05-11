@@ -19,6 +19,7 @@ classdef System < handle
 %              disp(obj.eventMap.keys()); 
             if obj.eventMap.isKey(obj.getTime())
                eval(obj.eventMap(obj.getTime()));
+%                obj.eventMap.remove(obj.getTime());
 %                 disp(['System at time: ',obj.time]); 
 %                 disp([obj.time,obj.eventMap(obj.time)]); 
             end

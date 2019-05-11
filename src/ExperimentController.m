@@ -320,6 +320,9 @@ classdef ExperimentController < System
 %             disp(obj.eventMap.keys());
             if obj.eventMap.isKey(obj.currentStep)
                eval(obj.eventMap(obj.currentStep));
+%               remove event cause we were running this twice, which is the
+%               real problem to debug. :-/
+               obj.eventMap.remove(obj.currentStep); 
 %                  disp('experiment controller event: ') 
 %                  disp([num2str(obj.currentStep),obj.eventMap(obj.currentStep)]); 
             end

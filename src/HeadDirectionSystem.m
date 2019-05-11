@@ -68,7 +68,7 @@ classdef HeadDirectionSystem < System
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
             obj.minimumVelocity = pi/20; 
-            obj.animalVelocityCalibration = 1.4; 
+            obj.animalVelocityCalibration = 1.4; %might not be needed if updateTurnVelocity reconciled w updateVelocity
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightOffset = 8; 

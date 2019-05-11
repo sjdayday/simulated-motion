@@ -287,10 +287,11 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.testingSystem.testProperty, 7, ...
                 'event processed at t=4' );
         end
-        function testControllerIsAlsoSystemAndProcessesEvents(testCase)
+        function testControllerIsAlsoSystemAndProcessesEventsExactlyOnce(testCase)
             controller = TestingExperimentController(); 
             controller.build();
-            controller.addControllerEvent(3, 'obj.testingField = 1;');
+            % odd equation, but event was firing twice
+            controller.addControllerEvent(3, 'obj.testingField = obj.testingField + 1;');
             testCase.assertEqual(controller.testingField, 0); 
             controller.stepForSystem(controller.testingSystem); 
             testCase.assertEqual(controller.testingField, 0); 

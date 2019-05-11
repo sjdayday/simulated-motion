@@ -2,9 +2,9 @@ classdef S4Test < AbstractTest
     methods (Test)
         function testAnimalEvents(testCase)
             script = S4(); 
-            testCase.assertEqual(script.ec.animal.minimumVelocity, pi/30); 
+            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.minimumVelocity, pi/20); 
             script.run(5);
-            testCase.assertEqual(script.ec.animal.minimumVelocity, pi/20); 
+            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.minimumVelocity, pi/30); 
             testCase.assertEqual(script.ec.getTime(), 5); 
         end
         function testLongRunningBehaviorTriggersStep(testCase)
