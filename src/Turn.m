@@ -12,7 +12,7 @@ classdef Turn <  Behavior
         function obj = Turn(prefix, animal, clockwiseNess, speed, distance)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal);
-            obj.defaultPetriNet = 'include-move-turn.xml';
+            obj.defaultPetriNet = 'include-move-turn-run.xml';
             obj.turnPrefix = [prefix,'Turn.'];
             obj.buildThreadedStandardSemantics();
 %             obj.runner.setFiringDelay(50);
