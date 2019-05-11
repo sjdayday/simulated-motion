@@ -143,6 +143,74 @@
                 </status>
             </toolspecificplace>
         </place>
+        <place id="Run.Distance">
+          <graphics>
+            <position x="74.0" y="574.0"/>
+          </graphics>
+          <name>
+            <value>Run.Distance</value>
+            <graphics>
+             <offset x="-5.0" y="35.0"/>
+            </graphics>
+          </name>
+          <capacity>
+            <value>0</value>
+          </capacity>
+          <initialMarking>
+            <graphics>
+              <offset x="0.0" y="0.0"/>
+            </graphics>
+            <value></value>
+          </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run.Speed">
+          <graphics>
+            <position x="74.0" y="625.0"/>
+          </graphics>
+          <name>
+            <value>Run.Speed</value>
+            <graphics>
+               <offset x="-5.0" y="35.0"/>
+            </graphics>
+          </name>
+          <capacity>
+            <value>0</value>
+          </capacity>
+          <initialMarking>
+            <graphics>
+               <offset x="0.0" y="0.0"/>
+            </graphics>
+            <value></value>
+          </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
         <place id="Turn.Done">
             <graphics>
                 <position x="553.0" y="524.0"/>
@@ -196,6 +264,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Turn.CounterClockwise">
             <graphics>
@@ -438,6 +520,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Run">
             <graphics>
@@ -458,6 +554,20 @@
                 </graphics>
                 <value></value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+
         </place>
         <place id="Simulated">
             <graphics>

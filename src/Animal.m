@@ -167,6 +167,20 @@ classdef Animal < System
                     'animal must be placed before it can turn or move:  place(...)') ;
             end
         end
+        function run(obj, relativeSpeed)
+            if obj.placed 
+%                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+%                     calculateVertices(obj);
+%                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
+%                      obj.hippocampalFormation.headDirectionSystem.step(); 
+                    obj.controller.step(); 
+%                      obj.step(); 
+
+            else
+                error('Animal:NotPlaced', ...
+                    'animal must be placed before it can turn or move:  place(...)') ;
+            end
+        end
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
             updateUnitCirclePosition(obj); 

@@ -41,20 +41,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <place id="Done">
             <graphics>
@@ -75,20 +61,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>false</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <place id="Stopped">
             <graphics>
@@ -129,20 +101,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <place id="Running">
             <graphics>
@@ -183,20 +141,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>false</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <place id="Enabled">
             <graphics>
@@ -217,20 +161,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-           <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <place id="Ongoing">
             <graphics>
@@ -311,20 +241,6 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <transition id="Arrive">
             <graphics>
@@ -630,7 +546,7 @@
             <arcpath id="" x="279.0" y="429.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Run.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
         <arc id="Prepare TO Ready" source="Prepare" target="Ready">
@@ -774,7 +690,7 @@
             <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Move.Run.Speed)</value>
+                <value>Default,#(Speed)</value>
             </inscription>
         </arc>
         <arc id="ObjectSensed TO T0" source="ObjectSensed" target="Stop">
