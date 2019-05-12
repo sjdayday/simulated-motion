@@ -29,6 +29,8 @@ classdef Animal < System
         currentDirection
         unitCirclePosition
         minimumVelocity
+        minimumRunVelocity
+        distanceTraveled
         markers
         features
         showFeatures
@@ -40,6 +42,8 @@ classdef Animal < System
         length
         lastX
         lastY
+        deltaX
+        deltaY
         lastDegrees
         shape
         lastShape
@@ -49,6 +53,7 @@ classdef Animal < System
         subplotAxes
         axesSet
         skipFirstPlot
+        move
     end
     methods
         function obj = Animal()
@@ -73,8 +78,11 @@ classdef Animal < System
             obj.length = 0.2;
             obj.placed = 0; 
             obj.axesSet = 0;
+            obj.minimumRunVelocity = 0.1; 
+            obj.distanceTraveled = 0; 
             obj.skipFirstPlot = 1; 
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
+            obj.move = 1; % 1=turn, 0=run
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -103,7 +111,9 @@ classdef Animal < System
             obj.x = 0;
             obj.y = 0; 
             obj.lastX = 0; 
-            obj.lastY = 0; 
+            obj.lastY = 0;
+            obj.deltaX = 0;
+            obj.deltaY = 0;
             obj.lastDegrees = 0;
             if ishandle(obj.h) 
                 figure(obj.h);
@@ -156,6 +166,7 @@ classdef Animal < System
         end
         function turn(obj, clockwiseNess, relativeSpeed)
             obj.checkPlaced(); 
+            obj.move = 1; 
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
                     calculateVertices(obj);
@@ -171,6 +182,9 @@ classdef Animal < System
         end
         function run(obj, relativeSpeed)
             obj.checkPlaced(); 
+            obj.move = 0; 
+            obj.distanceTraveled = relativeSpeed * obj.minimumRunVelocity; 
+            obj.calculateVertices(); 
 %                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
 %                     calculateVertices(obj);
 %                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
@@ -191,7 +205,7 @@ classdef Animal < System
             else
 %                 obj.currentDirection = obj.directions(1) + ... 
 %                     obj.clockwiseVelocity + obj.counterClockwiseVelocity;
-                updateUnitCirclePosition(obj);                 
+                obj.updateUnitCirclePosition();                 
             end
             if obj.currentDirection == obj.directions(1)
                notMovingMarkerUpdate(obj);  
@@ -204,8 +218,11 @@ classdef Animal < System
             obj.buildInitialVertices(); 
             obj.environment = environment;
             obj.environment.setPosition([x y]); 
+            obj.x = obj.environment.position(1); 
+            obj.y = obj.environment.position(2); 
             obj.currentDirection = radians; 
             obj.calculateAxisOfRotation(); 
+            obj.translateShape();
             obj.calculateVertices(); 
             obj.lastShape.Vertices = obj.updateVerticesFromShape(); 
         end
@@ -214,24 +231,50 @@ classdef Animal < System
            obj.axesSet = 1; 
         end
         function calculateAxisOfRotation(obj)
-            obj.x = obj.environment.position(1); 
-            obj.y = obj.environment.position(2); 
+%             obj.x = obj.environment.position(1); 
+%             obj.y = obj.environment.position(2); 
             obj.axisOfRotation = [obj.x obj.y 0; obj.x obj.y 1];
         end
-        function calculateVertices(obj)
+        function calculatePositionFromDistanceTraveled(obj)
+            % there must be a simple trig function for this...
+            obj.updateUnitCirclePosition();
+%             unitX = cos(obj.currentDirection);
+%             unitY = sin(obj.currentDirection); 
+%             unitHyp = sqrt(unitX^2 + unitY^2); 
+%             alpha = d / (sqrt(2)*unitHyp);
+            obj.deltaX = obj.distanceTraveled * obj.unitCirclePosition(1); 
+            obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
+            obj.x = obj.x + obj.deltaX;
+            obj.y = obj.y + obj.deltaY;
+        end
+        function rotateShape(obj)
             radians = obj.currentDirection; 
-             calculateAxisOfRotation(obj);
+            obj.calculateAxisOfRotation();
 %              x = obj.environment.position(1); 
 %              y = obj.environment.position(2); 
-            degrees = radians * 180 / pi;
-            obj.lastShape.Vertices = obj.updateVerticesFromShape();             
-            obj.shape = translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);
             % degrees needs to be difference between current and last
+            degrees = radians * 180 / pi;
             obj.shape = rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 
-            obj.vertices = obj.updateVerticesFromShape();
+            obj.lastDegrees = degrees; 
+        end
+        function translateShape(obj)
+            obj.shape = translate(obj.shape, [obj.x, obj.y,0]);   
             obj.lastX = obj.x; 
             obj.lastY = obj.y; 
-            obj.lastDegrees = degrees; 
+%             obj.shape = translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);            
+        end
+        function translateShapeByDistanceTraveled(obj)
+            obj.calculatePositionFromDistanceTraveled();  
+            obj.translateShape();
+        end
+        function calculateVertices(obj)
+            obj.lastShape.Vertices = obj.updateVerticesFromShape();
+            if (obj.move)  % 1 = turn
+                obj.rotateShape(); 
+            else  % 0 = run
+                obj.translateShapeByDistanceTraveled(); 
+            end
+            obj.vertices = obj.updateVerticesFromShape();
         end
         function vertices=updateVerticesFromShape(obj)
             temp = obj.shape.Vertices; 

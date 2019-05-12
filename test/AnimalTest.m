@@ -29,6 +29,17 @@ classdef AnimalTest < AbstractTest
                 testCase.assertEqual(ME.message, 'animal must be placed before it can move (turn or run):  place(...)'); 
             end
         end
+        function testAnimalCantRunIfNotPlaced(testCase)
+            testCase.animal = Animal(); 
+            testCase.animal.build(); 
+            try 
+                testCase.animal.run(1); 
+                testCase.assertFail('should throw'); 
+            catch  ME
+                testCase.assertEqual(ME.identifier, 'Animal:NotPlaced'); 
+                testCase.assertEqual(ME.message, 'animal must be placed before it can move (turn or run):  place(...)'); 
+            end
+        end
         % turns accumulate 
         function testAnimalVerticesReflectCumulativeTurns(testCase)
             import matlab.unittest.constraints.IsEqualTo
@@ -172,6 +183,71 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(3*pi/30, 'Within', RelativeTolerance(.00000001)));         
         end
+        function testRun(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.minimumRunVelocity = 0.1; 
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+%            testCase.animal.orientAnimal(0);
+            relativeSpeed = 1;
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+        end
+        function testRunAtAngle(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.minimumRunVelocity = 0.1; 
+            testCase.animal.place(testCase.environment, 1, 1, pi/4);
+%            testCase.animal.orientAnimal(0);
+            relativeSpeed = 1;
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1.07071, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1.07071, 'Within', RelativeTolerance(.00001)));         
+        end
+        function testTurnAndRun(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.minimumRunVelocity = 0.1; 
+            testCase.animal.place(testCase.environment, 1, 1, pi/2);
+%            testCase.animal.orientAnimal(0);
+            relativeSpeed = 1;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+            clockwiseNess = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseNess, 15); 
+            testCase.assertThat(testCase.animal.currentDirection, ...
+               IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
+            relativeSpeed = 2;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.2);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1.2, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+        end
+        
         function testControllerIsSteppedAtEachTurn(testCase)
             buildAnimalInEnvironment(testCase);
             testCase.assertEqual(testCase.animal.controller.getTime(), 0); 
