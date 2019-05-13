@@ -156,7 +156,8 @@ classdef Animal < System
             step@System(obj); 
 %             obj.hippocampalFormation.step();
             obj.hippocampalFormation.stepHds();
-            disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection)]); 
+            disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection),' x: ',num2str(obj.x),' y: ',num2str(obj.y)]); 
+            disp(obj.vertices); 
         end
         function checkPlaced(obj)
            if (~obj.placed)  
@@ -258,7 +259,7 @@ classdef Animal < System
             obj.lastDegrees = degrees; 
         end
         function translateShape(obj)
-            obj.shape = translate(obj.shape, [obj.x, obj.y,0]);   
+            obj.shape = translate(obj.shape, [obj.x - obj.lastX, obj.y - obj.lastY, 0]);   
             obj.lastX = obj.x; 
             obj.lastY = obj.y; 
 %             obj.shape = translate(obj.shape, [obj.x-obj.lastX, obj.y-obj.lastY,0]);            
