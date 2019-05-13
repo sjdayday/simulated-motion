@@ -25,7 +25,7 @@ classdef S4 < handle
 %             obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
             % obj.ec.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.turn(-1,1);');
             obj.ec.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity;'); 
-            obj.ec.addAnimalEvent(12, 'obj.motorCortex.moveDistance = 10; obj.motorCortex.clockwiseTurn();');             % obj.ec.addAnimalEvent(12, 'obj.turn(-1,1);'); 
+            obj.ec.addAnimalEvent(12, 'obj.motorCortex.turnDistance = 10; obj.motorCortex.clockwiseTurn();');             % obj.ec.addAnimalEvent(12, 'obj.turn(-1,1);'); 
 %             obj.ec.addAnimalEvent(12, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.motorCortex.moveDistance = 10; obj.motorCortex.clockwiseTurn();'); 
             % obj.ec.addAnimalEvent(13, 'obj.turn(-1,1);'); 
             % obj.ec.addAnimalEvent(14, 'obj.turn(-1,1);'); 

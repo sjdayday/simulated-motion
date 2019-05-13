@@ -16,7 +16,7 @@ cr.addAnimalEvent(10, 'obj.orientAnimal(pi/4); ');
 % cr.addControllerEvent(10, 'disp(''animal physically moved to orientation pi/4, and randomly initializing internal head direction''); pause(10); ')
 cr.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
 % cr.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.turn(-1,1);');
-cr.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.motorCortex.moveDistance = 10; obj.motorCortex.clockwiseTurn();'); 
+cr.addAnimalEvent(11, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity; obj.motorCortex.turnDistance = 10; obj.motorCortex.clockwiseTurn();'); 
 % cr.addAnimalEvent(12, 'obj.turn(-1,1);'); 
 % cr.addAnimalEvent(13, 'obj.turn(-1,1);'); 
 % cr.addAnimalEvent(14, 'obj.turn(-1,1);'); 

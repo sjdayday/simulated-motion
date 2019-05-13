@@ -10,9 +10,11 @@ classdef MotorCortex < System
         reward
         nOutput
         featureOutput
-        moveDistance
+        turnDistance
+        runDistance
+        runSpeed
         currentPlan
-        turnPrefix
+        movePrefix
         turnSpeed
         clockwiseNess
         clockwise  % read-only 
@@ -28,9 +30,11 @@ classdef MotorCortex < System
             obj.nFeatures = 3; 
             obj.rewardUnits = 5; 
             obj.build();
-            obj.moveDistance = 0; 
+            obj.turnDistance = 0; 
+            obj.runDistance = 0; 
+            obj.runSpeed = 1; 
             obj.animal = animal; 
-            obj.turnPrefix = 'Move.'; % Turn. 
+            obj.movePrefix = 'Move.'; % Turn.
             obj.clockwise = -1;
             obj.counterClockwise = 1; 
             obj.turnSpeed = 1;
@@ -53,9 +57,14 @@ classdef MotorCortex < System
             obj.currentPlan = obj.turn(); 
         end
         function aTurn = turn(obj)
-            aTurn = Turn(obj.turnPrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.moveDistance); 
+            aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
             obj.markedPlaceReport = aTurn.placeReport; 
         end
+        function aRun = run(obj)
+            aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance); 
+            obj.markedPlaceReport = aRun.placeReport; 
+        end
+        
         %% Single time step 
         function  step(obj)
             step@System(obj); 
