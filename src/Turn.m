@@ -34,11 +34,12 @@ classdef Turn <  Behavior
 %             obj.run();
             while (~obj.isDone)
                 pause(1); 
-            end
-            
-           
+            end  
         end
-        
+        function done(obj, ~, ~)
+            done@Behavior(obj, 1, 1); 
+            obj.animal.turnDone(); 
+        end
 %         Turn('Move.Turn.', Animal(), -1, 1, 3);
         function turned(obj, ~, ~) 
 %             disp([datestr(now),': about to pause']);

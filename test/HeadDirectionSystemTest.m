@@ -48,10 +48,19 @@ classdef HeadDirectionSystemTest < AbstractTest
             headDirectionSystem.updateTurnVelocity(1); 
             testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, minimumVelocity); 
+            headDirectionSystem.updateTurnVelocity(0); 
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);
+
             headDirectionSystem.updateTurnVelocity(-2); 
             
             testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 2*minimumVelocity); 
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);
+
+            headDirectionSystem.updateTurnVelocity(0); 
+            testCase.assertEqual(headDirectionSystem.clockwiseVelocity, 0); 
+            testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);
+            
         end
         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
             import matlab.unittest.constraints.IsEqualTo

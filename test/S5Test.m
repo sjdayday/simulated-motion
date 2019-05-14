@@ -15,8 +15,8 @@ classdef S5Test < AbstractTest
             testCase.assertThat(v(3,:), ...            
                  IsEqualTo([0.4840 0.7598], 'Within', RelativeTolerance(.0001)));    
 %             testCase.assertEqual(script.ec.getTime(), 22); 
-%             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-%                 22); 
+             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                 28); 
              % HDS is not tracking 
         end
         

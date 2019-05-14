@@ -181,6 +181,9 @@ classdef Animal < System
                         'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
                 end
         end
+        function turnDone(obj)
+            obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(0); 
+        end
         function run(obj, relativeSpeed)
             obj.checkPlaced(); 
             obj.move = 0; 

@@ -183,6 +183,27 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(3*pi/30, 'Within', RelativeTolerance(.00000001)));         
         end
+        function testHdsVelocityZeroBeforeAndAfterTurn(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+            testCase.animal.orientAnimal(0);
+%             testCase.assertThat(testCase.animal.headDirectionSystem.counterClockwiseVelocity, ...
+%                IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
+%             testCase.assertThat(testCase.animal.headDirectionSystem.clockwiseVelocity, ...
+%                IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertEqual(testCase.animal.headDirectionSystem.counterClockwiseVelocity, 0);                                     
+            testCase.assertEqual(testCase.animal.headDirectionSystem.clockwiseVelocity, 0);                                     
+            relativeSpeed = 1;
+            clockwiseNess = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turnDone(); % called by Turn.done 
+            testCase.assertEqual(testCase.animal.headDirectionSystem.counterClockwiseVelocity, 0);                                     
+            testCase.assertEqual(testCase.animal.headDirectionSystem.clockwiseVelocity, 0);                                     
+
+        end
+
         function testRun(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
