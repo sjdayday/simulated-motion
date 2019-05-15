@@ -10,7 +10,7 @@
 % International journal of neural systems, 17(04), 231-240.
 % 
 % Feature detection logic from HeadDirectionSystem.m
-classdef GridChartNetwork < handle 
+classdef GridChartNetwork < System 
 
     properties
         nX 
@@ -60,7 +60,7 @@ classdef GridChartNetwork < handle
         weights
         position
         velocities
-        time
+%         time
         firstPlot
         h
         gh
@@ -97,7 +97,7 @@ classdef GridChartNetwork < handle
             obj.velocity = [0; 0]; % v--velocity, m/ms  
             obj.firstPlot = 1; % first call to plot opens the figure
 %             obj.gh = [];  % override 
-            obj.time = 0; % time step 
+%             obj.time = 0; % time step 
             obj.maxMotionWeight = 1; 
             obj.sigmaMotionWeight = 2; 
             obj.weightInputVector = obj.maxMotionWeight* ...
@@ -120,6 +120,9 @@ classdef GridChartNetwork < handle
         function initializeActivation(obj)
             % A--activation of each cell
             obj.activation = rand(1,obj.nCells)/sqrt(obj.nCells);             
+        end
+        function build(obj)
+            buildNetwork(obj);
         end
         function buildNetwork(obj)
             initializeActivation(obj);
@@ -146,9 +149,14 @@ classdef GridChartNetwork < handle
             end
             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nCells); 
-            
-
+            obj.setChildTimekeeper(obj); 
         end
+        % not necessary here, but consistent with pattern for higher-level
+        % components, e.g. HippocampalFormation
+        function setChildTimekeeper(obj, timekeeper) 
+           obj.setTimekeeper(timekeeper);  
+        end
+        
         function buildWeightMatrix(obj) 
             %% Comments from Zilli: 
             %% Make x a 2-by-ncells vector of the 2D cell positions on the neural sheet
@@ -245,7 +253,7 @@ classdef GridChartNetwork < handle
                 obj.squaredPairwiseDists = min(obj.squaredPairwiseDists);
                 obj.squaredPairwiseDists = reshape(obj.squaredPairwiseDists,obj.nCells,obj.nCells)';
             else
-                if obj.time == 1
+                if obj.getTime() == 1
                     clear obj.squaredPairwiseDists;
                     obj.squaredPairwiseDists = ... 
                       (obj.iX-obj.jX +0 ).^2 + ... 
@@ -282,8 +290,8 @@ classdef GridChartNetwork < handle
             else
                 horizontalWeights = obj.negativeWeights;
             end
-                horizontalInput = obj.activation * ...
-                    abs(horizontalVelocity) * horizontalWeights;
+            horizontalInput = obj.activation * ...
+                abs(horizontalVelocity) * horizontalWeights;
         end
         function verticalInput = calculateVerticalInput(obj)
             activationMatrix = reshape(obj.activation,obj.nY,obj.nX);
@@ -305,7 +313,7 @@ classdef GridChartNetwork < handle
             if obj.externalVelocity
                 obj.velocity = obj.currentVelocity;  
             else
-                obj.velocity = obj.velocities(:,obj.time); % m/s            
+                obj.velocity = obj.velocities(:,obj.getTime()); % m/s            
             end
             % to change the grid orientation, this model rotates the velocity input
             obj.velocity = obj.directionInput*obj.velocity;
@@ -313,7 +321,7 @@ classdef GridChartNetwork < handle
         function updateFeatureWeights(obj)
             % from HeadDirectionSystem.m 
             % assumes that obj.featuresDetected is updated externally, e.g., 
-            % by HippocampalFormaton
+            % by HippocampalFormation
 
             newActivation = 1./(1+exp(-obj.activation.*obj.featureGain)) ...
                 - obj.featureOffset; 
@@ -337,7 +345,8 @@ classdef GridChartNetwork < handle
         end
         
         function  step(obj)
-            obj.time = obj.time+1;
+            step@System(obj); 
+%             obj.time = obj.time+1;
             buildVelocity(obj);
             updateFeatureWeights(obj);            
             %% Generate new weight matrix for current velocity
@@ -396,16 +405,16 @@ classdef GridChartNetwork < handle
                 % allocate space for next 1000 spikes:
                 obj.spikeCoords(obj.spikeind+1000,:) = [0 0];
                 obj.spikeCoords(obj.spikeind+1,:) = ...
-                    [obj.position(1,obj.time) obj.position(2,obj.time)];
+                    [obj.position(1,obj.getTime()) obj.position(2,obj.getTime())];
               else
                 obj.spikeCoords(obj.spikeind+1,:) = ... 
-                    [obj.position(1,obj.time) obj.position(2,obj.time)];
+                    [obj.position(1,obj.getTime()) obj.position(2,obj.getTime())];
               end
               obj.spikeind = obj.spikeind+1;
             end
-            xindex = round((obj.position(1,obj.time)-obj.minX) / ...
+            xindex = round((obj.position(1,obj.getTime())-obj.minX) / ...
                 (obj.maxX-obj.minX)*obj.nSpatialBins)+1;
-            yindex = round((obj.position(2,obj.time)-obj.minY) / ...
+            yindex = round((obj.position(2,obj.getTime())-obj.minY) / ...
                 (obj.maxY-obj.minY)*obj.nSpatialBins)+1;
             obj.occupancy(yindex,xindex) = obj.occupancy(yindex,xindex) + obj.dt;
             obj.spikes(yindex,xindex) = obj.spikes(yindex,xindex) + obj.activation(obj.watchCell);
@@ -422,12 +431,12 @@ classdef GridChartNetwork < handle
             imagesc(obj.spikes./obj.occupancy);
             axis square
             set(gca,'ydir','normal')
-            t = obj.time*obj.dt; 
+            t = obj.getTime()*obj.dt; 
             title({sprintf('t = %.1f ms',t),'Rate map'});
         end
         function plotTrajectory(obj)
             figure(obj.h);
-            plot(obj.position(1,1:obj.time),obj.position(2,1:obj.time));
+            plot(obj.position(1,1:obj.getTime()),obj.position(2,1:obj.getTime()));
             hold on;
             if ~isempty(obj.spikeCoords)
                 plot(obj.spikeCoords(2:obj.spikeind,1), ... 
