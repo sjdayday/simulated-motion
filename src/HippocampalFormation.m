@@ -1,5 +1,5 @@
-% PlaceSystem class:  extends AutoassociativeNetwork
-% models the functions of the hippocampus:  Dentate Gyrus and CA3
+% HippocampalFormation class:  extends System
+% models the functions of the hippocampus and entorhinal cortex
 classdef HippocampalFormation < System 
 
     properties
@@ -70,7 +70,7 @@ classdef HippocampalFormation < System
             buildGrids(obj); 
 %             buildLec(obj); 
             buildPlaceSystem(obj);
-            % TODO: setTimekeeper for grids and placesystem 
+            % TODO: setTimekeeper for placesystem 
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -184,20 +184,21 @@ classdef HippocampalFormation < System
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
-        function updateAngularVelocity(obj, velocity)
-            obj.headDirectionSystem.updateAngularVelocity(velocity);
-            obj.angularVelocity = velocity; 
+        function updateTurnVelocity(obj, velocity)
+            obj.angularVelocity = obj.headDirectionSystem.updateTurnVelocity(velocity);
+            % HDS calls updateAngularVelocity
+            % angularVelocity=radians per time step; negative velocity = clockwise 
         end
         function updateLinearVelocity(obj, velocity)
-            obj.linearVelocity = velocity; 
+            obj.linearVelocity = velocity; % meters per time step (ms?)
         end
-        function updateAngularAndLinearVelocity(obj, angularVelocity, linearVelocity)
-            if (angularVelocity == 0) || (linearVelocity == 0)
-                updateAngularVelocity(obj, angularVelocity); 
+        function updateTurnAndLinearVelocity(obj, turnVelocity, linearVelocity)
+            if (turnVelocity == 0) || (linearVelocity == 0)
+                updateTurnVelocity(obj, turnVelocity); 
                 updateLinearVelocity(obj, linearVelocity);
             else
                 error('HippocampalFormation:VelocitiesNonZero', ...
-                    'updateAngularAndLinearVelocity() requires one argument to be zero.') ;
+                    'updateTurnAndLinearVelocity() requires one argument to be zero; cannot both be turning and running simultaneously.') ;
             end
         end
         
@@ -208,11 +209,6 @@ classdef HippocampalFormation < System
             y = sin(radians); 
             cartesianVelocity = [x*obj.linearVelocity, y*obj.linearVelocity]; 
         end
-%         %% Single time step 
-% %         step(obj)
-%         plot(obj)
-% %         addEvent(obj, time, event)
-% 
         function plot(obj)
             
         end

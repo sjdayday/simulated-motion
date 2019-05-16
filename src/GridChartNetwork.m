@@ -313,6 +313,7 @@ classdef GridChartNetwork < System
             if obj.externalVelocity
                 obj.velocity = obj.currentVelocity;  
             else
+                % loaded for testing
                 obj.velocity = obj.velocities(:,obj.getTime()); % m/s            
             end
             % to change the grid orientation, this model rotates the velocity input

@@ -85,13 +85,14 @@ classdef HippocampalFormationTest < AbstractTest
                   0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ]); 
         end
-        function testHeadDirectionUpdatedByAngularVelocityAtEachStep(testCase)
+        function testHeadDirectionUpdatedByTurnVelocityAtEachStep(testCase)
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false; 
             system.build();  
 %             system.headDirectionSystem.pullVelocity = false;  
-            system.updateAngularVelocity(pi/10);
+%             system.updateAngularVelocity(pi/10);
+            system.updateTurnVelocity(2);            
             system.step(); 
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 55); 
             system.step(); 
@@ -103,6 +104,21 @@ classdef HippocampalFormationTest < AbstractTest
             end
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 8); 
         end
+        function testUpdateTurnVelocityTranslatedToAngularVelocity(testCase)
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.pullVelocity = false; 
+            system.build();  
+            system.updateTurnVelocity(1);
+%             testCase.assertEqual(signedAngularVelocity, pi/20); 
+            testCase.assertEqual(system.angularVelocity, pi/20);             
+            system.updateTurnVelocity(-2);
+%             testCase.assertEqual(signedAngularVelocity, -2*pi/20); 
+            testCase.assertEqual(system.angularVelocity, -2*pi/20);             
+            system.updateTurnVelocity(0);
+%             testCase.assertEqual(signedAngularVelocity, 0); 
+            testCase.assertEqual(system.angularVelocity, 0);             
+        end
         function testLinearVelocityAndOrientationToHorizontalVerticalVelocity(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -111,7 +127,9 @@ classdef HippocampalFormationTest < AbstractTest
             system.pullVelocity = false;             
             system.build();  
 %             system.headDirectionSystem.pullVelocity = false;  
-            system.updateAngularVelocity(0); 
+%       angular/turn velocity ignored
+%             system.updateAngularVelocity(pi/10); 
+%             system.updateTurnVelocity(-2);             
             system.step(); 
             system.step(); 
 %             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 8); 
@@ -128,13 +146,13 @@ classdef HippocampalFormationTest < AbstractTest
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false; 
             system.build();  
-            system.updateAngularAndLinearVelocity(-pi/10, 0);             
-            system.updateAngularAndLinearVelocity(0, 0.0005);             
+            system.updateTurnAndLinearVelocity(-2, 0);             
+            system.updateTurnAndLinearVelocity(0, 0.0005);             
             try 
-                system.updateAngularAndLinearVelocity(-pi/10, 0.0005); 
+                system.updateTurnAndLinearVelocity(-2, 0.0005); 
             catch  ME
                 testCase.assertEqual(ME.identifier, 'HippocampalFormation:VelocitiesNonZero'); 
-                testCase.assertEqual(ME.message, 'updateAngularAndLinearVelocity() requires one argument to be zero.'); 
+                testCase.assertEqual(ME.message, 'updateTurnAndLinearVelocity() requires one argument to be zero; cannot both be turning and running simultaneously.'); 
             end
         end
         function testCartesianVelocitiesUpdateGrids(testCase)
@@ -148,7 +166,8 @@ classdef HippocampalFormationTest < AbstractTest
 %             system.headDirectionSystem.pullVelocity = false;  
             system.pullVelocity = false; 
             system.build();  
-            system.updateAngularVelocity(0); 
+%    angular / turn velocity unnecessary             
+%             system.updateAngularVelocity(0); 
             system.step(); 
             system.step(); 
             system.headDirectionSystem.uActivation = zeros(1,60);
@@ -158,7 +177,7 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 15); 
             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 33); 
             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 73); 
-            system.updateAngularAndLinearVelocity(0, 0.0001); % down, right                   
+            system.updateTurnAndLinearVelocity(0, 0.0001); % down, right                   
             system.step();                                     
             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 23); 
             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 41); 
@@ -210,7 +229,7 @@ classdef HippocampalFormationTest < AbstractTest
             placeOutput = system.placeOutput; 
             mecLecOutput = [mecOutput, zeros(1,system.nLecOutput)]; 
             testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
-                placeOutput, 'use MEC output to retrieved saved place output'); 
+                placeOutput, 'use MEC output to retrieve saved place output'); 
 %             disp(system.placeSystem.outputIndices()); 
         end
         function testHeadDirectionSystemTreatsPlaceOutputAsDetectedFeatures(testCase)

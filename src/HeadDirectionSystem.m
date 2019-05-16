@@ -67,7 +67,7 @@ classdef HeadDirectionSystem < System
             initializeActivation(obj, true); 
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8
-            obj.minimumVelocity = pi/20; 
+            obj.minimumVelocity = pi/20; % radians per time step 
             obj.animalVelocityCalibration = 1.4; %might not be needed if updateTurnVelocity reconciled w updateVelocity
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
@@ -185,8 +185,9 @@ classdef HeadDirectionSystem < System
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
-        function updateTurnVelocity(obj, velocity)
-           obj.updateAngularVelocity(obj.minimumVelocity * velocity);
+        function signedAngularVelocity = updateTurnVelocity(obj, velocity)
+            signedAngularVelocity = obj.minimumVelocity * velocity; 
+            obj.updateAngularVelocity(signedAngularVelocity);
         end
         function updateAngularVelocity(obj, velocity)
            obj.pullVelocity = false; 

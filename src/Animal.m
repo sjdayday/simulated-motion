@@ -171,7 +171,8 @@ classdef Animal < System
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
                     calculateVertices(obj);
-                    obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
+                    
+                    obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseNess * relativeSpeed), 0); 
     %                      obj.hippocampalFormation.headDirectionSystem.step(); 
                     obj.controller.step(); 
     %                      obj.step(); 
@@ -189,6 +190,8 @@ classdef Animal < System
             obj.move = 0; 
             obj.distanceTraveled = relativeSpeed * obj.minimumRunVelocity; 
             obj.calculateVertices(); 
+%             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, 0); 
+
 %                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
 %                     calculateVertices(obj);
 %                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
@@ -240,7 +243,6 @@ classdef Animal < System
             obj.axisOfRotation = [obj.x obj.y 0; obj.x obj.y 1];
         end
         function calculatePositionFromDistanceTraveled(obj)
-            % there must be a simple trig function for this...
             obj.updateUnitCirclePosition();
 %             unitX = cos(obj.currentDirection);
 %             unitY = sin(obj.currentDirection); 
