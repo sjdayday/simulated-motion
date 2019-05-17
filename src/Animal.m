@@ -54,6 +54,8 @@ classdef Animal < System
         axesSet
         skipFirstPlot
         move
+        cartesianVelocity
+        velocityUnitsConversion
     end
     methods
         function obj = Animal()
@@ -83,6 +85,8 @@ classdef Animal < System
             obj.skipFirstPlot = 1; 
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
             obj.move = 1; % 1=turn, 0=run
+            obj.cartesianVelocity = [0; 0];
+            obj.velocityUnitsConversion = 1000; % GridChartNetworks expects m/ms
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -252,6 +256,11 @@ classdef Animal < System
             obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
             obj.x = obj.x + obj.deltaX;
             obj.y = obj.y + obj.deltaY;
+            obj.calculateCartesianVelocity(); 
+        end
+        function calculateCartesianVelocity(obj)
+            obj.cartesianVelocity = [obj.deltaX/obj.velocityUnitsConversion; ...
+                obj.deltaY/obj.velocityUnitsConversion];
         end
         function rotateShape(obj)
             radians = obj.currentDirection; 
