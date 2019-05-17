@@ -117,7 +117,7 @@ classdef Behavior < handle
            obj.isDone = true;
            disp('isdone: ');
            disp(obj.isDone);
-
+%            obj.animal.behaviorDone(); 
         end
         function markPlace(obj, place)
            obj.markPlaceMultipleTokens(place, 1);

@@ -31,6 +31,13 @@ classdef ExperimentController < System
         listener
         systemMap
         lastSystem
+%        possible grid parms 
+%         nGridOrientations 
+%         gridDirectionBiasIncrement             
+%         nGridGains
+%         baseGain 
+%         gridSize            
+
     end
     methods
         function obj = ExperimentController()
@@ -473,10 +480,17 @@ classdef ExperimentController < System
             subplot(333);  
             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
-            subplot(337); 
+            subplot(334);
+            obj.animal.hippocampalFormation.grids(1).plotActivation();             
+            subplot(335);
+            obj.animal.hippocampalFormation.grids(2).plotActivation();             
+            subplot(337);
+            obj.animal.hippocampalFormation.grids(3).plotActivation();             
+            subplot(338); 
+            obj.animal.hippocampalFormation.grids(4).plotActivation();             
 %             obj.animal.plotAnimal(); 
             hold on; 
-             subplot(338); 
+%              subplot(338); 
 %             obj.animal.plotAnimal(); 
              subplot(339); 
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 

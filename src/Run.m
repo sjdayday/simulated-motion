@@ -30,6 +30,10 @@ classdef Run <  Behavior
             
            
         end
+        function done(obj, ~, ~)
+            done@Behavior(obj, 1, 1); 
+            obj.animal.runDone(); 
+        end
         
 %         Turn('Move.Turn.', Animal(), -1, 1, 3);
         function stepped(obj, ~, ~) 

@@ -9,6 +9,10 @@ classdef AnimalTest < AbstractTest
             testCase.animal.place(testCase.environment, 0.5, 0.25, 0);  
             testCase.assertEqual(testCase.animal.closestWallDistance(), 0.25);                         
         end
+        function testBuildsDefaultGridChartNetworks(testCase)
+            buildAnimalInEnvironment(testCase);
+            testCase.assertEqual(testCase.animal.hippocampalFormation.nGrids, 4);                         
+        end
         function testAnimalCalculatesVerticesAtOriginDirectionZeroAtBuild(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -242,10 +246,9 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.y, ...
                IsEqualTo(1.07071, 'Within', RelativeTolerance(.00001)));         
         end
-        function testCalculateCartesianVelocity(testCase)
+        function testDistanceTraveledConvertedToLinearVelocity(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
-            import matlab.unittest.constraints.AbsoluteTolerance
             buildAnimalInEnvironment(testCase);
             testCase.animal.minimumRunVelocity = 0.1; 
             testCase.animal.place(testCase.environment, 1, 1, pi/2);
@@ -253,17 +256,14 @@ classdef AnimalTest < AbstractTest
             testCase.animal.run(relativeSpeed); 
             testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);
 %             testCase.assertEqual(testCase.animal.cartesianVelocity, [0; 0.0001]);
-            disp(testCase.animal.cartesianVelocity); 
-%             AbsoluteTolerance needed for values near 0
-            testCase.assertThat(testCase.animal.cartesianVelocity, ...
-                IsEqualTo([0; 0.0001], 'Within', AbsoluteTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.linearVelocity, ...
+                IsEqualTo(0.0001, 'Within', RelativeTolerance(.00001)));         
             testCase.animal.place(testCase.environment, 1, 1, pi);
             relativeSpeed = 2;
             testCase.animal.run(relativeSpeed); 
             testCase.assertEqual(testCase.animal.distanceTraveled, 0.2);
-            disp(testCase.animal.cartesianVelocity); 
-            testCase.assertThat(testCase.animal.cartesianVelocity, ...
-               IsEqualTo([-0.0002; 0], 'Within', AbsoluteTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.linearVelocity, ...
+               IsEqualTo(0.0002, 'Within', RelativeTolerance(.00001)));         
         end        
         function testTurnAndRun(testCase)
             import matlab.unittest.constraints.IsEqualTo

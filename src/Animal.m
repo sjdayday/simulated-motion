@@ -30,6 +30,7 @@ classdef Animal < System
         unitCirclePosition
         minimumVelocity
         minimumRunVelocity
+        linearVelocity
         distanceTraveled
         markers
         features
@@ -54,8 +55,13 @@ classdef Animal < System
         axesSet
         skipFirstPlot
         move
-        cartesianVelocity
         velocityUnitsConversion
+        nGridOrientations
+        gridDirectionBiasIncrement
+        nGridGains
+        baseGain
+        gridSize
+        motionInputWeights
     end
     methods
         function obj = Animal()
@@ -85,8 +91,14 @@ classdef Animal < System
             obj.skipFirstPlot = 1; 
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
             obj.move = 1; % 1=turn, 0=run
-            obj.cartesianVelocity = [0; 0];
+            obj.linearVelocity = 0;
             obj.velocityUnitsConversion = 1000; % GridChartNetworks expects m/ms
+            obj.nGridOrientations = 2; 
+            obj.gridDirectionBiasIncrement = pi/4;             
+            obj.nGridGains = 2; 
+            obj.baseGain = 1500; 
+            obj.gridSize = [10,9]; 
+            obj.motionInputWeights = false; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -97,7 +109,12 @@ classdef Animal < System
             obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.h = obj.h; 
-            
+            obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
+            obj.hippocampalFormation.gridDirectionBiasIncrement = obj.gridDirectionBiasIncrement;             
+            obj.hippocampalFormation.nGridGains = obj.nGridGains; 
+            obj.hippocampalFormation.baseGain = obj.baseGain; 
+            obj.hippocampalFormation.gridSize = obj.gridSize;            
+            obj.hippocampalFormation.motionInputWeights = obj.motionInputWeights;            
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 
@@ -158,8 +175,9 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
-%             obj.hippocampalFormation.step();
+%           obj.hippocampalFormation.step();
             obj.hippocampalFormation.stepHds();
+            obj.hippocampalFormation.stepMec();            
             disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection),' x: ',num2str(obj.x),' y: ',num2str(obj.y)]); 
             disp(obj.vertices); 
         end
@@ -186,15 +204,22 @@ classdef Animal < System
                         'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
                 end
         end
+
         function turnDone(obj)
             obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(0); 
         end
+        function runDone(obj)
+            obj.hippocampalFormation.updateLinearVelocity(0); 
+        end
+%         function behaviorDone(obj)
+%             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, 0); 
+%         end
         function run(obj, relativeSpeed)
             obj.checkPlaced(); 
             obj.move = 0; 
             obj.distanceTraveled = relativeSpeed * obj.minimumRunVelocity; 
             obj.calculateVertices(); 
-%             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, 0); 
+            obj.hippocampalFormation.updateTurnAndLinearVelocity(0, obj.linearVelocity); 
 
 %                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
 %                     calculateVertices(obj);
@@ -256,12 +281,13 @@ classdef Animal < System
             obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
             obj.x = obj.x + obj.deltaX;
             obj.y = obj.y + obj.deltaY;
-            obj.calculateCartesianVelocity(); 
+            obj.linearVelocity = obj.distanceTraveled / obj.velocityUnitsConversion; 
+%             obj.calculateLinearVelocity(); 
         end
-        function calculateCartesianVelocity(obj)
-            obj.cartesianVelocity = [obj.deltaX/obj.velocityUnitsConversion; ...
-                obj.deltaY/obj.velocityUnitsConversion];
-        end
+%         function calculateCartesian]Velocity(obj)
+%             obj.cartesianVelocity = [obj.deltaX/obj.velocityUnitsConversion; ...
+%                 obj.deltaY/obj.velocityUnitsConversion];
+%         end
         function rotateShape(obj)
             radians = obj.currentDirection; 
             obj.calculateAxisOfRotation();

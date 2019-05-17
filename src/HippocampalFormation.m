@@ -18,6 +18,7 @@ classdef HippocampalFormation < System
         gridDirectionBiasIncrement
         gridLength
         gridExternalVelocity
+        motionInputWeights
         nFeatures
         distanceUnits
         rewardInput
@@ -47,6 +48,7 @@ classdef HippocampalFormation < System
             obj.gridDirectionBiasIncrement = pi/6;
             obj.nGridGains = 1; 
             obj.gridSize = [10,9];
+            obj.motionInputWeights = true; 
             obj.nFeatures = 1; 
             obj.baseGain = 1000; 
             obj.distanceUnits = 5; 
@@ -135,7 +137,11 @@ classdef HippocampalFormation < System
                     obj.grids(1,kk).inputDirectionBias = bias; 
                     obj.grids(1,kk).inputGain = gain;
                     obj.grids(1,kk).externalVelocity = obj.gridExternalVelocity; 
+                    obj.grids(1,kk).motionInputWeights = obj.motionInputWeights; 
                     bias = bias + obj.gridDirectionBiasIncrement;
+                    if obj.visual
+                         obj.grids(1,kk).h = obj.h; 
+                    end
                 end
                 gain = gain * 1.42; 
                 index = index + 1; 

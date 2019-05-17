@@ -62,6 +62,7 @@ classdef GridChartNetwork < System
         velocities
 %         time
         firstPlot
+        firstStep
         h
         gh
         Ahist
@@ -112,6 +113,7 @@ classdef GridChartNetwork < System
             obj.featureGain = 3;
             obj.featureOffset = 0.15; 
             obj.readMode = false; 
+            obj.firstStep = true;
             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
 %             obj.AhistAll = zeros(1000, obj.nCells); 
@@ -253,7 +255,7 @@ classdef GridChartNetwork < System
                 obj.squaredPairwiseDists = min(obj.squaredPairwiseDists);
                 obj.squaredPairwiseDists = reshape(obj.squaredPairwiseDists,obj.nCells,obj.nCells)';
             else
-                if obj.getTime() == 1
+                if obj.firstStep
                     clear obj.squaredPairwiseDists;
                     obj.squaredPairwiseDists = ... 
                       (obj.iX-obj.jX +0 ).^2 + ... 
@@ -394,6 +396,9 @@ classdef GridChartNetwork < System
               % Zero out negative activities
             obj.activation(obj.activation<0) = 0;
             saveStatistics(obj); 
+            if obj.firstStep
+               obj.firstStep = false;  
+            end
         end
         function maxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.activation==max(obj.activation));

@@ -41,18 +41,18 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridSize = [10,9];
             system.build(); 
             testCase.assertEqual(length(system.grids), 8); 
-            testCase.assertEqual(system.grids(1,1).inputDirectionBias, 0); 
-            testCase.assertEqual(system.grids(1,2).inputDirectionBias, pi/4); 
-            testCase.assertEqual(system.grids(1,3).inputDirectionBias, 2*pi/4); 
-            testCase.assertEqual(system.grids(1,4).inputDirectionBias, 3*pi/4); 
-            testCase.assertEqual(system.grids(1,5).inputDirectionBias, 0); 
-            testCase.assertEqual(system.grids(1,6).inputDirectionBias, pi/4); 
-            testCase.assertEqual(system.grids(1,7).inputDirectionBias, 2*pi/4); 
-            testCase.assertEqual(system.grids(1,8).inputDirectionBias, 3*pi/4); 
-            testCase.assertEqual(system.grids(1,1).inputGain, 1500);             
-            testCase.assertEqual(system.grids(1,5).inputGain, ... 
+            testCase.assertEqual(system.grids(1).inputDirectionBias, 0); 
+            testCase.assertEqual(system.grids(2).inputDirectionBias, pi/4); 
+            testCase.assertEqual(system.grids(3).inputDirectionBias, 2*pi/4); 
+            testCase.assertEqual(system.grids(4).inputDirectionBias, 3*pi/4); 
+            testCase.assertEqual(system.grids(5).inputDirectionBias, 0); 
+            testCase.assertEqual(system.grids(6).inputDirectionBias, pi/4); 
+            testCase.assertEqual(system.grids(7).inputDirectionBias, 2*pi/4); 
+            testCase.assertEqual(system.grids(8).inputDirectionBias, 3*pi/4); 
+            testCase.assertEqual(system.grids(1).inputGain, 1500);             
+            testCase.assertEqual(system.grids(5).inputGain, ... 
                 system.grids(1,1).inputGain*1.42);             
-            testCase.assertEqual(system.grids(1,8).inputGain, ... 
+            testCase.assertEqual(system.grids(8).inputGain, ... 
                 system.grids(1,1).inputGain*1.42);             
         end
         function testHippocampalFormationGridsUpdateMecOutputEachStep(testCase)
@@ -150,6 +150,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.updateTurnAndLinearVelocity(0, 0.0005);             
             try 
                 system.updateTurnAndLinearVelocity(-2, 0.0005); 
+                testCase.assertEqual(1,0, 'should throw'); 
             catch  ME
                 testCase.assertEqual(ME.identifier, 'HippocampalFormation:VelocitiesNonZero'); 
                 testCase.assertEqual(ME.message, 'updateTurnAndLinearVelocity() requires one argument to be zero; cannot both be turning and running simultaneously.'); 
