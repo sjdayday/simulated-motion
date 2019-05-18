@@ -63,15 +63,15 @@ classdef MotorCortexTest < AbstractTest
             animal.place(env, 1, 1, 0);
             motorCortex = animal.motorCortex; 
             motorCortex.turnDistance = 10;
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 18); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 20); 
             motorCortex.counterClockwiseTurn();
 %             pause(5); 
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 59); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 43); 
 %  55 to 59 moving ccw
             motorCortex.turnDistance = 15;
             motorCortex.clockwiseTurn();
 %             pause(5); 
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 45); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 29); 
 %  59 to 45 moving cw
         end
         function testTurnAndRunUpdateHeadPositionAndArenaPosition(testCase)
@@ -88,9 +88,9 @@ classdef MotorCortexTest < AbstractTest
             animal.place(env, 1, 1, 0);
             motorCortex = animal.motorCortex; 
             motorCortex.turnDistance = 15;
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 18); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 20); 
             motorCortex.counterClockwiseTurn();
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 4);
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 47, 'starts 42, wanders down, then up');
             motorCortex.runSpeed = 1; 
             motorCortex.runDistance = 5; 
             motorCortex.run(); 
@@ -98,7 +98,7 @@ classdef MotorCortexTest < AbstractTest
                  IsEqualTo(1, 'Within', RelativeTolerance(.00001))); 
             testCase.assertThat(animal.y, ...            
                  IsEqualTo(1.5, 'Within', RelativeTolerance(.00001))); 
-            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 4); 
+            testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 47); 
         end
 % %         function testDrawRandomExecution(testCase)
 % %             motorCortex = TestingMotorExecutions; 

@@ -65,24 +65,24 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridSize = [6,5];
             system.build();  
             system.stepMec(); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 4); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 15); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 24); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 13); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 18); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 2); 
             testCase.assertEqual(system.mecOutput, ...
-                [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+                [ 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ]); 
-            for ii = 1:20;     
+            for ii = 1:20    
                 system.stepMec(); 
             end
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 19); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 25); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 23); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 7); 
             testCase.assertEqual(system.mecOutput, ...
-                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ]); 
         end
         function testHeadDirectionUpdatedByTurnVelocityAtEachStep(testCase)
@@ -247,9 +247,9 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3));                         
             system.step(); 
-            testCase.assertEqual(system.placeSystem.outputIndices(), [30 88 90]);             
+            testCase.assertEqual(system.placeSystem.outputIndices(), [4 56 131]); %30 88 90             
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
-            testCase.assertEqual(featureIndices, [30 88 90]);             
+            testCase.assertEqual(featureIndices, [4 56 131]);             
         end
         
     end
