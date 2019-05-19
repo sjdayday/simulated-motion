@@ -48,7 +48,7 @@ classdef HippocampalFormation < System
             obj.gridDirectionBiasIncrement = pi/6;
             obj.nGridGains = 1; 
             obj.gridSize = [10,9];
-            obj.motionInputWeights = true; 
+            obj.motionInputWeights = false; 
             obj.nFeatures = 1; 
             obj.baseGain = 1000; 
             obj.distanceUnits = 5; 

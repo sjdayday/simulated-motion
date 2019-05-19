@@ -23,7 +23,7 @@ classdef S4Test < AbstractTest
             pause(2);
             testCase.assertEqual(script.ec.getTime(), 22); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                24); 
+                19); 
             v = script.ec.animal.vertices; 
             testCase.assertThat(v(1,:), ...            
                  IsEqualTo([1 1.05], 'Within', RelativeTolerance(.0001))); 
