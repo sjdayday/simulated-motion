@@ -13,7 +13,7 @@ classdef S6 < handle
             obj.ec.setupDisplay(); 
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
-            obj.ec.totalSteps = 60;
+            obj.ec.totalSteps = 40;
 %             obj.ec.randomHeadDirection = false; % no effect?  
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/30;'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.minimumRunVelocity = 0.05; obj.showFeatures = 1; obj.features = [30 52];'); 

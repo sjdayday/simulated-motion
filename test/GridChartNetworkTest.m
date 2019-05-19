@@ -109,42 +109,62 @@ classdef GridChartNetworkTest < AbstractTest
             gridNet.externalVelocity = true; 
             gridNet.buildNetwork();
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             gridNet.step(); 
-            gridNet.plot(); 
+%             gridNet.plot(); 
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 25); 
             gridNet.updateVelocity(0.00005, -0.00005); % down & right
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 24, 'slow'); 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 32); 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 41); 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 49); 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 48); 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  
+%             gridNet.plot(); pause(1);  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 56); 
             gridNet.updateVelocity(-0.00005, 0); % left only 
             gridNet.step(); 
-            gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 47); 
             gridNet.step(); 
-            gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());             
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());             
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 47); 
             gridNet.step(); 
-            gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 38); 
             gridNet.step(); 
-            gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
+%             gridNet.plot(); pause(1); disp(gridNet.getMaxActivationIndex());  
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 29); 
+            
+%             gridNet.updateVelocity(0.00005, 0.000025); % NE 
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%       
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+%             gridNet.step(); 
+%             gridNet.plot(); pause(1);  disp(gridNet.getMaxActivationIndex());
+
             % motion downward to right, remembering that y-axis is low to
             % high indices:
             %  9 18 27 36 45 54 63 72 81 90

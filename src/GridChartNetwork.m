@@ -346,7 +346,25 @@ classdef GridChartNetwork < System
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
-        
+        function calculateActivationMotionInputWeights(obj, synapticInput)
+                obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
+                synapticInputHorizontal = synapticInput + ...
+                    obj.horizontalInput;
+                synapticInputHorizontalShape = ... 
+                    reshape(synapticInputHorizontal,obj.nY,obj.nX); 
+                synapticInputVerticalShape = synapticInputHorizontalShape'; 
+                synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
+                obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
+                synapticInputHorizontalVertical = synapticInputVertical + ...
+                    obj.verticalInput;
+                synapticInputVertical2 = ... 
+                    reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
+                synapticInputHorizontal2 = synapticInputVertical2'; 
+                synapticInputNormal = ... 
+                    reshape(synapticInputHorizontal2,1,obj.nCells); 
+                obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
+                  obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
+        end
         function  step(obj)
             step@System(obj); 
 %             obj.time = obj.time+1;
@@ -370,23 +388,24 @@ classdef GridChartNetwork < System
             synapticInput = motionSynapticInput + featureInput; 
             
             if obj.motionInputWeights == true
-                obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
-                synapticInputHorizontal = synapticInput + ...
-                    obj.horizontalInput;
-                synapticInputHorizontalShape = ... 
-                    reshape(synapticInputHorizontal,obj.nY,obj.nX); 
-                synapticInputVerticalShape = synapticInputHorizontalShape'; 
-                synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
-                obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
-                synapticInputHorizontalVertical = synapticInputVertical + ...
-                    obj.verticalInput;
-                synapticInputVertical2 = ... 
-                    reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
-                synapticInputHorizontal2 = synapticInputVertical2'; 
-                synapticInputNormal = ... 
-                    reshape(synapticInputHorizontal2,1,obj.nCells); 
-                obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
-                  obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
+                obj.calculateActivationMotionInputWeights(synapticInput); 
+%                 obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
+%                 synapticInputHorizontal = synapticInput + ...
+%                     obj.horizontalInput;
+%                 synapticInputHorizontalShape = ... 
+%                     reshape(synapticInputHorizontal,obj.nY,obj.nX); 
+%                 synapticInputVerticalShape = synapticInputHorizontalShape'; 
+%                 synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
+%                 obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
+%                 synapticInputHorizontalVertical = synapticInputVertical + ...
+%                     obj.verticalInput;
+%                 synapticInputVertical2 = ... 
+%                     reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
+%                 synapticInputHorizontal2 = synapticInputVertical2'; 
+%                 synapticInputNormal = ... 
+%                     reshape(synapticInputHorizontal2,1,obj.nCells); 
+%                 obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
+%                   obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
             else
                 obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.activation));

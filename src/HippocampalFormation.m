@@ -28,6 +28,7 @@ classdef HippocampalFormation < System
         mecOutput
         nMecOutput
         headDirectionSystem
+        currentHeadDirection
         featureOutput
         lecSystem
         lecOutput
@@ -63,6 +64,7 @@ classdef HippocampalFormation < System
             obj.visual = false; 
             obj.animal = Animal();
             obj.loadFixedRandom();
+            obj.currentHeadDirection = 1; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -177,6 +179,7 @@ classdef HippocampalFormation < System
         function stepMec(obj)
             obj.mecOutput = zeros(1,obj.nMecOutput); 
             index = 0; 
+            obj.updateCurrentHeadDirection();
             v =  calculateCartesianVelocity(obj);
             for ii = 1:obj.nGrids
                 obj.grids(1,ii).updateVelocity(v(1),v(2)); 
@@ -207,10 +210,11 @@ classdef HippocampalFormation < System
                     'updateTurnAndLinearVelocity() requires one argument to be zero; cannot both be turning and running simultaneously.') ;
             end
         end
-        
+        function updateCurrentHeadDirection(obj)
+            obj.currentHeadDirection = obj.headDirectionSystem.getMaxActivationIndex();   
+        end
         function cartesianVelocity =  calculateCartesianVelocity(obj)
-            currentHeadDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
-            radians = (currentHeadDirection/obj.nHeadDirectionCells)*(-2*pi); 
+            radians = (obj.currentHeadDirection/obj.nHeadDirectionCells)*(2*pi); 
             x = cos(radians); 
             y = sin(radians); 
             cartesianVelocity = [x*obj.linearVelocity, y*obj.linearVelocity]; 

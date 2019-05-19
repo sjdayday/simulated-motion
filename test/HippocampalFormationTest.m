@@ -135,6 +135,7 @@ classdef HippocampalFormationTest < AbstractTest
         function testLinearVelocityAndOrientationToHorizontalVerticalVelocity(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
+            import matlab.unittest.constraints.AbsoluteTolerance                        
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false;             
@@ -150,9 +151,40 @@ classdef HippocampalFormationTest < AbstractTest
             system.headDirectionSystem.uActivation(8) = 1; 
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ... 
                 8, 'forced'); 
-            system.updateLinearVelocity(0.0005); 
+            system.updateCurrentHeadDirection();
+            system.updateLinearVelocity(0.0005);
             testCase.assertThat(system.calculateCartesianVelocity(), ...            
-                IsEqualTo([0.000334565303179, -0.000371572412738 ], 'Within', RelativeTolerance(.00000000001)));         
+                IsEqualTo([0.0003345, 0.0003715], 'Within', AbsoluteTolerance(.0000001)));         
+        end
+        function testCalculateCartesianVelocity(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance            
+            import matlab.unittest.constraints.AbsoluteTolerance                        
+            system = HippocampalFormation();
+            system.nHeadDirectionCells = 60; 
+            system.pullVelocity = false; 
+            system.build();  
+            system.updateLinearVelocity(0); 
+            system.currentHeadDirection = 1; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0, 0 ], 'Within', AbsoluteTolerance(.00000000001)));         
+            system.updateLinearVelocity(0.00005); 
+            system.currentHeadDirection = 60; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0.00005, 0 ], 'Within', AbsoluteTolerance(.00000000001)));         
+            system.currentHeadDirection = 30; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([-0.00005, 0], 'Within', AbsoluteTolerance(.00000000001)));         
+            system.currentHeadDirection = 15; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0, 0.00005], 'Within', AbsoluteTolerance(.00000000001)));         
+            system.currentHeadDirection = 45; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0, -0.00005], 'Within', AbsoluteTolerance(.00000000001)));         
+            system.currentHeadDirection = 8; 
+            testCase.assertThat(system.calculateCartesianVelocity(), ...            
+                IsEqualTo([0.00003345, 0.00003715], 'Within', AbsoluteTolerance(.00000001)));         
+            
         end
         function testBothAngularAndLinearVelocityCantBeNonZero(testCase)
             system = HippocampalFormation();
@@ -191,30 +223,30 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 15); 
             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 33); 
             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 73); 
-            system.updateTurnAndLinearVelocity(0, 0.0001); % down, right                   
+            system.updateTurnAndLinearVelocity(0, 0.0001); % up, right                   
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 23); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 41); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 45, ...
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 25); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 43); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 83, ...
                 'wraps to mid-top grid');             
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);   
             system.step(); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 23); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 41); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 54);     
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 26); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 44); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 3);     
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 31); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 49);
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 62);
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 44); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 53);
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 39); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 57);
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 61);
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 45); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 63);
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
 %             disp(system.grids(1,3).getMaxActivationIndex()); 
 %             system.grids(1,3).plot(); pause(1);             
 %             for ii = 1:10
