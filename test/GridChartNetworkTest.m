@@ -322,6 +322,174 @@ classdef GridChartNetworkTest < AbstractTest
 %                 end
 %             end
 %         end
+      function testMotionIncreasesWithInputGain(testCase)            
+            h = figure; 
+            colsp = 3;
+            rowsp = 3;  
+            gh = gobjects(rowsp,colsp);
+            rowOffset = 0; 
+            for kk = 1:rowsp
+                for ll = 1:colsp
+                    indPlot = ll+(rowOffset * colsp);
+%                     disp([kk,ll,indPlot]); 
+                    gh(kk,ll) = subplot(rowsp,colsp, indPlot); 
+                end
+                rowOffset = rowOffset + 1; 
+            end
+            network = GridChartNetwork(10,9);
+            network.h = h; 
+            network.gh = gh; 
+            network.inputGain = 1000;
+            network.externalVelocity = true; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            
+            network.buildNetwork();             
+            network2 = GridChartNetwork(10,9);
+            network2.h = h; 
+            network2.gh = gh;  
+            network2.externalVelocity = true; 
+            network2.inputGain = 2000;
+%             network2.motionWeightOffset = 4; 
+%             network2.inputDirectionBias = pi/4; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            network2.buildNetwork(); 
+            network3 = GridChartNetwork(10,9);
+            network3.h = h; 
+            network3.gh = gh;  
+            network3.externalVelocity = true; 
+            %             network3.motionInputWeights = 1;
+            network3.inputGain = 3000; 
+%             network3.motionWeightOffset = 4; 
+%             network3.inputDirectionBias = pi/4; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            network3.buildNetwork(); 
+            network.updateVelocity(0.00005, 0);
+            network2.updateVelocity(0.00005, 0);
+            network3.updateVelocity(0.00005, 0);            
+%             network4 = GridChartNetwork(10,9);
+%             network4.h = h; 
+%             network4.gh = gh;  
+%             network4.motionInputWeights = 1;
+%             network4.motionWeightOffset = 4; 
+%             network4.inputDirectionBias = pi/4; 
+%             network4.buildNetwork(); 
+%             for ii = 1:1000
+            testCase.assertEqual(network.getMaxActivationIndex(), 12, 'all start same'); 
+            testCase.assertEqual(network2.getMaxActivationIndex(), 12, 'all start same'); 
+            testCase.assertEqual(network3.getMaxActivationIndex(), 12, 'all start same'); 
+                for jj = 1:6
+%                     pause(1)
+%                     disp(['1: ',num2str(network.getMaxActivationIndex())]);                      
+                    network.step();
+%                     disp(['2: ',num2str(network2.getMaxActivationIndex())]);                      
+                    network2.step();
+%                     disp(['3: ',num2str(network3.getMaxActivationIndex())]);                                          
+                    network3.step();
+%                     figure(h);
+%                     subplot(331); 
+%                     network.plotActivation(); 
+%                     subplot(334); 
+%                     network2.plotActivation();
+%                     subplot(337); 
+%                     network3.plotActivation(); 
+                        drawnow;  
+                end
+            disp(['1: ',num2str(network.getMaxActivationIndex())]);                          
+            testCase.assertEqual(network.getMaxActivationIndex(), 20, ...
+                'gain 1000: small motion');
+            disp(['2: ',num2str(network2.getMaxActivationIndex())]);                     
+            testCase.assertEqual(network2.getMaxActivationIndex(), 47, ...
+                'gain 2000: middle'); 
+            disp(['3: ',num2str(network3.getMaxActivationIndex())]);
+            testCase.assertEqual(network3.getMaxActivationIndex(), 74, ...
+                'gain 3000: large motion'); 
+        end
+        
+      function testMotionAtIncreasingAngleWithDirectionBias(testCase)            
+            h = figure; 
+            colsp = 3;
+            rowsp = 3;  
+            gh = gobjects(rowsp,colsp);
+            rowOffset = 0; 
+            for kk = 1:rowsp
+                for ll = 1:colsp
+                    indPlot = ll+(rowOffset * colsp);
+%                     disp([kk,ll,indPlot]); 
+                    gh(kk,ll) = subplot(rowsp,colsp, indPlot); 
+                end
+                rowOffset = rowOffset + 1; 
+            end
+            network = GridChartNetwork(10,9);
+            network.h = h; 
+            network.gh = gh; 
+            network.inputDirectionBias = 0;             
+%             network.inputGain = 1000;
+            network.externalVelocity = true; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            
+            network.buildNetwork();             
+            network2 = GridChartNetwork(10,9);
+            network2.h = h; 
+            network2.gh = gh;  
+            network2.externalVelocity = true; 
+            network2.inputDirectionBias = pi/8; 
+%             network2.inputGain = 2000;
+%             network2.motionWeightOffset = 4; 
+%              network2.inputDirectionBias = pi/4; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            network2.buildNetwork(); 
+            network3 = GridChartNetwork(10,9);
+            network3.h = h; 
+            network3.gh = gh;  
+            network3.externalVelocity = true; 
+            %             network3.motionInputWeights = 1;
+            network3.inputDirectionBias = pi/4; 
+%             network3.inputGain = 3000; 
+%             network3.motionWeightOffset = 4; 
+%             network3.inputDirectionBias = pi/4; 
+            load '../rngDefaultSettings';
+            rng(rngDefault);   % set random 
+            network3.buildNetwork(); 
+            network.updateVelocity(0.00005, 0);
+            network2.updateVelocity(0.00005, 0);
+            network3.updateVelocity(0.00005, 0);            
+            testCase.assertEqual(network.getMaxActivationIndex(), 12, 'all start same'); 
+            testCase.assertEqual(network2.getMaxActivationIndex(), 12, 'all start same'); 
+            testCase.assertEqual(network3.getMaxActivationIndex(), 12, 'all start same'); 
+                for jj = 1:7
+                    pause(0)
+%                     disp(['1: ',num2str(network.getMaxActivationIndex())]);                      
+                    network.step();
+%                     disp(['2: ',num2str(network2.getMaxActivationIndex())]);                      
+                    network2.step();
+%                     disp(['3: ',num2str(network3.getMaxActivationIndex())]);                                          
+                    network3.step();
+%                     figure(h);
+%                     subplot(331); 
+%                     network.plotActivation(); 
+%                     subplot(334); 
+%                     network2.plotActivation();
+%                     subplot(337); 
+%                     network3.plotActivation(); 
+%                         drawnow;  
+                end
+            disp(['1: ',num2str(network.getMaxActivationIndex())]);                          
+            testCase.assertEqual(network.getMaxActivationIndex(), 38, ...
+                'bias 0: horizontal motion');
+            disp(['2: ',num2str(network2.getMaxActivationIndex())]);                     
+            testCase.assertEqual(network2.getMaxActivationIndex(), 40, ...
+                'bias pi/8: slight rise'); 
+            disp(['3: ',num2str(network3.getMaxActivationIndex())]);
+            testCase.assertEqual(network3.getMaxActivationIndex(), 24, ...
+                'bias pi/4: large rise, sometimes doesnt cross columns'); 
+      end
+    end
+
 
 %         function testCreateNetwork(testCase)
 %             h = figure; 
@@ -383,5 +551,5 @@ classdef GridChartNetworkTest < AbstractTest
 %                 end
 %             end
 %         end
-    end
+%     end
 end
