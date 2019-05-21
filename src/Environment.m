@@ -115,7 +115,10 @@ classdef Environment < System
         end
         function direction = pointDirection(obj, target) 
            % again, thanks to Roger Stafford: 
+           % originally, in mathworks newsreader:
            % http://www.mathworks.com/matlabcentral/newsreader/view_thread/151925#849830
+           % archived here: 
+           % https://groups.google.com/d/msg/comp.soft-sys.matlab/zNbUui3bjcA/ehyAzegIoNMJ
            % 11 Dec, 2007
            v = [target(1)-obj.position(1) target(2)-obj.position(2) 0];
            u = [cos(obj.direction) sin(obj.direction) 0];
@@ -146,6 +149,9 @@ classdef Environment < System
         function direction = closestWallDirection(obj)
             [wallIndex, ~] = closestWall(obj); 
             direction = wallDirection(obj, obj.walls(wallIndex,:)); 
+        end
+        function cueHeadDirection = cueHeadDirectionOffset(obj, index)
+            cueHeadDirection = fix(obj.cueDirection(index)/(2*pi) * obj.directionIntervals); 
         end
         %% Single time step 
         function plot(obj)

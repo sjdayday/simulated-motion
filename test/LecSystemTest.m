@@ -9,13 +9,14 @@ classdef LecSystemTest < AbstractTest
             lec.build(); 
             testCase.assertEqual(lec.nOutput, 209); 
         end
-        function testCreateLecSystem2(testCase)
+        function testBuildsCanonicalRepresentationForCues(testCase)
             lec = LecSystem();
             lec.distanceUnits = 8;
             lec.nHeadDirectionCells = 60;
             lec.nFeatures = 3; 
             lec.rewardUnits = 5; 
             lec.build(); 
+            
             testCase.assertEqual(lec.nOutput, 209); 
         end
 %         function testCreateArrayOfGridChartNetwork(testCase)

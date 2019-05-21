@@ -276,7 +276,7 @@ classdef HippocampalFormationTest < AbstractTest
             mecLecOutput = [mecOutput, zeros(1,system.nLecOutput)]; 
             testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
                 placeOutput, 'use MEC output to retrieve saved place output'); 
-%             disp(system.placeSystem.outputIndices()); 
+%             disp(system.placeSystem.outputIndices());  % 30    88    90
         end
         function testHeadDirectionSystemTreatsPlaceOutputAsDetectedFeatures(testCase)
             system = HippocampalFormation();

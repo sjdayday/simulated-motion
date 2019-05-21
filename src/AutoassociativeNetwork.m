@@ -31,7 +31,7 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
             product = inputX*obj.network;
             while ((totalActivation > 0) && (sum(retrieved) == 0))
                 if totalActivation > 0
-                    retrieved = fix(product/totalActivation); 
+                    retrieved = fix(product/totalActivation); % round toward 0
                 end
                 totalActivation = totalActivation - 1; 
             end

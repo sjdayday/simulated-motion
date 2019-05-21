@@ -62,7 +62,7 @@ classdef HebbMarrNetwork < handle
             totalActivation = sum(inputX);
             product = inputX*obj.network;
             if totalActivation > 0
-                retrieved = fix(product/totalActivation); 
+                retrieved = fix(product/totalActivation); % round towards 0
             end
         end
         function verifyInputs(obj,inputX,inputY)

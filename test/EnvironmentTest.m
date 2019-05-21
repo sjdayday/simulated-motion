@@ -70,6 +70,8 @@ classdef EnvironmentTest < AbstractTest
             env.center = [1 1]; 
             env.build(); 
             env.setPosition([1 1]); 
+            % direction interpreted as direction when pointed at most
+            % salient cue.  Then, calculate angle to various other cues.
             env.setDirection(pi/4); 
             testCase.assertThat(env.cueDirection(1), ...            
                 IsEqualTo(1.107148717794091, 'Within', RelativeTolerance(.00000000001))); 
@@ -127,9 +129,14 @@ classdef EnvironmentTest < AbstractTest
             env.directionIntervals = 60;
             env.center = [1 1]; 
             env.build();  
-            env.setPosition([1 1.5]);             
+            env.setPosition([1 1]);             
 %             env.setPosition([0.5 1]); 
-            env.setDirection(pi/4);
+            env.setDirection(pi/2);
+            env.addCue([3 1]); 
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 45);
+            env.setDirection(3*pi/2);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 15);
+
             % 60 9 8 7 6 5 4 3 2 1 0 9 8 7 6 45
             % 3*pi/4
             % pi/4            
