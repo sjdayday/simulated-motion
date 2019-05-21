@@ -114,7 +114,7 @@ classdef Environment < System
            direction = pointDirection(obj, obj.cues(cueIndex,:));   
         end
         function direction = pointDirection(obj, target) 
-           % again, thanks to Roger Stafford: 
+           % thanks to Roger Stafford: 
            % originally, in mathworks newsreader:
            % http://www.mathworks.com/matlabcentral/newsreader/view_thread/151925#849830
            % archived here: 
@@ -151,7 +151,7 @@ classdef Environment < System
             direction = wallDirection(obj, obj.walls(wallIndex,:)); 
         end
         function cueHeadDirection = cueHeadDirectionOffset(obj, index)
-            cueHeadDirection = fix(obj.cueDirection(index)/(2*pi) * obj.directionIntervals); 
+            cueHeadDirection = ceil(obj.cueDirection(index)/(2*pi) * (obj.directionIntervals-1))+1; 
         end
         %% Single time step 
         function plot(obj)
