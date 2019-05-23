@@ -27,10 +27,29 @@ classdef LecSystemTest < AbstractTest
             env.directionIntervals = 60;
             env.center = [1 1]; 
             env.build();  
-            env.setPosition([1 1]);             
+            env.setPosition([0.5 1]);             
 %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
-            env.setHeadDirection(16);
+            env.addCue([0 0]);            
+            env.setHeadDirection(1); % 0
+            disp(['1: ', num2str(env.cueHeadDirectionOffset(1))]); 
+            disp(['2: ', num2str(env.cueHeadDirectionOffset(2))]); 
+            wallDirection = env.closestWallDirection(); 
+            disp(['wall: ', num2str(env.headDirectionOffset(wallDirection))]); 
+%             env.setHeadDirection(11); % pi/3
+% canonical view:  
+%   head direction when pointing at most salient cue: 1-60
+%   head direction offset from most salient cue head direction 61-120
+%   direction to closest wall from most salient cue head direction 121-180
+%             testCase.assertEqual(lec.buildCanonicalView(env), ...
+%                 [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
+%                   1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   ]); 
+% 
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
 %             env.setHeadDirection(46);
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);

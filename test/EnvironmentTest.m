@@ -87,7 +87,7 @@ classdef EnvironmentTest < AbstractTest
             testCase.assertThat(env.cueDirection(3), ...            
                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
         end
-        function testCalculatesAngleFromDirectionToClosestWall(testCase)
+        function testCalculatesAngleAndHeadDirectionFromDirectionToClosestWall(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             env = Environment();
@@ -102,20 +102,28 @@ classdef EnvironmentTest < AbstractTest
             env.setPosition([0.5 1]); 
             env.setDirection(pi/4);
             % 3*pi/4
-            testCase.assertThat(env.closestWallDirection(), ...            
+            wallDirection = env.closestWallDirection(); 
+            testCase.assertThat(wallDirection, ...            
                 IsEqualTo(2.356194490192345, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 23);
             % pi/4
             env.setPosition([1 1.5]);             
-            testCase.assertThat(env.closestWallDirection(), ...            
+            wallDirection = env.closestWallDirection(); 
+            testCase.assertThat(wallDirection, ...            
                 IsEqualTo(0.785398163397448, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 8);
             % 7*pi/4
             env.setPosition([1.5 1]);             
-            testCase.assertThat(env.closestWallDirection(), ...            
+            wallDirection = env.closestWallDirection(); 
+            testCase.assertThat(wallDirection, ...                        
                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 53);
             % 5*pi/4
             env.setPosition([1 0.5]);             
-            testCase.assertThat(env.closestWallDirection(), ...            
+            wallDirection = env.closestWallDirection(); 
+            testCase.assertThat(wallDirection, ...            
                 IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 38);
         end
         function testCalculatesHeadDirectionCellOffsetToCueFromCurrentDirection(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
@@ -146,8 +154,8 @@ classdef EnvironmentTest < AbstractTest
             env.setDirection((2*pi));
             testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
 
-%             env.setDirection(pi/2*1.2);
-%             disp(['pi/2*1.2 ', num2str(env.cueHeadDirectionOffset(1))]); 
+%             env.setDirection(5*pi/3);
+%             disp(['5*pi/3 ', num2str(env.cueHeadDirectionOffset(1))]); 
 %             env.setDirection(pi/2*1.15);
 %             disp(['pi/2*1.15 ', num2str(env.cueHeadDirectionOffset(1))]); 
 %             env.setDirection(pi/2*1.1);
