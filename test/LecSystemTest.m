@@ -18,6 +18,26 @@ classdef LecSystemTest < AbstractTest
             lec.build(); 
             
             testCase.assertEqual(lec.nOutput, 209); 
+                        env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();  
+            env.setPosition([1 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.setHeadDirection(16);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+%             env.setHeadDirection(46);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
+%             env.setHeadDirection(1);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+
+            
         end
 %         function testCreateArrayOfGridChartNetwork(testCase)
 %             grids(1,3) = GridChartNetwork(6,5); 

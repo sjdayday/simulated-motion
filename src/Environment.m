@@ -1,5 +1,21 @@
 % Environment class:  models a physical arena and cues.  
-% The Animal interacts with the Environment. 
+% The Animal interacts with the Environment.
+% This class is mostly methods that calculate distances and angles to cues
+% and walls.  In the "real" animal, those calculations are done internally, 
+% presumably as part of neocortical processing of sensory inputs.
+% Putting that logic in a class that models the actual physical environment
+% is just done for convenience in programming. 
+%
+% The setHeadDirection method is used by the LecSystem to develop the
+% canonical representation of the animal's position in relation to
+% important cues, from the animal's current internal head direction.  
+% The calculation is done *as if* the animal's current internal head direction 
+% were synchronized with the animal's actual physical head direction in the
+% environment.  Since this is only true a small fraction of the time, the
+% cueHeadDirectionOffset calculation will be off by the discrepancy between
+% internal and actual head direction.  The fact of this discrepancy is
+% unimportant; what is important is that it be consistent across the
+% animal's interaction with a given environment. 
 classdef Environment < System
 
     properties
@@ -150,8 +166,13 @@ classdef Environment < System
             [wallIndex, ~] = closestWall(obj); 
             direction = wallDirection(obj, obj.walls(wallIndex,:)); 
         end
+        function setHeadDirection(obj, headDirection)
+            % TODO guard <1 or > directionIntervals
+            obj.setDirection(((headDirection-1)/obj.directionIntervals)*(2*pi));  
+        end
         function cueHeadDirection = cueHeadDirectionOffset(obj, index)
-            cueHeadDirection = ceil(obj.cueDirection(index)/(2*pi) * (obj.directionIntervals-1))+1; 
+            cueHeadDirection = fix(obj.cueDirection(index)/(2*pi) * obj.directionIntervals)+1;
+            cueHeadDirection = min(cueHeadDirection, obj.directionIntervals); % could cueDirection(index) ever be exactly 2*pi? 
         end
         %% Single time step 
         function plot(obj)

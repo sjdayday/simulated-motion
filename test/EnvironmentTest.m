@@ -131,8 +131,8 @@ classdef EnvironmentTest < AbstractTest
             env.build();  
             env.setPosition([1 1]);             
 %             env.setPosition([0.5 1]); 
-            env.addCue([2 1]); 
-            % hmm, stays in range, but...
+            env.addCue([2 1]); %  x   ------------- cue (at 0)
+           
             env.setDirection(pi/2);
             testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
             env.setDirection(3*pi/2);
@@ -142,9 +142,51 @@ classdef EnvironmentTest < AbstractTest
             env.setDirection(0.0001);
             testCase.assertEqual(env.cueHeadDirectionOffset(1), 60);
             env.setDirection((2*pi)*0.99);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
             env.setDirection((2*pi));
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+
+%             env.setDirection(pi/2*1.2);
+%             disp(['pi/2*1.2 ', num2str(env.cueHeadDirectionOffset(1))]); 
+%             env.setDirection(pi/2*1.15);
+%             disp(['pi/2*1.15 ', num2str(env.cueHeadDirectionOffset(1))]); 
+%             env.setDirection(pi/2*1.1);
+%             disp(['pi/2*1.1 ', num2str(env.cueHeadDirectionOffset(1))]); 
+%             env.setDirection(pi/2*1.05);
+%             disp(['pi/2*1.05 ', num2str(env.cueHeadDirectionOffset(1))]); 
+%             env.setDirection(pi/2*1.02);
+%             disp(['pi/2*1.02 ', num2str(env.cueHeadDirectionOffset(1))]); 
+        end
+
+        function testCalculatesHeadDirectionCellOffsetFromCurrentHeadDirection(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();  
+            env.setPosition([1 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.setHeadDirection(16);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+            env.setHeadDirection(46);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
+            env.setHeadDirection(1);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+            env.setHeadDirection(2);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 60);
+            env.setHeadDirection(60);
             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
+            env.setHeadDirection(59);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 3);
+%             env.setDirection((2*pi));
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
         end
     end
 end
