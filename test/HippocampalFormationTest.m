@@ -15,10 +15,10 @@ classdef HippocampalFormationTest < AbstractTest
              '5 orientations x 3 gains'); 
             testCase.assertEqual(system.nMecOutput, 1350, ... 
                 '90 per grid x 15 grids'); 
-            testCase.assertEqual(system.nLecOutput, 215, ... 
-                '3 features, each 60 orientation + 10 distance; 5 for reward'); 
-            testCase.assertEqual(system.placeSystem.nDGInput, 1565); 
-            testCase.assertEqual(system.placeSystem.nCA3, 1565);
+            testCase.assertEqual(system.nLecOutput, 180, ... 
+                '3 features, each 60 orientation'); 
+            testCase.assertEqual(system.placeSystem.nDGInput, 1530); 
+            testCase.assertEqual(system.placeSystem.nCA3, 1530);
 %             MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
 %             LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
 %             fired = placeSystem.step(MecOutput, LecOutput); 
@@ -292,9 +292,9 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3));                         
             system.step(); 
-            testCase.assertEqual(system.placeSystem.outputIndices(), [30 88 90]); %             
+            testCase.assertEqual(system.placeSystem.outputIndices(), [5 49 116]); % [30 88 90]            
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
-            testCase.assertEqual(featureIndices, [30 88 90]);             
+            testCase.assertEqual(featureIndices, [5 49 116]);             
         end
         
     end

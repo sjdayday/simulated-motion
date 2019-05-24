@@ -151,14 +151,14 @@ classdef HippocampalFormation < System
         end
         function buildLec(obj)
             obj.lecSystem = LecSystem();
-            obj.lecSystem.distanceUnits = obj.distanceUnits;
+%             obj.lecSystem.distanceUnits = obj.distanceUnits;
             obj.lecSystem.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.lecSystem.nFeatures = obj.nFeatures; 
-            if obj.rewardInput 
-                obj.lecSystem.rewardUnits = 5;
-            else
-                obj.lecSystem.rewardUnits = 0; 
-            end
+%             if obj.rewardInput 
+%                 obj.lecSystem.rewardUnits = 5;
+%             else
+%                 obj.lecSystem.rewardUnits = 0; 
+%             end
             obj.lecSystem.build(); 
             obj.nLecOutput = obj.lecSystem.nOutput;
             
