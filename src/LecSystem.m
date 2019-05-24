@@ -9,6 +9,8 @@ classdef LecSystem < System
         reward
         nOutput
         featureOutput
+        environment
+        index
     end
     methods
         function obj = LecSystem()
@@ -25,6 +27,33 @@ classdef LecSystem < System
             obj.reward = zeros(1,obj.rewardUnits);  
             obj.nOutput = length(obj.featureOutput) + obj.rewardUnits; 
 
+        end
+        function setEnvironment(obj, environment)
+           obj.environment = environment;  
+        end
+        % canonical view:  
+        %   head direction when pointing at most salient cue: 1-60
+        %   head direction offset from most salient cue head direction 61-120
+        %   direction to closest wall from most salient cue head direction 121-180
+        function buildCanonicalView(obj, headDirection)
+            obj.featureOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells);
+            obj.index = 0; 
+            cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
+            obj.updateLecOutput(cueHeadDirection); 
+            obj.updateLecOutput(obj.environment.cueHeadDirectionOffset(2));
+            wallDirection = obj.environment.closestWallDirection(); 
+            obj.updateLecOutput(obj.environment.headDirectionOffset(wallDirection));
+        end
+        function updateLecOutput(obj, direction)
+            obj.featureOutput(1,obj.index+direction) = 1; 
+            obj.index = obj.index + obj.nHeadDirectionCells;             
+        end
+        function cueHeadDirection=adjustHeadDirectionTowardSalientCue(obj, headDirection) 
+            obj.environment.setHeadDirection(headDirection);
+            offset = obj.environment.cueHeadDirectionOffset(1);  
+            cueHeadDirection = headDirection - (obj.nHeadDirectionCells - offset) - 1; 
+%             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
+            obj.environment.setHeadDirection(cueHeadDirection);
         end
         %% Single time step 
         function  step(obj)
