@@ -2,30 +2,30 @@
 classdef LecSystem < System 
 
     properties
-        distanceUnits
+%         distanceUnits
         nHeadDirectionCells
         nFeatures
-        rewardUnits
+%         rewardUnits
         reward
         nOutput
-        featureOutput
+        lecOutput
         environment
         index
     end
     methods
         function obj = LecSystem()
             obj = obj@System(); 
-            obj.distanceUnits = 8;
+%             obj.distanceUnits = 8;
             obj.nHeadDirectionCells = 60;
             obj.nFeatures = 3; 
-            obj.rewardUnits = 5; 
+%             obj.rewardUnits = 5; 
             obj.build();            
         end
         function build(obj)
-            featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
-            obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
-            obj.reward = zeros(1,obj.rewardUnits);  
-            obj.nOutput = length(obj.featureOutput) + obj.rewardUnits; 
+%             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
+            obj.lecOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells); 
+%             obj.reward = zeros(1,obj.rewardUnits);  
+            obj.nOutput = length(obj.lecOutput); % + obj.rewardUnits; 
 
         end
         function setEnvironment(obj, environment)
@@ -36,7 +36,7 @@ classdef LecSystem < System
         %   head direction offset from most salient cue head direction 61-120
         %   direction to closest wall from most salient cue head direction 121-180
         function buildCanonicalView(obj, headDirection)
-            obj.featureOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells);
+            obj.lecOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells);
             obj.index = 0; 
             cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
             obj.updateLecOutput(cueHeadDirection); 
@@ -45,7 +45,7 @@ classdef LecSystem < System
             obj.updateLecOutput(obj.environment.headDirectionOffset(wallDirection));
         end
         function updateLecOutput(obj, direction)
-            obj.featureOutput(1,obj.index+direction) = 1; 
+            obj.lecOutput(1,obj.index+direction) = 1; 
             obj.index = obj.index + obj.nHeadDirectionCells;             
         end
         function cueHeadDirection=adjustHeadDirectionTowardSalientCue(obj, headDirection) 
