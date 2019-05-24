@@ -278,6 +278,70 @@ classdef HippocampalFormationTest < AbstractTest
                 placeOutput, 'use MEC output to retrieve saved place output'); 
 %             disp(system.placeSystem.outputIndices());  % 30    88    90
         end
+        function testMecAndLecOutputUpdatesPlaceSystemThenRetrievesSamePlace(testCase)
+            system = HippocampalFormation();
+            system.nGridOrientations = 3; 
+            system.nHeadDirectionCells = 60; 
+            system.gridDirectionBiasIncrement = pi/4;   
+            system.gridExternalVelocity = false; 
+            system.nGridGains = 1; 
+            system.gridSize = [6,5];
+            system.pullVelocity = false; 
+            system.nHeadDirectionCells = 60;
+            system.nFeatures = 3; 
+            system.build(); 
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();
+            system.lecSystem.setEnvironment(env); 
+            env.setPosition([0.5 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.addCue([0 0]);            
+%             currentHeadDirection = 10;
+%             system.lecSystem.buildCanonicalView(currentHeadDirection); 
+
+            system.step(); % stepMec 
+            mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+                  ];
+            testCase.assertEqual(system.mecOutput, mecOutput); 
+            lecOutput = system.lecOutput; 
+            testCase.assertEqual(lecOutput, ...
+                [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
+                  1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  ]);             
+            system.stepPlace(); 
+            placeOutput = system.placeOutput; 
+            disp(placeOutput); 
+            mecLecOutput = [mecOutput, lecOutput]; 
+            testCase.assertEqual(system.placeSystem.outputIndices(), ...
+               [60    86    95   144   161   243]);  
+            testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
+                placeOutput, 'use MEC & LEC output to retrieve saved place output'); 
+            mecOutputOnly = [mecOutput, zeros(1,system.nLecOutput)]; 
+            testCase.assertEqual(system.placeSystem.read(mecOutputOnly), ...
+                placeOutput, 'use MEC output to retrieve saved place output'); 
+            lecOutputOnly = [zeros(1,system.nMecOutput), lecOutput]; 
+            testCase.assertEqual(system.placeSystem.read(lecOutputOnly), ...
+                placeOutput, 'use LEC output to retrieve saved place output'); 
+            zeroOutput = [zeros(1,system.nMecOutput), zeros(1,system.nLecOutput)];
+            testCase.assertEqual(system.placeSystem.read(zeroOutput), ...
+                zeros(1,length(placeOutput)), ...
+                'simple counter case; zeros does not retrieve place'); 
+%             disp(system.placeSystem.outputIndices());  % 30    88    90
+        end
         function testHeadDirectionSystemTreatsPlaceOutputAsDetectedFeatures(testCase)
             system = HippocampalFormation();
             system.nGridOrientations = 3; 

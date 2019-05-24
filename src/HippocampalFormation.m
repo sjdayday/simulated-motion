@@ -169,9 +169,10 @@ classdef HippocampalFormation < System
         end
         function step(obj)
             step@System(obj); 
-            stepHds(obj); 
-            stepMec(obj); 
-            stepPlace(obj); 
+            obj.stepHds(); 
+            obj.stepMec(); 
+            obj.stepLec(); 
+            obj.stepPlace(); 
         end
         function stepHds(obj)
             obj.headDirectionSystem.step(); 
@@ -188,6 +189,10 @@ classdef HippocampalFormation < System
                 obj.mecOutput(1,index+max) = 1; 
                 index = index + obj.gridLength;     
             end            
+        end
+        function stepLec(obj)
+            obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
+            obj.lecOutput = obj.lecSystem.lecOutput; 
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
