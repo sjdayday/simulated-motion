@@ -40,6 +40,8 @@ classdef HippocampalFormation < System
         pullVelocity
         visual
         h
+        placeList
+        nPlaceIndices
     end
     methods
         function obj = HippocampalFormation()
@@ -64,7 +66,7 @@ classdef HippocampalFormation < System
             obj.visual = false; 
             obj.animal = Animal();
             obj.loadFixedRandom();
-            obj.currentHeadDirection = 1; 
+            obj.currentHeadDirection = 1;
          end
         function build(obj)
             calculateSizes(obj); 
@@ -75,6 +77,8 @@ classdef HippocampalFormation < System
 %             buildLec(obj); 
             buildPlaceSystem(obj);
             % TODO: setTimekeeper for placesystem 
+            obj.nPlaceIndices = obj.nGrids + 3; 
+            obj.placeList = zeros(1,obj.nPlaceIndices); 
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -196,7 +200,11 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
+           obj.addOutputToPlacesList(); 
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
+        end
+        function addOutputToPlacesList(obj)
+           obj.placeList = [obj.placeList; obj.placeSystem.outputIndices()]; 
         end
         function updateTurnVelocity(obj, velocity)
             obj.angularVelocity = obj.headDirectionSystem.updateTurnVelocity(velocity);

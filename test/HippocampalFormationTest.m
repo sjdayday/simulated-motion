@@ -324,7 +324,7 @@ classdef HippocampalFormationTest < AbstractTest
                   ]);             
             system.stepPlace(); 
             placeOutput = system.placeOutput; 
-            disp(placeOutput); 
+%             disp(placeOutput); 
             mecLecOutput = [mecOutput, lecOutput]; 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
                [60    86    95   144   161   243]);  
@@ -359,6 +359,19 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.placeSystem.outputIndices(), [5 49 116]); % [30 88 90]            
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
             testCase.assertEqual(featureIndices, [5 49 116]);             
+        end
+        function testPlaceOutputAccumulatesAsList(testCase)
+            system = HippocampalFormation();
+            system.build();
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+            system.addOutputToPlacesList(); 
+            system.placeSystem.currentOutput = [1 0 1 0 1 0 1 0];
+            system.addOutputToPlacesList(); 
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+            system.addOutputToPlacesList(); 
+            disp(system.placeList); 
+            testCase.assertEqual([0 0 0 0; 2 4 6 8; 1 3 5 7; 2 4 6 8], ...
+                 system.placeList);
         end
         
     end
