@@ -370,8 +370,16 @@ classdef HippocampalFormationTest < AbstractTest
             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
             system.addOutputToPlacesList(); 
             disp(system.placeList); 
-            testCase.assertEqual([0 0 0 0; 2 4 6 8; 1 3 5 7; 2 4 6 8], ...
+            testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8], ...
                  system.placeList);
+            system.placeSystem.currentOutput = [0 1 0 1 0 1];
+            system.addOutputToPlacesList(); 
+            testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0], ...
+                 system.placeList,'shorter indices zero-filled at end');
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 1 1 1 1];
+            system.addOutputToPlacesList(); 
+            testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0; 2 4 6 7], ...
+                 system.placeList,'longer indices truncated');
         end
         
     end

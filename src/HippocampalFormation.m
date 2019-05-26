@@ -78,7 +78,7 @@ classdef HippocampalFormation < System
             buildPlaceSystem(obj);
             % TODO: setTimekeeper for placesystem 
             obj.nPlaceIndices = obj.nGrids + 3; 
-            obj.placeList = zeros(1,obj.nPlaceIndices); 
+            obj.placeList = [];  
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -204,7 +204,17 @@ classdef HippocampalFormation < System
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
         function addOutputToPlacesList(obj)
-           obj.placeList = [obj.placeList; obj.placeSystem.outputIndices()]; 
+           row = zeros(1,obj.nPlaceIndices);  
+           indices = obj.placeSystem.outputIndices(); 
+           len = length(row); 
+           if length(row) > length(indices)
+               len = length(indices); 
+           end
+           for ii = 1:len
+                row(1,ii) = indices(1,ii); 
+           end
+           obj.placeList = [obj.placeList; row]; 
+%            obj.placeList = [obj.placeList; obj.placeSystem.outputIndices()]; 
         end
         function updateTurnVelocity(obj, velocity)
             obj.angularVelocity = obj.headDirectionSystem.updateTurnVelocity(velocity);
