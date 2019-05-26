@@ -41,6 +41,7 @@ classdef HippocampalFormation < System
         visual
         h
         placeList
+        placeListDisplay
         nPlaceIndices
     end
     methods
@@ -78,7 +79,8 @@ classdef HippocampalFormation < System
             buildPlaceSystem(obj);
             % TODO: setTimekeeper for placesystem 
             obj.nPlaceIndices = obj.nGrids + 3; 
-            obj.placeList = [];  
+            obj.placeList = []; 
+            obj.placeListDisplay = []; 
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -200,10 +202,27 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
-           obj.addOutputToPlacesList(); 
+           obj.addPositionAndOutput(); 
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
-        function addOutputToPlacesList(obj)
+        function addPositionAndOutput(obj) 
+           row = obj.addOutputToPlacesList();   
+           newRow = [obj.animal.x obj.animal.y row]; 
+           dims = size(obj.placeListDisplay); 
+           len = dims(1); 
+           if (len == 0)
+               obj.placeListDisplay = [obj.placeListDisplay; newRow]; 
+           elseif len >= 1
+               previousRow = obj.placeListDisplay(len,:); 
+               allSame = min(newRow == previousRow); 
+               if ~allSame
+                 obj.placeListDisplay = [obj.placeListDisplay; newRow]; 
+%                  disp(mat2str(newRow,2));
+               end
+           end
+            
+        end
+        function row = addOutputToPlacesList(obj)
            row = zeros(1,obj.nPlaceIndices);  
            indices = obj.placeSystem.outputIndices(); 
            len = length(row); 

@@ -381,6 +381,39 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0; 2 4 6 7], ...
                  system.placeList,'longer indices truncated');
         end
+        function testNewAnimalPositionAndPlaceOutputAccumulatesAsList(testCase)
+            system = HippocampalFormation();
+            system.build();
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+            system.animal.x = 1.1;
+            system.animal.y = 0.1;
+            system.addPositionAndOutput();
+%             disp(system.placeListDisplay); 
+            system.placeSystem.currentOutput = [1 0 1 0 1 0 1 0];
+            system.animal.x = 1.2;
+            system.animal.y = 0.1;
+            system.addPositionAndOutput();
+            testCase.assertEqual(system.placeListDisplay, ...
+                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7]);
+            system.addPositionAndOutput();
+            testCase.assertEqual(system.placeListDisplay, ...
+                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7],'duplicates not added');
+             
+%             system.addOutputToPlacesList(); 
+%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+%             system.addOutputToPlacesList(); 
+%             disp(system.placeList); 
+%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8], ...
+%                  system.placeList);
+%             system.placeSystem.currentOutput = [0 1 0 1 0 1];
+%             system.addOutputToPlacesList(); 
+%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0], ...
+%                  system.placeList,'shorter indices zero-filled at end');
+%             system.placeSystem.currentOutput = [0 1 0 1 0 1 1 1 1 1];
+%             system.addOutputToPlacesList(); 
+%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0; 2 4 6 7], ...
+%                  system.placeList,'longer indices truncated');
+        end
         
     end
 end
