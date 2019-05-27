@@ -224,21 +224,24 @@ classdef HippocampalFormation < System
             near = double(distance <= obj.nearThreshold); 
         end
         function addPositionAndOutput(obj) 
-           placeIdRow = obj.addOutputToPlacesList(); 
+           placeRow = obj.addOutputToPlacesList(); 
            position = [obj.animal.x obj.animal.y];
-           result = obj.savePositionForPlace(position, placeIdRow); 
-           positionPlaceRow = [position placeIdRow]; 
+           positionPlaceRow = [position placeRow]; 
            dims = size(obj.placeListDisplay); 
            len = dims(1); 
            if (len == 0)
-               obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
+               obj.saveForDisplay(position, placeRow, positionPlaceRow);
            elseif len >= 1
                previousRow = obj.placeListDisplay(len,:); 
                allSame = min(positionPlaceRow == previousRow); 
                if ~allSame
-                 obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
+                 obj.saveForDisplay(position, placeRow, positionPlaceRow);
                end
            end           
+        end
+        function saveForDisplay(obj, position, placeRow, positionPlaceRow)
+               obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
+               result = obj.savePositionForPlace(position, placeRow);             
         end
         function position = getPositionForPlace(obj, placeIdString)
            position = obj.placePositionMap(placeIdString); 
