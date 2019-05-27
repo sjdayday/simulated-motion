@@ -397,22 +397,42 @@ classdef HippocampalFormationTest < AbstractTest
                 [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7]);
             system.addPositionAndOutput();
             testCase.assertEqual(system.placeListDisplay, ...
-                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7],'duplicates not added');
-             
-%             system.addOutputToPlacesList(); 
-%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
-%             system.addOutputToPlacesList(); 
-%             disp(system.placeList); 
-%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8], ...
-%                  system.placeList);
-%             system.placeSystem.currentOutput = [0 1 0 1 0 1];
-%             system.addOutputToPlacesList(); 
-%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0], ...
-%                  system.placeList,'shorter indices zero-filled at end');
-%             system.placeSystem.currentOutput = [0 1 0 1 0 1 1 1 1 1];
-%             system.addOutputToPlacesList(); 
-%             testCase.assertEqual([2 4 6 8; 1 3 5 7; 2 4 6 8; 2 4 6 0; 2 4 6 7], ...
-%                  system.placeList,'longer indices truncated');
+                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7],'duplicates not added');        
+        end
+        function testMapBuiltKeyStringPlaceIdValuePosition(testCase)
+            system = HippocampalFormation();
+            system.build();
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+            system.animal.x = 1.1;
+            system.animal.y = 0.1;
+            system.addPositionAndOutput();
+            position = system.getPositionForPlace('[2 4 6 8]'); 
+            testCase.assertEqual(position(1), 1.1); 
+            testCase.assertEqual(position(2), 0.1); 
+            try 
+                system.getPositionForPlace('[5 5 7 8]'); 
+                testCase.assertFail('should throw'); 
+            catch  EX
+                testCase.assertEqual(EX.identifier, 'MATLAB:Containers:Map:NoKey'); 
+            end
+        end
+        function testCurrentPlacePositionNearOrFarFromSavedPosition(testCase)
+            system = HippocampalFormation();
+            system.nearThreshold = 0.2;
+            system.build();
+            system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+            system.animal.x = 1.1;
+            system.animal.y = 0.1;
+            result = system.savePositionForPlace([1.1 0.1], [2 4 6 8]);
+            testCase.assertEqual(result, 2, 'new place'); 
+            result = system.savePositionForPlace([1.1 0.2], [2 4 6 8]);
+            testCase.assertEqual(result, 1, 'near place'); 
+            result = system.savePositionForPlace([1.1 0.5], [2 4 6 8]);
+            testCase.assertEqual(result, 0, 'far place'); 
+            position = system.getPositionForPlace('[2 4 6 8]'); 
+            testCase.assertEqual(position(1), 1.1, 'first position saved is maintained'); 
+            testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
+
         end
         
     end

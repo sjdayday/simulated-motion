@@ -42,7 +42,9 @@ classdef HippocampalFormation < System
         h
         placeList
         placeListDisplay
+        placePositionMap
         nPlaceIndices
+        nearThreshold
     end
     methods
         function obj = HippocampalFormation()
@@ -68,6 +70,8 @@ classdef HippocampalFormation < System
             obj.animal = Animal();
             obj.loadFixedRandom();
             obj.currentHeadDirection = 1;
+            obj.placePositionMap = containers.Map('KeyType','char','ValueType','any');
+            obj.nearThreshold = 0.2;
          end
         function build(obj)
             calculateSizes(obj); 
@@ -205,22 +209,39 @@ classdef HippocampalFormation < System
            obj.addPositionAndOutput(); 
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
+        function result = savePositionForPlace(obj, position, placeId)
+           placeKey = mat2str(placeId,2);
+           try 
+               previousPosition = obj.getPositionForPlace(placeKey);  
+               result = obj.positionNearOrFarFromPreviousPosition(position, previousPosition);
+           catch EX
+               obj.placePositionMap(placeKey) = position; 
+               result = 2;  
+           end
+        end
+        function near = positionNearOrFarFromPreviousPosition(obj, position, previousPosition)
+            distance = sqrt((position(1)-previousPosition(1))^2 + (position(2)-previousPosition(2))^2); 
+            near = double(distance <= obj.nearThreshold); 
+        end
         function addPositionAndOutput(obj) 
-           row = obj.addOutputToPlacesList();   
-           newRow = [obj.animal.x obj.animal.y row]; 
+           placeIdRow = obj.addOutputToPlacesList(); 
+           position = [obj.animal.x obj.animal.y];
+           result = obj.savePositionForPlace(position, placeIdRow); 
+           positionPlaceRow = [position placeIdRow]; 
            dims = size(obj.placeListDisplay); 
            len = dims(1); 
            if (len == 0)
-               obj.placeListDisplay = [obj.placeListDisplay; newRow]; 
+               obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
            elseif len >= 1
                previousRow = obj.placeListDisplay(len,:); 
-               allSame = min(newRow == previousRow); 
+               allSame = min(positionPlaceRow == previousRow); 
                if ~allSame
-                 obj.placeListDisplay = [obj.placeListDisplay; newRow]; 
-%                  disp(mat2str(newRow,2));
+                 obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
                end
-           end
-            
+           end           
+        end
+        function position = getPositionForPlace(obj, placeIdString)
+           position = obj.placePositionMap(placeIdString); 
         end
         function row = addOutputToPlacesList(obj)
            row = zeros(1,obj.nPlaceIndices);  
