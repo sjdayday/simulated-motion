@@ -492,6 +492,8 @@ classdef ExperimentController < System
             hold on; 
 %              subplot(338); 
 %             obj.animal.plotAnimal(); 
+             subplot(336); 
+            obj.animal.hippocampalFormation.plotPlaces(); 
              subplot(339); 
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
             drawnow

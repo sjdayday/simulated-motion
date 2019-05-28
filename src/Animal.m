@@ -99,6 +99,9 @@ classdef Animal < System
             obj.baseGain = 1500; 
             obj.gridSize = [10,9]; 
             obj.motionInputWeights = false; 
+            obj.x = 0;
+            obj.y = 0; 
+
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -129,8 +132,8 @@ classdef Animal < System
             obj.vertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
             obj.lastVertices = [0 0+obj.width; 0 0-obj.width; 0+obj.length 0]; 
             obj.axisOfRotation = [0 0 0; 0 0 1];
-            obj.x = 0;
-            obj.y = 0; 
+%             obj.x = 0;
+%             obj.y = 0; 
             obj.lastX = 0; 
             obj.lastY = 0;
             obj.deltaX = 0;
@@ -175,9 +178,9 @@ classdef Animal < System
         %% Single time step 
         function  step(obj)
             step@System(obj); 
-%           obj.hippocampalFormation.step();
-            obj.hippocampalFormation.stepHds();
-            obj.hippocampalFormation.stepMec();            
+            obj.hippocampalFormation.step();
+%             obj.hippocampalFormation.stepHds();
+%             obj.hippocampalFormation.stepMec();            
             disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection),' x: ',num2str(obj.x),' y: ',num2str(obj.y)]); 
             disp(obj.vertices); 
         end

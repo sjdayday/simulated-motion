@@ -45,6 +45,7 @@ classdef HippocampalFormation < System
         placePositionMap
         nPlaceIndices
         nearThreshold
+        lastPositionPlaceRow
     end
     methods
         function obj = HippocampalFormation()
@@ -72,6 +73,9 @@ classdef HippocampalFormation < System
             obj.currentHeadDirection = 1;
             obj.placePositionMap = containers.Map('KeyType','char','ValueType','any');
             obj.nearThreshold = 0.2;
+            obj.placeList = []; 
+            obj.placeListDisplay = [];
+            
          end
         function build(obj)
             calculateSizes(obj); 
@@ -82,9 +86,6 @@ classdef HippocampalFormation < System
 %             buildLec(obj); 
             buildPlaceSystem(obj);
             % TODO: setTimekeeper for placesystem 
-            obj.nPlaceIndices = obj.nGrids + 3; 
-            obj.placeList = []; 
-            obj.placeListDisplay = []; 
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
@@ -100,7 +101,10 @@ classdef HippocampalFormation < System
 %                obj.reward = zeros(1,5);  
 %             end
 %             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
-            
+            numberOfLecIndices = 3; 
+            obj.nPlaceIndices = obj.nGrids + numberOfLecIndices; 
+            nPosition = 2; % [animal.x animal.y] 
+            obj.lastPositionPlaceRow = zeros(1,(nPosition+obj.nPlaceIndices)); % position + place            
         end
         function rebuildHeadDirectionSystem(obj) 
             tempMap = []; 
@@ -206,7 +210,7 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
-           obj.addPositionAndOutput(); 
+           obj.addPositionAndPlaceIfDifferent(); 
            obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
         end
         function result = savePositionForPlace(obj, position, placeId)
@@ -223,25 +227,19 @@ classdef HippocampalFormation < System
             distance = sqrt((position(1)-previousPosition(1))^2 + (position(2)-previousPosition(2))^2); 
             near = double(distance <= obj.nearThreshold); 
         end
-        function addPositionAndOutput(obj) 
+        function addPositionAndPlaceIfDifferent(obj) 
            placeRow = obj.addOutputToPlacesList(); 
            position = [obj.animal.x obj.animal.y];
            positionPlaceRow = [position placeRow]; 
-           dims = size(obj.placeListDisplay); 
-           len = dims(1); 
-           if (len == 0)
-               obj.saveForDisplay(position, placeRow, positionPlaceRow);
-           elseif len >= 1
-               previousRow = obj.placeListDisplay(len,:); 
-               allSame = min(positionPlaceRow == previousRow); 
-               if ~allSame
-                 obj.saveForDisplay(position, placeRow, positionPlaceRow);
-               end
-           end           
+           allSame = min(positionPlaceRow == obj.lastPositionPlaceRow); 
+           if ~allSame
+             obj.saveForDisplay(position, placeRow, positionPlaceRow);
+           end
+           obj.lastPositionPlaceRow = positionPlaceRow; 
         end
         function saveForDisplay(obj, position, placeRow, positionPlaceRow)
-               obj.placeListDisplay = [obj.placeListDisplay; positionPlaceRow]; 
-               result = obj.savePositionForPlace(position, placeRow);             
+           result = obj.savePositionForPlace(position, placeRow);             
+           obj.placeListDisplay = [obj.placeListDisplay; [result positionPlaceRow]]; 
         end
         function position = getPositionForPlace(obj, placeIdString)
            position = obj.placePositionMap(placeIdString); 
@@ -285,7 +283,30 @@ classdef HippocampalFormation < System
             y = sin(radians); 
             cartesianVelocity = [x*obj.linearVelocity, y*obj.linearVelocity]; 
         end
-        function plot(obj)
+        function plotPlaces(obj)
+           figure(obj.h) 
+           axis off
+           offset = 0; 
+           dims = size(obj.placeListDisplay); 
+           for ii = 1:dims(1)
+               result = obj.placeListDisplay(ii,1); 
+               row = obj.placeListDisplay(ii,2:dims(2));
+               placeMat = mat2str(row(3:end));
+               positionPlaceLine = ['x: ', num2str(row(1)), ...
+                   'y: ', num2str(row(2)), ...
+                   'p: ', placeMat(2:end-1)]; 
+               if result == 0
+                   color = 'r'; 
+               elseif result == 1
+                   color = 'g'; 
+               elseif result == 2
+                   color = 'b'; 
+               end
+               text(0,1-offset,positionPlaceLine,'Color',color);
+               offset = 0.1 * ii; 
+           end
+        end
+        function plot(~)
             
         end
 

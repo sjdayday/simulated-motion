@@ -387,17 +387,18 @@ classdef HippocampalFormationTest < AbstractTest
             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
             system.animal.x = 1.1;
             system.animal.y = 0.1;
-            system.addPositionAndOutput();
+            system.addPositionAndPlaceIfDifferent();
 %             disp(system.placeListDisplay); 
             system.placeSystem.currentOutput = [1 0 1 0 1 0 1 0];
             system.animal.x = 1.2;
             system.animal.y = 0.1;
-            system.addPositionAndOutput();
+            system.addPositionAndPlaceIfDifferent();
+            result = 2; 
             testCase.assertEqual(system.placeListDisplay, ...
-                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7]);
-            system.addPositionAndOutput();
+                [result 1.1 0.1 2 4 6 8; result 1.2 0.1 1 3 5 7]);
+            system.addPositionAndPlaceIfDifferent();
             testCase.assertEqual(system.placeListDisplay, ...
-                [1.1 0.1 2 4 6 8; 1.2 0.1 1 3 5 7],'duplicates not added');        
+                [result 1.1 0.1 2 4 6 8; result 1.2 0.1 1 3 5 7],'duplicates not added');        
         end
         function testMapBuiltKeyStringPlaceIdValuePosition(testCase)
             system = HippocampalFormation();
@@ -405,7 +406,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
             system.animal.x = 1.1;
             system.animal.y = 0.1;
-            system.addPositionAndOutput();
+            system.addPositionAndPlaceIfDifferent();
             position = system.getPositionForPlace('[2 4 6 8]'); 
             testCase.assertEqual(position(1), 1.1); 
             testCase.assertEqual(position(2), 0.1); 
