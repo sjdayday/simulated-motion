@@ -36,6 +36,7 @@ classdef HippocampalFormation < System
         linearVelocity
         angularVelocity
         defaultFeatureDetectors
+        updateFeatureDetectors
         randomHeadDirection
         pullVelocity
         visual
@@ -75,6 +76,7 @@ classdef HippocampalFormation < System
             obj.nearThreshold = 0.2;
             obj.placeList = []; 
             obj.placeListDisplay = [];
+            obj.updateFeatureDetectors = false; 
             
          end
         function build(obj)
@@ -211,7 +213,9 @@ classdef HippocampalFormation < System
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.addPositionAndPlaceIfDifferent(); 
-           obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
+           if obj.updateFeatureDetectors
+               obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
+           end
         end
         function result = savePositionForPlace(obj, position, placeId)
            placeKey = mat2str(placeId,2);
@@ -283,27 +287,36 @@ classdef HippocampalFormation < System
             y = sin(radians); 
             cartesianVelocity = [x*obj.linearVelocity, y*obj.linearVelocity]; 
         end
+        function trimmedPlaceList = trimPlaceListDisplay(obj)
+           s = size(obj.placeListDisplay);
+           if s(1) > 20
+              trimmedPlaceList =  obj.placeListDisplay((s(1)-19):end,:);   
+           else
+              trimmedPlaceList =  obj.placeListDisplay;    
+           end
+        end
         function plotPlaces(obj)
            figure(obj.h) 
            axis off
            offset = 0; 
-           dims = size(obj.placeListDisplay); 
+           trimmedPlaceListDisplay = obj.trimPlaceListDisplay();
+           dims = size(trimmedPlaceListDisplay); 
            for ii = 1:dims(1)
-               result = obj.placeListDisplay(ii,1); 
-               row = obj.placeListDisplay(ii,2:dims(2));
+               result = trimmedPlaceListDisplay(ii,1); 
+               row = trimmedPlaceListDisplay(ii,2:dims(2));
                placeMat = mat2str(row(3:end));
-               positionPlaceLine = ['x: ', num2str(row(1)), ...
-                   'y: ', num2str(row(2)), ...
+               positionPlaceLine = ['x: ', num2str(row(1),3), ...
+                   'y: ', num2str(row(2),3), ...
                    'p: ', placeMat(2:end-1)]; 
                if result == 0
                    color = 'r'; 
                elseif result == 1
-                   color = 'g'; 
+                   color = [0,0.5,0]; 
                elseif result == 2
                    color = 'b'; 
                end
                text(0,1-offset,positionPlaceLine,'Color',color);
-               offset = 0.1 * ii; 
+               offset = 0.05 * ii; 
            end
         end
         function plot(~)

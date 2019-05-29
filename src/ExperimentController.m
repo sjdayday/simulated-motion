@@ -31,6 +31,7 @@ classdef ExperimentController < System
         listener
         systemMap
         lastSystem
+        hPlace
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -100,6 +101,8 @@ classdef ExperimentController < System
             obj.animal.place(obj.environment, 1, 1, 0); % pi/2  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
+            % move this to animal.place
+            obj.animal.hippocampalFormation.lecSystem.setEnvironment(obj.environment);
             obj.animal.controller = obj;
         end
 
@@ -471,6 +474,7 @@ classdef ExperimentController < System
 % grid1   grid2    grid3
 % EC act  CA3 act HDS act  
             figure(obj.h);
+            delete(obj.hPlace); 
             subplot(331); 
             title({'Animal in the arena'})
             obj.animal.plotAnimal(); 
@@ -493,9 +497,9 @@ classdef ExperimentController < System
 %              subplot(338); 
 %             obj.animal.plotAnimal(); 
              subplot(336); 
-            obj.animal.hippocampalFormation.plotPlaces(); 
-             subplot(339); 
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
+            obj.hPlace = subplot(339); 
+            obj.animal.hippocampalFormation.plotPlaces(); 
             drawnow
         end        
     end

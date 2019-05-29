@@ -47,7 +47,9 @@ classdef LecSystem < System
             end
         end
         function updateLecOutput(obj, direction)
-            obj.lecOutput(1,obj.index+direction) = 1; 
+            if direction > 0
+                obj.lecOutput(1,obj.index+direction) = 1; 
+            end
             obj.index = obj.index + obj.nHeadDirectionCells;             
         end
         function cueHeadDirection=adjustHeadDirectionTowardSalientCue(obj, headDirection) 

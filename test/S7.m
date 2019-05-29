@@ -13,7 +13,7 @@ classdef S7 < handle
             obj.ec.setupDisplay(); 
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
-            obj.ec.totalSteps = 40;
+            obj.ec.totalSteps = 45;
 %             obj.ec.randomHeadDirection = false; % no effect?  
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/30;'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.minimumRunVelocity = 0.05; obj.showFeatures = 1; obj.features = [30 52];'); 
@@ -42,6 +42,8 @@ classdef S7 < handle
 %              obj.ec.addControllerEvent(41, 'disp(''did not just changed HDS velocity''); pause(10); ')
             obj.ec.addAnimalEvent(50, 'obj.motorCortex.turnDistance = 12; obj.motorCortex.clockwiseTurn();');
             obj.ec.addAnimalEvent(70, 'obj.motorCortex.runDistance = 20; obj.motorCortex.run();'); 
+            obj.ec.addAnimalEvent(93, 'obj.motorCortex.turnDistance = 30; obj.motorCortex.counterClockwiseTurn();');
+            obj.ec.addAnimalEvent(125, 'obj.motorCortex.runDistance = 20; obj.motorCortex.run();'); 
         end
         function run(obj, steps)
             obj.ec.runHeadDirectionSystemForSteps(steps);            

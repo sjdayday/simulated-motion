@@ -352,6 +352,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridSize = [6,5];
             system.pullVelocity = false; 
             system.defaultFeatureDetectors = false; 
+            system.updateFeatureDetectors = true;
             system.build();  
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3));                         

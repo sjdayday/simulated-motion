@@ -127,7 +127,14 @@ classdef Environment < System
             relativeDistance = calculateRelativeDistance(obj, distance);
         end
         function direction = cueDirection(obj, cueIndex)
-           direction = pointDirection(obj, obj.cues(cueIndex,:));   
+           s = size(obj.cues);
+           disp('size of obj.cues:'); 
+           disp(s);
+           if s(1) < cueIndex
+               direction = 0;
+           else
+               direction = pointDirection(obj, obj.cues(cueIndex,:));   
+           end
         end
         function direction = pointDirection(obj, target) 
            % thanks to Roger Stafford: 
