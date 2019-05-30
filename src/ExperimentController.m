@@ -474,7 +474,6 @@ classdef ExperimentController < System
 % grid1   grid2    grid3
 % EC act  CA3 act HDS act  
             figure(obj.h);
-            delete(obj.hPlace); 
             subplot(331); 
             title({'Animal in the arena'})
             obj.animal.plotAnimal(); 
@@ -498,6 +497,8 @@ classdef ExperimentController < System
 %             obj.animal.plotAnimal(); 
              subplot(336); 
             obj.animal.hippocampalFormation.headDirectionSystem.plotActivation(); 
+            
+            delete(obj.hPlace); 
             obj.hPlace = subplot(339); 
             obj.animal.hippocampalFormation.plotPlaces(); 
             drawnow

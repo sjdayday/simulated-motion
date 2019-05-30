@@ -36,8 +36,8 @@ classdef LecSystem < System
         %   head direction offset from most salient cue head direction 61-120
         %   direction to closest wall from most salient cue head direction 121-180
         function buildCanonicalView(obj, headDirection)
-            obj.lecOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells);
-            if (isa(obj.environment,'Environment')) 
+            obj.lecOutput = zeros(1, obj.nOutput);
+            if (isa(obj.environment,'Environment') && (obj.environment.nCues >= 2)) 
                 obj.index = 0; 
                 cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
                 obj.updateLecOutput(cueHeadDirection); 

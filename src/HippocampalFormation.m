@@ -181,6 +181,7 @@ classdef HippocampalFormation < System
             obj.lecOutput = zeros(1, obj.nLecOutput) ;
         end
         function buildPlaceSystem(obj)
+            disp(['MEC: ',num2str(obj.nMecOutput), 'LEC: ', num2str(obj.nLecOutput)]);  
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);             
         end
         function step(obj)
@@ -209,6 +210,7 @@ classdef HippocampalFormation < System
         function stepLec(obj)
             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
+            disp(['length lecOutput: ', num2str(length( obj.lecOutput))]); 
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);

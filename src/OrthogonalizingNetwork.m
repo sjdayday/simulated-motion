@@ -47,9 +47,10 @@ classdef OrthogonalizingNetwork < handle
         end
         function verifyInputs(obj,input)
             if (length(input) ~= obj.nSynapses) 
-                    error('OrthogonalizingNetwork:stepInputWrongLength', ...
-                    ['Input must be of same length as nSynapses; was %d.\n'], ...
-                    length(input)) ;
+                    strSynapses = num2str(obj.nSynapses); 
+                    error(['OrthogonalizingNetwork:stepInputWrongLength', ...
+                    'Input must be of same length as nSynapses: ', strSynapses, ...
+                    ' but was ', num2str(length(input))]) ;
             end
         end
 %         function plot(obj)
