@@ -9,6 +9,9 @@ classdef S7 < handle
             close all;
             obj.ec = ExperimentController(); 
             obj.ec.visualize(true);
+            obj.ec.pullVelocityFromAnimal = false;
+            obj.ec.defaultFeatureDetectors = false; 
+            obj.ec.updateFeatureDetectors = true; 
             obj.ec.build(); 
             obj.ec.setupDisplay(); 
             obj.ec.stepPause = 0;

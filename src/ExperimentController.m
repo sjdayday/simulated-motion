@@ -10,6 +10,10 @@ classdef ExperimentController < System
         headDirectionSystemPropertyMap
         nChartSystemSingleDimensionCells
         nHeadDirectionCells
+        pullVelocityFromAnimal
+        defaultFeatureDetectors
+        updateFeatureDetectors
+        
         hFigures
         totalSteps
         currentStep
@@ -43,6 +47,9 @@ classdef ExperimentController < System
     methods
         function obj = ExperimentController()
             obj.visual = false;
+            obj.pullVelocityFromAnimal = true;
+            obj.defaultFeatureDetectors = true; 
+            obj.updateFeatureDetectors = false; 
 %             obj.build(); 
         end
         function build(obj)
@@ -52,6 +59,7 @@ classdef ExperimentController < System
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
+
             buildEnvironment(obj);
             
             
@@ -85,8 +93,15 @@ classdef ExperimentController < System
             obj.environment.addWall([0 2],[2 2]); 
             obj.environment.addWall([0 0],[2 0]); 
             obj.environment.addWall([2 0],[2 2]);
-            obj.environment.build(); 
+            obj.environment.addCue([2 1.5]); 
+            obj.environment.addCue([0 1]);            
+
 %             env.setPosition([0.5 0.25]); 
+            obj.environment.distanceIntervals = 8;
+            obj.environment.directionIntervals = 60;
+            obj.environment.center = [1 1]; 
+            obj.environment.build();
+%             env.setPosition([0.5 1]); 
 
 
         end
@@ -94,6 +109,9 @@ classdef ExperimentController < System
             obj.animal = Animal();
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
+            obj.animal.pullVelocityFromAnimal = obj.pullVelocityFromAnimal; 
+            obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  
+            obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 
@@ -101,9 +119,10 @@ classdef ExperimentController < System
             obj.animal.place(obj.environment, 1, 1, 0); % pi/2  
             obj.headDirectionSystem = obj.animal.hippocampalFormation.headDirectionSystem; 
             obj.animal.chartSystem = obj.chartSystem; 
-            % move this to animal.place
+            % move this to animal.place ?
             obj.animal.hippocampalFormation.lecSystem.setEnvironment(obj.environment);
             obj.animal.controller = obj;
+            
         end
 
         function resetRandomSeed(obj, reset)

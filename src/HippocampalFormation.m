@@ -103,7 +103,7 @@ classdef HippocampalFormation < System
 %                obj.reward = zeros(1,5);  
 %             end
 %             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
-            numberOfLecIndices = 3; 
+            numberOfLecIndices = 3; % defaults to number of features in 2 cued environment
             obj.nPlaceIndices = obj.nGrids + numberOfLecIndices; 
             nPosition = 2; % [animal.x animal.y] 
             obj.lastPositionPlaceRow = zeros(1,(nPosition+obj.nPlaceIndices)); % position + place            

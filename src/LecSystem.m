@@ -1,4 +1,15 @@
 %% LecSystem class:  simple model of Lateral Entorhinal Cortex (LEC)
+% Detects angles to cues in the Environment
+% Hard-coded expectation that there are three cues:  
+%  Environment first cue (most salient)
+%  Environment second cue
+%  Environment nearest wall  
+% Builds a canonical view of the cues, calculating as if current head
+% direction was towards the most salient cue, and then calculating the
+% angles to the second cue and the nearest wall from that angle.  
+% For a given position in the arena, this means that there is one canonical
+% view of the cues, rather than one for each possible head direction at
+% that position.  
 classdef LecSystem < System 
 
     properties
@@ -17,11 +28,20 @@ classdef LecSystem < System
             obj = obj@System(); 
 %             obj.distanceUnits = 8;
             obj.nHeadDirectionCells = 60;
+            % set default number of features as if environment was present
+            % because animal doesn't know its environment until it is
+            % placed, and LecSystem is created (through
+            % HippocampalFormation) before that, we need to hard-code the
+            % number of features rather than deriving it.  
             obj.nFeatures = 3; 
 %             obj.rewardUnits = 5; 
-            obj.build();            
         end
         function build(obj)
+            if obj.isEnvironmentPresentWithTwoCues()
+               obj.nFeatures = 3;     
+            else
+               % obj.nFeatures defaults or is set externally
+            end
 %             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
             obj.lecOutput = zeros(1, obj.nFeatures * obj.nHeadDirectionCells); 
 %             obj.reward = zeros(1,obj.rewardUnits);  
@@ -31,13 +51,17 @@ classdef LecSystem < System
         function setEnvironment(obj, environment)
            obj.environment = environment;  
         end
+        function cuedEnvironment = isEnvironmentPresentWithTwoCues(obj)
+            cuedEnvironment = (isa(obj.environment,'Environment') && ...
+                (obj.environment.nCues >= 2)) ; 
+        end
         % canonical view:  
         %   head direction when pointing at most salient cue: 1-60
         %   head direction offset from most salient cue head direction 61-120
         %   direction to closest wall from most salient cue head direction 121-180
         function buildCanonicalView(obj, headDirection)
             obj.lecOutput = zeros(1, obj.nOutput);
-            if (isa(obj.environment,'Environment') && (obj.environment.nCues >= 2)) 
+            if obj.isEnvironmentPresentWithTwoCues()
                 obj.index = 0; 
                 cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
                 obj.updateLecOutput(cueHeadDirection); 

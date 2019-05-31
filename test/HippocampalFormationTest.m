@@ -355,7 +355,10 @@ classdef HippocampalFormationTest < AbstractTest
             system.updateFeatureDetectors = true;
             system.build();  
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
-                zeros(1,system.placeSystem.nCA3));                         
+                zeros(1,system.placeSystem.nCA3)); 
+            s = size(system.headDirectionSystem.featureWeights); 
+            testCase.assertEqual(system.placeSystem.nCA3, s(1), ...
+                'featureWeights rebuilt when featuresDetected is updated'); 
             system.step(); 
             testCase.assertEqual(system.placeSystem.outputIndices(), [5 49 116]); % [30 88 90]            
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  

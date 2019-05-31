@@ -22,6 +22,7 @@ classdef Animal < System
         randomHeadDirection
         defaultFeatureDetectors
         pullVelocityFromAnimal
+        updateFeatureDetectors
         clockwiseVelocity
         counterClockwiseVelocity
         directions
@@ -34,6 +35,7 @@ classdef Animal < System
         distanceTraveled
         markers
         features
+        nFeatures
         showFeatures
         justOriented
         vertices
@@ -79,8 +81,11 @@ classdef Animal < System
             obj.visual = false; 
             obj.nHeadDirectionCells = 60; 
             obj.randomHeadDirection = true; 
+            % these three probably move together, driving HDS  
             obj.pullVelocityFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
+            obj.updateFeatureDetectors = false; 
+            obj.nFeatures = 3; 
             obj.motorCortex = MotorCortex(obj); 
             obj.width = 0.05; 
             obj.length = 0.2;
@@ -107,9 +112,12 @@ classdef Animal < System
             obj.hippocampalFormation = HippocampalFormation();
             obj.hippocampalFormation.animal = obj; 
             obj.hippocampalFormation.defaultFeatureDetectors = obj.defaultFeatureDetectors; 
+            obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
+            obj.hippocampalFormation.updateFeatureDetectors = obj.updateFeatureDetectors;
+            obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
-            obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
+            
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
