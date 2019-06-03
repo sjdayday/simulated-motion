@@ -47,6 +47,7 @@ classdef HippocampalFormation < System
         nPlaceIndices
         nearThreshold
         lastPositionPlaceRow
+        showIndices
     end
     methods
         function obj = HippocampalFormation()
@@ -77,7 +78,7 @@ classdef HippocampalFormation < System
             obj.placeList = []; 
             obj.placeListDisplay = [];
             obj.updateFeatureDetectors = false; 
-            
+            obj.showIndices = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -144,6 +145,11 @@ classdef HippocampalFormation < System
             end
             obj.headDirectionSystem.build(); 
         end
+        function initializeGridActivation(obj)
+           for ii = 1:obj.nGrids
+              obj.grids(ii).initializeActivation();  
+           end
+        end
         function buildGrids(obj) 
             gain = obj.baseGain; 
             index = 0; 
@@ -205,12 +211,19 @@ classdef HippocampalFormation < System
                 max = obj.grids(1,ii).getMaxActivationIndex(); 
                 obj.mecOutput(1,index+max) = 1; 
                 index = index + obj.gridLength;     
-            end            
+            end 
+            if obj.showIndices
+                disp(['MEC output: ',mat2str(find(obj.mecOutput == 1))]);
+            end
         end
         function stepLec(obj)
             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
-            disp(['length lecOutput: ', num2str(length( obj.lecOutput))]); 
+%             disp(['length lecOutput: ', num2str(length( obj.lecOutput))]);
+            if obj.showIndices
+                disp(['LEC output: ',mat2str(find(obj.lecOutput == 1))]);
+            end
+
         end
         function stepPlace(obj)
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
@@ -218,6 +231,10 @@ classdef HippocampalFormation < System
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
            end
+           if obj.showIndices
+                disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
+           end
+
         end
         function result = savePositionForPlace(obj, position, placeId)
            placeKey = mat2str(placeId,2);

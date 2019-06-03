@@ -64,6 +64,7 @@ classdef Animal < System
         baseGain
         gridSize
         motionInputWeights
+        showHippocampalFormationECIndices
     end
     methods
         function obj = Animal()
@@ -106,7 +107,7 @@ classdef Animal < System
             obj.motionInputWeights = false; 
             obj.x = 0;
             obj.y = 0; 
-
+            obj.showHippocampalFormationECIndices = false;
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -117,7 +118,7 @@ classdef Animal < System
             obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
-            
+            obj.hippocampalFormation.showIndices = obj.showHippocampalFormationECIndices; 
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
@@ -292,7 +293,9 @@ classdef Animal < System
             obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
             obj.x = obj.x + obj.deltaX;
             obj.y = obj.y + obj.deltaY;
+
             obj.linearVelocity = obj.distanceTraveled / obj.velocityUnitsConversion; 
+            obj.environment.setPosition([obj.x, obj.y]); 
 %             obj.calculateLinearVelocity(); 
         end
 %         function calculateCartesian]Velocity(obj)

@@ -32,10 +32,13 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
             while ((totalActivation > 0) && (sum(retrieved) == 0))
                 if totalActivation > 0
                     retrieved = fix(product/totalActivation); % round toward 0
+                    disp(['totalActivation: ',num2str(totalActivation),' retrieved: ', ...
+                        mat2str(find(retrieved >= 1))]);
                 end
                 totalActivation = totalActivation - 1; 
             end
             obj.currentOutput = retrieved; 
+            
         end
         function inputX = getCurrentInputX(obj)
             inputX = obj.currentInputX; 

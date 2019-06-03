@@ -225,7 +225,12 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.x, ...
                IsEqualTo(1.1, 'Within', RelativeTolerance(.00000001)));         
             testCase.assertThat(testCase.animal.y, ...
-               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001))); 
+            % animal's position in the environment is also updated 
+            testCase.assertThat(testCase.environment.position, ...
+               IsEqualTo([1.1, 1], 'Within', RelativeTolerance(.00000001)));         
+           
+           
         end
         function testRunAtAngle(testCase)
             import matlab.unittest.constraints.IsEqualTo

@@ -36,6 +36,7 @@ classdef ExperimentController < System
         systemMap
         lastSystem
         hPlace
+        showHippocampalFormationECIndices
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -50,6 +51,7 @@ classdef ExperimentController < System
             obj.pullVelocityFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
             obj.updateFeatureDetectors = false; 
+            obj.showHippocampalFormationECIndices = false; 
 %             obj.build(); 
         end
         function build(obj)
@@ -112,6 +114,7 @@ classdef ExperimentController < System
             obj.animal.pullVelocityFromAnimal = obj.pullVelocityFromAnimal; 
             obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  
             obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
+            obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 
@@ -257,6 +260,7 @@ classdef ExperimentController < System
         end
 %         function step(obj, system)        
         function step(obj)
+           disp(['ExperimentController time: ',num2str(obj.getTime())]);
            step@System(obj); 
            events(obj); 
            obj.animal.step(); 

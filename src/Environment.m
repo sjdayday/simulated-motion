@@ -73,9 +73,10 @@ classdef Environment < System
         end
         function setPosition(obj, position)
            obj.position = position;  
+           disp(['environment position updated: ',mat2str(position)]); 
         end
         function setDirection(obj, direction)
-           obj.direction = direction;  
+           obj.direction = direction;    
         end
         function [wallIndex,distance] = closestWall(obj)
             distances = zeros(1,obj.nWalls);  
@@ -128,8 +129,8 @@ classdef Environment < System
         end
         function direction = cueDirection(obj, cueIndex)
            s = size(obj.cues);
-           disp('size of obj.cues:'); 
-           disp(s);
+%            disp('size of obj.cues:'); 
+%            disp(s);
            if s(1) < cueIndex
                direction = 0;
            else
@@ -178,7 +179,9 @@ classdef Environment < System
             obj.setDirection(((headDirection-1)/obj.directionIntervals)*(2*pi));  
         end
         function cueHeadDirection = cueHeadDirectionOffset(obj, index)
-            cueHeadDirection = obj.headDirectionOffset(obj.cueDirection(index));            
+            cueHeadDirection = obj.headDirectionOffset(obj.cueDirection(index));
+            disp(['cueHeadDirection: ',num2str(cueHeadDirection),'obj.cueDirection(index): ',...
+                num2str(obj.cueDirection(index)),' for index: ',num2str(index)]); 
         end
         function headDirection = headDirectionOffset(obj, direction)
             headDirection = fix(direction/(2*pi) * obj.directionIntervals)+1;

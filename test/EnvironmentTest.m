@@ -196,5 +196,38 @@ classdef EnvironmentTest < AbstractTest
 %             env.setDirection((2*pi));
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
         end
+        function testCalculatesHeadDirectionCellOffsetFromVariousPositions(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();  
+            env.setPosition([1 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.setHeadDirection(16);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+            % same cue and head direction, new position
+            env.setPosition([1 1.5]);             
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 41);
+%             env.setHeadDirection(46);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
+%             env.setHeadDirection(1);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+%             env.setHeadDirection(2);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 60);
+%             env.setHeadDirection(60);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
+%             env.setHeadDirection(59);
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 3);
+% %             env.setDirection((2*pi));
+%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
+        end
     end
 end
