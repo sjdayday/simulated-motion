@@ -39,6 +39,7 @@ classdef HippocampalFormation < System
         updateFeatureDetectors
         randomHeadDirection
         pullVelocity
+        pullFeatures
         visual
         h
         placeList
@@ -69,6 +70,7 @@ classdef HippocampalFormation < System
             obj.defaultFeatureDetectors = true; 
             obj.randomHeadDirection = true; 
             obj.pullVelocity = true; 
+            obj.pullFeatures = true; 
             obj.visual = false; 
             obj.animal = Animal();
             obj.loadFixedRandom();
@@ -139,7 +141,8 @@ classdef HippocampalFormation < System
             obj.headDirectionSystem.animal = obj.animal; 
 %             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
-            obj.headDirectionSystem.pullVelocity = obj.pullVelocity;   
+            obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
+            obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 
             if not(obj.defaultFeatureDetectors)
                 obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput;             
             end

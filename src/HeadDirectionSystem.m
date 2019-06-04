@@ -184,6 +184,8 @@ classdef HeadDirectionSystem < System
 %                newWeights = zeros(obj.nHeadDirectionCells);  
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
+%             disp(['HDS feature detectors: ',mat2str(find(obj.featuresDetected == 1))]);
+%             disp(['HDS feature weights: ',mat2str(find(obj.featureWeights > 0))]);
         end
         function signedAngularVelocity = updateTurnVelocity(obj, velocity)
             signedAngularVelocity = obj.minimumVelocity * velocity; 

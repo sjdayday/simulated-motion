@@ -11,6 +11,7 @@ classdef S10 < handle
             obj.ec = ExperimentController(); 
             obj.ec.visualize(true);
             obj.ec.pullVelocityFromAnimal = false;
+            obj.ec.pullFeaturesFromAnimal = false; 
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
             obj.ec.showHippocampalFormationECIndices = true; 
@@ -18,7 +19,7 @@ classdef S10 < handle
             obj.ec.setupDisplay(); 
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
-            obj.ec.totalSteps = 28;
+            obj.ec.totalSteps = 48;
 %             obj.ec.randomHeadDirection = false; % no effect?  
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/30;obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.minimumRunVelocity = 0.05;'); 
@@ -35,12 +36,12 @@ classdef S10 < handle
             obj.ec.addControllerEvent(25, 'disp(''observe location....''); pause(20); ')
             obj.ec.addHeadDirectionSystemEvent(26, 'obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(26, 'obj.hippocampalFormation.initializeGridActivation();');
-            obj.ec.addHeadDirectionSystemEvent(30, 'obj.readMode = 1;');
-            obj.ec.addAnimalEvent(31, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');     
-            obj.ec.addAnimalEvent(35, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
-            obj.ec.addAnimalEvent(39, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
-            obj.ec.addAnimalEvent(43, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
-            obj.ec.addAnimalEvent(47, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
+            obj.ec.addHeadDirectionSystemEvent(40, 'obj.readMode = 1;');
+            obj.ec.addAnimalEvent(41, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');     
+            obj.ec.addAnimalEvent(45, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
+            obj.ec.addAnimalEvent(49, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
+            obj.ec.addAnimalEvent(53, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
+            obj.ec.addAnimalEvent(57, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
 %             obj.ec.addAnimalEvent(31, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
 %             obj.ec.addAnimalEvent(31, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
 %             obj.ec.addAnimalEvent(31, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');

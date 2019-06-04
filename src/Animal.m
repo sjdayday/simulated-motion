@@ -22,6 +22,7 @@ classdef Animal < System
         randomHeadDirection
         defaultFeatureDetectors
         pullVelocityFromAnimal
+        pullFeaturesFromAnimal
         updateFeatureDetectors
         clockwiseVelocity
         counterClockwiseVelocity
@@ -84,6 +85,7 @@ classdef Animal < System
             obj.randomHeadDirection = true; 
             % these three probably move together, driving HDS  
             obj.pullVelocityFromAnimal = true;
+            obj.pullFeaturesFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
             obj.updateFeatureDetectors = false; 
             obj.nFeatures = 3; 
@@ -114,6 +116,7 @@ classdef Animal < System
             obj.hippocampalFormation.animal = obj; 
             obj.hippocampalFormation.defaultFeatureDetectors = obj.defaultFeatureDetectors; 
             obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
+            obj.hippocampalFormation.pullFeatures = obj.pullFeaturesFromAnimal;
             obj.hippocampalFormation.updateFeatureDetectors = obj.updateFeatureDetectors;
             obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;

@@ -11,6 +11,7 @@ classdef ExperimentController < System
         nChartSystemSingleDimensionCells
         nHeadDirectionCells
         pullVelocityFromAnimal
+        pullFeaturesFromAnimal
         defaultFeatureDetectors
         updateFeatureDetectors
         
@@ -49,6 +50,7 @@ classdef ExperimentController < System
         function obj = ExperimentController()
             obj.visual = false;
             obj.pullVelocityFromAnimal = true;
+            obj.pullFeaturesFromAnimal = true; 
             obj.defaultFeatureDetectors = true; 
             obj.updateFeatureDetectors = false; 
             obj.showHippocampalFormationECIndices = false; 
@@ -112,6 +114,7 @@ classdef ExperimentController < System
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
             obj.animal.pullVelocityFromAnimal = obj.pullVelocityFromAnimal; 
+            obj.animal.pullFeaturesFromAnimal = obj.pullFeaturesFromAnimal; 
             obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  
             obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
             obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices; 
