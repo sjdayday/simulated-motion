@@ -12,6 +12,7 @@ classdef PlaceSystem < AutoassociativeNetwork
         DG
         ECOutput
         DGOutput
+        placeId
     end
     methods
         function obj = PlaceSystem(nMecOutput, nLecOutput)
@@ -40,6 +41,7 @@ classdef PlaceSystem < AutoassociativeNetwork
             obj.ECOutput = [mecInput, lecInput]; 
             obj.DGOutput = obj.DG.step(obj.ECOutput);
             fired = step@AutoassociativeNetwork(obj, obj.ECOutput, obj.DGOutput); 
+            obj.placeId = fired; 
 %             fired = network.step(input);
 %             if sum(inputX) == 0
 %                 inputX = obj.currentInputX; 
@@ -56,6 +58,14 @@ classdef PlaceSystem < AutoassociativeNetwork
 %         end        
         function retrieved = read(obj, ECOutput)
             retrieved = read@AutoassociativeNetwork(obj, ECOutput); 
+            obj.placeId = retrieved; 
+        end
+        function recognized = placeRecognized(obj, ECOutput) 
+            if (obj.read(ECOutput) == zeros(1,obj.nNeurons))
+                recognized = false;
+            else
+                recognized = true; 
+            end
         end
     end
 end

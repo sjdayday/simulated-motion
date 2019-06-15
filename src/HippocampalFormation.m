@@ -232,7 +232,7 @@ classdef HippocampalFormation < System
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors
-               obj.headDirectionSystem.featuresDetected = obj.placeOutput; 
+               obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
            end
            if obj.showIndices
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);

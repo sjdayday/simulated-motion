@@ -139,7 +139,10 @@ classdef HeadDirectionSystem < System
         function setChildTimekeeper(obj, timekeeper) 
            obj.setTimekeeper(timekeeper);  
         end
-
+        function setFeaturesDetected(obj, featuresDetected)
+            obj.featuresDetected = featuresDetected; 
+            obj.pullFeatures = false; 
+        end
         function updateFeaturesDetected(obj)
            if obj.pullFeatures 
                 if isempty(obj.animal.features)

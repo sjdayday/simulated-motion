@@ -74,9 +74,6 @@ classdef HebbMarrNetwork < handle
             end
         end
         function plot(obj)
-            %Plot the raster plot of the network activity.
-            %X=time in milliseconds, Y=neuron that fired
-%             plot(obj.firings(:,1),obj.firings(:,2),'.');
         end
     end
 end
