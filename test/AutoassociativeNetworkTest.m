@@ -11,6 +11,26 @@ classdef AutoassociativeNetworkTest < AbstractTest
             retrieved = network.read([1 0 1 1 0]); %corrupted
             testCase.assertEqual(retrieved, inputY);             
         end
+        function testRetrievalRequiresThresholdNumberOfMatches(testCase)
+            network = createAutoassociativeNetwork(5);
+            network.matchThreshold = 0; % default 
+            inputY = [1 0 1 0 1];  % detonator synapses
+            inputX = [1 0 1 0 1]; 
+            fired = network.step(inputX, inputY); 
+            testCase.assertEqual(fired, inputY); 
+            retrieved = network.read([1 0 1 0 0]); %incomplete
+            testCase.assertEqual(retrieved, inputY); 
+            retrieved = network.read([1 0 0 0 0]); % minimal match
+            testCase.assertEqual(retrieved, inputY);             
+
+            network.matchThreshold = 1;
+            retrieved = network.read([1 0 1 0 0]); %incomplete
+            testCase.assertEqual(retrieved, inputY, 'above threshold so retrieves'); 
+            retrieved = network.read([1 0 0 0 0]); % minimal match
+            testCase.assertEqual(retrieved, zeros(1,5), 'below threshold so not retrieved');             
+
+        end
+        
         function testShortOutputIsNonZeroIndices(testCase)
             network = createAutoassociativeNetwork(5);
             inputY = [1 0 1 0 1];  % detonator synapses

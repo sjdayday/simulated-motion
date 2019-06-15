@@ -9,12 +9,14 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
         wiring
         currentInputX
         currentOutput
+        matchThreshold
     end
     methods
         function obj = AutoassociativeNetwork(dimension)
             obj = obj@HebbMarrNetwork(dimension);
             obj.wiring = SequentialWiring(dimension); 
             obj.currentInputX = zeros(1,dimension); 
+            obj.matchThreshold = 0; 
         end
         function fired = step(obj, inputX, inputY)
             if sum(inputX) == 0
@@ -29,8 +31,8 @@ classdef AutoassociativeNetwork < HebbMarrNetwork
             verifyInputs(obj,inputX,[]); 
             totalActivation = sum(inputX);
             product = inputX*obj.network;
-            while ((totalActivation > 0) && (sum(retrieved) == 0))
-                if totalActivation > 0
+            while ((totalActivation > obj.matchThreshold) && (sum(retrieved) == 0))
+                if totalActivation > obj.matchThreshold
                     retrieved = fix(product/totalActivation); % round toward 0
                     disp(['totalActivation: ',num2str(totalActivation),' retrieved: ', ...
                         mat2str(find(retrieved >= 1))]);
