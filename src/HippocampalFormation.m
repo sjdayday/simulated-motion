@@ -49,6 +49,7 @@ classdef HippocampalFormation < System
         nearThreshold
         lastPositionPlaceRow
         showIndices
+        placeMatchThreshold
     end
     methods
         function obj = HippocampalFormation()
@@ -81,6 +82,7 @@ classdef HippocampalFormation < System
             obj.placeListDisplay = [];
             obj.updateFeatureDetectors = false; 
             obj.showIndices = false; 
+            obj.placeMatchThreshold = 0;
          end
         function build(obj)
             calculateSizes(obj); 
@@ -191,7 +193,8 @@ classdef HippocampalFormation < System
         end
         function buildPlaceSystem(obj)
             disp(['MEC: ',num2str(obj.nMecOutput), 'LEC: ', num2str(obj.nLecOutput)]);  
-            obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);             
+            obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);
+            obj.placeSystem.matchThreshold = obj.placeMatchThreshold;
         end
         function step(obj)
             step@System(obj); 
@@ -229,6 +232,8 @@ classdef HippocampalFormation < System
 
         end
         function stepPlace(obj)
+           placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
+           disp(['Place recognized: ',num2str(placeRecognized)]);                     
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors

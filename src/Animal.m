@@ -66,6 +66,7 @@ classdef Animal < System
         gridSize
         motionInputWeights
         showHippocampalFormationECIndices
+        placeMatchThreshold
     end
     methods
         function obj = Animal()
@@ -110,6 +111,7 @@ classdef Animal < System
             obj.x = 0;
             obj.y = 0; 
             obj.showHippocampalFormationECIndices = false;
+            obj.placeMatchThreshold = 0;
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -129,7 +131,8 @@ classdef Animal < System
             obj.hippocampalFormation.nGridGains = obj.nGridGains; 
             obj.hippocampalFormation.baseGain = obj.baseGain; 
             obj.hippocampalFormation.gridSize = obj.gridSize;            
-            obj.hippocampalFormation.motionInputWeights = obj.motionInputWeights;            
+            obj.hippocampalFormation.motionInputWeights = obj.motionInputWeights; 
+            obj.hippocampalFormation.placeMatchThreshold = obj.placeMatchThreshold;
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 

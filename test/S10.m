@@ -15,6 +15,7 @@ classdef S10 < handle
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
             obj.ec.showHippocampalFormationECIndices = true; 
+            obj.ec.placeMatchThreshold = 2;
             obj.ec.build(); 
             obj.ec.setupDisplay(); 
             obj.ec.stepPause = 0;
