@@ -5,6 +5,52 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.nX, 6, '6 cols'); 
             testCase.assertEqual(gridNet.nY, 5, '5 rows'); 
         end
+        function testGridPropertiesCanBeChangedPriorToExplicitBuild(testCase)
+            gridNet = GridChartNetwork(6,5); 
+            s = size(gridNet.positiveWeights); 
+            testCase.assertEqual(s, [0 0], 'shouldnt be built yet'); 
+            
+            testCase.assertEqual(gridNet.motionWeightOffset, 5, 'current default'); 
+            gridNet.build(); 
+            positiveWeights = gridNet.positiveWeights;
+            gridNet = GridChartNetwork(6,5); 
+            gridNet.build(); 
+            testCase.assertEqual(gridNet.positiveWeights, positiveWeights, ... 
+                'weights should be same'); 
+            
+            gridNet.motionWeightOffset = 6; 
+            gridNet.build(); 
+            testCase.assertNotEqual(gridNet.positiveWeights, positiveWeights, ... 
+                'weights should be different after changing input property'); 
+            
+%             system = HippocampalFormation();
+%             system.nearThreshold = 0.2;
+%             system.nGridOrientations = 3; 
+%             system.gridDirectionBiasIncrement = pi/4;   
+%             system.gridExternalVelocity = false; 
+%             system.nGridGains = 1; 
+%             system.gridSize = [6,5];
+%             system.pullVelocity = false; 
+%             system.defaultFeatureDetectors = false; 
+%             system.updateFeatureDetectors = true;
+%             system.build();  
+%             testCase.assertTrue(system.grid(1).updateFeatureDetectors); 
+%             testCase.assertEqual(position(2), obj.positiveWeights, 'first position saved is maintained'); 
+%             system.build();
+%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+%             system.animal.x = 1.1;
+%             system.animal.y = 0.1;
+%             result = system.savePositionForPlace([1.1 0.1], [2 4 6 8]);
+%             testCase.assertEqual(result, 2, 'new place'); 
+%             result = system.savePositionForPlace([1.1 0.2], [2 4 6 8]);
+%             testCase.assertEqual(result, 1, 'near place'); 
+%             result = system.savePositionForPlace([1.1 0.5], [2 4 6 8]);
+%             testCase.assertEqual(result, 0, 'far place'); 
+%             position = system.getPositionForPlace('[2 4 6 8]'); 
+%             testCase.assertEqual(position(1), 1.1, 'first position saved is maintained'); 
+%             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
+
+        end
         function testCreateArrayOfGridChartNetwork(testCase)
             grids(1,3) = GridChartNetwork(6,5); 
             testCase.assertEqual(grids(1,3).nX, 6, ...
@@ -20,7 +66,8 @@ classdef GridChartNetworkTest < AbstractTest
             gridNet.nFeatureDetectors = 5; 
             gridNet.featureGain = 3;
             gridNet.featureOffset = 0.15;             
-            gridNet.buildNetwork();
+            gridNet.build();
+            gridNet.build();  % build twice to mimic previous behavior prior to refactor          
             gridNet.step(); 
             for ii = 1:7
                 gridNet.step();            
@@ -95,7 +142,7 @@ classdef GridChartNetworkTest < AbstractTest
             import matlab.unittest.constraints.RelativeTolerance
             gridNet = GridChartNetwork(6,5); 
             gridNet.motionInputWeights = true; 
-            gridNet.buildNetwork();
+            gridNet.build();
             gridNet.step();             
             squaredPairwiseDists = gridNet.squaredPairwiseDists; 
             gridNet.step(); 
@@ -107,7 +154,8 @@ classdef GridChartNetworkTest < AbstractTest
             import matlab.unittest.constraints.RelativeTolerance
             gridNet = GridChartNetwork(10,9); 
             gridNet.externalVelocity = true; 
-            gridNet.buildNetwork();
+            gridNet.build();
+            gridNet.build(); % build twice to mimic previous behavior prior to refactor            
             gridNet.step(); 
 %             gridNet.plot(); pause(1);  
             gridNet.step(); 
@@ -344,7 +392,7 @@ classdef GridChartNetworkTest < AbstractTest
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
             
-            network.buildNetwork();             
+            network.build();             
             network2 = GridChartNetwork(10,9);
             network2.h = h; 
             network2.gh = gh;  
@@ -354,7 +402,7 @@ classdef GridChartNetworkTest < AbstractTest
 %             network2.inputDirectionBias = pi/4; 
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
-            network2.buildNetwork(); 
+            network2.build(); 
             network3 = GridChartNetwork(10,9);
             network3.h = h; 
             network3.gh = gh;  
@@ -365,7 +413,7 @@ classdef GridChartNetworkTest < AbstractTest
 %             network3.inputDirectionBias = pi/4; 
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
-            network3.buildNetwork(); 
+            network3.build(); 
             network.updateVelocity(0.00005, 0);
             network2.updateVelocity(0.00005, 0);
             network3.updateVelocity(0.00005, 0);            
@@ -431,7 +479,7 @@ classdef GridChartNetworkTest < AbstractTest
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
             
-            network.buildNetwork();             
+            network.build();             
             network2 = GridChartNetwork(10,9);
             network2.h = h; 
             network2.gh = gh;  
@@ -442,7 +490,7 @@ classdef GridChartNetworkTest < AbstractTest
 %              network2.inputDirectionBias = pi/4; 
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
-            network2.buildNetwork(); 
+            network2.build(); 
             network3 = GridChartNetwork(10,9);
             network3.h = h; 
             network3.gh = gh;  
@@ -454,7 +502,7 @@ classdef GridChartNetworkTest < AbstractTest
 %             network3.inputDirectionBias = pi/4; 
             load '../rngDefaultSettings';
             rng(rngDefault);   % set random 
-            network3.buildNetwork(); 
+            network3.build(); 
             network.updateVelocity(0.00005, 0);
             network2.updateVelocity(0.00005, 0);
             network3.updateVelocity(0.00005, 0);            

@@ -2,26 +2,6 @@
 <pnml>
     <net id="recall">
         <token id="Default" red="0" green="0" blue="0"/>
-        <place id="Not recognized">
-            <graphics>
-                <position x="347.0" y="263.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="54.0" y="48.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
         <place id="Place not recalled">
             <graphics>
                 <position x="347.0" y="76.0"/>
@@ -122,6 +102,26 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
+        <place id="Unrecognized">
+            <graphics>
+                <position x="347.0" y="263.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="54.0" y="48.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,-2</value>
+            </initialMarking>
+        </place>
         <transition id="Create place">
             <graphics>
                 <position x="357.0" y="191.0"/>
@@ -182,7 +182,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Create place TO Not recognized" source="Create place" target="Not recognized">
+        <arc id="Create place TO Not recognized" source="Create place" target="Unrecognized">
             <arcpath id="" x="362.0" y="221.0" curvePoint="false"/>
             <arcpath id="" x="362.0" y="263.0" curvePoint="false"/>
             <type value="normal"/>

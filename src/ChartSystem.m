@@ -2,7 +2,9 @@
 % Samsonovich, A., & McNaughton, B. L. (1997). Path integration and cognitive mapping in
 % a continuous attractor neural network model. The Journal of neuroscience, 17 (15),
 % 5900{5920.
-% This class is roughly an extension of HeadDirectionSystem, from 1D to 2D
+% This class is roughly an extension of HeadDirectionSystem, from 1D to 2D,
+%
+% currently unused outside of some tests; see GridChartNetwork
 classdef ChartSystem < System 
 
     properties

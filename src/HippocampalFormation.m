@@ -89,7 +89,7 @@ classdef HippocampalFormation < System
             buildLec(obj); 
             rebuildHeadDirectionSystem(obj); 
 %             buildHeadDirectionSystem(obj); 
-            buildGrids(obj); 
+            buildGrids(obj);             
 %             buildLec(obj); 
             buildPlaceSystem(obj);
             % TODO: setTimekeeper for placesystem 
@@ -167,6 +167,7 @@ classdef HippocampalFormation < System
                     obj.grids(1,kk).inputGain = gain;
                     obj.grids(1,kk).externalVelocity = obj.gridExternalVelocity; 
                     obj.grids(1,kk).motionInputWeights = obj.motionInputWeights; 
+                    obj.grids(1,kk).build(); 
                     bias = bias + obj.gridDirectionBiasIncrement;
                     if obj.visual
                          obj.grids(1,kk).h = obj.h; 
@@ -238,6 +239,7 @@ classdef HippocampalFormation < System
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
+               %TODO update grids
            end
            if obj.showIndices
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);

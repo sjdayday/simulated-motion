@@ -114,7 +114,7 @@ classdef GridChartNetwork < System
             obj.featureOffset = 0.15; 
             obj.readMode = false; 
             obj.firstStep = true;
-            buildNetwork(obj);
+%             buildNetwork(obj);
 %             obj.Ahist = zeros(10000,1); 
 %             obj.AhistAll = zeros(1000, obj.nCells); 
 
@@ -414,7 +414,9 @@ classdef GridChartNetwork < System
             
               % Zero out negative activities
             obj.activation(obj.activation<0) = 0;
-            saveStatistics(obj); 
+            if ~obj.externalVelocity
+                saveStatistics(obj); 
+            end
             if obj.firstStep
                obj.firstStep = false;  
             end
@@ -476,8 +478,10 @@ classdef GridChartNetwork < System
             plotActivation(obj);
             subplot(obj.gh(rowIndex,2));
             plotRateMap(obj)
-            subplot(obj.gh(rowIndex,3));
-            plotTrajectory(obj)
+            if ~obj.externalVelocity
+                subplot(obj.gh(rowIndex,3));
+                plotTrajectory(obj)                
+            end
             drawnow
         end    
         function plotDetail(obj, rowIndex)

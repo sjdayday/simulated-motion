@@ -63,18 +63,18 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridExternalVelocity = false; 
             system.nGridGains = 1; 
             system.gridSize = [6,5];
-            system.build();  
+            system.build(); 
             system.stepMec(); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 4); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 15); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 24); 
-%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 13); 
-%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 18); 
-%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 2); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 14); 
+%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 4); 
+%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 15); 
+%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 24); 
             testCase.assertEqual(system.mecOutput, ...
-               [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+               [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
         %                 [ 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
 %                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 ...
 %                   0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
@@ -82,20 +82,14 @@ classdef HippocampalFormationTest < AbstractTest
             for ii = 1:20    
                 system.stepMec(); 
             end
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 19); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 25); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 22); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 26); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 29); 
             
-            %             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 17);
-%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 23); 
-%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 7); 
             testCase.assertEqual(system.mecOutput, ...
-                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%         [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 ...
                   ]); 
         end
         function testHeadDirectionUpdatedByTurnVelocityAtEachStep(testCase)
@@ -107,15 +101,15 @@ classdef HippocampalFormationTest < AbstractTest
 %             system.updateAngularVelocity(pi/10);
             system.updateTurnVelocity(2);            
             system.step(); 
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 55); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 4); % was 55 
             system.step(); 
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 55); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 10); % was 55 
             system.step(); 
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 56); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 13); % was 56 
             for ii = 3:10     
                 system.step(); 
             end
-            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 24); %was 8 
         end
         function testUpdateTurnVelocityTranslatedToAngularVelocity(testCase)
             system = HippocampalFormation();
@@ -211,48 +205,62 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridSize = [10,9];
 %             system.headDirectionSystem.pullVelocity = false;  
             system.pullVelocity = false; 
-            system.build();  
+            system.build(); 
 %    angular / turn velocity unnecessary             
-%             system.updateAngularVelocity(0); 
+%             system.updateAngularVelocity(0);
             system.step(); 
             system.step(); 
             system.headDirectionSystem.uActivation = zeros(1,60);
             system.headDirectionSystem.uActivation(8) = 1; 
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ... 
-                8, 'forced'); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 15); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 33); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 73); 
+                8, 'forced'); % up and right for first grid; w bias, third is straight up
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 78); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 68); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 15); 
+%             disp(system.grids(1,1).getMaxActivationIndex()); 
+%             system.grids(1,1).plot(); pause(1);   
+%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 15); 
+%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 33); 
+%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 73); 
             system.updateTurnAndLinearVelocity(0, 0.0001); % up, right                   
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 25); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 43); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 83, ...
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 88); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 69); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 7, ...
                 'wraps to mid-top grid');             
-%             disp(system.grids(1,3).getMaxActivationIndex()); 
-%             system.grids(1,3).plot(); pause(1);   
+%             disp(system.grids(1,1).getMaxActivationIndex()); 
+%             system.grids(1,1).plot(); pause(1);   
             system.step(); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 26); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 44); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 3);     
-%             disp(system.grids(1,3).getMaxActivationIndex()); 
-%             system.grids(1,3).plot(); pause(1);             
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 89); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 70); 
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 7);     
+%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 26); 
+%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 44); 
+%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 3);     
+%             disp(system.grids(1,1).getMaxActivationIndex()); 
+%             system.grids(1,1).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 44); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 53);
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
-%             disp(system.grids(1,3).getMaxActivationIndex()); 
-%             system.grids(1,3).plot(); pause(1);             
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 9); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 71);
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 89);
+%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 44); 
+%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 53);
+%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
+%             disp(system.grids(1,1).getMaxActivationIndex()); 
+%             system.grids(1,1).plot(); pause(1);             
             system.step();                                     
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 45); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 63);
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
-%             disp(system.grids(1,3).getMaxActivationIndex()); 
-%             system.grids(1,3).plot(); pause(1);             
+            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 18); 
+            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 72);
+            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 90);
+%             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 45); 
+%             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 63);
+%             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 13);
+%             disp(system.grids(1,1).getMaxActivationIndex()); 
+%             system.grids(1,1).plot(); pause(1);             
 %             for ii = 1:10
 %                 system.step();     
-%                 system.grids(1,3).plot(); pause(1); 
-%                 disp(system.grids(1,3).getMaxActivationIndex()); 
+%                 system.grids(1,1).plot(); pause(1); 
+%                 disp(system.grids(1,1).getMaxActivationIndex()); 
 %             end
         end
         function testMecOutputUpdatesPlaceSystemThenRetrievesSamePlace(testCase)
@@ -266,9 +274,9 @@ classdef HippocampalFormationTest < AbstractTest
             system.pullVelocity = false; 
             system.build();  
             system.stepMec(); 
-            mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+            mecOutput = [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ];
             testCase.assertEqual(system.mecOutput, mecOutput); 
             system.stepPlace(); 
@@ -308,10 +316,14 @@ classdef HippocampalFormationTest < AbstractTest
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
 
             system.step(); % stepMec 
-            mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+            mecOutput = [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                  0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
                   ];
+%             mecOutput = [ 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 ...
+%                   ];
             testCase.assertEqual(system.mecOutput, mecOutput); 
             lecOutput = system.lecOutput; 
             testCase.assertEqual(lecOutput, ...
@@ -327,7 +339,7 @@ classdef HippocampalFormationTest < AbstractTest
 %             disp(placeOutput); 
             mecLecOutput = [mecOutput, lecOutput]; 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
-               [60    86    95   144   161   243]);  
+               [47    95    96   135   161   243]);  
             testCase.assertEqual(system.placeSystem.read(mecLecOutput), ...
                 placeOutput, 'use MEC & LEC output to retrieve saved place output'); 
             mecOutputOnly = [mecOutput, zeros(1,system.nLecOutput)]; 
@@ -360,9 +372,9 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(system.placeSystem.nCA3, s(1), ...
                 'featureWeights rebuilt when featuresDetected is updated'); 
             system.step(); 
-            testCase.assertEqual(system.placeSystem.outputIndices(), [5 49 116]); % [30 88 90]            
+            testCase.assertEqual(system.placeSystem.outputIndices(), [56 63 119]); % [5 49 116]            
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
-            testCase.assertEqual(featureIndices, [5 49 116]);             
+            testCase.assertEqual(featureIndices, [56 63 119]);             
         end
         function testPlaceOutputAccumulatesAsList(testCase)
             system = HippocampalFormation();
@@ -439,6 +451,38 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
 
         end
+        function testSettlesToOriginalPlaceWhenNear(testCase)
+            system = HippocampalFormation();
+            system.nearThreshold = 0.2;
+            system.nGridOrientations = 3; 
+            system.nHeadDirectionCells = 60; 
+            system.gridDirectionBiasIncrement = pi/4;   
+            system.gridExternalVelocity = false; 
+            system.nGridGains = 1; 
+            system.gridSize = [6,5];
+            system.pullVelocity = false; 
+            system.defaultFeatureDetectors = false; 
+            system.updateFeatureDetectors = true;
+            system.showIndices = true; 
+            system.build();  
+%             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
+%                 zeros(1,system.placeSystem.nCA3));
+%             system.build();
+%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
+%             system.animal.x = 1.1;
+%             system.animal.y = 0.1;
+%             result = system.savePositionForPlace([1.1 0.1], [2 4 6 8]);
+%             testCase.assertEqual(result, 2, 'new place'); 
+%             result = system.savePositionForPlace([1.1 0.2], [2 4 6 8]);
+%             testCase.assertEqual(result, 1, 'near place'); 
+%             result = system.savePositionForPlace([1.1 0.5], [2 4 6 8]);
+%             testCase.assertEqual(result, 0, 'far place'); 
+%             position = system.getPositionForPlace('[2 4 6 8]'); 
+%             testCase.assertEqual(position(1), 1.1, 'first position saved is maintained'); 
+%             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
+
+        end
+
         
     end
 end

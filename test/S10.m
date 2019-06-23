@@ -34,12 +34,17 @@ classdef S10 < handle
             obj.ec.addAnimalEvent(20, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(22, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(24, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
-            obj.ec.addControllerEvent(25, 'disp(''observe location....''); pause(20); ')
+            obj.ec.addControllerEvent(25, 'disp(''25 observe location....''); pause(20); ')
+            obj.ec.addControllerEvent(26, 'disp(''26 observe location....''); pause(20); ')            
             obj.ec.addHeadDirectionSystemEvent(26, 'obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(26, 'obj.hippocampalFormation.initializeGridActivation();');
+            obj.ec.addControllerEvent(35, 'disp(''35 observe location....''); pause(20); ')
+            obj.ec.addControllerEvent(36, 'disp(''36 observe location....''); pause(2); ')            
             obj.ec.addHeadDirectionSystemEvent(40, 'obj.readMode = 1;');
             obj.ec.addAnimalEvent(41, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');     
             obj.ec.addAnimalEvent(45, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
+            obj.ec.addControllerEvent(45, 'disp(''45 observe location....''); pause(20); ')
+            obj.ec.addControllerEvent(46, 'disp(''46 observe location....''); pause(20); ')            
             obj.ec.addAnimalEvent(49, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
             obj.ec.addAnimalEvent(53, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');
             obj.ec.addAnimalEvent(57, 'obj.motorCortex.turnDistance = 1; obj.motorCortex.clockwiseTurn();');

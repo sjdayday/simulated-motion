@@ -23,7 +23,7 @@ classdef S4Test < AbstractTest
             pause(2);
             testCase.assertEqual(script.ec.getTime(), 22); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                19); 
+                29); 
             v = script.ec.animal.vertices; 
             testCase.assertThat(v(1,:), ...            
                  IsEqualTo([1 1.05], 'Within', RelativeTolerance(.0001))); 
@@ -32,15 +32,15 @@ classdef S4Test < AbstractTest
             testCase.assertThat(v(3,:), ...            
                  IsEqualTo([1.2 1], 'Within', RelativeTolerance(.0001)));    
 %             testCase.assertEqual(script.ec.getTime(), 22); 
-            script.run(3);
+            script.run(5);
 %             testCase.assertEqual(script.ec.getTime(), 24); 
 %             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
 %                 20); 
 %             script.run(1);
-            testCase.assertEqual(script.ec.getTime(), 25); 
+            testCase.assertEqual(script.ec.getTime(), 27); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                14); 
-            script.run(10);
+                4); 
+            script.run(8);
 %             pause(10);
             testCase.assertEqual(script.ec.getTime(), 35); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...

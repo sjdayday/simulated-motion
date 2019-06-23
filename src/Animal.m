@@ -213,9 +213,8 @@ classdef Animal < System
                     calculateVertices(obj);
                     
                     obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseNess * relativeSpeed), 0); 
-    %                      obj.hippocampalFormation.headDirectionSystem.step(); 
+
                     obj.controller.step(); 
-    %                      obj.step(); 
 
                 else
                     error('Animal:ClockwiseNess', ...
@@ -239,12 +238,7 @@ classdef Animal < System
             obj.calculateVertices(); 
             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, obj.linearVelocity); 
 
-%                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
-%                     calculateVertices(obj);
-%                     obj.hippocampalFormation.headDirectionSystem.updateTurnVelocity(clockwiseNess * relativeSpeed); 
-%                      obj.hippocampalFormation.headDirectionSystem.step(); 
-                    obj.controller.step(); 
-%                      obj.step(); 
+            obj.controller.step(); 
 
         end
         function orientAnimal(obj, direction)
