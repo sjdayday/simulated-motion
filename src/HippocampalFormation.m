@@ -1,4 +1,4 @@
-% HippocampalFormation class:  extends System
+ % HippocampalFormation class:  extends System
 % models the functions of the hippocampus and entorhinal cortex
 classdef HippocampalFormation < System 
 
@@ -239,7 +239,9 @@ classdef HippocampalFormation < System
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
-               %TODO update grids
+               for jj = 1:obj.nGrids
+                  obj.grids(1,jj).featuresDetected = obj.placeOutput; 
+               end
            end
            if obj.showIndices
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);

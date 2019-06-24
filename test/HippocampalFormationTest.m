@@ -354,7 +354,7 @@ classdef HippocampalFormationTest < AbstractTest
                 'simple counter case; zeros does not retrieve place'); 
 %             disp(system.placeSystem.outputIndices());  % 30    88    90
         end
-        function testHeadDirectionSystemTreatsPlaceOutputAsDetectedFeatures(testCase)
+        function testHdsAndGridsTreatPlaceOutputAsDetectedFeatures(testCase)
             system = HippocampalFormation();
             system.nGridOrientations = 3; 
             system.nHeadDirectionCells = 60; 
@@ -374,7 +374,11 @@ classdef HippocampalFormationTest < AbstractTest
             system.step(); 
             testCase.assertEqual(system.placeSystem.outputIndices(), [56 63 119]); % [5 49 116]            
             featureIndices = find(system.headDirectionSystem.featuresDetected == 1);  
-            testCase.assertEqual(featureIndices, [56 63 119]);             
+            testCase.assertEqual(featureIndices, [56 63 119]); 
+            for jj = 1:3
+                featureIndices = find(system.grids(1,jj).featuresDetected == 1);  
+                testCase.assertEqual(featureIndices, [56 63 119]); 
+            end
         end
         function testPlaceOutputAccumulatesAsList(testCase)
             system = HippocampalFormation();
