@@ -29,7 +29,7 @@ classdef HippocampalFormation < System
         nMecOutput
         headDirectionSystem
         currentHeadDirection
-        featureOutput
+        nFeatureDetectors
         lecSystem
         lecOutput
         nLecOutput
@@ -110,8 +110,10 @@ classdef HippocampalFormation < System
 %             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
             numberOfLecIndices = 3; % defaults to number of features in 2 cued environment
             obj.nPlaceIndices = obj.nGrids + numberOfLecIndices; 
+            obj.nLecOutput = obj.nFeatures * obj.nHeadDirectionCells; 
             nPosition = 2; % [animal.x animal.y] 
             obj.lastPositionPlaceRow = zeros(1,(nPosition+obj.nPlaceIndices)); % position + place            
+            obj.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput; 
         end
         function rebuildHeadDirectionSystem(obj) 
             tempMap = []; 
@@ -146,7 +148,7 @@ classdef HippocampalFormation < System
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
             obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 
             if not(obj.defaultFeatureDetectors)
-                obj.headDirectionSystem.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput;             
+                obj.headDirectionSystem.nFeatureDetectors = obj.nFeatureDetectors; % obj.nMecOutput + obj.nLecOutput;             
             end
             obj.headDirectionSystem.build(); 
         end
@@ -167,6 +169,7 @@ classdef HippocampalFormation < System
                     obj.grids(1,kk).inputGain = gain;
                     obj.grids(1,kk).externalVelocity = obj.gridExternalVelocity; 
                     obj.grids(1,kk).motionInputWeights = obj.motionInputWeights; 
+                    obj.grids(1,kk).nFeatureDetectors = obj.nFeatureDetectors;
                     obj.grids(1,kk).build(); 
                     bias = bias + obj.gridDirectionBiasIncrement;
                     if obj.visual
@@ -232,9 +235,12 @@ classdef HippocampalFormation < System
             end
 
         end
-        function stepPlace(obj)
+        function placeRecognized = placeRecognized(obj)
            placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
-           disp(['Place recognized: ',num2str(placeRecognized)]);                     
+           disp(['Place recognized: ',num2str(placeRecognized)]);                                 
+        end
+        function stepPlace(obj)
+           placeRecognized = obj.placeRecognized(); 
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors

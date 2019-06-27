@@ -3,6 +3,7 @@ classdef HippocampalFormationTest < AbstractTest
         % testBinaryPerforantInputsStrengthenWeightsOnDirectPath
         function testBuildHippocampalFormation(testCase)
             system = HippocampalFormation();
+            system.defaultFeatureDetectors = false; 
             system.nHeadDirectionCells = 60; 
             system.nGridOrientations = 5; 
             system.nGridGains = 3; 
@@ -19,6 +20,9 @@ classdef HippocampalFormationTest < AbstractTest
                 '3 features, each 60 orientation'); 
             testCase.assertEqual(system.placeSystem.nDGInput, 1530); 
             testCase.assertEqual(system.placeSystem.nCA3, 1530);
+            testCase.assertEqual(system.nFeatureDetectors, 1530);
+            testCase.assertEqual(system.headDirectionSystem.nFeatureDetectors, 1530);            
+            testCase.assertEqual(system.grids(1).nFeatureDetectors, 1530);            
 %             MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
 %             LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
 %             fired = placeSystem.step(MecOutput, LecOutput); 
@@ -457,7 +461,7 @@ classdef HippocampalFormationTest < AbstractTest
         end
         function testSettlesToOriginalPlaceWhenNear(testCase)
             system = HippocampalFormation();
-            system.nearThreshold = 0.2;
+            % system.animal.minimumRunVelocity = 0.05 ; 
             system.nGridOrientations = 3; 
             system.nHeadDirectionCells = 60; 
             system.gridDirectionBiasIncrement = pi/4;   
@@ -465,10 +469,61 @@ classdef HippocampalFormationTest < AbstractTest
             system.nGridGains = 1; 
             system.gridSize = [6,5];
             system.pullVelocity = false; 
+            system.nFeatures = 3; 
+
             system.defaultFeatureDetectors = false; 
             system.updateFeatureDetectors = true;
             system.showIndices = true; 
-            system.build();  
+            system.build();
+            
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();
+            system.lecSystem.setEnvironment(env); 
+            env.setPosition([0.5 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.addCue([0 0]);            
+%             currentHeadDirection = 10;
+%             system.lecSystem.buildCanonicalView(currentHeadDirection); 
+
+            system.step(); % stepMec 
+%             mecOutput = [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   ];
+%             testCase.assertEqual(system.mecOutput, mecOutput); 
+%             lecOutput = system.lecOutput; 
+%             testCase.assertEqual(lecOutput, ...
+%                 [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
+%                   1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+%                   ]);             
+            system.stepPlace(); 
+%             placeOutput = system.placeOutput; 
+% %             disp(placeOutput); 
+%             mecLecOutput = [mecOutput, lecOutput]; 
+            testCase.assertEqual(system.placeSystem.outputIndices(), ...
+               [47    95    96   135   161   243]);  
+            
+            system.updateTurnAndLinearVelocity(0, 0.0001); 
+            system.stepHds(); 
+            system.stepMec(); 
+            system.stepLec(); 
+            testCase.assertTrue(system.placeRecognized()); 
+          
+%             system.step(); 
+%             testCase.assertEqual(system.placeSystem.outputIndices(), [56 63 119]); % [5 49 116]            
+            
 %             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
 %                 zeros(1,system.placeSystem.nCA3));
 %             system.build();
