@@ -67,6 +67,8 @@ classdef GridChartNetwork < System
         gh
         Ahist
         AhistAll
+        % motionInputWeights: roughly, if false, use velocity to drive
+        % motion, not a set of weights as in original model.
         motionInputWeights
         squaredPairwiseDists
         readMode
@@ -389,23 +391,6 @@ classdef GridChartNetwork < System
             
             if obj.motionInputWeights == true
                 obj.calculateActivationMotionInputWeights(synapticInput); 
-%                 obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
-%                 synapticInputHorizontal = synapticInput + ...
-%                     obj.horizontalInput;
-%                 synapticInputHorizontalShape = ... 
-%                     reshape(synapticInputHorizontal,obj.nY,obj.nX); 
-%                 synapticInputVerticalShape = synapticInputHorizontalShape'; 
-%                 synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
-%                 obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
-%                 synapticInputHorizontalVertical = synapticInputVertical + ...
-%                     obj.verticalInput;
-%                 synapticInputVertical2 = ... 
-%                     reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
-%                 synapticInputHorizontal2 = synapticInputVertical2'; 
-%                 synapticInputNormal = ... 
-%                     reshape(synapticInputHorizontal2,1,obj.nCells); 
-%                 obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
-%                   obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
             else
                 obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.activation));
@@ -420,6 +405,9 @@ classdef GridChartNetwork < System
             if obj.firstStep
                obj.firstStep = false;  
             end
+        end
+        function maxActivation = getMaxActivation(obj)
+           maxActivation = max(obj.activation);  
         end
         function maxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.activation==max(obj.activation));

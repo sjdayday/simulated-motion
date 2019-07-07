@@ -1,4 +1,4 @@
- % HippocampalFormation class:  extends System
+% HippocampalFormation class:  extends System
 % models the functions of the hippocampus and entorhinal cortex
 classdef HippocampalFormation < System 
 
@@ -50,6 +50,7 @@ classdef HippocampalFormation < System
         lastPositionPlaceRow
         showIndices
         placeMatchThreshold
+        settleToPlace
     end
     methods
         function obj = HippocampalFormation()
@@ -83,6 +84,7 @@ classdef HippocampalFormation < System
             obj.updateFeatureDetectors = false; 
             obj.showIndices = false; 
             obj.placeMatchThreshold = 0;
+            obj.settleToPlace = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -210,28 +212,59 @@ classdef HippocampalFormation < System
         function stepHds(obj)
             obj.headDirectionSystem.step(); 
         end
-        function stepMec(obj)
+        function initializeMecOutput(obj)
             obj.mecOutput = zeros(1,obj.nMecOutput); 
-            index = 0; 
+        end
+        function stepMec(obj)
+            obj.initializeMecOutput();
+            mecOutputOffset = 0; 
             obj.updateCurrentHeadDirection();
             v =  calculateCartesianVelocity(obj);
             for ii = 1:obj.nGrids
                 obj.grids(1,ii).updateVelocity(v(1),v(2)); 
-                obj.grids(1,ii).step(); 
-                max = obj.grids(1,ii).getMaxActivationIndex(); 
-                obj.mecOutput(1,index+max) = 1; 
-                index = index + obj.gridLength;     
+                mecOutputOffset = obj.stepGrid(mecOutputOffset, ii);
+                disp(['grid ',num2str(ii),': ',num2str(obj.grids(1,ii).getMaxActivation())]);
+%                 obj.grids(1,ii).step(); 
+%                 max = obj.grids(1,ii).getMaxActivationIndex(); 
+%                 obj.mecOutput(1,index+max) = 1; 
+%                 index = index + obj.gridLength;     
             end 
             if obj.showIndices
-                disp(['MEC output: ',mat2str(find(obj.mecOutput == 1))]);
+                disp(['MEC output: ',obj.printMecOutputIndices()]);
             end
+        end
+        function mecOutputOffset = stepGrid(obj, mecOutputOffset, ii)
+            obj.grids(1,ii).step(); 
+            max = obj.grids(1,ii).getMaxActivationIndex(); 
+            mecOutputOffset = updateMecOutput(obj, mecOutputOffset, max); 
+%             obj.mecOutput(1,index+max) = 1; 
+%             index = index + obj.gridLength;                 
+        end
+        function mecOutputOffset = updateMecOutput(obj, mecOutputOffset, max)
+            obj.mecOutput(1,mecOutputOffset+max) = 1; 
+            mecOutputOffset = mecOutputOffset + obj.gridLength;                             
+        end
+        function indices = mecOutputIndices(obj)
+           indices = obj.outputIndices(obj.mecOutput);   
+        end
+        function indices = lecOutputIndices(obj)
+           indices = obj.outputIndices(obj.lecOutput);   
+        end
+        function indices = outputIndices(~, output)
+           indices = find(output == 1);    
+        end
+        function print = printMecOutputIndices(obj)
+           print = mat2str(obj.mecOutputIndices());   
+        end
+        function print = printLecOutputIndices(obj)
+           print = mat2str(obj.lecOutputIndices());   
         end
         function stepLec(obj)
             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
 %             disp(['length lecOutput: ', num2str(length( obj.lecOutput))]);
             if obj.showIndices
-                disp(['LEC output: ',mat2str(find(obj.lecOutput == 1))]);
+                disp(['LEC output: ',obj.printLecOutputIndices()]);
             end
 
         end
@@ -241,6 +274,9 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            placeRecognized = obj.placeRecognized(); 
+           if placeRecognized && obj.settleToPlace
+              obj.settle();  
+           end
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors
@@ -253,6 +289,61 @@ classdef HippocampalFormation < System
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
            end
 
+        end
+        function settle(obj)
+%            disp(['settling to: ', mat2str(obj.placeSystem.outputIndices())]); % mat2str(find(obj.placeSystem.placeId == 1))]); 
+            disp(['hds features detected: ', mat2str(find(obj.headDirectionSystem.featuresDetected == 1))]); 
+            disp(['grid(1) features detected: ', mat2str(find(obj.grids(1).featuresDetected == 1))]);             
+% %             obj.placeSystem.placeId
+            obj.setReadMode(1);
+            obj.settleHds(); 
+            obj.settleGrids();
+            if obj.showIndices
+                disp(['MEC output after settling: ',obj.printMecOutputIndices()]);
+            end
+
+            obj.setReadMode(0);            
+        end
+        function settleHds(obj) 
+            disp('about to settle HDS'); 
+            lastHdsActivation = obj.headDirectionSystem.getMaxActivationIndex(); 
+            newHdsActivation = 0; 
+            disp(['about to settle HDS from: ', num2str(lastHdsActivation)]);
+            obj.stepHds(); 
+            while newHdsActivation ~=  lastHdsActivation 
+                lastHdsActivation = obj.headDirectionSystem.getMaxActivationIndex();
+                disp(['settling HDS ', num2str(obj.headDirectionSystem.getMaxActivationIndex())]); 
+                obj.stepHds();
+                newHdsActivation = obj.headDirectionSystem.getMaxActivationIndex();
+            end            
+        end
+        function settleGrids(obj)
+            obj.initializeMecOutput();
+            mecOutputOffset = 0;
+            for ii = 1:obj.nGrids
+              newGridActivation = obj.settleGrid(ii);  
+              mecOutputOffset = obj.updateMecOutput(mecOutputOffset, newGridActivation);
+           end
+        end
+        
+        function newGridActivation = settleGrid(obj, ii) 
+            disp(['about to settle Grid ', num2str(ii)]); 
+            lastGridActivation = obj.grids(ii).getMaxActivationIndex(); 
+            newGridActivation = 0; 
+            disp(['about to settle Grid from: ', num2str(lastGridActivation)]);
+            obj.grids(ii).step(); 
+            while newGridActivation ~=  lastGridActivation 
+                lastGridActivation = obj.grids(ii).getMaxActivationIndex(); 
+                disp(['settling grid ', num2str(obj.grids(ii).getMaxActivationIndex())]); 
+                obj.grids(ii).step(); 
+                newGridActivation = obj.grids(ii).getMaxActivationIndex();
+            end            
+        end
+        function setReadMode(obj, mode)
+            obj.headDirectionSystem.readMode = mode;
+            for ii = 1:obj.nGrids
+              obj.grids(ii).readMode = mode;  
+           end
         end
         function result = savePositionForPlace(obj, position, placeId)
            placeKey = mat2str(placeId,2);

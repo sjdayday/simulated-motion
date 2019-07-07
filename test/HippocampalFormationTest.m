@@ -1,4 +1,9 @@
 classdef HippocampalFormationTest < AbstractTest
+    properties
+        hf
+        h
+        counter
+    end
     methods (Test)
         % testBinaryPerforantInputsStrengthenWeightsOnDirectPath
         function testBuildHippocampalFormation(testCase)
@@ -461,11 +466,18 @@ classdef HippocampalFormationTest < AbstractTest
         end
         function testSettlesToOriginalPlaceWhenNear(testCase)
             system = HippocampalFormation();
+            testCase.hf = system; 
+            testCase.h=figure; 
+            testCase.counter = 0; 
+            hold on;  
+            system.h = testCase.h;
+            system.visual = true; 
+            system.settleToPlace = true; 
             % system.animal.minimumRunVelocity = 0.05 ; 
             system.nGridOrientations = 3; 
             system.nHeadDirectionCells = 60; 
             system.gridDirectionBiasIncrement = pi/4;   
-            system.gridExternalVelocity = false; 
+            system.gridExternalVelocity = true; 
             system.nGridGains = 1; 
             system.gridSize = [6,5];
             system.pullVelocity = false; 
@@ -492,8 +504,15 @@ classdef HippocampalFormationTest < AbstractTest
             env.addCue([0 0]);            
 %             currentHeadDirection = 10;
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
-
-            system.step(); % stepMec 
+            testCase.plotGrids();
+            system.step(); % stepMec and stepPlace 
+            testCase.plotGrids();
+            system.step(); % stepMec and stepPlace 
+            testCase.plotGrids();
+            system.step(); % stepMec and stepPlace 
+            testCase.plotGrids();
+            system.step(); % stepMec and stepPlace 
+            testCase.plotGrids();
 %             mecOutput = [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
 %                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
 %                   0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
@@ -508,19 +527,53 @@ classdef HippocampalFormationTest < AbstractTest
 %                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
 %                   1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
 %                   ]);             
-            system.stepPlace(); 
+%             system.stepPlace(); % <==
+            
 %             placeOutput = system.placeOutput; 
 % %             disp(placeOutput); 
 %             mecLecOutput = [mecOutput, lecOutput]; 
-            testCase.assertEqual(system.placeSystem.outputIndices(), ...
-               [47    95    96   135   161   243]);  
-            
-            system.updateTurnAndLinearVelocity(0, 0.0001); 
+%             testCase.assertEqual(system.mecOutputIndices(), ...
+%                [17 33 87], 'original mec output');  % [17 33 87]
+%             testCase.assertEqual(system.lecOutputIndices(), ...
+%                [1 101 151], 'original lec output');  
+%             testCase.assertEqual(system.placeSystem.outputIndices(), ...
+%                [54 95 106 161 243 268]);  
+            disp('about to move'); 
+            % mimic small run
+            system.updateTurnAndLinearVelocity(0, 0.0003); 
+            system.stepMec();             
+            testCase.plotGrids();
+            system.stepMec();             
+            testCase.plotGrids();
+            system.stepMec();             
+            testCase.plotGrids();
+            system.stepMec();             
+            testCase.plotGrids();
+            system.stepMec();             
+            testCase.plotGrids();
+            system.stepMec();             
+            testCase.plotGrids();
+%             system.updateTurnAndLinearVelocity(0, 0.00015); 
+            env.setPosition([0.6 1]);
+            % calculate new place 
             system.stepHds(); 
             system.stepMec(); 
             system.stepLec(); 
+            testCase.plotGrids();
             testCase.assertTrue(system.placeRecognized()); 
+            testCase.assertEqual(system.placeSystem.outputIndices(), ...
+               [54 95 106 161 243 268]); 
+            testCase.assertEqual(system.mecOutputIndices(), ...
+               [17 33 83], 'different mec output');  % [17 58 83] 17 33 83
+            testCase.assertEqual(system.lecOutputIndices(), ...
+               [1 100 151], 'different lec output');  
+            
+            system.settle(); 
+            testCase.plotGrids();
+            testCase.assertEqual(system.mecOutputIndices(), ...
+               [17 33 87], 'settle back to original mec output');  
           
+            
 %             system.step(); 
 %             testCase.assertEqual(system.placeSystem.outputIndices(), [56 63 119]); % [5 49 116]            
             
@@ -541,7 +594,20 @@ classdef HippocampalFormationTest < AbstractTest
 %             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
 
         end
+        function plotGrids(testCase)
+            testCase.counter = testCase.counter + 1; 
+            figure(testCase.h); 
+            subplot(2,3,1); 
 
+            testCase.hf.grids(1).plotActivation(); 
+            subplot(2,3,2); 
+            testCase.hf.grids(2).plotActivation(); 
+            subplot(2,3,3); 
+            testCase.hf.grids(3).plotActivation(); 
+            subplot(2,3,4);             
+            title({'counter ',sprintf('t = %d',testCase.counter)})
+            pause(1); 
+        end
         
     end
 end
