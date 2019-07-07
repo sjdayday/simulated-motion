@@ -335,16 +335,8 @@ classdef GridChartNetwork < System
             for ii = 1:length(obj.featuresDetected)
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
             end
-%             rrow = obj.featureWeights(30,:);
-%             disp([' ',max(rrow)]); 
-%             disp(find(rrow == max(rrow)));
-%             disp(find(obj.uActivation == max(obj.uActivation)));
-%             if obj.time > 10 
-%                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
-%             end
             if obj.readMode
                newWeights = zeros(size(obj.featureWeights));  
-%                newWeights = zeros(obj.nHeadDirectionCells);  
             end
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
@@ -367,38 +359,62 @@ classdef GridChartNetwork < System
                 obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
                   obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
         end
-        function  step(obj)
-            step@System(obj); 
-%             obj.time = obj.time+1;
-            buildVelocity(obj);
-            updateFeatureWeights(obj);            
-            %% Generate new weight matrix for current velocity
-
-            buildSquaredPairwiseDists(obj);
+        function updateActivationWithFeatureInputs(obj)
+            updateFeatureWeights(obj); 
+            featureInput = obj.featuresDetected * obj.featureWeights;         
+            obj.updateActivation(featureInput); 
+        end
+        function settle(obj) 
+            obj.readMode = 1; 
+            lastGridActivation = obj.getMaxActivationIndex(); 
+            newGridActivation = 0; 
+            disp(['about to settle Grid from: ', num2str(lastGridActivation)]);
+            obj.updateActivationWithFeatureInputs(); 
+            while newGridActivation ~=  lastGridActivation 
+                lastGridActivation = obj.getMaxActivationIndex(); 
+                obj.updateActivationWithFeatureInputs(); 
+                newGridActivation = obj.getMaxActivationIndex();
+            end
+            obj.readMode = 0; 
+        end
         
+        function updateActivationWithMotionInputs(obj)           
+            buildVelocity(obj);
+            %% Generate new weight matrix for current velocity
+       
+            buildSquaredPairwiseDists(obj);
+            
               % Weights have an excitatory center that peaks at 
               % I-T (peakSynapticStrength-shiftInhibitoryTail) and if T>0, the
               % weights are inhibitory for sufficiently high distances; specifically,
               % for distance > sigma*sqrt(-log(T/I)).
-             
+              
             obj.weights = obj.peakSynapticStrength * ... 
             exp(-obj.squaredPairwiseDists/obj.weightStdDev^2) - ... 
             obj.shiftInhibitoryTail;
 
             motionSynapticInput = obj.activation*obj.weights';
-            featureInput = obj.featuresDetected * obj.featureWeights; 
-            synapticInput = motionSynapticInput + featureInput; 
-            
+            obj.updateActivation(motionSynapticInput); 
+        end
+        function updateActivation(obj, synapticInput)
             if obj.motionInputWeights == true
                 obj.calculateActivationMotionInputWeights(synapticInput); 
             else
                 obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
-                  obj.normalizedWeight*(synapticInput/sum(obj.activation));
-                
-            end
-            
+                  obj.normalizedWeight*(synapticInput/sum(obj.activation));                
+            end            
               % Zero out negative activities
-            obj.activation(obj.activation<0) = 0;
+            obj.activation(obj.activation<0) = 0;            
+        end
+        function  step(obj)
+            step@System(obj); 
+%       originally, synaptic input was sum of motion and feature inputs
+%       now, either one or the other, defaulting to motion.  
+%             synapticInput = motionSynapticInput + featureInput; 
+            
+            obj.updateActivationWithMotionInputs(); 
+%             obj.updateActivation(synapticInput); 
+            
             if ~obj.externalVelocity
                 saveStatistics(obj); 
             end
