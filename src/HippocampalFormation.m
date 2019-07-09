@@ -272,19 +272,27 @@ classdef HippocampalFormation < System
            placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
            disp(['Place recognized: ',num2str(placeRecognized)]);                                 
         end
+        function updateGridsWithFeatureInput(obj)
+           for jj = 1:obj.nGrids
+              obj.grids(1,jj).readMode = 0;
+              obj.grids(1,jj).updateFeatureWeights(); % or update...FeatureInputs? 
+           end            
+        end
         function stepPlace(obj)
            placeRecognized = obj.placeRecognized(); 
-           if placeRecognized && obj.settleToPlace
-              obj.settle();  
-           end
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
-           obj.addPositionAndPlaceIfDifferent(); 
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
                for jj = 1:obj.nGrids
                   obj.grids(1,jj).featuresDetected = obj.placeOutput; 
                end
            end
+           if placeRecognized && obj.settleToPlace
+              obj.settle();  
+           else
+              obj.updateGridsWithFeatureInput();  
+           end
+           obj.addPositionAndPlaceIfDifferent(); 
            if obj.showIndices
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
            end
@@ -321,23 +329,9 @@ classdef HippocampalFormation < System
             obj.initializeMecOutput();
             mecOutputOffset = 0;
             for ii = 1:obj.nGrids
-              newGridActivation = obj.settleGrid(ii);  
+              newGridActivation = obj.grids(ii).settle();  
               mecOutputOffset = obj.updateMecOutput(mecOutputOffset, newGridActivation);
            end
-        end
-        
-        function newGridActivation = settleGrid(obj, ii) 
-            disp(['about to settle Grid ', num2str(ii)]); 
-            lastGridActivation = obj.grids(ii).getMaxActivationIndex(); 
-            newGridActivation = 0; 
-            disp(['about to settle Grid from: ', num2str(lastGridActivation)]);
-            obj.grids(ii).step(); 
-            while newGridActivation ~=  lastGridActivation 
-                lastGridActivation = obj.grids(ii).getMaxActivationIndex(); 
-                disp(['settling grid ', num2str(obj.grids(ii).getMaxActivationIndex())]); 
-                obj.grids(ii).step(); 
-                newGridActivation = obj.grids(ii).getMaxActivationIndex();
-            end            
         end
         function setReadMode(obj, mode)
             obj.headDirectionSystem.readMode = mode;

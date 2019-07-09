@@ -364,16 +364,16 @@ classdef GridChartNetwork < System
             featureInput = obj.featuresDetected * obj.featureWeights;         
             obj.updateActivation(featureInput); 
         end
-        function settle(obj) 
+        function newActivation = settle(obj) 
             obj.readMode = 1; 
-            lastGridActivation = obj.getMaxActivationIndex(); 
-            newGridActivation = 0; 
-            disp(['about to settle Grid from: ', num2str(lastGridActivation)]);
+            lastActivation = obj.getMaxActivationIndex(); 
+            newActivation = 0; 
+            disp(['about to settle Grid from: ', num2str(lastActivation)]);
             obj.updateActivationWithFeatureInputs(); 
-            while newGridActivation ~=  lastGridActivation 
-                lastGridActivation = obj.getMaxActivationIndex(); 
+            while newActivation ~=  lastActivation 
+                lastActivation = obj.getMaxActivationIndex(); 
                 obj.updateActivationWithFeatureInputs(); 
-                newGridActivation = obj.getMaxActivationIndex();
+                newActivation = obj.getMaxActivationIndex();
             end
             obj.readMode = 0; 
         end

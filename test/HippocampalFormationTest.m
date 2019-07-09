@@ -506,6 +506,9 @@ classdef HippocampalFormationTest < AbstractTest
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
+            testCase.assertEqual(system.placeSystem.outputIndices(), ...
+               [54 95 106 161 243 268], ...
+               'initial indices prior to network convergence');  
             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
             testCase.plotGrids();
@@ -513,47 +516,18 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
             testCase.plotGrids();
-%             mecOutput = [ 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   ];
-%             testCase.assertEqual(system.mecOutput, mecOutput); 
-%             lecOutput = system.lecOutput; 
-%             testCase.assertEqual(lecOutput, ...
-%                 [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
-%                   1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-%                   ]);             
-%             system.stepPlace(); % <==
-            
-%             placeOutput = system.placeOutput; 
-% %             disp(placeOutput); 
-%             mecLecOutput = [mecOutput, lecOutput]; 
-%             testCase.assertEqual(system.mecOutputIndices(), ...
-%                [17 33 87], 'original mec output');  % [17 33 87]
-%             testCase.assertEqual(system.lecOutputIndices(), ...
-%                [1 101 151], 'original lec output');  
-%             testCase.assertEqual(system.placeSystem.outputIndices(), ...
-%                [54 95 106 161 243 268]);  
+            testCase.assertEqual(system.mecOutputIndices(), ...
+               [17 33 87], 'original mec output'); 
+            testCase.assertEqual(system.lecOutputIndices(), ...
+               [1 101 151], 'original lec output');  
+            testCase.assertEqual(system.placeSystem.outputIndices(), ...
+               [51 72 95 161 225 243]);  
             disp('about to move'); 
+%             pause(5); 
             % mimic small run
-            system.updateTurnAndLinearVelocity(0, 0.0003); 
-            system.stepMec();             
-            testCase.plotGrids();
-            system.stepMec();             
-            testCase.plotGrids();
-            system.stepMec();             
-            testCase.plotGrids();
-            system.stepMec();             
-            testCase.plotGrids();
-            system.stepMec();             
-            testCase.plotGrids();
-            system.stepMec();             
-            testCase.plotGrids();
-%             system.updateTurnAndLinearVelocity(0, 0.00015); 
+            system.updateTurnAndLinearVelocity(0, 0.0001); 
+%             system.stepMec();             
+%             testCase.plotGrids();
             env.setPosition([0.6 1]);
             % calculate new place 
             system.stepHds(); 
@@ -562,37 +536,22 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.plotGrids();
             testCase.assertTrue(system.placeRecognized()); 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
-               [54 95 106 161 243 268]); 
+               [95 161 243], ...
+               'common indices between current and original place'); % [51 72 95 161 225 243] full place Id 
+            testCase.assertEqual(find(system.grids(1).featuresDetected == 1), [51 72 95 161 225 243]); 
+            % featuresDetected not updated with (shorter) place Id, but
+            % using previous placeId to pull us back later
             testCase.assertEqual(system.mecOutputIndices(), ...
-               [17 33 83], 'different mec output');  % [17 58 83] 17 33 83
-            testCase.assertEqual(system.lecOutputIndices(), ...
-               [1 100 151], 'different lec output');  
+               [17 59 83], 'different mec output');  
+%             testCase.assertEqual(system.lecOutputIndices(), ...
+%                [1 100 151], 'different lec output');  
             
             system.settle(); 
+            disp('after settle'); 
+%             pause(5);             
             testCase.plotGrids();
             testCase.assertEqual(system.mecOutputIndices(), ...
                [17 33 87], 'settle back to original mec output');  
-          
-            
-%             system.step(); 
-%             testCase.assertEqual(system.placeSystem.outputIndices(), [56 63 119]); % [5 49 116]            
-            
-%             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
-%                 zeros(1,system.placeSystem.nCA3));
-%             system.build();
-%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
-%             system.animal.x = 1.1;
-%             system.animal.y = 0.1;
-%             result = system.savePositionForPlace([1.1 0.1], [2 4 6 8]);
-%             testCase.assertEqual(result, 2, 'new place'); 
-%             result = system.savePositionForPlace([1.1 0.2], [2 4 6 8]);
-%             testCase.assertEqual(result, 1, 'near place'); 
-%             result = system.savePositionForPlace([1.1 0.5], [2 4 6 8]);
-%             testCase.assertEqual(result, 0, 'far place'); 
-%             position = system.getPositionForPlace('[2 4 6 8]'); 
-%             testCase.assertEqual(position(1), 1.1, 'first position saved is maintained'); 
-%             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
-
         end
         function plotGrids(testCase)
             testCase.counter = testCase.counter + 1; 
