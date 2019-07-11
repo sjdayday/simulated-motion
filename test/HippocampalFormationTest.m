@@ -554,18 +554,20 @@ classdef HippocampalFormationTest < AbstractTest
                [17 33 87], 'settle back to original mec output');  
         end
         function plotGrids(testCase)
-            testCase.counter = testCase.counter + 1; 
-            figure(testCase.h); 
-            subplot(2,3,1); 
+            if ishandle(testCase.h)
+                testCase.counter = testCase.counter + 1; 
+                figure(testCase.h); 
+                subplot(2,3,1); 
 
-            testCase.hf.grids(1).plotActivation(); 
-            subplot(2,3,2); 
-            testCase.hf.grids(2).plotActivation(); 
-            subplot(2,3,3); 
-            testCase.hf.grids(3).plotActivation(); 
-            subplot(2,3,4);             
-            title({'counter ',sprintf('t = %d',testCase.counter)})
-            pause(1); 
+                testCase.hf.grids(1).plotActivation(); 
+                subplot(2,3,2); 
+                testCase.hf.grids(2).plotActivation(); 
+                subplot(2,3,3); 
+                testCase.hf.grids(3).plotActivation(); 
+                subplot(2,3,4);             
+                title({'counter ',sprintf('t = %d',testCase.counter)})
+                pause(1);                 
+            end
         end
         
     end
