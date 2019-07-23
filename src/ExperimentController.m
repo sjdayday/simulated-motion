@@ -39,6 +39,7 @@ classdef ExperimentController < System
         hPlace
         showHippocampalFormationECIndices
         placeMatchThreshold
+        rebuildHeadDirectionSystemFlag
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -56,6 +57,7 @@ classdef ExperimentController < System
             obj.updateFeatureDetectors = false; 
             obj.showHippocampalFormationECIndices = false; 
             obj.placeMatchThreshold = 0;
+            obj.rebuildHeadDirectionSystemFlag = true; 
 %             obj.build(); 
         end
         function build(obj)
@@ -192,7 +194,13 @@ classdef ExperimentController < System
         end
         function runHeadDirectionSystemForSteps(obj, steps)
             if obj.getCurrentStep(class(obj.animal.hippocampalFormation.headDirectionSystem)) == 1
-                obj.rebuildHeadDirectionSystem();
+                if obj.rebuildHeadDirectionSystemFlag
+                    obj.rebuildHeadDirectionSystem();
+                else
+                    if obj.visual
+                        obj.animal.hippocampalFormation.headDirectionSystem.h = obj.h; 
+                    end
+                end
                 obj.setupSystem(obj.animal.hippocampalFormation.headDirectionSystem);         
             end
             obj.lastSystem = obj.animal.hippocampalFormation.headDirectionSystem;

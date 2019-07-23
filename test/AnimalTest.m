@@ -320,6 +320,33 @@ classdef AnimalTest < AbstractTest
                 testCase.assertEqual(ME.message, 'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).'); 
             end
         end
+        function testRunThen180HeadDirectionRunBackSettlesToSamePlace(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.minimumRunVelocity = 0.1; 
+            testCase.animal.place(testCase.environment, 1, 1, pi/2);
+%            testCase.animal.orientAnimal(0);
+            relativeSpeed = 1;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+            clockwiseNess = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseNess, 15); 
+            testCase.assertThat(testCase.animal.currentDirection, ...
+               IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
+            relativeSpeed = 2;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0.2);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1.2, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+        end
+        
         function buildAnimalInEnvironment(testCase)
             testCase.environment = Environment();
             testCase.environment.addWall([0 0],[0 2]); 

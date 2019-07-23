@@ -172,22 +172,6 @@ classdef Animal < System
         function rebuildHeadDirectionSystem(obj)
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.hippocampalFormation.rebuildHeadDirectionSystem(); 
-%             tempMap = []; 
-%             if not(isempty(obj.hippocampalFormation.headDirectionSystem))
-%                 if not(isempty(obj.headDirectionSystem.eventMap))
-%                     tempMap = obj.headDirectionSystem.eventMap; 
-%                 end                
-%             end
-%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);
-%             obj.headDirectionSystem.animal = obj;
-%             if not(isempty(tempMap))
-%                 obj.headDirectionSystem.eventMap = tempMap; 
-%             end
-%             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection); 
-%             if obj.visual
-%                 obj.headDirectionSystem.h = obj.h; 
-%                 obj.hippocampalFormation.headDirectionSystem.h = obj.h; 
-%             end
         end
 
         %% Single time step 

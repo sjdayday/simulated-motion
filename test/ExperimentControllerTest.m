@@ -34,6 +34,22 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.currentStep, 21);
             testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.getTime(), 20);
         end
+        function testCanSubstituteAnotherHdsCollaborator(testCase)
+            controller = ExperimentController(); 
+            controller.build();
+            controller.totalSteps = 20; 
+            testCase.assertEqual(controller.currentStep, 1);
+            forced = HeadDirectionSystemForced(60); 
+            forced.build();
+            controller.rebuildHeadDirectionSystemFlag = false; 
+            controller.animal.hippocampalFormation.headDirectionSystem = forced; 
+%                 controller.overrideSystem(name, forced); 
+            testCase.assertEqual(class(controller.animal.hippocampalFormation.headDirectionSystem), 'HeadDirectionSystemForced');            
+            controller.runHeadDirectionSystem(); 
+            testCase.assertEqual(class(controller.animal.hippocampalFormation.headDirectionSystem), 'HeadDirectionSystemForced');                        
+            testCase.assertEqual(controller.currentStep, 21);
+            testCase.assertEqual(controller.animal.hippocampalFormation.headDirectionSystem.getTime(), 20);
+        end
         function testCanRunSystemForOneOrMoreSteps(testCase)
             controller = TestingExperimentController(); 
             controller.build();
