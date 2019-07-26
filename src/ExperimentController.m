@@ -40,6 +40,7 @@ classdef ExperimentController < System
         showHippocampalFormationECIndices
         placeMatchThreshold
         rebuildHeadDirectionSystemFlag
+        settleToPlace
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -58,6 +59,7 @@ classdef ExperimentController < System
             obj.showHippocampalFormationECIndices = false; 
             obj.placeMatchThreshold = 0;
             obj.rebuildHeadDirectionSystemFlag = true; 
+            obj.settleToPlace = false;
 %             obj.build(); 
         end
         function build(obj)
@@ -123,6 +125,7 @@ classdef ExperimentController < System
             obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
             obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices;
             obj.animal.placeMatchThreshold = obj.placeMatchThreshold;
+            obj.animal.settleToPlace = obj.settleToPlace;
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 

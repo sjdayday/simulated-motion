@@ -12,6 +12,7 @@ classdef S8 < handle
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
+            obj.ec.settleToPlace = true;
             obj.ec.build(); 
             
             obj.ec.setupDisplay(); 
@@ -24,13 +25,13 @@ classdef S8 < handle
 
             obj.ec.totalSteps = 30; % 28
 %             obj.ec.randomHeadDirection = false; % no effect?  
-            obj.ec.addControllerEvent(10, 'disp(''force HDS activation''); pause(10); ');
+%             obj.ec.addControllerEvent(10, 'disp(''force HDS activation''); pause(10); ');
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/30;obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.minimumRunVelocity = 0.05;'); 
             obj.ec.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
             obj.ec.addHeadDirectionSystemEvent(8, 'obj.forceActivation(10);'); 
 %             obj.ec.addControllerEvent(10, 'disp(''force HDS activation''); pause(10); ');
-            obj.ec.addControllerEvent(9, 'disp(''force HDS activation''); pause(10); ');            
+%             obj.ec.addControllerEvent(9, 'disp(''force HDS activation''); pause(10); ');            
 %             obj.ec.addHeadDirectionSystemEvent(25, 'obj.animal.hippocampalFormation.headDirectionSystem.uActivation = zeros(1,60);obj.animal.hippocampalFormation.headDirectionSystem.uActivation(10) = 1;');             
 %             obj.ec.addControllerEvent(26, 'disp(''force animal HDS activation''); pause(10); ');
 %             obj.ec.addControllerEvent(27, 'disp(''force2 animal HDS activation''); pause(10); ');            
@@ -45,7 +46,7 @@ classdef S8 < handle
             obj.ec.addAnimalEvent(24, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(28, 'obj.motorCortex.turnDistance = 30; obj.motorCortex.clockwiseTurn();');            
             obj.ec.addHeadDirectionSystemEvent(26, 'obj.forceActivation(40);'); 
-            obj.ec.addControllerEvent(27, 'disp(''force HDS activation''); pause(10); ');
+%             obj.ec.addControllerEvent(27, 'disp(''force HDS activation''); pause(10); ');
             obj.ec.addAnimalEvent(58, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();'); 
             obj.ec.addAnimalEvent(60, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');             
             obj.ec.addAnimalEvent(62, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');

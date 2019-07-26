@@ -425,8 +425,9 @@ classdef GridChartNetwork < System
         function maxActivation = getMaxActivation(obj)
            maxActivation = max(obj.activation);  
         end
-        function maxIndex = getMaxActivationIndex(obj)
+        function firstMaxIndex = getMaxActivationIndex(obj)
             maxIndex = find(obj.activation==max(obj.activation));
+            firstMaxIndex = maxIndex(1); % only need one value
         end
         function saveStatistics(obj)
           % Save firing field information
