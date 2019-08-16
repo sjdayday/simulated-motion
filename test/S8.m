@@ -12,7 +12,8 @@ classdef S8 < handle
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
-            obj.ec.settleToPlace = true;
+            obj.ec.settleToPlace = false;
+            obj.ec.showHippocampalFormationECIndices = true; 
             obj.ec.build(); 
             
             obj.ec.setupDisplay(); 
@@ -30,7 +31,8 @@ classdef S8 < handle
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.minimumRunVelocity = 0.05;'); 
             obj.ec.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
             obj.ec.addHeadDirectionSystemEvent(8, 'obj.forceActivation(10);'); 
-%             obj.ec.addControllerEvent(10, 'disp(''force HDS activation''); pause(10); ');
+            obj.ec.addAnimalEvent(8, 'obj.hippocampalFormation.settleToPlace = true; ');
+            obj.ec.addAnimalEvent(9, 'obj.hippocampalFormation.settleToPlace = true; ');
 %             obj.ec.addControllerEvent(9, 'disp(''force HDS activation''); pause(10); ');            
 %             obj.ec.addHeadDirectionSystemEvent(25, 'obj.animal.hippocampalFormation.headDirectionSystem.uActivation = zeros(1,60);obj.animal.hippocampalFormation.headDirectionSystem.uActivation(10) = 1;');             
 %             obj.ec.addControllerEvent(26, 'disp(''force animal HDS activation''); pause(10); ');
@@ -38,7 +40,7 @@ classdef S8 < handle
 %             obj.ec.addAnimalEvent(8, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();'); 
             obj.ec.addAnimalEvent(10, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');             
             obj.ec.addAnimalEvent(12, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
-            obj.ec.addAnimalEvent(14, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
+%             obj.ec.addAnimalEvent(12, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();  obj.hippocampalFormation.settleToPlace = true; ');            obj.ec.addAnimalEvent(14, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(16, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(18, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');
             obj.ec.addAnimalEvent(20, 'obj.motorCortex.runDistance = 1; obj.motorCortex.run();');

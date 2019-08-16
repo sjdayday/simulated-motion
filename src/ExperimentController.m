@@ -253,7 +253,7 @@ classdef ExperimentController < System
         end
         function doStep(obj, system)
            system.step();
-           disp('experiment controller doStep: before incrementCurrentStep');           
+%            disp('experiment controller doStep: before incrementCurrentStep');           
            obj.incrementCurrentStep(class(system));
            if obj.visual
                plot(obj);  
@@ -266,13 +266,13 @@ classdef ExperimentController < System
            obj.lastSystem = system; 
         end
         function step(obj)
-           disp(['ExperimentController step: time before : step@System',num2str(obj.getTime())]);
+%            disp(['ExperimentController step: time before : step@System',num2str(obj.getTime())]);
            step@System(obj); 
-           disp('experiment controller step: before step@System');
+%            disp('experiment controller step: before step@System');
            events(obj);
-           disp('experiment controller step: before animal.step');
+%            disp('experiment controller step: before animal.step');
            obj.animal.step(); 
-           disp('experiment controller step: before doStep');                          
+%            disp('experiment controller step: before doStep');                          
            obj.doStep(obj.lastSystem); 
         end
         function continueHeadDirectionSystem(obj)

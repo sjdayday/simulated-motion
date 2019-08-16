@@ -341,23 +341,23 @@ classdef GridChartNetwork < System
             obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
         end
         function calculateActivationMotionInputWeights(obj, synapticInput)
-                obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
-                synapticInputHorizontal = synapticInput + ...
-                    obj.horizontalInput;
-                synapticInputHorizontalShape = ... 
-                    reshape(synapticInputHorizontal,obj.nY,obj.nX); 
-                synapticInputVerticalShape = synapticInputHorizontalShape'; 
-                synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
-                obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
-                synapticInputHorizontalVertical = synapticInputVertical + ...
-                    obj.verticalInput;
-                synapticInputVertical2 = ... 
-                    reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
-                synapticInputHorizontal2 = synapticInputVertical2'; 
-                synapticInputNormal = ... 
-                    reshape(synapticInputHorizontal2,1,obj.nCells); 
-                obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
-                  obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
+            obj.horizontalInput = calculateHorizontalInput(obj)*obj.inputGain; 
+            synapticInputHorizontal = synapticInput + ...
+                obj.horizontalInput;
+            synapticInputHorizontalShape = ... 
+                reshape(synapticInputHorizontal,obj.nY,obj.nX); 
+            synapticInputVerticalShape = synapticInputHorizontalShape'; 
+            synapticInputVertical = reshape(synapticInputVerticalShape,1,obj.nCells);
+            obj.verticalInput = calculateVerticalInput(obj)*obj.inputGain; 
+            synapticInputHorizontalVertical = synapticInputVertical + ...
+                obj.verticalInput;
+            synapticInputVertical2 = ... 
+                reshape(synapticInputHorizontalVertical,obj.nX,obj.nY);
+            synapticInputHorizontal2 = synapticInputVertical2'; 
+            synapticInputNormal = ... 
+                reshape(synapticInputHorizontal2,1,obj.nCells); 
+            obj.activation = (1-obj.normalizedWeight)*synapticInputNormal + ... 
+              obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
         end
         function updateActivationWithFeatureInputs(obj)
             updateFeatureWeights(obj); 
@@ -376,6 +376,7 @@ classdef GridChartNetwork < System
                 newActivation = obj.getMaxActivationIndex();
             end
             obj.readMode = 0; 
+            disp(['Grid settled to: ', num2str(newActivation)]);
         end
         
         function updateActivationWithMotionInputs(obj)           
@@ -397,14 +398,16 @@ classdef GridChartNetwork < System
             obj.updateActivation(motionSynapticInput); 
         end
         function updateActivation(obj, synapticInput)
-            if obj.motionInputWeights == true
-                obj.calculateActivationMotionInputWeights(synapticInput); 
-            else
-                obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
-                  obj.normalizedWeight*(synapticInput/sum(obj.activation));                
-            end            
-              % Zero out negative activities
-            obj.activation(obj.activation<0) = 0;            
+            if any(synapticInput) % only if some element non-zero, else leave activation as is
+                if obj.motionInputWeights == true
+                    obj.calculateActivationMotionInputWeights(synapticInput); 
+                else
+                    obj.activation = (1-obj.normalizedWeight)*synapticInput + ... 
+                      obj.normalizedWeight*(synapticInput/sum(obj.activation));                
+                end            
+                  % Zero out negative activities
+                obj.activation(obj.activation<0) = 0;            
+            end
         end
         function  step(obj)
             step@System(obj); 
@@ -453,10 +456,12 @@ classdef GridChartNetwork < System
         end
         function plotActivation(obj)
             figure(obj.h);
-            imagesc(reshape(obj.activation,obj.nY,obj.nX));
+            clims = [min(obj.activation) max(obj.activation)]; 
+            imagesc((reshape(obj.activation,obj.nY,obj.nX)), clims);
             axis square
             title('Population activity')
             set(gca,'ydir','normal')            
+            colorbar
         end
         function plotRateMap(obj)
             figure(obj.h);

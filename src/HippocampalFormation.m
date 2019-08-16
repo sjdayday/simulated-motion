@@ -224,10 +224,6 @@ classdef HippocampalFormation < System
                 obj.grids(1,ii).updateVelocity(v(1),v(2)); 
                 mecOutputOffset = obj.stepGrid(mecOutputOffset, ii);
                 disp(['grid ',num2str(ii),': ',num2str(obj.grids(1,ii).getMaxActivation())]);
-%                 obj.grids(1,ii).step(); 
-%                 max = obj.grids(1,ii).getMaxActivationIndex(); 
-%                 obj.mecOutput(1,index+max) = 1; 
-%                 index = index + obj.gridLength;     
             end 
             if obj.showIndices
                 disp(['MEC output: ',obj.printMecOutputIndices()]);
@@ -335,9 +331,10 @@ classdef HippocampalFormation < System
         end
         function setReadMode(obj, mode)
             obj.headDirectionSystem.readMode = mode;
-            for ii = 1:obj.nGrids
-              obj.grids(ii).readMode = mode;  
-           end
+% done in GCN settle
+%             for ii = 1:obj.nGrids
+%               obj.grids(ii).readMode = mode;  
+%            end
         end
         function result = savePositionForPlace(obj, position, placeId)
            placeKey = mat2str(placeId,2);
@@ -428,14 +425,14 @@ classdef HippocampalFormation < System
                row = trimmedPlaceListDisplay(ii,2:dims(2));
                placeMat = mat2str(row(3:end));
                positionPlaceLine = ['x: ', num2str(row(1),3), ...
-                   'y: ', num2str(row(2),3), ...
-                   'p: ', placeMat(2:end-1)]; 
+                   ' y: ', num2str(row(2),3), ...
+                   ' p: ', placeMat(2:end-1)]; 
                if result == 0
-                   color = 'r'; 
+                   color = 'r'; % red, place found, but far from previous x,y position 
                elseif result == 1
-                   color = [0,0.5,0]; 
+                   color = [0,0.5,0]; % green, place found, near to previous x,y position
                elseif result == 2
-                   color = 'b'; 
+                   color = 'b'; % blue, new
                end
                text(0,1-offset,positionPlaceLine,'Color',color);
                offset = 0.05 * ii; 

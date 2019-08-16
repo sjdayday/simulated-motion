@@ -26,6 +26,7 @@ classdef Run <  Behavior
 %             obj.run();
             while (~obj.isDone)
                 pause(1); 
+            
             end
             
            

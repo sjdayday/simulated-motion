@@ -120,6 +120,7 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
                 18, 'stable; now present features'); 
             gridNet.featuresDetected = [0 0 1 0 0]; 
+            gridNet.readMode = 0; 
             for ii = 1:5
                 gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
             end
@@ -180,6 +181,43 @@ classdef GridChartNetworkTest < AbstractTest
             gridNet.settle(); 
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18, ...
                 'back to original activation'); 
+        end
+        function testSettleGetsCurrentActivationIfNoFeatureInputOverlap(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            gridNet = GridChartNetwork(6,5); 
+            gridNet.externalVelocity = true; 
+            gridNet.nFeatureDetectors = 5; 
+            gridNet.featureGain = 3;
+            gridNet.featureOffset = 0.15;             
+            gridNet.build();
+            gridNet.build();  % build twice to mimic previous behavior prior to refactor          
+            gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+%             gridNet.updateFeatureWeights(); 
+            for ii = 1:7
+                gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+%                 gridNet.updateFeatureWeights(); 
+            end
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+                18, 'stable; now present features'); 
+            gridNet.featuresDetected = [0 0 1 0 0]; 
+            for ii = 1:5
+                gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+            end
+            w = gridNet.featureWeights; 
+            testCase.assertEqual(max(w(1,:)), 0); 
+            testCase.assertThat(max(w(3,:)), ...            
+                IsEqualTo(0.457953284878695, 'Within', RelativeTolerance(.00000000001))); % 0.488275478428257
+%             % randomly "place" animal elsewhere
+            gridNet.initializeActivation(); 
+            gridNet.featuresDetected = [0 0 0 0 0]; 
+            gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+                25, 'stable activation at new random orientation'); 
+            gridNet.featuresDetected = [0 1 0 0 0]; % no overlap  
+            gridNet.settle(); 
+            testCase.assertEqual(gridNet.getMaxActivationIndex(), 25, ...
+                'stay at current activation'); 
         end
 
 %         function testPositiveAndNegativeMotionWeights(testCase)
