@@ -68,6 +68,9 @@ classdef Animal < System
         showHippocampalFormationECIndices
         placeMatchThreshold
         settleToPlace
+        whiskerLength
+        rightWhiskerTouching
+        leftWhiskerTouching
     end
     methods
         function obj = Animal()
@@ -94,6 +97,9 @@ classdef Animal < System
             obj.motorCortex = MotorCortex(obj); 
             obj.width = 0.05; 
             obj.length = 0.2;
+            obj.whiskerLength = 0.1; 
+            obj.rightWhiskerTouching = false; 
+            obj.leftWhiskerTouching = false;
             obj.placed = 0; 
             obj.axesSet = 0;
             obj.minimumRunVelocity = 0.1; 
@@ -317,7 +323,53 @@ classdef Animal < System
                 obj.translateShapeByDistanceTraveled(); 
             end
             obj.vertices = obj.updateVerticesFromShape();
+            obj.calculateWhiskersTouching(); 
         end
+        function distance = vertexDistance(obj, point)
+            obj.environment.setPosition(point); 
+            distance = obj.environment.closestWallDistance();
+        end
+        function calculateWhiskersTouching(obj) 
+            obj.rightWhiskerTouching = false;
+            obj.leftWhiskerTouching = false;
+            currentPosition = obj.environment.position; 
+%             leftSide = obj.vertices(1,:); 
+%             obj.environment.setPosition(leftSide); 
+%             leftDistance = obj.environment.closestWallDistance();
+            leftDistance = obj.vertexDistance(obj.vertices(1,:)); 
+            rightDistance = obj.vertexDistance(obj.vertices(2,:)); 
+%             rightSide = obj.vertices(2,:); 
+%             obj.environment.setPosition(rightSide); 
+%             rightDistance = obj.environment.closestWallDistance();
+            noseDistance = obj.vertexDistance(obj.vertices(3,:)); 
+%             nose = obj.vertices(3,:); 
+%             obj.environment.setPosition(nose); 
+%             noseDistance = obj.environment.closestWallDistance();
+            if (noseDistance <= obj.whiskerLength)
+               if (rightDistance < leftDistance) 
+                  obj.rightWhiskerTouching = true;  
+                  disp('right whisker touching');          
+               end
+               if (leftDistance < rightDistance)
+                  obj.leftWhiskerTouching = true;     
+                  disp('left whisker touching');          
+               end
+               if (leftDistance == rightDistance)
+                  obj.rightWhiskerTouching = true;     
+                  obj.leftWhiskerTouching = true;     
+                  disp('both whiskers touching');          
+               end      
+            end
+            obj.environment.setPosition(currentPosition); 
+            if obj.rightWhiskerTouching || obj.leftWhiskerTouching
+               behavior = obj.motorCortex.currentPlan;   
+               if isa(behavior, 'Behavior')
+                   place = [behavior.behaviorPrefix, 'ObjectSensed'];
+    %                disp(place);
+                   behavior.markPlace(place);                 
+               end
+            end
+        end        
         function vertices=updateVerticesFromShape(obj)
             temp = obj.shape.Vertices; 
             vertices = [temp(1,1:2); temp(2,1:2); temp(3,1:2)];                    

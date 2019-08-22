@@ -6,27 +6,26 @@ classdef Turn <  Behavior
          distanceTurned
          clockwiseNess
          speed
-         turnPrefix
     end
     methods
         function obj = Turn(prefix, animal, clockwiseNess, speed, distance)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal);
             obj.defaultPetriNet = 'include-move-turn-run.xml';
-            obj.turnPrefix = [prefix,'Turn.'];
+            obj.behaviorPrefix = [prefix,'Turn.'];
             obj.buildThreadedStandardSemantics();
 %             obj.runner.setFiringDelay(50);
 %             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
             obj.markPlace([obj.prefix,'Turn']);  
-            obj.listenPlaceWithAcknowledgement([obj.turnPrefix, 'Turned'], @obj.turned); 
+            obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
             if (clockwiseNess == 1)
-                obj.markPlace([obj.turnPrefix, 'CounterClockwise']);
+                obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
             end 
             if (clockwiseNess == -1)
-                obj.markPlace([obj.turnPrefix, 'Clockwise']);                
+                obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
             end
-            obj.markPlaceMultipleTokens([obj.turnPrefix, 'Speed'], speed); 
-            obj.markPlaceMultipleTokens([obj.turnPrefix, 'Distance'], distance); 
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
             obj.distanceTurned = 0; 
             obj.clockwiseNess = clockwiseNess; 
             obj.speed = speed; 

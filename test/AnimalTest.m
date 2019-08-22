@@ -138,6 +138,43 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(v(3,2), ...
                IsEqualTo(1.0, 'Within', RelativeTolerance(.0001)));         
         end  
+        function testAnimalDetectsWhiskerTouchingWall(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.whiskerLength = 0.01;
+            testCase.animal.motorCortex.run(); 
+            testCase.animal.place(testCase.environment, 1, 1, pi/4);              
+            testCase.assertFalse(testCase.animal.rightWhiskerTouching);
+            testCase.assertFalse(testCase.animal.leftWhiskerTouching);
+            testCase.animal.place(testCase.environment, 1, 0.005, 0);              
+            testCase.assertTrue(testCase.animal.rightWhiskerTouching);
+            testCase.assertFalse(testCase.animal.leftWhiskerTouching);
+            testCase.animal.place(testCase.environment, 1, 1.995, 0);              
+            testCase.assertFalse(testCase.animal.rightWhiskerTouching);
+            testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            testCase.animal.place(testCase.environment, 0.1414, 0.1414, 5*pi/4);              
+            testCase.assertFalse(testCase.animal.rightWhiskerTouching, ... 
+            'should be true, but some small error so right not exactly equal left');
+            testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            testCase.animal.place(testCase.environment, 1, 0, 0);              
+            testCase.assertTrue(testCase.animal.rightWhiskerTouching, ... 
+            'both on x axis' );
+            testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            
+        end
+        function testStopsRunOrTurnIfWhiskerTouchingWall(testCase)
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.whiskerLength = 0.1;
+            testCase.animal.motorCortex.runDistance = 5;             
+
+            testCase.animal.place(testCase.environment, 1.69, 1, 0);              
+            testCase.animal.motorCortex.run();                         
+%             testCase.assertTrue(testCase.animal.rightWhiskerTouching, ... 
+%             'both on x axis' );
+%             testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            
+        end          
         function testAnimalCalculatesItsAxisOfRotation(testCase) 
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance

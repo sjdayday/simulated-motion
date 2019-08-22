@@ -5,21 +5,20 @@ classdef Run <  Behavior
     properties
          distanceRun
          speed
-         runPrefix
     end
     methods
         function obj = Run(prefix, animal, speed, distance)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal);
             obj.defaultPetriNet = 'include-move-turn-run.xml';
-            obj.runPrefix = [prefix,'Run.'];
+            obj.behaviorPrefix = [prefix,'Run.'];
             obj.buildThreadedStandardSemantics();
 %             obj.runner.setFiringDelay(50);
 %             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
             obj.markPlace([obj.prefix,'Run']);  
-            obj.listenPlaceWithAcknowledgement([obj.runPrefix, 'Stepped'], @obj.stepped); 
-            obj.markPlaceMultipleTokens([obj.runPrefix, 'Speed'], speed); 
-            obj.markPlaceMultipleTokens([obj.runPrefix, 'Distance'], distance); 
+            obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped); 
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
             obj.distanceRun = 0; 
             obj.speed = speed; 
             obj.thread.start(); 

@@ -20,6 +20,7 @@ classdef Behavior < handle
         petriNet
         isDone
         prefix
+        behaviorPrefix
         acknowledging
         placeReport
     end
@@ -30,6 +31,7 @@ classdef Behavior < handle
             obj.defaultPetriNet = 'base-control.xml';
             obj.isDone = false;
             obj.prefix = prefix; 
+            obj.behaviorPrefix = ''; % override in specific behavior
             obj.animal = animal; 
             obj.acknowledging = false; 
             getSystemsFromAnimal(obj); 

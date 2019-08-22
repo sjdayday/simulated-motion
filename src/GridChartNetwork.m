@@ -399,6 +399,7 @@ classdef GridChartNetwork < System
         end
         function updateActivation(obj, synapticInput)
             if any(synapticInput) % only if some element non-zero, else leave activation as is
+                disp('updating grid activation'); 
                 if obj.motionInputWeights == true
                     obj.calculateActivationMotionInputWeights(synapticInput); 
                 else
@@ -406,7 +407,9 @@ classdef GridChartNetwork < System
                       obj.normalizedWeight*(synapticInput/sum(obj.activation));                
                 end            
                   % Zero out negative activities
-                obj.activation(obj.activation<0) = 0;            
+                obj.activation(obj.activation<0) = 0; 
+            else 
+                disp('zero synaptic input, so activation not updated'); 
             end
         end
         function  step(obj)
