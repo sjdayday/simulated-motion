@@ -45,12 +45,12 @@ Adjust for your Matlab installation, and add entries, specifying a full path:
 This code was developed under Matlab R2018b, although some of it might run at lower versions.  
 Known toolboxes needed:
 * antenna
-* neural net (for nprtool)
+* neural net (for nprtool; without it, the system will still run, although some tests may break)
 
 To run the tests, in Matlab:
-
+```
 cd('[complete path to git]/simulated-motion/test')
-
+```
 Open allTests.m; as noted in the comments, you may need to run:
 ``` 
  addpath('[complete path to git]/simulated-motion/src')
@@ -60,13 +60,13 @@ Open allTests.m; as noted in the comments, you may need to run:
 ```
 
 Then move to the src directory:
-
+```
 cd('[complete path to git]/simulated-motion/src')
- 
+```
 At the Matlab prompt:
-
+```
 allTests
-
+```
 The tests take many minutes and should run without errors. 
 
 Sample objects that execute the entire system: S4, S8, S11  
@@ -81,7 +81,7 @@ src/main/resources/log4j2.xml  in the PIPECore jar....
 
 (I haven't figured out a way to override it by putting it in the matlab path, e.g., src/log4j2.xml doesn't work.)
 
-This process hasn't been run on anyone else's machine yet, so is unlikely to be reliable, yet.  Please contact me with problems or open a github issue.
+This process hasn't been run on anyone else's machine yet, so is unlikely to be complete.  Please contact me with problems or open a github issue.
  
 Questions:  stevedoubleday@gmail.com
 
