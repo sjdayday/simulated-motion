@@ -1,9 +1,12 @@
 # simulated-motion
 matlab model of simulated motion in rats 
 
-The matlab code is dependent on the Petrinet software from the PIPECore repository:
+The matlab code is dependent on the Java Petrinet software from the PIPECore repository:
+
 https://github.com/sarahtattersall/PIPECore.git
+
 Install, using maven.  Instructions:
+
 https://github.com/sarahtattersall/PIPECore/tree/hierarchical-nets
 
 Once PIPECore is installed, run its tests; they should run without errors.  
@@ -13,8 +16,11 @@ Although similar function is available through the dynamic javaclasspath command
 what seemed to work best for me was to update the classpath file directly.  
 
 On my mac, this was:
-/Applications/MATLAB_R2018b.app/toolbox/local/classpath.txt 
-Adjust for your Matlab installation, and add entries, specifying a full path: 
+
+/Applications/MATLAB_R2018b.app/toolbox/local/classpath.txt
+ 
+Adjust for your Matlab installation, and add entries, specifying a full path:
+``` 
 [complete path to your maven repository]/.m2/repository/uk/ac/imperial/pipe-markov-chain/1.1.2-SNAPSHOT/pipe-markov-chain-1.1.2-SNAPSHOT.jar
 [complete path to your maven repository]/.m2/repository/uk/ac/imperial/pipe-core/2.0.0-beta-2-SNAPSHOT/pipe-core-2.0.0-beta-2-SNAPSHOT.jar
 [complete path to your maven repository]/.m2/repository/org/antlr/antlr4/4.5.3/antlr4-4.5.3.jar
@@ -34,31 +40,49 @@ Adjust for your Matlab installation, and add entries, specifying a full path:
 [complete path to your maven repository]/.m2/repository/de/twentyeleven/skysail/jgraphx-osgi/1.10.3.1/jgraphx-osgi-1.10.3.1.jar
 [complete path to your maven repository]/.m2/repository/javax/json/javax.json-api/1.0/javax.json-api-1.0.jar
 [complete path to your maven repository]/.m2/repository/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar
+```
 
 This code was developed under Matlab R2018b, although some of it might run at lower versions.  
 Known toolboxes needed:
-antenna
-neural net (for nprtool)
+* antenna
+* neural net (for nprtool)
 
 To run the tests, in Matlab:
+
 cd('[complete path to git]/simulated-motion/test')
 
-Open allTests.m; as noted in the comments, you may need to run: 
+Open allTests.m; as noted in the comments, you may need to run:
+``` 
  addpath('[complete path to git]/simulated-motion/src')
  addpath('[complete path to git]/simulated-motion/test')
  savepath '[complete path to git]/simulated-motion/src/pathdef.m'
  savepath '[complete path to git]/simulated-motion/test/pathdef.m'
+```
 
+Then move to the src directory:
+
+cd('[complete path to git]/simulated-motion/src')
+ 
 At the Matlab prompt:
- allTests
-The tests take a few minutes and should run without errors. 
 
-Sample scripts to execute the entire system:  
-hds1
-hds2
+allTests
 
-Debugging of the PIPE Petri net java code may require updating the following file: 
+The tests take many minutes and should run without errors. 
+
+Sample objects that execute the entire system: S4, S8, S11  
+```
+s = S4(); 
+s.runAll(); 
+```
+
+Debugging of the PIPE Petri net java code may require updating the following file:
+ 
 src/main/resources/log4j2.xml  in the PIPECore jar....
+
 (I haven't figured out a way to override it by putting it in the matlab path, e.g., src/log4j2.xml doesn't work.)
 
+This process hasn't been run on anyone else's machine yet, so is unlikely to be reliable, yet.  Please contact me with problems or open a github issue.
+ 
 Questions:  stevedoubleday@gmail.com
+
+Steve Doubleday

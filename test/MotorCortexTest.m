@@ -1,22 +1,22 @@
 classdef MotorCortexTest < AbstractTest
     methods (Test)
 % works...longer whisker detects walls better         
-        function testLotsOfRandomBehaviors(testCase)  
-            env = Environment();
-            env.addWall([0 0],[0 2]); 
-            env.addWall([0 2],[2 2]); 
-            env.addWall([0 0],[2 0]); 
-            env.addWall([2 0],[2 2]);
-            env.build();
-            animal = Animal();
-            animal.build(); 
-            animal.whiskerLength = 0.1;
-            animal.place(env, 1, 1, 0);
-            motorCortex = animal.motorCortex;
-            motorCortex.maxBehaviorSteps = 5; 
-            motorCortex.randomNavigation(200);
-            disp(motorCortex.behaviorHistory); 
-        end
+%         function testLotsOfRandomBehaviors(testCase)  
+%             env = Environment();
+%             env.addWall([0 0],[0 2]); 
+%             env.addWall([0 2],[2 2]); 
+%             env.addWall([0 0],[2 0]); 
+%             env.addWall([2 0],[2 2]);
+%             env.build();
+%             animal = Animal();
+%             animal.build(); 
+%             animal.whiskerLength = 0.1;
+%             animal.place(env, 1, 1, 0);
+%             motorCortex = animal.motorCortex;
+%             motorCortex.maxBehaviorSteps = 5; 
+%             motorCortex.randomNavigation(200);
+%             disp(motorCortex.behaviorHistory); 
+%         end
         function testExpectedPlacesAreMarkedInMoveTurnPN(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 
