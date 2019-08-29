@@ -11,6 +11,7 @@ classdef TurnTest < AbstractTest
             animal.build();
             animal.place(environment, 1, 1, 0);
             turn = Turn('Move.', animal, -1, 1, 3); 
+            turn.execute(); 
             testCase.assertTrue(turn.isDone);
             testCase.assertEqual(3, turn.distanceTurned);
         end

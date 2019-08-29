@@ -122,11 +122,13 @@ classdef MotorCortex < System
         function aTurn = turn(obj)
             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
             obj.currentPlan = aTurn; 
+            aTurn.execute(); 
             obj.markedPlaceReport = aTurn.placeReport; 
         end
         function aRun = run(obj)
             aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance); 
             obj.currentPlan = aRun; 
+            aRun.execute(); 
             obj.markedPlaceReport = aRun.placeReport; 
         end
         

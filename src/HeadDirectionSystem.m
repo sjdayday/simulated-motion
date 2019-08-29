@@ -166,13 +166,6 @@ classdef HeadDirectionSystem < System
             for ii = 1:length(obj.featuresDetected)
                 newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
             end
-%             rrow = obj.featureWeights(30,:);
-%             disp([' ',max(rrow)]); 
-%             disp(find(rrow == max(rrow)));
-%             disp(find(obj.uActivation == max(obj.uActivation)));
-%             if obj.time > 10 
-%                disp([max(rrow), find(rrow == max(rrow)), find(obj.uActivation == max(obj.uActivation))]); 
-%             end
             if obj.readMode
                newWeights = zeros(size(obj.featureWeights));  
 %                newWeights = zeros(obj.nHeadDirectionCells);  
@@ -213,7 +206,7 @@ classdef HeadDirectionSystem < System
             updateVelocity(obj); 
             updateFeatureWeights(obj);                 
             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
-            activationFunction(obj); 
+            obj.activationFunction(); 
             clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
             counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
             featureInput = obj.featuresDetected * obj.featureWeights; 

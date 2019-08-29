@@ -56,6 +56,13 @@ classdef Behavior < handle
             obj.waitForInput(true);
              
          end
+         function execute(obj)
+            obj.thread.start(); 
+%             obj.run();
+            while (~obj.isDone)
+                pause(0.1); 
+            end   
+         end
         function buildStandardSemantics(obj)
             obj.buildRunner(); 
             obj.listenPlace([obj.prefix,'Done'], @obj.done); 
@@ -147,6 +154,9 @@ classdef Behavior < handle
         end
         function resetRandomSeed(obj, reset)
             obj.resetSeed = reset; 
+        end
+        function placeReport = getPlaceReport(obj, index)
+           placeReport = obj.runner.getPlaceReport(index); 
         end
 %         function visualize(obj, visual)
 %             obj.visual = visual; 

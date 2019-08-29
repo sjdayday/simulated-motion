@@ -360,7 +360,7 @@ classdef GridChartNetwork < System
               obj.normalizedWeight*(synapticInputNormal/sum(obj.activation));
         end
         function updateActivationWithFeatureInputs(obj)
-            updateFeatureWeights(obj); 
+            obj.updateFeatureWeights(); 
             featureInput = obj.featuresDetected * obj.featureWeights;         
             obj.updateActivation(featureInput); 
         end

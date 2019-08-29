@@ -21,13 +21,7 @@ classdef Run <  Behavior
             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
             obj.distanceRun = 0; 
             obj.speed = speed; 
-            obj.thread.start(); 
-%             obj.run();
-            while (~obj.isDone)
-                pause(1); 
-            
-            end
-            
+%             obj.execute(); 
            
         end
         function done(obj, ~, ~)

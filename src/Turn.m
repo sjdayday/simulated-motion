@@ -28,12 +28,8 @@ classdef Turn <  Behavior
             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
             obj.distanceTurned = 0; 
             obj.clockwiseNess = clockwiseNess; 
-            obj.speed = speed; 
-            obj.thread.start(); 
-%             obj.run();
-            while (~obj.isDone)
-                pause(1); 
-            end  
+            obj.speed = speed;
+%             obj.execute(); 
         end
         function done(obj, ~, ~)
             done@Behavior(obj, 1, 1); 
