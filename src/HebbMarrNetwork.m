@@ -73,6 +73,17 @@ classdef HebbMarrNetwork < handle
                     'InputY must be the same length as nNeurons, or empty; was %d.'], length(inputX), length(inputY)) ;
             end
         end
+        function count = activationCount(obj)
+            count = 0; 
+            for ii = 1:obj.nNeurons
+                count = count + sum(obj.network(ii,:));
+            end
+            disp(['activated synapse count: ', num2str(count)]);
+        end
+        function percent = saturation(obj)
+            percent = obj.activationCount() / (obj.nNeurons * obj.nSynapses); 
+        end
+
         function plot(obj)
         end
     end
