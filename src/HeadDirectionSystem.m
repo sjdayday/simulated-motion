@@ -98,7 +98,7 @@ classdef HeadDirectionSystem < System
            else
                obj.uActivation = zeros(1,obj.nHeadDirectionCells);
                obj.uActivation = obj.uActivation + 0.25;
-               obj.uActivation(1,60) = 0.8; 
+               obj.uActivation(1,obj.nHeadDirectionCells) = 0.8; 
            end
         end
         function build(obj)

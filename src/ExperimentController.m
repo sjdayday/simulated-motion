@@ -46,7 +46,7 @@ classdef ExperimentController < System
 %         gridDirectionBiasIncrement             
 %         nGridGains
 %         baseGain 
-%         gridSize            
+        gridSize            
 
     end
     methods
@@ -59,6 +59,8 @@ classdef ExperimentController < System
             obj.showHippocampalFormationECIndices = false; 
             obj.placeMatchThreshold = 0;
             obj.rebuildHeadDirectionSystemFlag = true; 
+            obj.nHeadDirectionCells = 60; 
+            obj.gridSize = [10,9];
             obj.settleToPlace = false;
 %             obj.build(); 
         end
@@ -69,6 +71,7 @@ classdef ExperimentController < System
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
+            
 
             buildEnvironment(obj);
             
@@ -108,7 +111,7 @@ classdef ExperimentController < System
 
 %             env.setPosition([0.5 0.25]); 
             obj.environment.distanceIntervals = 8;
-            obj.environment.directionIntervals = 60;
+            obj.environment.directionIntervals = obj.nHeadDirectionCells;
             obj.environment.center = [1 1]; 
             obj.environment.build();
 %             env.setPosition([0.5 1]); 
@@ -119,6 +122,8 @@ classdef ExperimentController < System
             obj.animal = Animal();
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
+            obj.animal.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.animal.gridSize = obj.gridSize;
             obj.animal.pullVelocityFromAnimal = obj.pullVelocityFromAnimal; 
             obj.animal.pullFeaturesFromAnimal = obj.pullFeaturesFromAnimal; 
             obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  

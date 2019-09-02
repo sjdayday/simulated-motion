@@ -104,12 +104,6 @@ classdef HippocampalFormation < System
             obj.nY = obj.gridSize(1,2);
             obj.gridLength = obj.nX * obj.nY; 
             obj.nMecOutput = obj.nGrids * obj.gridLength; 
-%             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
-%             obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
-%             if obj.rewardInput 
-%                obj.reward = zeros(1,5);  
-%             end
-%             obj.nLecOutput = length(obj.featureOutput) + length(obj.reward); 
             numberOfLecIndices = 3; % defaults to number of features in 2 cued environment
             obj.nPlaceIndices = obj.nGrids + numberOfLecIndices; 
             obj.nLecOutput = obj.nFeatures * obj.nHeadDirectionCells; 
@@ -145,7 +139,7 @@ classdef HippocampalFormation < System
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
             obj.headDirectionSystem.animal = obj.animal; 
-%             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
+            obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
             obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 
@@ -233,8 +227,6 @@ classdef HippocampalFormation < System
             obj.grids(1,ii).step(); 
             max = obj.grids(1,ii).getMaxActivationIndex(); 
             mecOutputOffset = updateMecOutput(obj, mecOutputOffset, max); 
-%             obj.mecOutput(1,index+max) = 1; 
-%             index = index + obj.gridLength;                 
         end
         function mecOutputOffset = updateMecOutput(obj, mecOutputOffset, max)
             obj.mecOutput(1,mecOutputOffset+max) = 1; 
