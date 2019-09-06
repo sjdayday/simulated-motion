@@ -16,6 +16,7 @@ classdef HeadDirectionSystem < System
         sigmaAngularWeight
         angularWeightInputVector
         angularWeightOffset
+        angularWeightPercent
         wHeadDirectionWeights
         featureWeights
         featureGain
@@ -66,12 +67,13 @@ classdef HeadDirectionSystem < System
             obj.xAxisValues = 1:nHeadDirectionCells; 
             initializeActivation(obj, true); 
             obj.Ahist = zeros(100,1);
-            obj.normalizedWeight = 0.0;  % 0.8
+            obj.normalizedWeight = 0.0;  % 0.8 was 0
             obj.minimumVelocity = pi/20; % radians per time step 
             obj.animalVelocityCalibration = 1.4; %might not be needed if updateTurnVelocity reconciled w updateVelocity
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
-            obj.angularWeightOffset = 8; 
+            obj.angularWeightPercent = 0.133; % 8/60
+%             obj.angularWeightOffset = 8; % built later
             obj.nFeatureDetectors = 100;             
 %             obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
 %             obj.featureWeights = zeros(length(obj.featuresDetected),obj.nHeadDirectionCells); 
@@ -108,9 +110,10 @@ classdef HeadDirectionSystem < System
                 obj.weightPattern(:,loc)=exp(-(dis*obj.dx).^2/(2*obj.sigmaWeightPattern^2));
             end
             % gaussian weights peaking on diagonal and wrapping
+            obj.buildAngularWeightOffset(); 
             obj.wHeadDirectionWeights = obj.weightPattern*obj.weightPattern'; % weights in ca. [0, 18] 
             obj.wHeadDirectionWeights = obj.wHeadDirectionWeights/obj.wHeadDirectionWeights(1,1); % normalized by max value, so in [0,1]
-            obj.wHeadDirectionWeights = 4*(obj.wHeadDirectionWeights-obj.CInhibitionOffset); % in [-2,2]
+            obj.wHeadDirectionWeights = 4*(obj.wHeadDirectionWeights-obj.CInhibitionOffset); % in [-2,2] 12: [-1.4, 2.6]
             obj.clockwiseWeights = toeplitz(obj.angularWeightInputVector); 
             obj.counterClockwiseWeights = toeplitz(obj.angularWeightInputVector); 
             obj.counterClockwiseWeights = ... 
@@ -124,6 +127,9 @@ classdef HeadDirectionSystem < System
 %             disp('minimum velocity:'); 
 %             disp(obj.minimumVelocity); 
             obj.setChildTimekeeper(obj); 
+        end
+        function buildAngularWeightOffset(obj)
+            obj.angularWeightOffset = ceil(obj.angularWeightPercent * obj.nHeadDirectionCells); % 8 for 60, 2 for 12
         end
         % not necessary here, but consistent with pattern for higher-level
         % components, e.g. HippocampalFormation
@@ -180,12 +186,16 @@ classdef HeadDirectionSystem < System
         end
         function updateAngularVelocity(obj, velocity)
            obj.pullVelocity = false; 
-           if velocity >= 0 
+%            velocity = velocity * 5; 
+           if velocity > 0 
                obj.counterClockwiseVelocity = velocity; 
                obj.clockwiseVelocity = 0; 
-           else
+           elseif velocity < 0
                obj.clockwiseVelocity = -velocity; 
                obj.counterClockwiseVelocity = 0; 
+           else
+               obj.counterClockwiseVelocity = 0;
+               obj.clockwiseVelocity = 0; 
            end
         end
         function  updateVelocity(obj)
@@ -209,11 +219,15 @@ classdef HeadDirectionSystem < System
             obj.activationFunction(); 
             clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
             counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
+%             clockwiseInput = clockwiseInput * 5; % temp
+%             counterClockwiseInput = counterClockwiseInput * 5;  % temp
             featureInput = obj.featuresDetected * obj.featureWeights; 
             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
                 clockwiseInput + counterClockwiseInput + featureInput; 
+            % FIXME separate motion from feature input
                 % obj.uActivation % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
-
+            
+            % with normalizedWeight = 0, this is just synapticInput    
             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 

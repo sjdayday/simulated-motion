@@ -10,6 +10,7 @@ classdef ExperimentController < System
         headDirectionSystemPropertyMap
         nChartSystemSingleDimensionCells
         nHeadDirectionCells
+        nCueIntervals
         pullVelocityFromAnimal
         pullFeaturesFromAnimal
         defaultFeatureDetectors
@@ -62,6 +63,7 @@ classdef ExperimentController < System
             obj.nHeadDirectionCells = 60; 
             obj.gridSize = [10,9];
             obj.settleToPlace = false;
+            obj.nCueIntervals = obj.nHeadDirectionCells; 
 %             obj.build(); 
         end
         function build(obj)
@@ -123,6 +125,7 @@ classdef ExperimentController < System
             obj.animal.visual = true; 
             obj.animal.randomHeadDirection = obj.randomHeadDirection; 
             obj.animal.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.animal.nCueIntervals = obj.nCueIntervals;
             obj.animal.gridSize = obj.gridSize;
             obj.animal.pullVelocityFromAnimal = obj.pullVelocityFromAnimal; 
             obj.animal.pullFeaturesFromAnimal = obj.pullFeaturesFromAnimal; 

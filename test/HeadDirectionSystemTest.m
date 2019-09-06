@@ -42,6 +42,17 @@ classdef HeadDirectionSystemTest < AbstractTest
             % moves roughly twice as far CW as CCW when velocity is 2x greater
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 45); 
         end
+        function testBuildsAngularWeightOffsetProportionalToHeadDirectionCells(testCase)
+            headDirectionSystem = HeadDirectionSystem(60); 
+            testCase.assertEqual(headDirectionSystem.angularWeightPercent, 0.133, ... 
+                'derived from 8/60 -- original values'); 
+            headDirectionSystem.build(); 
+            testCase.assertEqual(headDirectionSystem.angularWeightOffset, 8); 
+            headDirectionSystem = HeadDirectionSystem(12); 
+            headDirectionSystem.build(); 
+            testCase.assertEqual(headDirectionSystem.angularWeightOffset, 2); 
+        end
+        
         function testTurnVelocityConvertsToAngularVelocity(testCase)
             headDirectionSystem = HeadDirectionSystem(60); 
             minimumVelocity = headDirectionSystem.minimumVelocity; 

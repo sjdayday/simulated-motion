@@ -7,6 +7,7 @@ classdef HippocampalFormation < System
 %         currentInputX
         animal
         nHeadDirectionCells
+        nCueIntervals
         nGrids
         nGridOrientations
         nGridGains
@@ -55,7 +56,8 @@ classdef HippocampalFormation < System
     methods
         function obj = HippocampalFormation()
             obj = obj@System(); 
-            obj.nHeadDirectionCells = 12; 
+            obj.nHeadDirectionCells = 60;
+            obj.nCueIntervals = obj.nHeadDirectionCells;
             obj.nGridOrientations = 1; 
             obj.gridDirectionBiasIncrement = pi/6;
             obj.nGridGains = 1; 
@@ -106,7 +108,7 @@ classdef HippocampalFormation < System
             obj.nMecOutput = obj.nGrids * obj.gridLength; 
             numberOfLecIndices = 3; % defaults to number of features in 2 cued environment
             obj.nPlaceIndices = obj.nGrids + numberOfLecIndices; 
-            obj.nLecOutput = obj.nFeatures * obj.nHeadDirectionCells; 
+            obj.nLecOutput = obj.nFeatures * obj.nCueIntervals; 
             nPosition = 2; % [animal.x animal.y] 
             obj.lastPositionPlaceRow = zeros(1,(nPosition+obj.nPlaceIndices)); % position + place            
             obj.nFeatureDetectors = obj.nMecOutput + obj.nLecOutput; 
@@ -181,6 +183,7 @@ classdef HippocampalFormation < System
 %             obj.lecSystem.distanceUnits = obj.distanceUnits;
             obj.lecSystem.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.lecSystem.nFeatures = obj.nFeatures; 
+            obj.lecSystem.nCueIntervals = obj.nCueIntervals; 
 %             if obj.rewardInput 
 %                 obj.lecSystem.rewardUnits = 5;
 %             else

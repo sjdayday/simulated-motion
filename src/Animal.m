@@ -19,6 +19,7 @@ classdef Animal < System
         h
         visual
         nHeadDirectionCells
+        nCueIntervals
         randomHeadDirection
         defaultFeatureDetectors
         pullVelocityFromAnimal
@@ -87,6 +88,7 @@ classdef Animal < System
             obj.justOriented = 0;
             obj.visual = false; 
             obj.nHeadDirectionCells = 60; 
+            obj.nCueIntervals = obj.nHeadDirectionCells;
             obj.randomHeadDirection = true; 
             % these three probably move together, driving HDS  
             obj.pullVelocityFromAnimal = true;
@@ -131,6 +133,7 @@ classdef Animal < System
             obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.hippocampalFormation.nCueIntervals = obj.nCueIntervals;
             obj.hippocampalFormation.showIndices = obj.showHippocampalFormationECIndices; 
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.h = obj.h; 
