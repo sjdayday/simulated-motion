@@ -5,13 +5,14 @@ classdef S4 < handle
         ec
     end
     methods 
-        function obj = S4()
+        function obj = S4(visual)
             close all;
             obj.ec = ExperimentController(); 
-            obj.ec.visualize(true);
+            obj.ec.visualize(visual);
             obj.ec.build(); 
-
-            obj.ec.setupDisplay(); 
+            if visual
+                obj.ec.setupDisplay(); 
+            end
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
             obj.ec.totalSteps = 35;

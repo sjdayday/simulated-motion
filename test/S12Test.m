@@ -4,7 +4,7 @@ classdef S12Test < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             import matlab.unittest.constraints.AbsoluteTolerance        
-            script = S12(); 
+            script = S12(false); 
 %             script.runAll();
 %             placeList = script.ec.animal.hippocampalFormation.placeListDisplay;
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.nHeadDirectionCells, 60); 

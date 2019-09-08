@@ -1,26 +1,26 @@
 classdef S4Test < AbstractTest
     methods (Test)
         function testAnimalEvents(testCase)
-            script = S4(); 
+            script = S4(false); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.minimumVelocity, pi/20); 
             script.run(5);
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.minimumVelocity, pi/30); 
             testCase.assertEqual(script.ec.getTime(), 5); 
         end
         function testLongRunningBehaviorTriggersStep(testCase)
-            script = S4(); 
+            script = S4(false); 
             script.run(12);
 %             turn x 10
-            pause(10);
+%             pause(10);
             testCase.assertEqual(script.ec.getTime(), 22); 
         end
         function testOrientAnimalDrivesHdsBack(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
-            script = S4(); 
+            script = S4(false); 
             script.run(12);
 %             turn x 10
-            pause(2);
+%             pause(2);
             testCase.assertEqual(script.ec.getTime(), 22); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 29); 

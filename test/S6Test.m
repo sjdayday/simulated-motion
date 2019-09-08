@@ -4,7 +4,7 @@ classdef S6Test < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             import matlab.unittest.constraints.AbsoluteTolerance        
-            script = S6(); 
+            script = S6(false); 
             script.runAll();
 %             turn x 10
 %             pause(30);

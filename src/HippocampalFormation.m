@@ -289,8 +289,9 @@ classdef HippocampalFormation < System
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.showIndices
                 disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
+                obj.printPlaceFieldStats(); 
            end
-
+           
         end
         function settle(obj)
 %            disp(['settling to: ', mat2str(obj.placeSystem.outputIndices())]); % mat2str(find(obj.placeSystem.placeId == 1))]); 
@@ -411,6 +412,20 @@ classdef HippocampalFormation < System
            else
               trimmedPlaceList =  obj.placeListDisplay;    
            end
+        end
+        function counts=calculatePlaceFieldStats(obj)
+           counts = zeros(1,3); 
+           c = obj.placeListDisplay(:,1)';
+           cc = size(find(c == 0));
+           counts(1) = cc(2); 
+           cc = size(find(c == 1));
+           counts(2) = cc(2); 
+           cc = size(find(c == 2));
+           counts(3) = cc(2); 
+        end
+        function printPlaceFieldStats(obj)
+           counts = obj.calculatePlaceFieldStats();
+           disp(['Place fields -- novel: ',num2str(counts(3)),'  near: ',num2str(counts(2)),'  far: ',num2str(counts(1)),'  near/novel ratio: ',num2str(counts(2)/counts(3))]);
         end
         function plotPlaces(obj)
            figure(obj.h) 

@@ -4,7 +4,7 @@ classdef S8Test < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             import matlab.unittest.constraints.AbsoluteTolerance        
-            script = S8(); 
+            script = S8(false); 
             script.runAll();
             placeList = script.ec.animal.hippocampalFormation.placeListDisplay;
             testCase.assertEqual(size(placeList), [20 10]); 

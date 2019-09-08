@@ -6,14 +6,14 @@ classdef S12 < handle
         ec
     end
     methods 
-        function obj = S12()
+        function obj = S12(visual)
             close all;
             obj.ec = ExperimentController();
             obj.ec.nHeadDirectionCells = 60;
             obj.ec.nCueIntervals = 12;
             obj.ec.gridSize=[6,5]; 
             obj.ec.includeHeadDirectionFeatureInput = false;
-            obj.ec.visualize(true);
+            obj.ec.visualize(visual);
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
@@ -21,8 +21,9 @@ classdef S12 < handle
             obj.ec.placeMatchThreshold = 2;
             obj.ec.showHippocampalFormationECIndices = true; 
             obj.ec.build(); 
-            
-            obj.ec.setupDisplay(); 
+            if visual
+                obj.ec.setupDisplay(); 
+            end
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
             obj.ec.totalSteps = 8; % 28

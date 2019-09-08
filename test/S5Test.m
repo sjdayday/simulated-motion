@@ -3,7 +3,7 @@ classdef S5Test < AbstractTest
         function testTurnAndRun(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
-            script = S5(); 
+            script = S5(false); 
             script.runAll();
 %             turn x 10
 %             pause(30);

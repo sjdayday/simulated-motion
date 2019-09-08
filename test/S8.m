@@ -5,18 +5,19 @@ classdef S8 < handle
         ec
     end
     methods 
-        function obj = S8()
+        function obj = S8(visual)
             close all;
             obj.ec = ExperimentController(); 
-            obj.ec.visualize(true);
+            obj.ec.visualize(visual);
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
             obj.ec.settleToPlace = false;
             obj.ec.showHippocampalFormationECIndices = true; 
             obj.ec.build(); 
-            
-            obj.ec.setupDisplay(); 
+            if visual
+                obj.ec.setupDisplay(); 
+            end
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
             forced = HeadDirectionSystemForced(60); 
