@@ -72,6 +72,7 @@ classdef Animal < System
         whiskerLength
         rightWhiskerTouching
         leftWhiskerTouching
+        includeHeadDirectionFeatureInput
     end
     methods
         function obj = Animal()
@@ -94,6 +95,7 @@ classdef Animal < System
             obj.pullVelocityFromAnimal = true;
             obj.pullFeaturesFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
+            obj.includeHeadDirectionFeatureInput = true;
             obj.updateFeatureDetectors = false; 
             obj.nFeatures = 3; 
             obj.motorCortex = MotorCortex(obj); 
@@ -130,6 +132,7 @@ classdef Animal < System
             obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
             obj.hippocampalFormation.pullFeatures = obj.pullFeaturesFromAnimal;
             obj.hippocampalFormation.updateFeatureDetectors = obj.updateFeatureDetectors;
+            obj.hippocampalFormation.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
             obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 

@@ -15,7 +15,7 @@ classdef ExperimentController < System
         pullFeaturesFromAnimal
         defaultFeatureDetectors
         updateFeatureDetectors
-        
+        includeHeadDirectionFeatureInput
         hFigures
         totalSteps
         currentStep
@@ -57,6 +57,7 @@ classdef ExperimentController < System
             obj.pullFeaturesFromAnimal = true; 
             obj.defaultFeatureDetectors = true; 
             obj.updateFeatureDetectors = false; 
+            obj.includeHeadDirectionFeatureInput = true;
             obj.showHippocampalFormationECIndices = false; 
             obj.placeMatchThreshold = 0;
             obj.rebuildHeadDirectionSystemFlag = true; 
@@ -131,6 +132,7 @@ classdef ExperimentController < System
             obj.animal.pullFeaturesFromAnimal = obj.pullFeaturesFromAnimal; 
             obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  
             obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
+            obj.animal.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
             obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices;
             obj.animal.placeMatchThreshold = obj.placeMatchThreshold;
             obj.animal.settleToPlace = obj.settleToPlace;

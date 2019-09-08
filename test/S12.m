@@ -12,6 +12,7 @@ classdef S12 < handle
             obj.ec.nHeadDirectionCells = 60;
             obj.ec.nCueIntervals = 12;
             obj.ec.gridSize=[6,5]; 
+            obj.ec.includeHeadDirectionFeatureInput = false;
             obj.ec.visualize(true);
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 

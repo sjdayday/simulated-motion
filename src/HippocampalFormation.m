@@ -29,6 +29,7 @@ classdef HippocampalFormation < System
         mecOutput
         nMecOutput
         headDirectionSystem
+        includeHeadDirectionFeatureInput
         currentHeadDirection
         nFeatureDetectors
         lecSystem
@@ -72,6 +73,7 @@ classdef HippocampalFormation < System
             obj.linearVelocity = 0; 
             obj.gridExternalVelocity = true; 
             obj.defaultFeatureDetectors = true; 
+            obj.includeHeadDirectionFeatureInput = true; 
             obj.randomHeadDirection = true; 
             obj.pullVelocity = true; 
             obj.pullFeatures = true; 
@@ -141,7 +143,8 @@ classdef HippocampalFormation < System
         function buildHeadDirectionSystem(obj)
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
             obj.headDirectionSystem.animal = obj.animal; 
-            obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells;  
+            obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells; 
+            obj.headDirectionSystem.includeFeatureInput = obj.includeHeadDirectionFeatureInput; 
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
             obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 

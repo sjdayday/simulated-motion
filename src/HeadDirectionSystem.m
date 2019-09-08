@@ -34,6 +34,7 @@ classdef HeadDirectionSystem < System
         featuresDetected
         nFeatureDetectors
         featureLearningRate
+        includeFeatureInput
         rate
         betaGain
         alphaOffset
@@ -90,6 +91,7 @@ classdef HeadDirectionSystem < System
             obj.readMode = 0;
             obj.pullVelocity = true;
             obj.pullFeatures = true; 
+            obj.includeFeatureInput = true; 
 
         end
         function initializeActivation(obj, random)
@@ -223,7 +225,10 @@ classdef HeadDirectionSystem < System
 %             counterClockwiseInput = counterClockwiseInput * 5;  % temp
             featureInput = obj.featuresDetected * obj.featureWeights; 
             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
-                clockwiseInput + counterClockwiseInput + featureInput; 
+                clockwiseInput + counterClockwiseInput; % + featureInput; 
+            if obj.includeFeatureInput
+                synapticInput = synapticInput + featureInput; 
+            end
             % FIXME separate motion from feature input
                 % obj.uActivation % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
             
