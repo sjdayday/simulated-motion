@@ -83,9 +83,8 @@ classdef PlaceSystemTest < AbstractTest
             LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
             placeSystem.step(MecOutput, LecOutput);
             testCase.assertEqual(placeSystem.outputIndices(), [1 2 5 6 8 15 16 19]); 
-            % FIXME!
-            disp(placeSystem.network); 
-            disp(placeSystem.saturation()); 
+%             disp(placeSystem.network); 
+%             disp(placeSystem.saturation()); 
         end
     end
 end

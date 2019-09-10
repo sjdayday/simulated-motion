@@ -44,6 +44,9 @@ classdef HippocampalFormation < System
         pullFeatures
         visual
         h
+        hh % graphing stats
+        stats
+        statsCounter
         placeList
         placeListDisplay
         placePositionMap
@@ -57,6 +60,8 @@ classdef HippocampalFormation < System
     methods
         function obj = HippocampalFormation()
             obj = obj@System(); 
+            obj.stats = []; 
+            obj.statsCounter = 1;
             obj.nHeadDirectionCells = 60;
             obj.nCueIntervals = obj.nHeadDirectionCells;
             obj.nGridOrientations = 1; 
@@ -425,8 +430,28 @@ classdef HippocampalFormation < System
         end
         function printPlaceFieldStats(obj)
            counts = obj.calculatePlaceFieldStats();
-           disp(['Place fields -- novel: ',num2str(counts(3)),'  near: ',num2str(counts(2)),'  far: ',num2str(counts(1)),'  near/novel ratio: ',num2str(counts(2)/counts(3))]);
+           ratio = counts(2)/counts(3);
+           disp(['Place fields -- novel: ',num2str(counts(3)),'  near: ',num2str(counts(2)),'  far: ',num2str(counts(1)),'  near/novel ratio: ',num2str(ratio)]);
+           obj.gatherStats([ratio, obj.placeSystem.saturation()]);
         end
+        function gatherStats(obj, percents) 
+           if obj.statsCounter == 10
+                obj.stats = [obj.stats; percents]; 
+                obj.graphStats(); 
+                obj.statsCounter = 1; 
+           else
+                obj.statsCounter = obj.statsCounter + 1; 
+           end
+        end
+        function graphStats(obj)
+            if ishandle(obj.hh) 
+                plot(obj.stats(:,1));
+                hold on
+                plot(obj.stats(:,2)); 
+            else
+                obj.hh = figure; 
+            end
+        end        
         function plotPlaces(obj)
            figure(obj.h) 
            axis off

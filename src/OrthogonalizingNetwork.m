@@ -29,7 +29,7 @@ classdef OrthogonalizingNetwork < handle
         function buildNetwork(obj)
             obj.network = zeros(obj.nSynapses,obj.nNeurons); 
             obj.wiringInput.rebuildConnections = obj.rebuildConnections; 
-            obj.wiringOutput.rebuildConnections = obj.rebuildConnections; %             buildWeightFunction(obj);
+            obj.wiringOutput.rebuildConnections = obj.rebuildConnections;
         end
         function fired = step(obj, input)
             verifyInputs(obj,input); 
