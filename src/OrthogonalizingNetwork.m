@@ -14,6 +14,7 @@ classdef OrthogonalizingNetwork < handle
         network     
         weightType
         rebuildConnections
+        sparse
     end
     methods
         function obj = OrthogonalizingNetwork(synapses, neurons)
@@ -23,6 +24,7 @@ classdef OrthogonalizingNetwork < handle
             obj.wiringInput = OrthogonalizingWiring([synapses neurons]); 
             obj.wiringOutput = OrthogonalizingWiring([neurons synapses]); 
             obj.rebuildConnections = false;
+            obj.sparse = false; 
         end
         % buildNetwork must be called after constructor is called and any 
         % properties are overridden. 
@@ -33,18 +35,34 @@ classdef OrthogonalizingNetwork < handle
         end
         function fired = step(obj, input)
             verifyInputs(obj,input); 
-            internal = obj.wiringInput.connect(input);
-            fired = obj.wiringOutput.connect(internal);
-        end
-        function retrieved = read(obj, inputX)
-            retrieved = zeros(1,obj.nNeurons); 
-            verifyInputs(obj,inputX,[]); 
-            totalActivation = sum(inputX);
-            product = inputX*obj.network;
-            if totalActivation > 0
-                retrieved = fix(product/totalActivation); 
+            if obj.sparse
+                sparseInput = obj.buildSparseInput(input); 
+                fired = obj.buildSparseVector(sparseInput); 
+            else
+                internal = obj.wiringInput.connect(input);
+                fired = obj.wiringOutput.connect(internal);
             end
         end
+        function sparseInput = buildSparseInput(~, input)
+           total = 1; 
+           modulo = length(input); 
+           indices = find(input == 1); 
+           indicesLength = length(indices);
+           if indicesLength == 0
+               sparseInput = 0; 
+           else
+               for ii = 1:indicesLength
+                  total = total * indices(ii); 
+               end
+               sparseInput = mod(total, modulo);                
+           end
+        end
+        function sparseVector = buildSparseVector(obj, sparseInput)
+            sparseVector = zeros(1,obj.nSynapses); 
+            index = sparseInput + 1; 
+            sparseVector(index) = 1;
+        end
+        
         function verifyInputs(obj,input)
             if (length(input) ~= obj.nSynapses) 
                     strSynapses = num2str(obj.nSynapses); 
