@@ -37,6 +37,7 @@ classdef OrthogonalizingNetwork < handle
             verifyInputs(obj,input); 
             if obj.sparse
                 sparseInput = obj.buildSparseInput(input); 
+                disp(['sparse input: ',num2str(sparseInput)]);
                 fired = obj.buildSparseVector(sparseInput); 
             else
                 internal = obj.wiringInput.connect(input);
@@ -45,21 +46,28 @@ classdef OrthogonalizingNetwork < handle
         end
         function sparseInput = buildSparseInput(~, input)
            total = 1; 
-           modulo = length(input); 
+           nBuckets = length(input); 
            indices = find(input == 1); 
            indicesLength = length(indices);
            if indicesLength == 0
                sparseInput = 0; 
            else
                for ii = 1:indicesLength
-                  total = total * indices(ii); 
+                   total = total + sin(indices(ii));
+%                   total = total * indices(ii);                    
                end
-               sparseInput = mod(total, modulo);                
+               total = total * 10000; 
+               prettyRandom = total - floor(total);
+               sparseInput = floor(nBuckets * prettyRandom); 
+%                sparseInput = mod(total, modulo);                
            end
         end
         function sparseVector = buildSparseVector(obj, sparseInput)
             sparseVector = zeros(1,obj.nSynapses); 
             index = sparseInput + 1; 
+            if index > obj.nSynapses 
+               index = obj.nSynapses;  
+            end
             sparseVector(index) = 1;
         end
         

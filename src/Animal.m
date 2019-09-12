@@ -73,6 +73,7 @@ classdef Animal < System
         rightWhiskerTouching
         leftWhiskerTouching
         includeHeadDirectionFeatureInput
+        sparseOrthogonalizingNetwork
     end
     methods
         function obj = Animal()
@@ -124,6 +125,7 @@ classdef Animal < System
             obj.showHippocampalFormationECIndices = false;
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
+            obj.sparseOrthogonalizingNetwork = false; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -139,6 +141,7 @@ classdef Animal < System
             obj.hippocampalFormation.nCueIntervals = obj.nCueIntervals;
             obj.hippocampalFormation.showIndices = obj.showHippocampalFormationECIndices; 
             obj.hippocampalFormation.visual = obj.visual; 
+            obj.hippocampalFormation.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
             obj.hippocampalFormation.gridDirectionBiasIncrement = obj.gridDirectionBiasIncrement;             

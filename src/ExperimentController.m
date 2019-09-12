@@ -42,13 +42,14 @@ classdef ExperimentController < System
         placeMatchThreshold
         rebuildHeadDirectionSystemFlag
         settleToPlace
+        sparseOrthogonalizingNetwork
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
 %         nGridGains
 %         baseGain 
         gridSize            
-
+        thirdCue
     end
     methods
         function obj = ExperimentController()
@@ -65,6 +66,8 @@ classdef ExperimentController < System
             obj.gridSize = [10,9];
             obj.settleToPlace = false;
             obj.nCueIntervals = obj.nHeadDirectionCells; 
+            obj.sparseOrthogonalizingNetwork = false; 
+            obj.thirdCue = false; 
 %             obj.build(); 
         end
         function build(obj)
@@ -111,7 +114,9 @@ classdef ExperimentController < System
             obj.environment.addWall([2 0],[2 2]);
             obj.environment.addCue([2 1.5]); 
             obj.environment.addCue([0 1]);            
-
+            if obj.thirdCue
+                obj.environment.addCue([1 2]);            
+            end
 %             env.setPosition([0.5 0.25]); 
             obj.environment.distanceIntervals = 8;
             obj.environment.directionIntervals = obj.nHeadDirectionCells;
@@ -136,6 +141,7 @@ classdef ExperimentController < System
             obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices;
             obj.animal.placeMatchThreshold = obj.placeMatchThreshold;
             obj.animal.settleToPlace = obj.settleToPlace;
+            obj.animal.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 

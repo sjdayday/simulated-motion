@@ -26,16 +26,9 @@ classdef PlaceSystem < AutoassociativeNetwork
             obj.DG.buildNetwork(); 
             obj.weightType = 'binary'; %weights are binary
             obj.buildNetwork();
-%             obj.wiring = SequentialWiring(dimension); 
-%             obj.currentInputX = zeros(1,dimension); 
-%             outputMecLength = 50; 
-%             outputLecLength = 50; 
-%             placeSystem = PlaceSystem(outputMecLength, outputLecLength); 
-%             testCase.assertEqual(placeSystem.nMEC, 50); 
-%             testCase.assertEqual(placeSystem.nLEC, 50); 
-%             testCase.assertEqual(placeSystem.nDGInput, 100); 
-%             testCase.assertEqual(placeSystem.nCA3, 100);             
-
+        end
+        function sparseOrthogonalizingNetwork(obj, sparse)
+           obj.DG.sparse = sparse;  
         end
         function fired = step(obj, mecInput, lecInput)
             obj.ECOutput = [mecInput, lecInput]; 

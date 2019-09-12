@@ -56,6 +56,7 @@ classdef HippocampalFormation < System
         showIndices
         placeMatchThreshold
         settleToPlace
+        sparseOrthogonalizingNetwork
     end
     methods
         function obj = HippocampalFormation()
@@ -87,13 +88,14 @@ classdef HippocampalFormation < System
             obj.loadFixedRandom();
             obj.currentHeadDirection = 1;
             obj.placePositionMap = containers.Map('KeyType','char','ValueType','any');
-            obj.nearThreshold = 0.2;
+            obj.nearThreshold = 0.5;
             obj.placeList = []; 
             obj.placeListDisplay = [];
             obj.updateFeatureDetectors = false; 
             obj.showIndices = false; 
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
+            obj.sparseOrthogonalizingNetwork = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -206,6 +208,7 @@ classdef HippocampalFormation < System
             disp(['MEC: ',num2str(obj.nMecOutput), 'LEC: ', num2str(obj.nLecOutput)]);  
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);
             obj.placeSystem.matchThreshold = obj.placeMatchThreshold;
+            obj.placeSystem.sparseOrthogonalizingNetwork(obj.sparseOrthogonalizingNetwork); 
         end
         function step(obj)
             step@System(obj); 
