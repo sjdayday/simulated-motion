@@ -6,17 +6,20 @@ classdef AnimalTest < AbstractTest
     methods (Test)
         function testAnimalKnowsItsEnvironment(testCase)
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();
             testCase.animal.place(testCase.environment, 0.5, 0.25, 0);  
             testCase.assertEqual(testCase.animal.closestWallDistance(), 0.25);                         
         end
         function testBuildsDefaultGridChartNetworks(testCase)
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.assertEqual(testCase.animal.hippocampalFormation.nGrids, 4);                         
         end
         function testAnimalCalculatesVerticesAtOriginDirectionZeroAtBuild(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();
             v = testCase.animal.vertices; 
             testCase.assertEqual(v(1,:), [0 0.05]);                         
             testCase.assertEqual(v(2,:), [0 -0.05]);                         
@@ -49,6 +52,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);              
             v = testCase.animal.vertices; 
             testCase.assertEqual(v(1,:), [1 1.05]);                          
@@ -103,6 +107,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);              
             v = testCase.animal.vertices; 
             testCase.assertEqual(v(1,:), [1 1.05]);                          
@@ -142,21 +147,30 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.whiskerLength = 0.01;
             testCase.animal.motorCortex.run(); 
             testCase.animal.place(testCase.environment, 1, 1, pi/4);              
             testCase.assertFalse(testCase.animal.rightWhiskerTouching);
             testCase.assertFalse(testCase.animal.leftWhiskerTouching);
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();                        
             testCase.animal.place(testCase.environment, 1, 0.005, 0);              
             testCase.assertTrue(testCase.animal.rightWhiskerTouching);
             testCase.assertFalse(testCase.animal.leftWhiskerTouching);
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();                        
             testCase.animal.place(testCase.environment, 1, 1.995, 0);              
             testCase.assertFalse(testCase.animal.rightWhiskerTouching);
             testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();                        
             testCase.animal.place(testCase.environment, 0.1414, 0.1414, 5*pi/4);              
             testCase.assertFalse(testCase.animal.rightWhiskerTouching, ... 
             'should be true, but some small error so right not exactly equal left');
             testCase.assertTrue(testCase.animal.leftWhiskerTouching);
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();                        
             testCase.animal.place(testCase.environment, 1, 0, 0);              
             testCase.assertTrue(testCase.animal.rightWhiskerTouching, ... 
             'both on x axis' );
@@ -165,6 +179,8 @@ classdef AnimalTest < AbstractTest
         end
         function testStopsRunIfWhiskerTouchingWall(testCase)
             buildAnimalInEnvironment(testCase);
+            testCase.animal.keepRunnerForReporting = true;             
+            testCase.animal.build();            
             testCase.animal.whiskerLength = 0.1;
             testCase.animal.motorCortex.runDistance = 5;             
             testCase.animal.place(testCase.environment, 1.69, 1, 0);              
@@ -195,6 +211,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);
             a = testCase.animal.axisOfRotation; 
             testCase.assertEqual(a(1,:), [1 1 0]);  % maybe                        
@@ -209,6 +226,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
              a = testCase.animal.axisOfRotation; 
             testCase.assertEqual(a(1,:), [0 0 0]);  % maybe                        
             testCase.assertEqual(a(2,:), [0 0 1]);                                    
@@ -224,6 +242,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);
             testCase.animal.orientAnimal(0);
             relativeSpeed = 1;
@@ -244,6 +263,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);
             testCase.animal.orientAnimal(0);
 %             testCase.assertThat(testCase.animal.headDirectionSystem.counterClockwiseVelocity, ...
@@ -265,6 +285,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.minimumRunVelocity = 0.1; 
             testCase.animal.place(testCase.environment, 1, 1, 0);
 %            testCase.animal.orientAnimal(0);
@@ -289,6 +310,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.minimumRunVelocity = 0.1; 
             testCase.animal.place(testCase.environment, 1, 1, pi/4);
 %            testCase.animal.orientAnimal(0);
@@ -308,6 +330,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.minimumRunVelocity = 0.1; 
             testCase.animal.place(testCase.environment, 1, 1, pi/2);
             relativeSpeed = 1;
@@ -327,6 +350,7 @@ classdef AnimalTest < AbstractTest
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.minimumRunVelocity = 0.1; 
             testCase.animal.place(testCase.environment, 1, 1, pi/2);
 %            testCase.animal.orientAnimal(0);
@@ -352,6 +376,7 @@ classdef AnimalTest < AbstractTest
         
         function testControllerIsSteppedAtEachTurn(testCase)
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.assertEqual(testCase.animal.controller.getTime(), 0); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
             clockwiseNess = -1;
@@ -363,6 +388,7 @@ classdef AnimalTest < AbstractTest
         end        
         function testClockwisenessMustBeOneOrMinusOne(testCase)
             buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);
             clockwiseNess = -2 ;   
             try 
@@ -408,7 +434,7 @@ classdef AnimalTest < AbstractTest
             testCase.environment.addWall([2 0],[2 2]);
             testCase.environment.build();
             testCase.animal = Animal();
-            testCase.animal.build();
+
             
         end
 %         function testCurrentDirection(testCase)

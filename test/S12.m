@@ -32,7 +32,7 @@ classdef S12 < handle
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/6;obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/6'); 
 %             obj.ec.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
-            obj.ec.addAnimalEvent(8, 'obj.motorCortex.randomNavigation(1200); ');
+            obj.ec.addAnimalEvent(8, 'obj.motorCortex.randomNavigation(4000); ');
         end
         function run(obj, steps)
             obj.ec.runHeadDirectionSystemForSteps(steps);            

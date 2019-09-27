@@ -23,6 +23,8 @@ classdef Behavior < handle
         behaviorPrefix
         acknowledging
         placeReport
+        listeners
+        keepRunnerForReporting
     end
     methods
          function obj = Behavior(prefix, animal)
@@ -35,6 +37,8 @@ classdef Behavior < handle
             obj.animal = animal; 
             obj.acknowledging = false; 
             getSystemsFromAnimal(obj); 
+            obj.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
+            obj.keepRunnerForReporting = false; 
          end
          function getSystemsFromAnimal(obj)     
             obj.placeSystem = obj.animal.placeSystem; 
@@ -52,6 +56,7 @@ classdef Behavior < handle
             obj.runner.setPlaceReporterParameters(true, true, 0); 
             obj.enable();
             obj.runner.setFiringLimit(1000);
+            obj.runner.setSeed(rand()*1000000);
 %             obj.runner.setFiringDelay(1000);
             obj.waitForInput(true);
              
@@ -101,6 +106,7 @@ classdef Behavior < handle
             listener = BooleanPlaceListener(place, obj.runner, acknowledgement);
             obj.runner.listenForTokenChanges(listener, place, acknowledgement);
             set(listener,'PropertyChangeCallback',evaluator);
+            obj.listeners = [obj.listeners; listener];
         end           
         function acknowledge(obj, place) 
            obj.runner.acknowledge(place);  
@@ -124,9 +130,23 @@ classdef Behavior < handle
                 obj.run();  % concurrentModificationException if run() here when threaded
            end
            obj.isDone = true;
+           obj.cleanupJvmMemory(); 
            disp('isdone: ');
            disp(obj.isDone);
 %            obj.animal.behaviorDone(); 
+        end
+        function cleanupJvmMemory(obj)
+           disp(size(obj.listeners));
+           disp(obj.listeners(1,:)); 
+           for ii = 1:length(obj.listeners)
+              obj.listeners(ii,1) = [];
+           end
+           obj.thread = []; 
+           obj.threadRunner = []; 
+           if ~obj.keepRunnerForReporting
+               obj.runner = []; 
+           end
+
         end
         function markPlace(obj, place)
            obj.markPlaceMultipleTokens(place, 1);

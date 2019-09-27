@@ -23,6 +23,7 @@ classdef MotorCortex < System
         remainingDistance
         maxBehaviorSteps
         behaviorHistory
+        keepRunnerForReporting
     end
     methods
         function obj = MotorCortex(animal)
@@ -31,6 +32,7 @@ classdef MotorCortex < System
             obj.nHeadDirectionCells = 60;
             obj.nFeatures = 3; 
             obj.rewardUnits = 5; 
+            obj.keepRunnerForReporting = false; 
             obj.build();
             obj.turnDistance = 0; 
             obj.runDistance = 0; 
@@ -45,13 +47,13 @@ classdef MotorCortex < System
             obj.remainingDistance = 0; 
             obj.maxBehaviorSteps = 5; 
             obj.behaviorHistory = [];
+            
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
             obj.featureOutput = zeros(1, obj.nFeatures * featureLength); 
             obj.reward = zeros(1,obj.rewardUnits);  
             obj.nOutput = length(obj.featureOutput) + obj.rewardUnits; 
-
         end
         function randomNavigation(obj, steps)
             obj.behaviorHistory = [];
@@ -121,12 +123,14 @@ classdef MotorCortex < System
         end
         function aTurn = turn(obj)
             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
-            obj.currentPlan = aTurn; 
+            aTurn.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            obj.currentPlan = aTurn;             
             aTurn.execute(); 
             obj.markedPlaceReport = aTurn.placeReport; 
         end
         function aRun = run(obj)
             aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance); 
+            aRun.keepRunnerForReporting = obj.keepRunnerForReporting;             
             obj.currentPlan = aRun; 
             aRun.execute(); 
             obj.markedPlaceReport = aRun.placeReport; 

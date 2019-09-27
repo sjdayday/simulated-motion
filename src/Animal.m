@@ -74,6 +74,7 @@ classdef Animal < System
         leftWhiskerTouching
         includeHeadDirectionFeatureInput
         sparseOrthogonalizingNetwork
+        keepRunnerForReporting
     end
     methods
         function obj = Animal()
@@ -126,6 +127,7 @@ classdef Animal < System
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
             obj.sparseOrthogonalizingNetwork = false; 
+            obj.keepRunnerForReporting = false; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -155,6 +157,7 @@ classdef Animal < System
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 
             obj.controller.build(); 
+            obj.motorCortex.keepRunnerForReporting = obj.keepRunnerForReporting; 
 %             obj.setChildTimekeeper(obj); 
         end
         function setChildTimekeeper(obj, timekeeper) 
