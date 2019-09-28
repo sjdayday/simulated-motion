@@ -57,6 +57,7 @@ classdef HippocampalFormation < System
         placeMatchThreshold
         settleToPlace
         sparseOrthogonalizingNetwork
+        separateMecLec
     end
     methods
         function obj = HippocampalFormation()
@@ -96,6 +97,7 @@ classdef HippocampalFormation < System
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
             obj.sparseOrthogonalizingNetwork = false; 
+            obj.separateMecLec = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -208,7 +210,8 @@ classdef HippocampalFormation < System
             disp(['MEC: ',num2str(obj.nMecOutput), 'LEC: ', num2str(obj.nLecOutput)]);  
             obj.placeSystem = PlaceSystem(obj.nMecOutput, obj.nLecOutput);
             obj.placeSystem.matchThreshold = obj.placeMatchThreshold;
-            obj.placeSystem.sparseOrthogonalizingNetwork(obj.sparseOrthogonalizingNetwork); 
+            obj.placeSystem.sparseOrthogonalizingNetwork(obj.sparseOrthogonalizingNetwork, ...
+                obj.separateMecLec); 
         end
         function step(obj)
             step@System(obj); 

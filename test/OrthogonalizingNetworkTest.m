@@ -56,6 +56,37 @@ classdef OrthogonalizingNetworkTest < AbstractTest
             firedDifferent = network.step(inputDifferent); 
             testCase.assertEqual(firedDifferent, [0 0 0 0 1 0 0 0 0 0]);             
         end
+%         buildSparseVector(obj, sparseInput)
+        function testBuildSparseVectorFromOneOrTwoInputs(testCase)
+            network = createOrthogonalizingNetwork(10,100); 
+            sparseVector = network.buildSparseVector([3]);
+            testCase.assertEqual(sparseVector, [0 0 0 1 0 0 0 0 0 0]);             
+            sparseVector = network.buildSparseVector([3 8]);
+            testCase.assertEqual(sparseVector, [0 0 0 1 0 0 0 0 1 0]);             
+            sparseVector = network.buildSparseVector([3 3]);
+            testCase.assertEqual(sparseVector, [0 0 0 1 0 0 0 0 0 0]);             
+        end
+        function testSimilarInputsForMecOrLecActivateTwoSparseRandomOutputs(testCase)
+            network = createOrthogonalizingNetwork(10,100); 
+            network.sparse = true; 
+            network.nMEC = 5; 
+            network.separateMecLec = true; 
+            input =  [1 0 1 1 0 1 0 0 0 0];
+            input2 = [1 0 1 1 0 0 1 0 0 0];
+            input3 = [1 0 1 1 0 1 0 0 0 1];
+            input4 = [0 0 0 0 1 1 0 0 0 1];            
+            fired = network.step(input); 
+            testCase.assertEqual(fired, [0 0 0 0 0 0 0 1 1 0]);             
+            fired2 = network.step(input2); 
+            testCase.assertEqual(fired2, [0 0 0 0 0 0 0 0 1 1], ...
+                'MEC same (9), LEC different, so one digit same');             
+            fired3 = network.step(input3); 
+            testCase.assertEqual(fired3, [0 0 0 0 1 0 0 0 1 0], ...
+                'MEC still same (9), LEC different');             
+            fired4 = network.step(input4); 
+            testCase.assertEqual(fired4, [0 0 0 0 1 0 0 1 0 0], ...
+                'MEC different, LEC same as previous');             
+        end
         function testCreateSparseOutputUsingLowDigitsOfSin(testCase)
             network = OrthogonalizingNetwork(10, 100);    
             network.sparse = true; 

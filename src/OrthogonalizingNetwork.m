@@ -15,6 +15,8 @@ classdef OrthogonalizingNetwork < handle
         weightType
         rebuildConnections
         sparse
+        nMEC
+        separateMecLec
     end
     methods
         function obj = OrthogonalizingNetwork(synapses, neurons)
@@ -25,6 +27,8 @@ classdef OrthogonalizingNetwork < handle
             obj.wiringOutput = OrthogonalizingWiring([neurons synapses]); 
             obj.rebuildConnections = false;
             obj.sparse = false; 
+            obj.nMEC = 0; 
+            obj.separateMecLec = false; 
         end
         % buildNetwork must be called after constructor is called and any 
         % properties are overridden. 
@@ -44,25 +48,33 @@ classdef OrthogonalizingNetwork < handle
                 fired = obj.wiringOutput.connect(internal);
             end
         end
-        function sparseInput = buildSparseInput(~, input)
-           total = 1; 
+        function sparseInput = buildSparseInput(obj, input)
            nBuckets = length(input); 
+           if obj.separateMecLec
+              first = obj.buildOneDigit(input(1:obj.nMEC), nBuckets);
+              second = obj.buildOneDigit(input(obj.nMEC+1:end), nBuckets);
+              sparseInput = [first second]; 
+           else
+              sparseInput = obj.buildOneDigit(input, nBuckets); 
+           end
+        end
+        function oneDigit = buildOneDigit(~, input, nBuckets)
+           total = 1; 
            indices = find(input == 1); 
            indicesLength = length(indices);
            if indicesLength == 0
-               sparseInput = 0; 
+               oneDigit = 0; 
            else
                for ii = 1:indicesLength
-                   total = total + sin(indices(ii));
-%                   total = total * indices(ii);                    
+                   total = total + sin(indices(ii));          
                end
                total = total * 10000; 
                prettyRandom = total - floor(total);
-               sparseInput = floor(nBuckets * prettyRandom); 
-%                sparseInput = mod(total, modulo);                
-           end
+               oneDigit = floor(nBuckets * prettyRandom); 
+           end   
         end
         function sparseVector = buildSparseVector(obj, sparseInput)
+            % takes vector of length 1 or 2 and updates sparse vector 
             sparseVector = zeros(1,obj.nSynapses); 
             index = sparseInput + 1; 
             if index > obj.nSynapses 
@@ -79,7 +91,5 @@ classdef OrthogonalizingNetwork < handle
                     ' but was ', num2str(length(input))]) ;
             end
         end
-%         function plot(obj)
-%         end
     end
 end

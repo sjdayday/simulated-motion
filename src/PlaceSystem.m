@@ -23,12 +23,14 @@ classdef PlaceSystem < AutoassociativeNetwork
             obj.nMEC = nMecOutput; 
             obj.nLEC = nLecOutput;  
             obj.DG = OrthogonalizingNetwork(obj.nDGInput,obj.nDGInput * 10);
+            obj.DG.nMEC = obj.nMEC; 
             obj.DG.buildNetwork(); 
             obj.weightType = 'binary'; %weights are binary
             obj.buildNetwork();
         end
-        function sparseOrthogonalizingNetwork(obj, sparse)
-           obj.DG.sparse = sparse;  
+        function sparseOrthogonalizingNetwork(obj, sparse, separateMecLec)
+           obj.DG.sparse = sparse; 
+           obj.DG.separateMecLec = separateMecLec;
         end
         function fired = step(obj, mecInput, lecInput)
             obj.ECOutput = [mecInput, lecInput]; 

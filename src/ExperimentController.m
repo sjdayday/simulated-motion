@@ -43,6 +43,7 @@ classdef ExperimentController < System
         rebuildHeadDirectionSystemFlag
         settleToPlace
         sparseOrthogonalizingNetwork
+        separateMecLec
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -67,6 +68,7 @@ classdef ExperimentController < System
             obj.settleToPlace = false;
             obj.nCueIntervals = obj.nHeadDirectionCells; 
             obj.sparseOrthogonalizingNetwork = false; 
+            obj.separateMecLec = false; 
             obj.thirdCue = false; 
 %             obj.build(); 
         end
@@ -142,6 +144,7 @@ classdef ExperimentController < System
             obj.animal.placeMatchThreshold = obj.placeMatchThreshold;
             obj.animal.settleToPlace = obj.settleToPlace;
             obj.animal.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
+            obj.animal.separateMecLec = obj.separateMecLec; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 

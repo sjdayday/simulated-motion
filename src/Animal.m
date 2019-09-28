@@ -74,6 +74,7 @@ classdef Animal < System
         leftWhiskerTouching
         includeHeadDirectionFeatureInput
         sparseOrthogonalizingNetwork
+        separateMecLec
         keepRunnerForReporting
     end
     methods
@@ -127,6 +128,7 @@ classdef Animal < System
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
             obj.sparseOrthogonalizingNetwork = false; 
+            obj.separateMecLec = false; 
             obj.keepRunnerForReporting = false; 
         end
         function build(obj)
@@ -144,6 +146,7 @@ classdef Animal < System
             obj.hippocampalFormation.showIndices = obj.showHippocampalFormationECIndices; 
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
+            obj.hippocampalFormation.separateMecLec = obj.separateMecLec;
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
             obj.hippocampalFormation.gridDirectionBiasIncrement = obj.gridDirectionBiasIncrement;             
