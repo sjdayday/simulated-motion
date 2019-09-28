@@ -506,7 +506,11 @@ classdef ExperimentController < System
                wall = obj.environment.walls(jj,:); 
                L = line([wall(1) wall(3)], [wall(2) wall(4)],'Color','black','LineWidth',2); 
             end 
-%             axis ([0 2 0 2 ]);
+            for kk = 1:size(obj.environment.cues,1)
+                cue = obj.environment.cues(kk,:);
+                plot(cue(1),cue(2), ...
+                    'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');       
+            end
              axis off
 %             axis equal
         end
