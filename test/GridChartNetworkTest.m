@@ -22,34 +22,6 @@ classdef GridChartNetworkTest < AbstractTest
             gridNet.build(); 
             testCase.assertNotEqual(gridNet.positiveWeights, positiveWeights, ... 
                 'weights should be different after changing input property'); 
-            
-%             system = HippocampalFormation();
-%             system.nearThreshold = 0.2;
-%             system.nGridOrientations = 3; 
-%             system.gridDirectionBiasIncrement = pi/4;   
-%             system.gridExternalVelocity = false; 
-%             system.nGridGains = 1; 
-%             system.gridSize = [6,5];
-%             system.pullVelocity = false; 
-%             system.defaultFeatureDetectors = false; 
-%             system.updateFeatureDetectors = true;
-%             system.build();  
-%             testCase.assertTrue(system.grid(1).updateFeatureDetectors); 
-%             testCase.assertEqual(position(2), obj.positiveWeights, 'first position saved is maintained'); 
-%             system.build();
-%             system.placeSystem.currentOutput = [0 1 0 1 0 1 0 1];
-%             system.animal.x = 1.1;
-%             system.animal.y = 0.1;
-%             result = system.savePositionForPlace([1.1 0.1], [2 4 6 8]);
-%             testCase.assertEqual(result, 2, 'new place'); 
-%             result = system.savePositionForPlace([1.1 0.2], [2 4 6 8]);
-%             testCase.assertEqual(result, 1, 'near place'); 
-%             result = system.savePositionForPlace([1.1 0.5], [2 4 6 8]);
-%             testCase.assertEqual(result, 0, 'far place'); 
-%             position = system.getPositionForPlace('[2 4 6 8]'); 
-%             testCase.assertEqual(position(1), 1.1, 'first position saved is maintained'); 
-%             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
-
         end
         function testCreateArrayOfGridChartNetwork(testCase)
             grids(1,3) = GridChartNetwork(6,5); 
@@ -58,49 +30,6 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(grids(1,1).nX, 10, ...
                 'other objects initialized with default 10,9'); 
         end
-%         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.externalVelocity = true; 
-%             gridNet.nFeatureDetectors = 5; 
-%             gridNet.featureGain = 3;
-%             gridNet.featureOffset = 0.15;             
-%             gridNet.build();
-%             gridNet.build();  % build twice to mimic previous behavior prior to refactor          
-%             gridNet.step(); 
-%             for ii = 1:7
-%                 gridNet.step();            
-%             end
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
-%                 18, 'stable; now present features'); 
-%             gridNet.featuresDetected = [0 0 1 0 0]; 
-%             for ii = 1:5
-%                 gridNet.step();            
-%             end
-%             w = gridNet.featureWeights; 
-%             testCase.assertEqual(max(w(1,:)), 0); 
-%             testCase.assertThat(max(w(3,:)), ...            
-%                 IsEqualTo(0.488275478428257, 'Within', RelativeTolerance(.00000000001))); 
-% %             % randomly "place" animal elsewhere
-%             gridNet.initializeActivation(); 
-%             gridNet.featuresDetected = [0 0 0 0 0]; 
-%             gridNet.step();            
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
-%                 25, 'stable activation at new random orientation'); 
-%             gridNet.featuresDetected = [0 0 1 0 0]; 
-%             gridNet.readMode = 1; 
-%             % features now drive us back to the orientation at which they 
-%             % were perceived: 18
-%             gridNet.step(); 
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 19); 
-%             gridNet.step(); 
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
-%             gridNet.step(); 
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
-%             gridNet.step(); 
-%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
-%         end
         function testUpdateActivationWithFeatureInputs(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -219,42 +148,6 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 25, ...
                 'stay at current activation'); 
         end
-
-%         function testPositiveAndNegativeMotionWeights(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.buildNetwork();
-%             testCase.assertEqual(length(gridNet.horizonalWeightInputVector), 6, ...
-%                 'weights operate row at a time, until/unless I figure out how to process 5X6 matrix in one pass');
-%             testCase.assertEqual(length(gridNet.verticalWeightInputVector), 5);
-%             testCase.assertEqual(size(gridNet.positiveHorizontalWeights), [6 6 ]);
-%             testCase.assertEqual(size(gridNet.negativeHorizontalWeights), [6 6]);
-%             testCase.assertEqual(size(gridNet.positiveVerticalWeights), [5 5]);
-%             testCase.assertEqual(size(gridNet.negativeVerticalWeights), [5 5]);
-%             % assumes row at a time processing
-% %             horizontalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];            
-%             horizontalPositive = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
-%             testCase.assertThat(gridNet.positiveHorizontalWeights(1,:), ...
-%                 IsEqualTo(horizontalPositive, 'Within', RelativeTolerance(.0000000001)));         
-% %             horizontalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-%             horizontalNegative = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-%             testCase.assertThat(gridNet.negativeHorizontalWeights(1,:), ...
-%                 IsEqualTo(horizontalNegative, 'Within', RelativeTolerance(.0000000001)));         
-%             % vertical processing, after transposition, implies shift
-%             % to the left to make numbers be more positive after transpose back 
-% %             verticalPositive = [0.184796813628934   0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-%             verticalPositive = [0.203028146638744   0.185744160092518   0.185744160092518   0.203028146638744   0.208235290447501];
-% 
-% %             verticalPositive = [0.184796813628934   0.201687064406685 0.184796813628934 0.147980845516166 0.129517595665892];
-%             testCase.assertThat(gridNet.positiveVerticalWeights(1,:), ...
-%                 IsEqualTo(verticalPositive, 'Within', RelativeTolerance(.00000001)));         
-% %             verticalNegative = [0.184796813628934  0.201687064406685   0.184796813628934   0.147980845516166   0.129517595665892 0.147980845516166];            
-%             verticalNegative = [0.203028146638744   0.208235290447501 0.203028146638744   0.185744160092518   0.185744160092518];
-% %             verticalNegative = [0.147980845516166 0.129517595665892, 0.147980845516166   0.184796813628934   0.201687064406685];
-%             testCase.assertThat(gridNet.negativeVerticalWeights(1,:), ...
-%                 IsEqualTo(verticalNegative, 'Within', RelativeTolerance(.00000001)));         
-%         end
         function testMotionInputsLeavePairwiseDistancesConstant(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -389,151 +282,6 @@ classdef GridChartNetworkTest < AbstractTest
             testCase.assertEqual(gridNet.getMaxActivationIndex(), 29); 
             
         end
-        
-%         function testBuildsHorizontalMotionSynapticInput(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.motionInputWeights = 1; 
-%             gridNet.buildNetwork();
-%             gridNet.activation = ...
-%                 [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
-%             % looks like:
-% %             0     0     0     0     0     0
-% %             0     0     0     1     0     0
-% %             0     0     1     2     1     0
-% %             0     0     0     1     0     0
-% %             0     0     0     0     0     0
-%             gridNet.velocity = [ 0.3; 0.2]; 
-%             % shifted right
-%             horizontalInput = ...
-%                    [0   0   0   0   0   0;
-%                     0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
-%                     0.183082830098147   0.166499064709234   0.183082830098147   0.215778461154216   0.231890326821372   0.215778461154216;
-%                     0.044394253654850   0.038855278699768   0.044394253654850   0.055439044088680   0.060506119322006   0.055439044088680;
-%                     0   0   0   0   0   0; ];
-%             testCase.assertThat(gridNet.calculateHorizontalInput(), ...
-%             IsEqualTo(horizontalInput, 'Within', RelativeTolerance(.00000001)));         
-%         end
-%         function testBuildsVerticalMotionSynapticInput(testCase)
-%             import matlab.unittest.constraints.IsEqualTo
-%             import matlab.unittest.constraints.RelativeTolerance
-%             gridNet = GridChartNetwork(6,5); 
-%             gridNet.motionInputWeights = 1; 
-%             gridNet.buildNetwork();
-%             gridNet.activation = ...
-%                 [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 2 1 0 0 0 1 0 0 0 0 0 0 0]; 
-%                         % looks like:
-% %             0     0     0     0     0     0
-% %             0     0     0     1     0     0
-% %             0     0     1     2     1     0
-% %             0     0     0     1     0     0
-% %             0     0     0     0     0     0
-% 
-%             gridNet.velocity = [ 0.3; 0.2]; 
-%             % shifted up
-%             verticalInput = ...
-%               [0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0; 
-%                0                   0   0.041647058089500   0.164505374834498   0.041647058089500                   0;
-%                0                   0   0.040605629327749   0.160007148763501   0.040605629327749                   0;
-%                0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0;
-%                0                   0   0.037148832018504   0.152052125383259   0.037148832018504                   0];            
-%            testCase.assertThat(gridNet.calculateVerticalInput(), ...
-%                 IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
-%             reshapeInput = reshape(verticalInput,1,gridNet.nCells);
-%             verticalInputReshaped = reshape(reshapeInput,gridNet.nY,gridNet.nX); 
-%             testCase.assertThat(verticalInputReshaped, ...
-%                 IsEqualTo(verticalInput, 'Within', RelativeTolerance(.00000001)));
-%             
-%         end
-%         function testWeightOffset(testCase)
-%             
-%         end
-%         function testWeightOrientation(testCase)
-%             
-%         end
-%         function testWeightGain(testCase)
-%             
-%         end
-%         function testSingle(testCase)
-%             gridNet = GridChartNetwork(6,5);
-%             gridNet.motionInputWeights = 1;
-%             gridNet.buildNetwork();
-%             gridNet.step();
-%             gridNet.plot();
-%             gridNet.step();
-%             gridNet.plot();
-%             for ii = 1:100
-%                 for jj = 1:10
-%                     gridNet.step();
-%                     if jj == 10
-%                         gridNet.plot();
-%                         drawnow;
-%                     end
-%                 end
-%             end
-%         end
-
-%         function testCreateNetwork(testCase)
-%             h = figure; 
-%             colsp = 3;
-%             rowsp = 3;  
-%             gh = gobjects(rowsp,colsp);
-%             rowOffset = 0; 
-%             for kk = 1:3
-%                 for ll = 1:colsp
-%                     indPlot = ll+(rowOffset * colsp);
-% %                     disp([kk,ll,indPlot]); 
-%                     gh(kk,ll) = subplot(colsp,rowsp,indPlot); 
-%                 end
-%                 rowOffset = rowOffset + 1; 
-%             end
-%             network = GridChartNetwork(6,5);
-%             network.h = h; 
-%             network.gh = gh; 
-%             network2 = GridChartNetwork(6,5);
-%             network2.h = h; 
-%             network2.gh = gh;             
-%             network2.inputDirectionBias = pi/4; 
-%             network2.buildNetwork(); 
-%             network3 = GridChartNetwork(6,5);
-%             network3.h = h; 
-%             network3.gh = gh;             
-%             network3.inputGain = 50; 
-%             network3.buildNetwork(); 
-%             for ii = 1:100
-%                 for jj = 1:10
-%                     network.step();
-%                     network2.step();
-%                     network3.step();
-%                     if jj == 10
-%                         figure(h);
-%                         network.plotAll(1); 
-%                         network2.plotAll(2); 
-%                         network3.plotAll(3);                         
-% %                         subplot(331);
-% %                         network.plotActivation();
-% %                         subplot(332);
-% %                         network.plotRateMap(); 
-% %                         subplot(333);
-% %                         network.plotTrajectory(); 
-% %                         subplot(334); 
-% %                         network2.plotActivation();
-% %                         subplot(335);
-% %                         network2.plotRateMap(); 
-% %                         subplot(336);
-% %                         network2.plotTrajectory(); 
-% %                         subplot(337); 
-% %                         network3.plotActivation();
-% %                         subplot(338);
-% %                         network3.plotRateMap(); 
-% %                         subplot(339);
-% %                         network3.plotTrajectory(); 
-%                         drawnow; 
-%                     end
-%                 end
-%             end
-%         end
       function testMotionIncreasesWithInputGain(testCase)            
             h = figure; 
             colsp = 3;

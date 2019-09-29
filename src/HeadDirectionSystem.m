@@ -157,7 +157,7 @@ classdef HeadDirectionSystem < System
            end
         end
         function updateFeatureWeights(obj)
-            updateFeaturesDetected(obj); 
+            obj.updateFeaturesDetected(); 
             % approximation of Skaggs, figure 4, "f()".  
             % based on sigmoidal function, negative at small activation 
             % values, linear over most of the activation range, 
@@ -212,11 +212,41 @@ classdef HeadDirectionSystem < System
         function activationFunction(obj)
            obj.rate = 1 ./ (1 + exp(obj.betaGain * (-obj.uActivation - obj.alphaOffset)));  
         end
-        %% Single time step 
+        function updateActivationWithMotionInputs(obj)
+            obj.updateVelocity();             
+            obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation); % may not be needed
+            obj.activationFunction(); 
+            clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
+            counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
+%             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
+            motionInput = clockwiseInput + counterClockwiseInput; % + featureInput; 
+           % with normalizedWeight = 0, this is just synapticInput  
+            obj.updateActivation(motionInput); 
+%             obj.updateActivation(synapticInput); 
+%             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
+%                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
+        end
+        function updateActivationWithFeatureInputs(obj)
+            obj.activationFunction();
+            obj.updateFeatureWeights(); 
+            featureInput = obj.featuresDetected * obj.featureWeights; 
+%             if obj.includeFeatureInput
+%                 synapticInput = synapticInput + featureInput; 
+%             end
+            obj.updateActivation(featureInput); 
+        end
+        function updateActivation(obj, input)
+            synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + input;
+
+            obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
+                  obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
+        end
+        
+        %% Single time step
         function  step(obj)
             step@System(obj); 
-            updateVelocity(obj); 
-            updateFeatureWeights(obj);                 
+            obj.updateVelocity(); 
+            obj.updateFeatureWeights(); % can this be independent?                  
             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
             obj.activationFunction(); 
             clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
@@ -232,7 +262,8 @@ classdef HeadDirectionSystem < System
             % FIXME separate motion from feature input
                 % obj.uActivation % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
             
-            % with normalizedWeight = 0, this is just synapticInput    
+            % with normalizedWeight = 0, this is just synapticInput   
+%             obj.updateActivation(synapticInput); 
             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 

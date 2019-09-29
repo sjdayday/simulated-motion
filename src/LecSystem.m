@@ -3,10 +3,10 @@
 % Hard-coded expectation that there are three cues:  
 %  Environment first cue (most salient)
 %  Environment second cue
-%  Environment nearest wall  
+%  Environment nearest wall or a third cue 
 % Builds a canonical view of the cues, calculating as if current head
 % direction was towards the most salient cue, and then calculating the
-% angles to the second cue and the nearest wall from that angle.  
+% angles to the second cue and the nearest wall / third cue from that angle.  
 % For a given position in the arena, this means that there is one canonical
 % view of the cues, rather than one for each possible head direction at
 % that position.  
@@ -94,6 +94,8 @@ classdef LecSystem < System
             obj.environment.setHeadDirection(headDirection);
             offset = obj.environment.cueHeadDirectionOffset(1);  
             cueHeadDirection = headDirection - (obj.nHeadDirectionCells - offset) - 1; 
+            % save the cueHeadDirection, and then associate it to the place
+            % Id
 %             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
             obj.environment.setHeadDirection(cueHeadDirection);
         end

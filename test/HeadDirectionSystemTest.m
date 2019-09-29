@@ -120,6 +120,143 @@ classdef HeadDirectionSystemTest < AbstractTest
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
         end
+        function testUpdateActivationWithFeatureInputs(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            headDirectionSystem = HeadDirectionSystem(60); 
+            randomHeadDirection = true; 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            headDirectionSystem.pullVelocity = false;  
+            headDirectionSystem.pullFeatures = false; 
+            headDirectionSystem.nFeatureDetectors = 5; 
+            headDirectionSystem.build();
+            for ii = 1:7
+                headDirectionSystem.updateActivationWithMotionInputs();
+%                 headDirectionSystem.step();            
+            end
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+                10, 'stable; now present features'); 
+            headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+            headDirectionSystem.step();            
+            w = headDirectionSystem.featureWeights; 
+            testCase.assertEqual(max(w(1,:)), 0); 
+            testCase.assertThat(max(w(3,:)), ...            
+                IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
+            % randomly "place" animal elsewhere
+            headDirectionSystem.initializeActivation(true);
+            headDirectionSystem.initializeActivation(true); 
+            headDirectionSystem.featuresDetected = [0 0 0 0 0]; 
+            headDirectionSystem.updateActivationWithMotionInputs();
+%             headDirectionSystem.step();            
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+                20, 'stable activation at new random orientation'); 
+            headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+            headDirectionSystem.readMode = 1; 
+            % features now drive us back to the orientation at which they 
+            % were perceived: 10
+            headDirectionSystem.updateActivationWithFeatureInputs();
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 18); 
+            headDirectionSystem.updateActivationWithFeatureInputs();
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 12); 
+            headDirectionSystem.updateActivationWithFeatureInputs();            
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+            headDirectionSystem.updateActivationWithFeatureInputs();            
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+            headDirectionSystem.updateActivationWithFeatureInputs();            
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+            headDirectionSystem.updateActivationWithFeatureInputs();            
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+            headDirectionSystem.updateActivationWithFeatureInputs();            
+%             headDirectionSystem.step(); 
+            testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+        end
+%         function testUpdateActivationWithFeatureInputs(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+%             gridNet = GridChartNetwork(6,5); 
+%             gridNet.externalVelocity = true; 
+%             gridNet.nFeatureDetectors = 5; 
+%             gridNet.featureGain = 3;
+%             gridNet.featureOffset = 0.15;             
+%             gridNet.build();
+%             gridNet.build();  % build twice to mimic previous behavior prior to refactor          
+%             gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+% %             gridNet.updateFeatureWeights(); 
+%             for ii = 1:7
+%                 gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+% %                 gridNet.updateFeatureWeights(); 
+%             end
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+%                 18, 'stable; now present features'); 
+%             gridNet.featuresDetected = [0 0 1 0 0]; 
+%             gridNet.readMode = 0; 
+%             for ii = 1:5
+%                 gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+%             end
+%             w = gridNet.featureWeights; 
+%             testCase.assertEqual(max(w(1,:)), 0); 
+%             testCase.assertThat(max(w(3,:)), ...            
+%                 IsEqualTo(0.457953284878695, 'Within', RelativeTolerance(.00000000001))); % 0.488275478428257
+% %             % randomly "place" animal elsewhere
+%             gridNet.initializeActivation(); 
+%             gridNet.featuresDetected = [0 0 0 0 0]; 
+%             gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+%                 25, 'stable activation at new random orientation'); 
+%             gridNet.featuresDetected = [0 0 1 0 0]; 
+%             gridNet.readMode = 1; 
+%             % features now drive us back to the orientation at which they 
+%             % were perceived: 18
+% %             gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+% %             testCase.assertEqual(gridNet.getMaxActivationIndex(), 19); 
+%             gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
+%             gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18); 
+%         end
+%         function testSettleEquivalentToUpdateActivationWithFeatureInputs(testCase)
+%             import matlab.unittest.constraints.IsEqualTo
+%             import matlab.unittest.constraints.RelativeTolerance
+%             gridNet = GridChartNetwork(6,5); 
+%             gridNet.externalVelocity = true; 
+%             gridNet.nFeatureDetectors = 5; 
+%             gridNet.featureGain = 3;
+%             gridNet.featureOffset = 0.15;             
+%             gridNet.build();
+%             gridNet.build();  % build twice to mimic previous behavior prior to refactor          
+%             gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+% %             gridNet.updateFeatureWeights(); 
+%             for ii = 1:7
+%                 gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+% %                 gridNet.updateFeatureWeights(); 
+%             end
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+%                 18, 'stable; now present features'); 
+%             gridNet.featuresDetected = [0 0 1 0 0]; 
+%             for ii = 1:5
+%                 gridNet.updateActivationWithFeatureInputs(); % gridNet.step(); 
+%             end
+%             w = gridNet.featureWeights; 
+%             testCase.assertEqual(max(w(1,:)), 0); 
+%             testCase.assertThat(max(w(3,:)), ...            
+%                 IsEqualTo(0.457953284878695, 'Within', RelativeTolerance(.00000000001))); % 0.488275478428257
+% %             % randomly "place" animal elsewhere
+%             gridNet.initializeActivation(); 
+%             gridNet.featuresDetected = [0 0 0 0 0]; 
+%             gridNet.updateActivationWithMotionInputs(); % gridNet.step(); 
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), ...
+%                 25, 'stable activation at new random orientation'); 
+%             gridNet.featuresDetected = [0 0 1 0 0]; 
+%             gridNet.settle(); 
+%             testCase.assertEqual(gridNet.getMaxActivationIndex(), 18, ...
+%                 'back to original activation'); 
+%         end
 
         
         

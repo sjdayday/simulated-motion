@@ -380,10 +380,10 @@ classdef GridChartNetwork < System
         end
         
         function updateActivationWithMotionInputs(obj)           
-            buildVelocity(obj);
+            obj.buildVelocity();
             %% Generate new weight matrix for current velocity
        
-            buildSquaredPairwiseDists(obj);
+            obj.buildSquaredPairwiseDists();
             
               % Weights have an excitatory center that peaks at 
               % I-T (peakSynapticStrength-shiftInhibitoryTail) and if T>0, the
@@ -399,7 +399,7 @@ classdef GridChartNetwork < System
         end
         function updateActivation(obj, synapticInput)
             if any(synapticInput) % only if some element non-zero, else leave activation as is
-                disp('updating grid activation'); 
+%                 disp('updating grid activation'); 
                 if obj.motionInputWeights == true
                     obj.calculateActivationMotionInputWeights(synapticInput); 
                 else
