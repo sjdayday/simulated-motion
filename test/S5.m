@@ -40,6 +40,7 @@ classdef S5 < handle
             obj.ec.addAnimalEvent(39, 'obj.showFeatures = 0; obj.features = [];'); 
             obj.ec.addAnimalEvent(40, 'obj.motorCortex.runDistance = 2; obj.motorCortex.run();'); 
             obj.ec.addHeadDirectionSystemEvent(40, 'obj.readMode = 0;');
+            obj.ec.addHeadDirectionSystemEvent(41, 'obj.readMode = 0;');            
 %              obj.ec.addAnimalEvent(40, 'obj.hippocampalFormation.headDirectionSystem.clockwiseVelocity = -obj.minimumVelocity;');            
 %              obj.ec.addControllerEvent(41, 'disp(''did not just changed HDS velocity''); pause(10); ')
             obj.ec.addAnimalEvent(45, 'obj.motorCortex.turnDistance = 25; obj.motorCortex.clockwiseTurn();');

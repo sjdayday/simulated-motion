@@ -245,27 +245,32 @@ classdef HeadDirectionSystem < System
         %% Single time step
         function  step(obj)
             step@System(obj); 
-            obj.updateVelocity(); 
-            obj.updateFeatureWeights(); % can this be independent?                  
-            obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
-            obj.activationFunction(); 
-            clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
-            counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
+%             obj.updateVelocity(); 
+            obj.updateFeatureWeights(); % can this be independent?  
+            if obj.readMode
+                obj.updateActivationWithFeatureInputs();
+            else
+                obj.updateActivationWithMotionInputs(); 
+            end
+%             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
+%             obj.activationFunction(); 
+%             clockwiseInput = obj.uActivation*(obj.clockwiseVelocity*obj.clockwiseWeights); 
+%             counterClockwiseInput = obj.uActivation*(obj.counterClockwiseVelocity*obj.counterClockwiseWeights); 
 %             clockwiseInput = clockwiseInput * 5; % temp
 %             counterClockwiseInput = counterClockwiseInput * 5;  % temp
-            featureInput = obj.featuresDetected * obj.featureWeights; 
-            synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
-                clockwiseInput + counterClockwiseInput; % + featureInput; 
-            if obj.includeFeatureInput
-                synapticInput = synapticInput + featureInput; 
-            end
+%             featureInput = obj.featuresDetected * obj.featureWeights; 
+%             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + ...
+%                 clockwiseInput + counterClockwiseInput; % + featureInput; 
+%             if obj.includeFeatureInput
+%                 synapticInput = synapticInput + featureInput; 
+%             end
             % FIXME separate motion from feature input
                 % obj.uActivation % .* obj.featuresDetected; % /((1-obj.currentActivationRatio)*2)
             
             % with normalizedWeight = 0, this is just synapticInput   
 %             obj.updateActivation(synapticInput); 
-            obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
-                  obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
+%             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
+%                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
 
             obj.Ahist(obj.getTime()) =  obj.currentActivationRatio ; 
             disp(['HeadDirectionSystem time: ',num2str(obj.getTime()),' activation: ',num2str(obj.getMaxActivationIndex())]); 

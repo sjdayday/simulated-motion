@@ -39,7 +39,7 @@ classdef S4Test < AbstractTest
 %             script.run(1);
             testCase.assertEqual(script.ec.getTime(), 27); 
             testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                4); 
+                5); % was 4
             script.run(8);
 %             pause(10);
             testCase.assertEqual(script.ec.getTime(), 35); 

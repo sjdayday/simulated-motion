@@ -73,6 +73,8 @@ classdef HeadDirectionSystemTest < AbstractTest
             testCase.assertEqual(headDirectionSystem.counterClockwiseVelocity, 0);
             
         end
+        % uncomment when readMode calls updateActivationWithFeatureInputs()
+        % automatically 
         function testActivationFollowsPreviouslyActivatedFeatures(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -105,18 +107,25 @@ classdef HeadDirectionSystemTest < AbstractTest
             headDirectionSystem.readMode = 1; 
             % features now drive us back to the orientation at which they 
             % were perceived: 10
-            headDirectionSystem.step(); 
+%             headDirectionSystem.step(); 
+            headDirectionSystem.updateActivationWithFeatureInputs();
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 18); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 12); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 11); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
+%             headDirectionSystem.updateActivationWithFeatureInputs();
             headDirectionSystem.step(); 
             testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 10); 
         end
