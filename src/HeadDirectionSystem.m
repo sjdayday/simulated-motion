@@ -53,6 +53,8 @@ classdef HeadDirectionSystem < System
         pullFeatures
         minimumVelocity
         animalVelocityCalibration
+        pullFeatureWeightsFromLec
+        lec
     end
     methods
         function obj = HeadDirectionSystem(nHeadDirectionCells)
@@ -92,6 +94,7 @@ classdef HeadDirectionSystem < System
             obj.pullVelocity = true;
             obj.pullFeatures = true; 
             obj.includeFeatureInput = true; 
+            obj.pullFeatureWeightsFromLec = false; 
 
         end
         function initializeActivation(obj, random)
@@ -228,12 +231,14 @@ classdef HeadDirectionSystem < System
         end
         function updateActivationWithFeatureInputs(obj)
             obj.activationFunction();
-            obj.updateFeatureWeights(); 
-            featureInput = obj.featuresDetected * obj.featureWeights; 
-%             if obj.includeFeatureInput
-%                 synapticInput = synapticInput + featureInput; 
-%             end
-            obj.updateActivation(featureInput); 
+            if obj.pullFeatureWeightsFromLec
+                featureInput = obj.lec.getFeatureInput(); 
+                obj.updateActivation(featureInput); 
+            else
+                obj.updateFeatureWeights(); 
+                featureInput = obj.featuresDetected * obj.featureWeights; 
+                obj.updateActivation(featureInput); 
+            end
         end
         function updateActivation(obj, input)
             synapticInput = obj.rate*obj.wHeadDirectionWeights*obj.dx + input;

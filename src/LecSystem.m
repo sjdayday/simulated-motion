@@ -26,6 +26,13 @@ classdef LecSystem < System
         headDirectionSystem
         cueActivation
         cueHeadDirection
+        featureWeights
+%         featureGain
+%         featureOffset       
+        featureLearningRate
+        featuresDetected
+        nFeatureDetectors
+        readMode
     end
     methods
         function obj = LecSystem()
@@ -42,9 +49,15 @@ classdef LecSystem < System
             obj.nFeatures = 3; 
 %             obj.rewardUnits = 5; 
             % default a head direction system, but expect to be overridden
-            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
-            obj.headDirectionSystem.build(); 
+%             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
+%             obj.headDirectionSystem.build(); 
             obj.cueHeadDirection = 1; % default
+            obj.featureLearningRate = 0.5; 
+            obj.nFeatureDetectors = 10; % default
+            obj.readMode = 0; 
+%             obj.featureGain = 10;
+%             obj.featureOffset = 0.65; 
+
         end
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
@@ -61,6 +74,8 @@ classdef LecSystem < System
             obj.nOutput = length(obj.lecOutput); % + obj.rewardUnits; 
             obj.index = 0; 
             obj.cueActivation = zeros(1,obj.nHeadDirectionCells);
+            obj.featuresDetected = zeros(1,obj.nFeatureDetectors);
+            obj.featureWeights = zeros(length(obj.featuresDetected),obj.nCueIntervals); 
         end
         function setEnvironment(obj, environment)
            obj.environment = environment;  
@@ -97,26 +112,7 @@ classdef LecSystem < System
             headActivation = obj.headDirectionSystem.uActivation; 
             positions = obj.cueHeadDirection - headDirection; 
             obj.cueActivation = circshift(headActivation, positions); 
-%             shiftedActivation = obj.cueActivation;
-%             obj.cueActivation = obj.shiftActivation(headActivation, shiftedActivation, ...
-%                 headDirection, obj.cueHeadDirection); 
-            % get the adjustment
-%             obj.cueActivation(adjusted)  = obj.headDirectionSystem.uActivation(original);
         end
-%         function shiftedActivation = shiftActivation(~, headActivation, shiftedActivation, headDirection, cueDirection)  
-%             hdsLength = length(headActivation(1,headDirection:end)); 
-%             cueLength = length(shiftedActivation(1, cueDirection:end)); 
-%             if hdsLength >= cueLength
-%                shiftedActivation(1,cueDirection:end) = ...
-%                   headActivation(1,headDirection:headDirection+cueLength-1); 
-%                left = hdsLength - cueLength; 
-%                shiftedActivation
-%             else
-%                 
-%             end
-%             
-%         end
-%         
         function maxIndex = getCueMaxActivationIndex(obj)
             maxIndex = find(obj.cueActivation==max(obj.cueActivation)); 
         end
@@ -136,9 +132,45 @@ classdef LecSystem < System
 %             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
             obj.environment.setHeadDirection(cueHeadDirection);
         end
+        function updateFeatureWeights(obj)
+%             obj.updateFeaturesDetected(); 
+            % approximation of Skaggs, figure 4, "f()".  
+            % based on sigmoidal function, negative at small activation 
+            % values, linear over most of the activation range, 
+            % topping out about 0.35, which acts
+            % as an implementation of "Wmax"
+
+%             activation = zeros(1, obj.nHeadDirectionCells); 
+%             activation(1,find(obj.uActivation == max(obj.uActivation))) = 0.3; 
+%             newWeights = (obj.featuresDetected' * activation); 
+%             activation = 1./(1+exp(-obj.uActivation.*obj.featureGain)) ...
+%                 - obj.featureOffset; 
+            newWeights = (obj.featuresDetected' * obj.cueActivation) - obj.featureWeights;  
+            % only update rows where features were detected
+            for ii = 1:length(obj.featuresDetected)
+                newWeights(ii,:) = obj.featuresDetected(1,ii).* newWeights(ii,:);
+            end
+            if obj.readMode
+               newWeights = zeros(size(obj.featureWeights));  
+%                newWeights = zeros(obj.nHeadDirectionCells);  
+            end
+            obj.featureWeights = obj.featureWeights + obj.featureLearningRate*(newWeights);
+%             disp(['HDS feature detectors: ',mat2str(find(obj.featuresDetected == 1))]);
+%             disp(['HDS feature weights: ',mat2str(find(obj.featureWeights > 0))]);
+        end
+        function featureInput = getFeatureInput(obj)
+           featureInput = obj.featuresDetected * obj.featureWeights;  
+        end
         %% Single time step 
-        function  step(obj)
+         function  step(obj)
             step@System(obj); 
+%             obj.updateVelocity(); 
+            obj.updateFeatureWeights(); % can this be independent?  
+            if obj.readMode
+                obj.updateActivationWithFeatureInputs();
+            else
+                obj.updateActivationWithMotionInputs(); 
+            end
         end
         function plot(obj)
         end  

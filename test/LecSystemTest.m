@@ -288,5 +288,91 @@ classdef LecSystemTest < AbstractTest
                 headDirectionSystem.uActivation(1,12:21), ...
                 'head direction activation copied and shifted to canonical view'); 
         end
+        
+        % copy HDS test for retrieving feature, and associate with
+        % canonical view
+
+    function testActivationFollowsPreviouslyActivatedFeatures(testCase)
+        import matlab.unittest.constraints.IsEqualTo
+        import matlab.unittest.constraints.RelativeTolerance
+        lec = LecSystem();
+        lec.nHeadDirectionCells = 60;
+        lec.nCueIntervals = 60; 
+%         lec.nCueIntervals = 12;         
+        lec.nFeatures = 3; 
+        lec.nFeatureDetectors = 5;        
+        lec.build(); 
+        env = Environment();
+        env.addWall([0 0],[0 2]); 
+        env.addWall([0 2],[2 2]); 
+        env.addWall([0 0],[2 0]); 
+        env.addWall([2 0],[2 2]);
+        env.distanceIntervals = 8;
+        env.directionIntervals = 60;
+        env.center = [1 1]; 
+        env.build();  
+        env.setPosition([0.5 1]);             
+%             env.setPosition([0.5 1]); 
+        env.addCue([2 1]);  %  x   ------------- cue (at 0)
+        env.addCue([0 0]);            
+        env.addCue([1 2]);  % cue at pi/2                        
+        headDirectionSystem = HeadDirectionSystem(60); 
+        randomHeadDirection = true; 
+        headDirectionSystem.initializeActivation(randomHeadDirection)            
+        headDirectionSystem.pullVelocity = false;  
+        headDirectionSystem.pullFeatures = false; 
+        headDirectionSystem.nFeatureDetectors = 5;
+        headDirectionSystem.build();
+
+        lec.headDirectionSystem = headDirectionSystem; 
+        headDirectionSystem.lec = lec; 
+        lec.buildCanonicalCueActivation(); 
+
+        for ii = 1:7
+            headDirectionSystem.step();            
+        end
+        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+            10, 'stable; now present features'); 
+        headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+        lec.featuresDetected = [0 0 1 0 1];         
+        headDirectionSystem.step(); 
+        lec.buildCanonicalCueActivation(); 
+        lec.updateFeatureWeights(); 
+        w = headDirectionSystem.featureWeights; 
+        lw = lec.featureWeights; 
+        testCase.assertEqual(max(w(1,:)), 0); 
+        testCase.assertThat(max(w(3,:)), ...            
+            IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
+        testCase.assertEqual(find(w(3,:) == max(w(3,:))), 10); 
+        % randomly "place" animal elsewhere
+        testCase.assertEqual(max(lw(1,:)), 0); 
+        testCase.assertThat(max(lw(3,:)), ...            
+            IsEqualTo(0.519338891167941, 'Within', RelativeTolerance(.00000000001))); 
+        testCase.assertEqual(find(lw(3,:) == max(lw(3,:))), 1); 
+        headDirectionSystem.pullFeatureWeightsFromLec = true; 
+        headDirectionSystem.initializeActivation(true);
+        headDirectionSystem.initializeActivation(true); 
+        lec.featuresDetected = [0 0 0 0 0]; 
+        headDirectionSystem.step();            
+        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+            20, 'stable activation at new random orientation');
+        
+        lec.featuresDetected = [0 0 1 0 1]; 
+        headDirectionSystem.readMode = 1;
+        lec.readMode = 1;
+        % features now drive us back to the canonical view at which they 
+        % were perceived: 1
+%             headDirectionSystem.step(); 
+        headDirectionSystem.updateActivationWithFeatureInputs();
+        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 2, ....
+            'pulled immediately'); 
+        headDirectionSystem.updateActivationWithFeatureInputs();
+        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 2, ....
+            'pulled immediately'); 
+        headDirectionSystem.updateActivationWithFeatureInputs();
+        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
+            'pulled immediately'); 
+    end
+        % testCueActivationAdjustedWhenRunning
     end
 end
