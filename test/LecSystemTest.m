@@ -216,14 +216,26 @@ classdef LecSystemTest < AbstractTest
 %         function testRemembersHeadDirectionAssociatedWithCanonicalCueDirection(testCase)
 %         end        
         function testAssociatesCurrentHeadDirectionWithCanonicalCueDirection(testCase)
-            lec = LecSystem();
-%             lec.distanceUnits = 8;
-            lec.nHeadDirectionCells = 60;
-            lec.nFeatures = 3; 
-%             lec.rewardUnits = 5; 
-            lec.build(); 
+            headDirectionSystem = HeadDirectionSystem(60); 
+            randomHeadDirection = true; 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            headDirectionSystem.pullVelocity = false;  
+            headDirectionSystem.pullFeatures = false; 
+            headDirectionSystem.nFeatureDetectors = 5; 
+            headDirectionSystem.build();
+            for ii = 1:7
+                headDirectionSystem.step();            
+            end
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, ...
+                10, 'stable'); 
             
-%             testCase.assertEqual(lec.nOutput, 209); 
+
+            lec = LecSystem();
+            lec.nHeadDirectionCells = 60;
+            lec.nCueIntervals = 12; 
+            lec.nFeatures = 3; 
+            lec.build(); 
             env = Environment();
             env.addWall([0 0],[0 2]); 
             env.addWall([0 2],[2 2]); 
@@ -245,33 +257,36 @@ classdef LecSystemTest < AbstractTest
 % the head direction, 
 % 2nd test?  then verify we can recover that 
             lec.setEnvironment(env); 
-            currentHeadDirection = 10;
-            lec.buildCanonicalView(currentHeadDirection); 
+            lec.headDirectionSystem = headDirectionSystem; 
+            lec.buildCanonicalCueActivation(); 
+            testCase.assertEqual(lec.getCueMaxActivationIndex(), 1); 
+            testCase.assertEqual(lec.cueActivation(1,1:10), ...
+                headDirectionSystem.uActivation(1,10:19), ...
+                'head direction activation copied and shifted to canonical view'); 
+            
 %             env.setHeadDirection(11); % pi/3
 % canonical view:  
 %   head direction when pointing at most salient cue: 1-60
 %   head direction offset from most salient cue head direction 61-120
 %   direction to closest wall from most salient cue head direction 121-180
-            testCase.assertEqual(lec.lecOutput, ...
-                [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
-                  1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  ]); 
-            currentHeadDirection = 50;
-            lec.buildCanonicalView(currentHeadDirection); 
-            testCase.assertEqual(lec.lecOutput, ...
-                [ 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...                  
-                  1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
-                  ], ...
-              'same output; canonical view does not depend on current head direction '); 
-            
+
+            headDirectionSystem.updateAngularVelocity(pi/10); 
+            headDirectionSystem.step(); 
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, 11); 
+            lec.buildCanonicalCueActivation(); 
+            testCase.assertEqual(lec.getCueMaxActivationIndex(), 1); 
+            testCase.assertEqual(lec.cueActivation(1,1:10), ...
+                headDirectionSystem.uActivation(1,11:20), ...
+                'head direction activation copied and shifted to canonical view'); 
+            headDirectionSystem.step(); 
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, 12); 
+            lec.buildCanonicalCueActivation(); 
+            testCase.assertEqual(lec.getCueMaxActivationIndex(), 1); 
+            testCase.assertEqual(lec.cueActivation(1,1:10), ...
+                headDirectionSystem.uActivation(1,12:21), ...
+                'head direction activation copied and shifted to canonical view'); 
         end
     end
 end

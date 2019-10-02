@@ -23,6 +23,9 @@ classdef LecSystem < System
         lecOutput
         environment
         index
+        headDirectionSystem
+        cueActivation
+        cueHeadDirection
     end
     methods
         function obj = LecSystem()
@@ -38,6 +41,10 @@ classdef LecSystem < System
             % number of features rather than deriving it.  
             obj.nFeatures = 3; 
 %             obj.rewardUnits = 5; 
+            % default a head direction system, but expect to be overridden
+            obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells); 
+            obj.headDirectionSystem.build(); 
+            obj.cueHeadDirection = 1; % default
         end
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
@@ -53,6 +60,7 @@ classdef LecSystem < System
 %             obj.reward = zeros(1,obj.rewardUnits);  
             obj.nOutput = length(obj.lecOutput); % + obj.rewardUnits; 
             obj.index = 0; 
+            obj.cueActivation = zeros(1,obj.nHeadDirectionCells);
         end
         function setEnvironment(obj, environment)
            obj.environment = environment;  
@@ -72,8 +80,8 @@ classdef LecSystem < System
             obj.lecOutput = zeros(1, obj.nOutput);
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
                 obj.index = 0; 
-                cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
-                obj.updateLecOutput(cueHeadDirection); 
+                obj.cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
+                obj.updateLecOutput(obj.cueHeadDirection); 
                 obj.updateLecOutput(obj.environment.cueHeadDirectionOffset(2));
                 if obj.environment.nCues == 2 
                     wallDirection = obj.environment.closestWallDirection(); 
@@ -82,6 +90,35 @@ classdef LecSystem < System
                     obj.updateLecOutput(obj.environment.cueHeadDirectionOffset(3));
                 end
             end
+        end
+        function buildCanonicalCueActivation(obj)
+            headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
+            obj.buildCanonicalView(headDirection); 
+            headActivation = obj.headDirectionSystem.uActivation; 
+            positions = obj.cueHeadDirection - headDirection; 
+            obj.cueActivation = circshift(headActivation, positions); 
+%             shiftedActivation = obj.cueActivation;
+%             obj.cueActivation = obj.shiftActivation(headActivation, shiftedActivation, ...
+%                 headDirection, obj.cueHeadDirection); 
+            % get the adjustment
+%             obj.cueActivation(adjusted)  = obj.headDirectionSystem.uActivation(original);
+        end
+%         function shiftedActivation = shiftActivation(~, headActivation, shiftedActivation, headDirection, cueDirection)  
+%             hdsLength = length(headActivation(1,headDirection:end)); 
+%             cueLength = length(shiftedActivation(1, cueDirection:end)); 
+%             if hdsLength >= cueLength
+%                shiftedActivation(1,cueDirection:end) = ...
+%                   headActivation(1,headDirection:headDirection+cueLength-1); 
+%                left = hdsLength - cueLength; 
+%                shiftedActivation
+%             else
+%                 
+%             end
+%             
+%         end
+%         
+        function maxIndex = getCueMaxActivationIndex(obj)
+            maxIndex = find(obj.cueActivation==max(obj.cueActivation)); 
         end
         function updateLecOutput(obj, direction)
             if direction > 0
