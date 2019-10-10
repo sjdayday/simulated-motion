@@ -84,6 +84,7 @@ classdef EnvironmentTest < AbstractTest
             testCase.assertThat(env.cueDirection(3), ...            
                 IsEqualTo(4.390638425988048, 'Within', RelativeTolerance(.00000000001))); 
             env.setPosition([0 0]); 
+            % 7*pi/4
             testCase.assertThat(env.cueDirection(3), ...            
                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
         end

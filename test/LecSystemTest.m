@@ -289,8 +289,78 @@ classdef LecSystemTest < AbstractTest
                 'head direction activation copied and shifted to canonical view'); 
         end
         
-        % copy HDS test for retrieving feature, and associate with
-        % canonical view
+        function testRetrievesHeadDirectionOffsetFromCanonicalCueDirection(testCase)
+            %                             
+            headDirectionSystem = HeadDirectionSystem(60); 
+            randomHeadDirection = true; 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            headDirectionSystem.pullVelocity = false;  
+            headDirectionSystem.pullFeatures = false; 
+            headDirectionSystem.nFeatureDetectors = 5; 
+            headDirectionSystem.build();
+            for ii = 1:7
+                headDirectionSystem.step();            
+            end
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, ...
+                10, 'stable'); 
+
+            lec = LecSystem();
+            lec.nHeadDirectionCells = 60;
+            lec.nCueIntervals = 12; 
+            lec.nFeatures = 3; 
+            lec.build(); 
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.distanceIntervals = 8;
+            env.directionIntervals = 60;
+            env.center = [1 1]; 
+            env.build();  
+            env.setPosition([0.5 1]);             
+%             env.setPosition([0.5 1]); 
+            env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            env.addCue([0 0]);            
+            env.addCue([1 2]);  % cue at pi/2                        
+% perhaps we don't need a HDS, we just assert a current head direction
+% and an angle from current head direction to canonical cue head direction
+% adjust the angle, get the head direction pointing at the canonical cue
+% then remember the place output that comes back, and associate that with
+% the head direction, 
+% 2nd test?  then verify we can recover that 
+            lec.setEnvironment(env); 
+            lec.headDirectionSystem = headDirectionSystem; 
+            lec.buildCanonicalCueActivation(); 
+            disp(lec.printOutputIndices()); 
+            testCase.assertEqual(lec.offset, 9); 
+            testCase.assertEqual(lec.getCueMaxActivationIndex(), 1); 
+            testCase.assertEqual(lec.cueActivation(1,1:10), ...
+                headDirectionSystem.uActivation(1,10:19), ...
+                'head direction activation copied and shifted to canonical view'); 
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            for ii = 1:7
+                headDirectionSystem.step();            
+            end
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, ...
+                4, 'stable'); 
+            lec.buildCanonicalCueActivation();
+            disp(lec.printOutputIndices()); 
+            testCase.assertEqual(lec.offset, 3);             
+        
+            headDirectionSystem.initializeActivation(randomHeadDirection)            
+            for ii = 1:7
+                headDirectionSystem.step();            
+            end
+            currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+            testCase.assertEqual(currentHeadDirection, ...
+                20, 'stable'); 
+            lec.buildCanonicalCueActivation(); 
+            disp(lec.printOutputIndices()); 
+            testCase.assertEqual(lec.offset, 19);
+        end
 
     function testActivationFollowsPreviouslyActivatedFeatures(testCase)
         import matlab.unittest.constraints.IsEqualTo
@@ -327,7 +397,7 @@ classdef LecSystemTest < AbstractTest
         lec.headDirectionSystem = headDirectionSystem; 
         headDirectionSystem.lec = lec; 
         lec.buildCanonicalCueActivation(); 
-
+        disp(['LEC: ', num2str(find(lec.lecOutput == 1)) ]); 
         for ii = 1:7
             headDirectionSystem.step();            
         end
@@ -337,6 +407,7 @@ classdef LecSystemTest < AbstractTest
         lec.featuresDetected = [0 0 1 0 1];         
         headDirectionSystem.step(); 
         lec.buildCanonicalCueActivation(); 
+        disp(['LEC2 : ', num2str(find(lec.lecOutput == 1)) ]); 
         lec.updateFeatureWeights(); 
         w = headDirectionSystem.featureWeights; 
         lw = lec.featureWeights; 
@@ -372,6 +443,9 @@ classdef LecSystemTest < AbstractTest
         headDirectionSystem.updateActivationWithFeatureInputs();
         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
             'pulled immediately'); 
+        lec.buildCanonicalCueActivation(); 
+        disp(['LEC3 : ', num2str(find(lec.lecOutput == 1)) ]); 
+
     end
         % testCueActivationAdjustedWhenRunning
     end

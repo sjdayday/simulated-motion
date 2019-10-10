@@ -33,6 +33,7 @@ classdef LecSystem < System
         featuresDetected
         nFeatureDetectors
         readMode
+        offset 
     end
     methods
         function obj = LecSystem()
@@ -57,7 +58,7 @@ classdef LecSystem < System
             obj.readMode = 0; 
 %             obj.featureGain = 10;
 %             obj.featureOffset = 0.65; 
-
+            obj.offset = 0; 
         end
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
@@ -85,12 +86,16 @@ classdef LecSystem < System
                 (obj.environment.nCues >= 2)) ; 
         end
         % canonical view:  
-        %   head direction when pointing at most salient cue: 1-60
-        %   head direction offset from most salient cue head direction 61-120
+        %   head direction when pointing at most salient cue:
+        %    1 to cueIntervals (e.g., 1-60)
+        %   head direction offset from most salient cue head direction: 
+        %    cueIntervals+1 to 2*cueIntervals (e.g., 61-120)
         % if only 2 cues
-        %   direction to closest wall from most salient cue head direction 121-180
+        %   direction to closest wall from most salient cue head direction: 
+        %    2*cueIntervals+1 to 3*cueIntervals (e.g., 121-180)
         % else 
-        %   head direction offset from most salient cue head direction 121-180
+        %   head direction offset from most salient cue head direction: 
+        %    2*cueIntervals+1 to 3*cueIntervals (e.g., 121-180)
         function buildCanonicalView(obj, headDirection)
             obj.lecOutput = zeros(1, obj.nOutput);
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
@@ -123,10 +128,11 @@ classdef LecSystem < System
             end
             obj.index = obj.index + obj.nCueIntervals;             
         end
-        function cueHeadDirection=adjustHeadDirectionTowardSalientCue(obj, headDirection) 
+        function cueHeadDirection = adjustHeadDirectionTowardSalientCue(obj, headDirection) 
             obj.environment.setHeadDirection(headDirection);
-            offset = obj.environment.cueHeadDirectionOffset(1);  
-            cueHeadDirection = headDirection - (obj.nHeadDirectionCells - offset) - 1; 
+            grossOffset = obj.environment.cueHeadDirectionOffset(1);  
+            obj.offset = obj.nHeadDirectionCells - grossOffset + 1;
+            cueHeadDirection = headDirection - obj.offset; 
             % save the cueHeadDirection, and then associate it to the place
             % Id
 %             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
@@ -161,16 +167,27 @@ classdef LecSystem < System
         function featureInput = getFeatureInput(obj)
            featureInput = obj.featuresDetected * obj.featureWeights;  
         end
+        
+        function indices = outputIndices(obj)
+           indices = find(obj.lecOutput == 1);    
+        end
+        function print = printOutputIndices(obj)
+           print = mat2str(obj.outputIndices());   
+        end
+        
+        
+        
+        
         %% Single time step 
          function  step(obj)
             step@System(obj); 
-%             obj.updateVelocity(); 
-            obj.updateFeatureWeights(); % can this be independent?  
-            if obj.readMode
-                obj.updateActivationWithFeatureInputs();
-            else
-                obj.updateActivationWithMotionInputs(); 
-            end
+% TODO: incorporate...
+%             obj.updateFeatureWeights(); % can this be independent?  
+%             if obj.readMode
+%                 obj.updateActivationWithFeatureInputs();
+%             else
+%                 obj.updateActivationWithMotionInputs(); 
+%             end
         end
         function plot(obj)
         end  
