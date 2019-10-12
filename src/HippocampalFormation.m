@@ -223,9 +223,6 @@ classdef HippocampalFormation < System
         function stepHds(obj)
             obj.headDirectionSystem.step(); 
         end
-        function initializeMecOutput(obj)
-            obj.mecOutput = zeros(1,obj.nMecOutput); 
-        end
         function stepMec(obj)
             obj.initializeMecOutput();
             mecOutputOffset = 0; 
@@ -240,6 +237,48 @@ classdef HippocampalFormation < System
                 disp(['MEC output: ',obj.printMecOutputIndices()]);
             end
         end
+        function stepLec(obj)
+            obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
+            obj.lecOutput = obj.lecSystem.lecOutput; 
+            if obj.showIndices
+                disp(['LEC output: ',obj.printLecOutputIndices()]);
+            end
+        end
+        function stepPlace(obj)
+           placeRecognized = obj.placeRecognized(); 
+           obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
+           if obj.updateFeatureDetectors
+               obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
+               for jj = 1:obj.nGrids
+                  obj.grids(1,jj).featuresDetected = obj.placeOutput; 
+               end
+           end
+           if placeRecognized && obj.settleToPlace
+              obj.settle();  
+           else
+              obj.updateGridsWithFeatureInput();  
+           end
+           obj.addPositionAndPlaceIfDifferent(); 
+           if obj.showIndices
+                disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
+                obj.printPlaceFieldStats(); 
+           end
+           
+        end
+        function placeRecognized = placeRecognized(obj)
+           placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
+           disp(['Place recognized: ',num2str(placeRecognized)]);                                 
+        end
+        function updateGridsWithFeatureInput(obj)
+           for jj = 1:obj.nGrids
+              obj.grids(1,jj).readMode = 0;
+              obj.grids(1,jj).updateFeatureWeights(); % or update...FeatureInputs? 
+           end            
+        end
+        function initializeMecOutput(obj)
+            obj.mecOutput = zeros(1,obj.nMecOutput); 
+        end
+        
         function mecOutputOffset = stepGrid(obj, mecOutputOffset, ii)
             obj.grids(1,ii).step(); 
             max = obj.grids(1,ii).getMaxActivationIndex(); 
@@ -264,46 +303,7 @@ classdef HippocampalFormation < System
         function print = printLecOutputIndices(obj)
            print = mat2str(obj.lecOutputIndices());   
         end
-        function stepLec(obj)
-            obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
-            obj.lecOutput = obj.lecSystem.lecOutput; 
-%             disp(['length lecOutput: ', num2str(length( obj.lecOutput))]);
-            if obj.showIndices
-                disp(['LEC output: ',obj.printLecOutputIndices()]);
-            end
-
-        end
-        function placeRecognized = placeRecognized(obj)
-           placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
-           disp(['Place recognized: ',num2str(placeRecognized)]);                                 
-        end
-        function updateGridsWithFeatureInput(obj)
-           for jj = 1:obj.nGrids
-              obj.grids(1,jj).readMode = 0;
-              obj.grids(1,jj).updateFeatureWeights(); % or update...FeatureInputs? 
-           end            
-        end
-        function stepPlace(obj)
-           placeRecognized = obj.placeRecognized(); 
-           obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
-           if obj.updateFeatureDetectors
-               obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
-               for jj = 1:obj.nGrids
-                  obj.grids(1,jj).featuresDetected = obj.placeOutput; 
-               end
-           end
-           if placeRecognized && obj.settleToPlace
-              obj.settle();  
-           else
-              obj.updateGridsWithFeatureInput();  
-           end
-           obj.addPositionAndPlaceIfDifferent(); 
-           if obj.showIndices
-                disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
-                obj.printPlaceFieldStats(); 
-           end
-           
-        end
+        
         function settle(obj)
 %            disp(['settling to: ', mat2str(obj.placeSystem.outputIndices())]); % mat2str(find(obj.placeSystem.placeId == 1))]); 
             disp(['hds features detected: ', mat2str(find(obj.headDirectionSystem.featuresDetected == 1))]); 

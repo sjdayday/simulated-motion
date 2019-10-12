@@ -33,7 +33,7 @@ classdef LecSystem < System
         featuresDetected
         nFeatureDetectors
         readMode
-        offset 
+%         offset 
     end
     methods
         function obj = LecSystem()
@@ -58,7 +58,7 @@ classdef LecSystem < System
             obj.readMode = 0; 
 %             obj.featureGain = 10;
 %             obj.featureOffset = 0.65; 
-            obj.offset = 0; 
+%             obj.offset = 0; 
         end
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
@@ -118,6 +118,13 @@ classdef LecSystem < System
             positions = obj.cueHeadDirection - headDirection; 
             obj.cueActivation = circshift(headActivation, positions); 
         end
+%         function buildCanonicalCueOffsetActivation(obj)
+%             headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
+%             obj.buildCanonicalView(headDirection); 
+%             headActivation = obj.headDirectionSystem.uActivation; 
+%             positions = obj.offset - headDirection; 
+%             obj.cueActivation = circshift(headActivation, positions); 
+%         end
         function maxIndex = getCueMaxActivationIndex(obj)
             maxIndex = find(obj.cueActivation==max(obj.cueActivation)); 
         end
@@ -131,8 +138,10 @@ classdef LecSystem < System
         function cueHeadDirection = adjustHeadDirectionTowardSalientCue(obj, headDirection) 
             obj.environment.setHeadDirection(headDirection);
             grossOffset = obj.environment.cueHeadDirectionOffset(1);  
-            obj.offset = obj.nHeadDirectionCells - grossOffset + 1;
-            cueHeadDirection = headDirection - obj.offset; 
+            offset = obj.nHeadDirectionCells - grossOffset + 1;
+%             grossOffset = obj.environment.cueHeadDirectionOffset(1);  
+%             obj.offset = obj.nHeadDirectionCells - grossOffset + 1;
+            cueHeadDirection = headDirection - offset; 
             % save the cueHeadDirection, and then associate it to the place
             % Id
 %             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
