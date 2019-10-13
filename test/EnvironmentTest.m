@@ -106,25 +106,25 @@ classdef EnvironmentTest < AbstractTest
             wallDirection = env.closestWallDirection(); 
             testCase.assertThat(wallDirection, ...            
                 IsEqualTo(2.356194490192345, 'Within', RelativeTolerance(.00000000001))); 
-            testCase.assertEqual(env.headDirectionOffset(wallDirection), 23);
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 22);
             % pi/4
             env.setPosition([1 1.5]);             
             wallDirection = env.closestWallDirection(); 
             testCase.assertThat(wallDirection, ...            
                 IsEqualTo(0.785398163397448, 'Within', RelativeTolerance(.00000000001))); 
-            testCase.assertEqual(env.headDirectionOffset(wallDirection), 8);
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 7);
             % 7*pi/4
             env.setPosition([1.5 1]);             
             wallDirection = env.closestWallDirection(); 
             testCase.assertThat(wallDirection, ...                        
                 IsEqualTo(5.497787143782138, 'Within', RelativeTolerance(.00000000001))); 
-            testCase.assertEqual(env.headDirectionOffset(wallDirection), 53);
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 52);
             % 5*pi/4
             env.setPosition([1 0.5]);             
             wallDirection = env.closestWallDirection(); 
             testCase.assertThat(wallDirection, ...            
                 IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
-            testCase.assertEqual(env.headDirectionOffset(wallDirection), 38);
+            testCase.assertEqual(env.headDirectionOffset(wallDirection), 37);
         end
         function testCalculatesHeadDirectionCellOffsetToCueFromCurrentDirection(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
@@ -143,17 +143,17 @@ classdef EnvironmentTest < AbstractTest
             env.addCue([2 1]); %  x   ------------- cue (at 0)
            
             env.setDirection(pi/2);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 45);
             env.setDirection(3*pi/2);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 15);
             env.setDirection(0);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 0);
             env.setDirection(0.0001);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 60);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 59);
             env.setDirection((2*pi)*0.99);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 0);
             env.setDirection((2*pi));
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 0);
 
 %             env.setDirection(5*pi/3);
 %             disp(['5*pi/3 ', num2str(env.cueHeadDirectionOffset(1))]); 
@@ -183,17 +183,17 @@ classdef EnvironmentTest < AbstractTest
 %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
             env.setHeadDirection(16);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 45);
             env.setHeadDirection(46);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 15);
             env.setHeadDirection(1);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 0);
             env.setHeadDirection(2);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 60);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 59);
             env.setHeadDirection(60);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
             env.setHeadDirection(59);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 3);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
 %             env.setDirection((2*pi));
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
         end
@@ -213,10 +213,10 @@ classdef EnvironmentTest < AbstractTest
 %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
             env.setHeadDirection(16);
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 46);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 45);
             % same cue and head direction, new position
             env.setPosition([1 1.5]);             
-            testCase.assertEqual(env.cueHeadDirectionOffset(1), 41);
+            testCase.assertEqual(env.cueHeadDirectionOffset(1), 40);
 %             env.setHeadDirection(46);
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 16);
 %             env.setHeadDirection(1);

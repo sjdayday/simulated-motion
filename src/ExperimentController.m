@@ -486,7 +486,8 @@ classdef ExperimentController < System
             p(1).Color = [0.5 0.5 0.5];
             subplot(333); % 222
             hold on 
-            title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
+            title({'Internal head direction ',sprintf('t = %d ',obj.currentStep), ...
+                sprintf(' max = %d',obj.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex())})
 %             title('Internal head direction');
             q = plot(obj.x,obj.y,obj.x,obj.yy);
 %             plot(.9192,.9192, ...
@@ -529,7 +530,9 @@ classdef ExperimentController < System
             title({'Physical head direction ',sprintf('t = %d',obj.currentStep)})
             obj.animal.plot(); 
             subplot(333);  
-            title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
+%             title({'Internal head direction ',sprintf('t = %d',obj.currentStep)})
+            title({'Internal head direction ',sprintf('t = %d ',obj.currentStep), ...
+                sprintf(' max = %d',obj.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex())})
             obj.animal.hippocampalFormation.headDirectionSystem.plotCircle(); 
             subplot(334);
             obj.animal.hippocampalFormation.grids(1).plotActivation();             

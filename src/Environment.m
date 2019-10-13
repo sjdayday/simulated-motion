@@ -186,7 +186,7 @@ classdef Environment < System
         % do we mean "head direction at this offset from current" or 
         % "offset between this direction and the current", which could be 0
         function headDirection = headDirectionOffset(obj, direction)
-            headDirection = fix(direction/(2*pi) * obj.directionIntervals)+1; % drop +1?
+            headDirection = fix(direction/(2*pi) * obj.directionIntervals); % drop +1?
             headDirection = min(headDirection, obj.directionIntervals); % if direction is exactly 2*pi             
         end
         %% Single time step 
