@@ -34,7 +34,7 @@ classdef HeadDirectionSystem < System
         featuresDetected
         nFeatureDetectors
         featureLearningRate
-        includeFeatureInput
+%         includeFeatureInput
         rate
         betaGain
         alphaOffset
@@ -93,7 +93,7 @@ classdef HeadDirectionSystem < System
             obj.readMode = 0;
             obj.pullVelocity = true;
             obj.pullFeatures = true; 
-            obj.includeFeatureInput = true; 
+%             obj.includeFeatureInput = true; 
             obj.pullFeatureWeightsFromLec = false; 
 
         end

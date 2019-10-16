@@ -12,7 +12,7 @@ classdef S11 < handle
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
-            obj.ec.includeHeadDirectionFeatureInput = false;
+%             obj.ec.includeHeadDirectionFeatureInput = false;
             obj.ec.settleToPlace = false;
             obj.ec.placeMatchThreshold = 2;
             obj.ec.showHippocampalFormationECIndices = true; 

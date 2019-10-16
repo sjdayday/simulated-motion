@@ -29,7 +29,7 @@ classdef HippocampalFormation < System
         mecOutput
         nMecOutput
         headDirectionSystem
-        includeHeadDirectionFeatureInput
+%         includeHeadDirectionFeatureInput
         currentHeadDirection
         nFeatureDetectors
         lecSystem
@@ -58,6 +58,7 @@ classdef HippocampalFormation < System
         settleToPlace
         sparseOrthogonalizingNetwork
         separateMecLec
+        hdsPullsFeatureWeightsFromLec
     end
     methods
         function obj = HippocampalFormation()
@@ -80,7 +81,7 @@ classdef HippocampalFormation < System
             obj.linearVelocity = 0; 
             obj.gridExternalVelocity = true; 
             obj.defaultFeatureDetectors = true; 
-            obj.includeHeadDirectionFeatureInput = true; 
+%             obj.includeHeadDirectionFeatureInput = true; 
             obj.randomHeadDirection = true; 
             obj.pullVelocity = true; 
             obj.pullFeatures = true; 
@@ -98,12 +99,14 @@ classdef HippocampalFormation < System
             obj.settleToPlace = false; 
             obj.sparseOrthogonalizingNetwork = false; 
             obj.separateMecLec = false; 
+            obj.hdsPullsFeatureWeightsFromLec = false; 
          end
         function build(obj)
             calculateSizes(obj); 
             buildLec(obj); 
             rebuildHeadDirectionSystem(obj); 
-%             buildHeadDirectionSystem(obj); 
+%             buildHeadDirectionSystem(obj);
+            obj.linkLecAndHeadDirectionSystems(); 
             buildGrids(obj);             
 %             buildLec(obj); 
             buildPlaceSystem(obj);
@@ -153,14 +156,20 @@ classdef HippocampalFormation < System
             obj.headDirectionSystem = HeadDirectionSystem(obj.nHeadDirectionCells);  % only here to keep tests passing
             obj.headDirectionSystem.animal = obj.animal; 
             obj.headDirectionSystem.nHeadDirectionCells = obj.nHeadDirectionCells; 
-            obj.headDirectionSystem.includeFeatureInput = obj.includeHeadDirectionFeatureInput; 
+%             obj.headDirectionSystem.includeFeatureInput = obj.includeHeadDirectionFeatureInput; 
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
             obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 
+            obj.headDirectionSystem.pullFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             if not(obj.defaultFeatureDetectors)
                 obj.headDirectionSystem.nFeatureDetectors = obj.nFeatureDetectors; % obj.nMecOutput + obj.nLecOutput;             
             end
             obj.headDirectionSystem.build(); 
+        end
+        function linkLecAndHeadDirectionSystems(obj)
+            % LEC and HDS mutually dependent, for feature weight processing
+            obj.lecSystem.headDirectionSystem = obj.headDirectionSystem;
+            obj.headDirectionSystem.lec = obj.lecSystem;             
         end
         function initializeGridActivation(obj)
            for ii = 1:obj.nGrids
@@ -195,6 +204,7 @@ classdef HippocampalFormation < System
 %             obj.lecSystem.distanceUnits = obj.distanceUnits;
             obj.lecSystem.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.lecSystem.nFeatures = obj.nFeatures; 
+            obj.lecSystem.nFeatureDetectors = obj.nFeatureDetectors;
             obj.lecSystem.nCueIntervals = obj.nCueIntervals; 
 %             if obj.rewardInput 
 %                 obj.lecSystem.rewardUnits = 5;
@@ -238,7 +248,8 @@ classdef HippocampalFormation < System
             end
         end
         function stepLec(obj)
-            obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
+%             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
+            obj.lecSystem.buildCanonicalCueActivation(); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
             if obj.showIndices
                 disp(['LEC output: ',obj.printLecOutputIndices()]);
@@ -249,6 +260,8 @@ classdef HippocampalFormation < System
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
+               obj.lecSystem.featuresDetected = obj.placeOutput; 
+               obj.lecSystem.updateFeatureWeights();
                for jj = 1:obj.nGrids
                   obj.grids(1,jj).featuresDetected = obj.placeOutput; 
                end
@@ -260,7 +273,7 @@ classdef HippocampalFormation < System
            end
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.showIndices
-                disp(['Place output: ',mat2str(find(obj.placeOutput == 1))]);
+                disp(['Place output: ',obj.printPlaceOutputIndices()]);
                 obj.printPlaceFieldStats(); 
            end
            
@@ -294,8 +307,14 @@ classdef HippocampalFormation < System
         function indices = lecOutputIndices(obj)
            indices = obj.outputIndices(obj.lecOutput);   
         end
+        function indices = placeOutputIndices(obj)
+           indices = obj.outputIndices(obj.placeOutput);   
+        end
         function indices = outputIndices(~, output)
            indices = find(output == 1);    
+        end
+        function print = printPlaceOutputIndices(obj)
+           print = mat2str(obj.placeOutputIndices());   
         end
         function print = printMecOutputIndices(obj)
            print = mat2str(obj.mecOutputIndices());   

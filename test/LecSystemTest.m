@@ -551,7 +551,7 @@ classdef LecSystemTest < AbstractTest
         testCase.assertThat(max(lw(3,:)), ...            
             IsEqualTo(0.519338891167941, 'Within', RelativeTolerance(.00000000001))); 
         testCase.assertEqual(find(lw(3,:) == max(lw(3,:))), 60, ...
-            'max has been shifted from 10 in hds to 1 in LDS'); 
+            'max has been shifted from 10 in hds to 60 in LDS'); 
         lec.buildCanonicalCueActivation(); 
         testCase.assertEqual(lec.cueHeadDirection, ...
             0, '2: lec cue direction unchanged');                 
@@ -568,7 +568,7 @@ classdef LecSystemTest < AbstractTest
         headDirectionSystem.readMode = 1;
         lec.readMode = 1;
         % features now drive us back to the canonical view at which they 
-        % were perceived: 1
+        % were perceived: 60
 %             headDirectionSystem.step(); 
         headDirectionSystem.updateActivationWithFeatureInputs();
         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....

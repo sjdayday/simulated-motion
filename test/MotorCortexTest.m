@@ -248,6 +248,23 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(motorCortex.randomSteps(), 0);
             testCase.assertEqual(motorCortex.remainingDistance, 0);
         end
+        function testCalculatesPhysicalTurnStepsToOrientToPrimaryCue(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.build();
+            env.addCue([2 1]);  % cue (at pi/4 from position)
+            
+            animal = Animal();
+            animal.build(); 
+            animal.place(env, 1, 1, pi/2);
+                       
+            motorCortex = animal.motorCortex;
+            testCase.assertEqual(animal.currentDirection, pi/2);            
+            testCase.assertEqual(motorCortex.cuePhysicalHeadDirectionOffset(), 45);                        
+        end
         
 % %         function testDrawRandomExecution(testCase)
 % %             motorCortex = TestingMotorExecutions; 

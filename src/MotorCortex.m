@@ -135,6 +135,14 @@ classdef MotorCortex < System
             aRun.execute(); 
             obj.markedPlaceReport = aRun.placeReport; 
         end
+        function offset = cuePhysicalHeadDirectionOffset(obj)
+            environment = obj.animal.environment; 
+            currentDirection = obj.animal.currentDirection; 
+            % environment direction alternates between animal direction and
+            % head direction, so use animal's direction
+            environment.setDirection(currentDirection); 
+            offset = environment.cueHeadDirectionOffset(1); % 1 is primary cue
+        end
         
         %% Single time step 
         function  step(obj)

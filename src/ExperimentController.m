@@ -15,7 +15,7 @@ classdef ExperimentController < System
         pullFeaturesFromAnimal
         defaultFeatureDetectors
         updateFeatureDetectors
-        includeHeadDirectionFeatureInput
+%         includeHeadDirectionFeatureInput
         hFigures
         totalSteps
         currentStep
@@ -44,6 +44,7 @@ classdef ExperimentController < System
         settleToPlace
         sparseOrthogonalizingNetwork
         separateMecLec
+        hdsPullsFeatureWeightsFromLec
 %        possible grid parms 
 %         nGridOrientations 
 %         gridDirectionBiasIncrement             
@@ -59,7 +60,7 @@ classdef ExperimentController < System
             obj.pullFeaturesFromAnimal = true; 
             obj.defaultFeatureDetectors = true; 
             obj.updateFeatureDetectors = false; 
-            obj.includeHeadDirectionFeatureInput = true;
+%             obj.includeHeadDirectionFeatureInput = true;
             obj.showHippocampalFormationECIndices = false; 
             obj.placeMatchThreshold = 0;
             obj.rebuildHeadDirectionSystemFlag = true; 
@@ -69,6 +70,7 @@ classdef ExperimentController < System
             obj.nCueIntervals = obj.nHeadDirectionCells; 
             obj.sparseOrthogonalizingNetwork = false; 
             obj.separateMecLec = false; 
+            obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.thirdCue = false; 
 %             obj.build(); 
         end
@@ -79,10 +81,8 @@ classdef ExperimentController < System
             obj.resetSeed = true; 
             obj.iteration = 0; 
             obj.nChartStats = 6;
-            
-
-            buildEnvironment(obj);
-            
+           
+            buildEnvironment(obj);            
             
             buildAnimal(obj); 
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
@@ -139,12 +139,13 @@ classdef ExperimentController < System
             obj.animal.pullFeaturesFromAnimal = obj.pullFeaturesFromAnimal; 
             obj.animal.defaultFeatureDetectors = obj.defaultFeatureDetectors;  
             obj.animal.updateFeatureDetectors = obj.updateFeatureDetectors;
-            obj.animal.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
+%             obj.animal.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
             obj.animal.showHippocampalFormationECIndices = obj.showHippocampalFormationECIndices;
             obj.animal.placeMatchThreshold = obj.placeMatchThreshold;
             obj.animal.settleToPlace = obj.settleToPlace;
             obj.animal.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.animal.separateMecLec = obj.separateMecLec; 
+            obj.animal.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 

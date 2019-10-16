@@ -72,9 +72,10 @@ classdef Animal < System
         whiskerLength
         rightWhiskerTouching
         leftWhiskerTouching
-        includeHeadDirectionFeatureInput
+%         includeHeadDirectionFeatureInput
         sparseOrthogonalizingNetwork
         separateMecLec
+        hdsPullsFeatureWeightsFromLec
         keepRunnerForReporting
     end
     methods
@@ -98,7 +99,7 @@ classdef Animal < System
             obj.pullVelocityFromAnimal = true;
             obj.pullFeaturesFromAnimal = true;
             obj.defaultFeatureDetectors = true; 
-            obj.includeHeadDirectionFeatureInput = true;
+%             obj.includeHeadDirectionFeatureInput = true;
             obj.updateFeatureDetectors = false; 
             obj.nFeatures = 3; 
             obj.motorCortex = MotorCortex(obj); 
@@ -128,7 +129,8 @@ classdef Animal < System
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
             obj.sparseOrthogonalizingNetwork = false; 
-            obj.separateMecLec = false; 
+            obj.separateMecLec = false;
+            obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.keepRunnerForReporting = false; 
         end
         function build(obj)
@@ -138,7 +140,7 @@ classdef Animal < System
             obj.hippocampalFormation.pullVelocity = obj.pullVelocityFromAnimal;
             obj.hippocampalFormation.pullFeatures = obj.pullFeaturesFromAnimal;
             obj.hippocampalFormation.updateFeatureDetectors = obj.updateFeatureDetectors;
-            obj.hippocampalFormation.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
+%             obj.hippocampalFormation.includeHeadDirectionFeatureInput = obj.includeHeadDirectionFeatureInput;
             obj.hippocampalFormation.nFeatures = obj.nFeatures; 
             obj.hippocampalFormation.randomHeadDirection = obj.randomHeadDirection;
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells; 
@@ -147,6 +149,7 @@ classdef Animal < System
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.hippocampalFormation.separateMecLec = obj.separateMecLec;
+            obj.hippocampalFormation.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
             obj.hippocampalFormation.gridDirectionBiasIncrement = obj.gridDirectionBiasIncrement;             

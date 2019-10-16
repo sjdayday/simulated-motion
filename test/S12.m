@@ -11,9 +11,9 @@ classdef S12 < handle
             close all;
             obj.ec = ExperimentController();
             obj.ec.nHeadDirectionCells = 60;
-            obj.ec.nCueIntervals = 12;
+            obj.ec.nCueIntervals = 60;
             obj.ec.gridSize=[6,5]; 
-            obj.ec.includeHeadDirectionFeatureInput = false;
+%             obj.ec.includeHeadDirectionFeatureInput = false;
             obj.ec.visualize(visual);
             obj.ec.pullVelocityFromAnimal = false;
             obj.ec.defaultFeatureDetectors = false; 
