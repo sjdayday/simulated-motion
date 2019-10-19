@@ -118,6 +118,38 @@ classdef LecSystem < System
             positions = obj.cueHeadDirection - headDirection; 
             obj.cueActivation = circshift(headActivation, positions); 
         end
+%         function [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
+%           calculateCanonicalHeadDirectionForAnimalDirection(obj, physicalDirection)
+        function canonicalHeadDirection = calculateCanonicalHeadDirection(obj, physicalDirection)
+            saveDirection = obj.environment.getDirection(); 
+            obj.environment.setDirection(physicalDirection);
+            radianPhysicalCueOffset = obj.environment.cueDirectionOffset(1); 
+            headDirectionRadians = obj.headDirectionSystem.angleForCurrentHeadDirection(); 
+            obj.environment.setDirection(headDirectionRadians);
+            radianHeadDirectionCueOffset = obj.environment.cueDirectionOffset(1); 
+            cueDirection = obj.environment.cueDirection(1); 
+            obj.environment.setDirection(saveDirection);
+            radianHeadDirectionOffset = radianPhysicalCueOffset - radianHeadDirectionCueOffset ;
+            radianCanonicalHeadDirection = radianHeadDirectionOffset + cueDirection; % +/- .00000001; rounding  
+            canonicalHeadDirection = obj.environment.headDirectionOffset(radianCanonicalHeadDirection) ; 
+            if canonicalHeadDirection < 0
+                canonicalHeadDirection = canonicalHeadDirection + obj.nHeadDirectionCells;
+            end
+        end
+        
+        function buildCanonicalCueActivationForAnimalDirection(obj, physicalDirection)
+            canonicalHeadDirection = obj.calculateCanonicalHeadDirection(physicalDirection);
+            headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
+            obj.buildCanonicalView(canonicalHeadDirection); 
+            headActivation = obj.headDirectionSystem.uActivation; 
+            positions = canonicalHeadDirection - headDirection; 
+            obj.cueActivation = circshift(headActivation, positions); 
+        end
+%         env.setHeadDirection(headDirection)
+%         offset = env.subtractAnglesConvertToOffset(animal.currentdirection)
+%         no. instead: simulating moving physical direction to primary cue, then offsetting to corresponding
+%         head direction
+        
 %         function buildCanonicalCueOffsetActivation(obj)
 %             headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
 %             obj.buildCanonicalView(headDirection); 

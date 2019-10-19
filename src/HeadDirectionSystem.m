@@ -301,10 +301,9 @@ classdef HeadDirectionSystem < System
                 pause(1);
                 obj.firstCirclePlot = 0;
             else
-                index = obj.getMaxActivationIndex(); 
-%                 index = find(obj.uActivation==max(obj.uActivation)); 
-%                radians = ((obj.nHeadDirectionCells-index)/obj.nHeadDirectionCells)*2*pi; 
-              radians = (index/obj.nHeadDirectionCells)*2*pi; 
+%                 index = obj.getMaxActivationIndex(); 
+%               radians = (index/obj.nHeadDirectionCells)*2*pi; 
+                radians = obj.angleForCurrentHeadDirection(); 
                 obj.marker.XData = cos(radians); 
                 obj.marker.YData = sin(radians); 
                 drawnow;
@@ -312,6 +311,14 @@ classdef HeadDirectionSystem < System
             end            
 
         end
+        function radians = angleForCurrentHeadDirection(obj)
+            index = obj.getMaxActivationIndex(); 
+            radians = obj.angleForHeadDirection(index); 
+        end
+        function radians = angleForHeadDirection(obj, index)
+            radians = (index/obj.nHeadDirectionCells)*2*pi; 
+        end
+        
         function plotActivation(obj)
             % assumes nHeadDirectionCells is 60
             figure(obj.h)

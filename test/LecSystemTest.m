@@ -295,6 +295,7 @@ classdef LecSystemTest < AbstractTest
 %                 headDirectionSystem.uActivation(1,12:21), ...
 %                 'head direction activation copied and shifted to canonical view'); 
         end
+
 %         function testCopyAndShiftHdsActivationToLecAtCanonicalCueDirectionOffset(testCase)
 %             % fix 
 %             headDirectionSystem = HeadDirectionSystem(60); 
@@ -651,6 +652,125 @@ classdef LecSystemTest < AbstractTest
 %                 headDirectionSystem.uActivation(1,12:21), ...
 %                 'head direction activation copied and shifted to canonical view'); 
 %         end        
+%  init head direction
+%  force animal direction
+%    
+
+
+    function testCopyShiftHdsActivationToLecAtHeadDirectionCanonicalOffset(testCase)
+        import matlab.unittest.constraints.IsEqualTo
+        import matlab.unittest.constraints.RelativeTolerance
+        headDirectionSystem = HeadDirectionSystem(60); 
+        randomHeadDirection = true; 
+        headDirectionSystem.initializeActivation(randomHeadDirection);            
+        headDirectionSystem.pullVelocity = false;  
+        headDirectionSystem.pullFeatures = false; 
+        headDirectionSystem.nFeatureDetectors = 5; 
+        headDirectionSystem.build();
+        for ii = 1:7
+            headDirectionSystem.step();            
+        end
+        currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+        testCase.assertEqual(currentHeadDirection, ...
+            10, 'stable'); 
+        animalDirection = pi/2; 
+
+        lec = LecSystem();
+        lec.nHeadDirectionCells = 60;
+        lec.nCueIntervals = 60; 
+%             lec.nCueIntervals = 12; 
+        lec.nFeatures = 3; 
+        lec.build(); 
+        env = Environment();
+        env.addWall([0 0],[0 2]); 
+        env.addWall([0 2],[2 2]); 
+        env.addWall([0 0],[2 0]); 
+        env.addWall([2 0],[2 2]);
+        env.distanceIntervals = 8;
+        env.directionIntervals = 60;
+        env.center = [1 1]; 
+        env.build();  
+        env.setPosition([0.5 1]);             
+%             env.setPosition([0.5 1]); 
+        env.addCue([2 1]);  %  x   ------------- 6cue (at 0)
+        env.addCue([0 0]);            
+        env.addCue([1 2]);  % cue at pi/2                        
+
+        lec.setEnvironment(env); 
+        lec.headDirectionSystem = headDirectionSystem; 
+
+%         [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
+%             lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+
+%         testCase.assertEqual(radianPhysicalCueOffset, 3*pi/2);  % 0 - pi/2           
+%         testCase.assertEqual(headDirectionRadians, pi/3); % 10 
+%         testCase.assertEqual(radianHeadDirectionCueOffset, 5*pi/3); % 10 
+%         testCase.assertThat(radianHeadDirectionOffset, ...            
+%             IsEqualTo((-1/6)*pi, 'Within', RelativeTolerance(.00000000001))); 
+
+%         testCase.assertEqual(radianHeadDirectionOffset, (-1/6)*pi);  
+        testCase.assertEqual(lec.calculateCanonicalHeadDirection(animalDirection), 55);  
+        lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+        testCase.assertEqual(lec.getCueMaxActivationIndex(), 55); 
+        env.cues(1,:) = [0 1];
+%         [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
+%             lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+%         testCase.assertThat(radianPhysicalCueOffset, ...            
+%             IsEqualTo(pi/2, 'Within', RelativeTolerance(.00000000001))); 
+% 
+%         testCase.assertEqual(headDirectionRadians, pi/3); % 10 
+%         testCase.assertThat(radianHeadDirectionCueOffset, ...            
+%             IsEqualTo(2*pi/3, 'Within', RelativeTolerance(.00000000001))); 
+%         testCase.assertThat(radianHeadDirectionOffset, ...            
+%             IsEqualTo((-1/6)*pi, 'Within', RelativeTolerance(.00000000001))); 
+%         testCase.assertEqual(canonicalHeadDirection, 24);   % 25 by hand; likely rounding  
+        testCase.assertEqual(lec.calculateCanonicalHeadDirection(animalDirection), 24);  
+        lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+        testCase.assertEqual(lec.getCueMaxActivationIndex(), 24); 
+       
+        env.cues(1,:) = [2 1];
+        headDirectionSystem.initializeActivation(randomHeadDirection); 
+        for ii = 1:7
+            headDirectionSystem.step();            
+        end
+        currentHeadDirection = headDirectionSystem.getMaxActivationIndex();  
+        testCase.assertEqual(currentHeadDirection, ...
+            4, 'stable'); 
+        animalDirection = -pi/3; 
+%         [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
+%             lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+%         testCase.assertEqual(radianPhysicalCueOffset, pi/3); % 0 - -pi/3 ...5/15 * pi             
+% %             testCase.assertEqual(radianPhysicalCueOffset, pi/3); % 5/15 * pi                         
+%         testCase.assertEqual(headDirectionRadians, 2*pi/15);                         
+%         testCase.assertEqual(radianHeadDirectionCueOffset, 28*pi/15); % 10             
+%         testCase.assertThat(radianHeadDirectionOffset, ...            
+%             IsEqualTo((-23/15)*pi, 'Within', RelativeTolerance(.00000000001))); 
+%         testCase.assertEqual(canonicalHeadDirection, 14);  
+        testCase.assertEqual(lec.calculateCanonicalHeadDirection(animalDirection), 14);  
+        lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+        testCase.assertEqual(lec.getCueMaxActivationIndex(), 14); 
+%   
+        disp(mat2str(env.cues(1,:)));
+        env.cues(1,:) = [0 1];
+        disp(mat2str(env.cues(1,:)));  % cue at pi
+%         [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
+%             lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+%         testCase.assertEqual(radianPhysicalCueOffset, pi*4/3); % 0 - -pi/3 ...5/15 * pi             
+%         testCase.assertEqual(headDirectionRadians, 2*pi/15);                         
+%         testCase.assertEqual(radianHeadDirectionCueOffset, 13*pi/15); % 10             
+%         testCase.assertThat(radianHeadDirectionOffset, ...            
+%             IsEqualTo((7/15)*pi, 'Within', RelativeTolerance(.00000000001))); 
+% 
+%         testCase.assertEqual(canonicalHeadDirection, 44);   % 14 -6  
+        testCase.assertEqual(lec.calculateCanonicalHeadDirection(animalDirection), 44);          
+        lec.buildCanonicalCueActivationForAnimalDirection(animalDirection); 
+        testCase.assertEqual(lec.getCueMaxActivationIndex(), 44); 
+        testCase.assertEqual(lec.cueActivation(1,44:54), ...
+            headDirectionSystem.uActivation(1,4:14), ...
+            'head direction activation copied and shifted to canonical view'); 
+    end 
+    % TODO use buildCanonicalCueActivationForAnimalDirection in remembering
+    % and returning to previous HD
     
     
     %     function testAssociatesHeadDirectionOffsetWithCanonicalCueDirection(testCase)

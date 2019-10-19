@@ -75,9 +75,15 @@ classdef Environment < System
            obj.position = position;  
            disp(['environment position updated: ',mat2str(position)]); 
         end
+        function position = getPosition(obj)
+           position = obj.position;  
+        end
         function setDirection(obj, direction)
            obj.direction = direction;    
         end
+        function direction = getDirection(obj)
+           direction = obj.direction;    
+        end        
         function [wallIndex,distance] = closestWall(obj)
             distances = zeros(1,obj.nWalls);  
             for ii = 1:obj.nWalls
@@ -127,7 +133,7 @@ classdef Environment < System
             distance = closestWallDistance(obj); 
             relativeDistance = calculateRelativeDistance(obj, distance);
         end
-        function direction = cueDirection(obj, cueIndex)
+        function direction = cueDirectionOffset(obj, cueIndex)
            s = size(obj.cues);
 %            disp('size of obj.cues:'); 
 %            disp(s);
@@ -137,7 +143,20 @@ classdef Environment < System
                direction = pointDirection(obj, obj.cues(cueIndex,:));   
            end
         end
+        function direction = cueDirection(obj, cueIndex)
+           s = size(obj.cues);
+%            disp('size of obj.cues:'); 
+%            disp(s);
+           if s(1) < cueIndex
+               direction = 0;
+           else
+               direction = pointGivenDirection(obj, obj.cues(cueIndex,:), 0);   
+           end
+        end
         function direction = pointDirection(obj, target) 
+            direction = obj.pointGivenDirection(target,obj.direction);  
+        end
+        function direction = pointGivenDirection(obj, target, givenDirection) 
            % thanks to Roger Stafford: 
            % originally, in mathworks newsreader:
            % http://www.mathworks.com/matlabcentral/newsreader/view_thread/151925#849830
@@ -145,7 +164,7 @@ classdef Environment < System
            % https://groups.google.com/d/msg/comp.soft-sys.matlab/zNbUui3bjcA/ehyAzegIoNMJ
            % 11 Dec, 2007
            v = [target(1)-obj.position(1) target(2)-obj.position(2) 0];
-           u = [cos(obj.direction) sin(obj.direction) 0];
+           u = [cos(givenDirection) sin(givenDirection) 0];
            direction = mod(atan2(u(1)*v(2)-v(1)*u(2),u(1)*v(1)+u(2)*v(2)),2*pi);
 %            direction = atan2(norm(cross(u,v)), dot(u,v)); % 3D
         end
@@ -179,12 +198,11 @@ classdef Environment < System
             obj.setDirection(((headDirection-1)/obj.directionIntervals)*(2*pi));  
         end
         function cueHeadDirection = cueHeadDirectionOffset(obj, index)
-            cueHeadDirection = obj.headDirectionOffset(obj.cueDirection(index));
-            disp(['cueHeadDirection: ',num2str(cueHeadDirection),'obj.cueDirection(index): ',...
-                num2str(obj.cueDirection(index)),' for index: ',num2str(index)]); 
+            cueHeadDirection = obj.headDirectionOffset(obj.cueDirectionOffset(index));
+            disp(['cueHeadDirection: ',num2str(cueHeadDirection),'obj.cueDirectionOffset(index): ',...
+                num2str(obj.cueDirectionOffset(index)),' for index: ',num2str(index)]); 
         end
-        % do we mean "head direction at this offset from current" or 
-        % "offset between this direction and the current", which could be 0
+        % head direction at this offset from current
         function headDirection = headDirectionOffset(obj, direction)
             headDirection = fix(direction/(2*pi) * obj.directionIntervals); % drop +1?
             headDirection = min(headDirection, obj.directionIntervals); % if direction is exactly 2*pi             
