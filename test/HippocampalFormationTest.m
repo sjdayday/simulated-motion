@@ -502,7 +502,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.separateMecLec = true; 
             system.hdsPullsFeatureWeightsFromLec = true; 
             system.nFeatures = 3;
-            system.showIndices = true; 
+%             system.showIndices = true; 
 
 %             testCase.hf = system; 
 %             testCase.h=figure; 
@@ -740,12 +740,12 @@ classdef HippocampalFormationTest < AbstractTest
         end
         function testSettlesToOriginalPlaceWhenNear(testCase)
             system = HippocampalFormation();
-            testCase.hf = system; 
-            testCase.h=figure; 
-            testCase.counter = 0; 
-            hold on;  
-            system.h = testCase.h;
-            system.visual = true; 
+%             testCase.hf = system; 
+%             testCase.h=figure; 
+%             testCase.counter = 0; 
+%             hold on;  
+%             system.h = testCase.h;
+%             system.visual = true; 
             system.settleToPlace = true; 
             % system.animal.minimumRunVelocity = 0.05 ; 
             system.nGridOrientations = 3; 
@@ -782,18 +782,18 @@ classdef HippocampalFormationTest < AbstractTest
             
 %             currentHeadDirection = 10;
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
-            testCase.plotGrids();
+%             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
                [54    82   106   243   268], ...  % 54 95 106 161 243 268
                'initial indices prior to network convergence');   
-            testCase.plotGrids();
+%             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
-            testCase.plotGrids();
+%             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
-            testCase.plotGrids();
+%             testCase.plotGrids();
             system.step(); % stepMec and stepPlace 
-            testCase.plotGrids();
+%             testCase.plotGrids();
             testCase.assertEqual(system.mecOutputIndices(), ...
                [16  58  83], 'original mec output'); 
 %            [17 33 87], 'original mec output'); 
@@ -812,7 +812,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.stepHds(); 
             system.stepMec(); 
             system.stepLec(); 
-            testCase.plotGrids();
+%             testCase.plotGrids();
             testCase.assertTrue(system.placeRecognized()); 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
                [82   243], ... % 95 161 243
@@ -828,7 +828,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.settle(); 
             disp('after settle'); 
 %             pause(5);             
-            testCase.plotGrids();
+%             testCase.plotGrids();
             testCase.assertEqual(system.mecOutputIndices(), ...
                [16  58  83], 'settle back to original mec output');  
 %                [17 33 87], 'settle back to original mec output');             

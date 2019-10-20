@@ -260,23 +260,28 @@ classdef HippocampalFormation < System
                 disp(['LEC output: ',obj.printLecOutputIndices()]);
             end
         end
+        function updateSubsystemFeatureDetectors(obj)
+           obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
+           obj.lecSystem.featuresDetected = obj.placeOutput; 
+           for jj = 1:obj.nGrids
+              obj.grids(1,jj).featuresDetected = obj.placeOutput; 
+           end            
+        end
         function stepPlace(obj)
            placeRecognized = obj.placeRecognized(); 
            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
            if obj.updateFeatureDetectors
-               obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
-               obj.lecSystem.featuresDetected = obj.placeOutput; 
-               if ~ obj.orienting
-                    obj.lecSystem.updateFeatureWeights();
-               end
-               for jj = 1:obj.nGrids
-                  obj.grids(1,jj).featuresDetected = obj.placeOutput; 
-               end
+               obj.updateSubsystemFeatureDetectors(); 
            end
            if placeRecognized && obj.settleToPlace
               obj.settle();  
            else
-              obj.updateGridsWithFeatureInput();  
+               % TODO:  reconcile readMode, combine with LEC featureWeights
+           if ~ obj.orienting
+                obj.lecSystem.updateFeatureWeights();
+                obj.updateGridsFeatureWeights();  
+           end
+%               obj.updateGridsFeatureWeights();  
            end
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.showIndices
@@ -289,7 +294,7 @@ classdef HippocampalFormation < System
            placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
            disp(['Place recognized: ',num2str(placeRecognized)]);                                 
         end
-        function updateGridsWithFeatureInput(obj)
+        function updateGridsFeatureWeights(obj)
            for jj = 1:obj.nGrids
               obj.grids(1,jj).readMode = 0;
               obj.grids(1,jj).updateFeatureWeights(); % or update...FeatureInputs? 
