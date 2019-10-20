@@ -276,6 +276,7 @@ classdef Animal < System
             obj.placed = 1; 
             obj.buildInitialVertices(); 
             obj.environment = environment;
+            obj.hippocampalFormation.lecSystem.environment = obj.environment; 
             obj.environment.setPosition([x y]); 
             obj.x = obj.environment.position(1); 
             obj.y = obj.environment.position(2); 

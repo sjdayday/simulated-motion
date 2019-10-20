@@ -300,109 +300,109 @@ classdef LecSystemTest < AbstractTest
 
 
 
-    function testHdsActivationFollowsPreviouslyActivatedLecFeatures(testCase)
-%             % [when] do we need to do this? 
-%             % orient, turning 19? 9? until pointing at cue, currently HD
-%             = 11? 1?        
-        import matlab.unittest.constraints.IsEqualTo
-        import matlab.unittest.constraints.RelativeTolerance
-        lec = LecSystem();
-        lec.nHeadDirectionCells = 60;
-        lec.nCueIntervals = 60; 
-%         lec.nCueIntervals = 12;         
-        lec.nFeatures = 3; 
-        lec.nFeatureDetectors = 5;        
-        lec.build(); 
-        env = Environment();
-        env.addWall([0 0],[0 2]); 
-        env.addWall([0 2],[2 2]); 
-        env.addWall([0 0],[2 0]); 
-        env.addWall([2 0],[2 2]);
-        env.distanceIntervals = 8;
-        env.directionIntervals = 60;
-        env.center = [1 1]; 
-        env.build();  
-        env.setPosition([0.5 1]);             
-%             env.setPosition([0.5 1]); 
-        env.addCue([2 1]);  %  x   ------------- cue (at 0)
-        env.addCue([0 0]);            
-        env.addCue([1 2]);  % cue at pi/2                        
-        headDirectionSystem = HeadDirectionSystem(60); 
-        randomHeadDirection = true; 
-        headDirectionSystem.initializeActivation(randomHeadDirection)            
-        headDirectionSystem.pullVelocity = false;  
-        headDirectionSystem.pullFeatures = false; 
-        headDirectionSystem.nFeatureDetectors = 5;
-        headDirectionSystem.build();
-
-        lec.headDirectionSystem = headDirectionSystem; 
-        headDirectionSystem.lec = lec; 
-        lec.setEnvironment(env);         
-        
-        disp(['LEC: ', lec.printOutputIndices() ]); 
-        for ii = 1:7
-            headDirectionSystem.step();            
-        end
-%             % current HD = 10, cueHD = 1        
-        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
-            10, 'stable; now present features'); 
-        lec.buildCanonicalCueActivation();         
-        testCase.assertEqual(lec.cueHeadDirection, ...
-            0, 'stable; now present features'); 
-%             % associate features with 1        
-        headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
-        lec.featuresDetected = [0 0 1 0 1];         
-        headDirectionSystem.step(); 
-        lec.buildCanonicalCueActivation(); 
-        testCase.assertEqual(lec.cueHeadDirection, ...
-            0, '1: lec cue direction unchanged');                 
-        disp(['LEC2 : ', lec.printOutputIndices() ]); 
-        lec.updateFeatureWeights(); 
-        w = headDirectionSystem.featureWeights; 
-        lw = lec.featureWeights; 
-        testCase.assertEqual(max(w(1,:)), 0); 
-        testCase.assertThat(max(w(3,:)), ...            
-            IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
-        testCase.assertEqual(find(w(3,:) == max(w(3,:))), 10); 
-        % randomly "place" animal elsewhere
-        testCase.assertEqual(max(lw(1,:)), 0); 
-        testCase.assertThat(max(lw(3,:)), ...            
-            IsEqualTo(0.519338891167941, 'Within', RelativeTolerance(.00000000001))); 
-        testCase.assertEqual(find(lw(3,:) == max(lw(3,:))), 60, ...
-            'max has been shifted from 10 in hds to 60 in LDS'); 
-        lec.buildCanonicalCueActivation(); 
-        testCase.assertEqual(lec.cueHeadDirection, ...
-            0, '2: lec cue direction unchanged');                 
-%             % reinitialize HD, stable at 20        
-        headDirectionSystem.pullFeatureWeightsFromLec = true; 
-        headDirectionSystem.initializeActivation(true);
-        headDirectionSystem.initializeActivation(true); 
-        lec.featuresDetected = [0 0 0 0 0]; 
-        headDirectionSystem.step();            
-        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
-            20, 'stable activation at new random orientation');
-%             % readMode        
-        lec.featuresDetected = [0 0 1 0 1]; 
-        headDirectionSystem.readMode = 1;
-        lec.readMode = 1;
-        % features now drive us back to the canonical view at which they 
-        % were perceived: 60
-%             headDirectionSystem.step(); 
-        headDirectionSystem.updateActivationWithFeatureInputs();
-        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
-            'pulled immediately'); 
-        headDirectionSystem.updateActivationWithFeatureInputs();
-        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
-            'pulled immediately'); 
-        headDirectionSystem.updateActivationWithFeatureInputs();
-        testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 60, ....
-            'pulled immediately'); 
-        lec.buildCanonicalCueActivation(); 
-        testCase.assertEqual(lec.cueHeadDirection, ...
-            0, '3: lec cue direction unchanged');         
-        disp(['LEC3 : ', lec.printOutputIndices() ]); 
-
-    end
+%     function testHdsActivationFollowsPreviouslyActivatedLecFeatures(testCase)
+% %             % [when] do we need to do this? 
+% %             % orient, turning 19? 9? until pointing at cue, currently HD
+% %             = 11? 1?        
+%         import matlab.unittest.constraints.IsEqualTo
+%         import matlab.unittest.constraints.RelativeTolerance
+%         lec = LecSystem();
+%         lec.nHeadDirectionCells = 60;
+%         lec.nCueIntervals = 60; 
+% %         lec.nCueIntervals = 12;         
+%         lec.nFeatures = 3; 
+%         lec.nFeatureDetectors = 5;        
+%         lec.build(); 
+%         env = Environment();
+%         env.addWall([0 0],[0 2]); 
+%         env.addWall([0 2],[2 2]); 
+%         env.addWall([0 0],[2 0]); 
+%         env.addWall([2 0],[2 2]);
+%         env.distanceIntervals = 8;
+%         env.directionIntervals = 60;
+%         env.center = [1 1]; 
+%         env.build();  
+%         env.setPosition([0.5 1]);             
+% %             env.setPosition([0.5 1]); 
+%         env.addCue([2 1]);  %  x   ------------- cue (at 0)
+%         env.addCue([0 0]);            
+%         env.addCue([1 2]);  % cue at pi/2                        
+%         headDirectionSystem = HeadDirectionSystem(60); 
+%         randomHeadDirection = true; 
+%         headDirectionSystem.initializeActivation(randomHeadDirection)            
+%         headDirectionSystem.pullVelocity = false;  
+%         headDirectionSystem.pullFeatures = false; 
+%         headDirectionSystem.nFeatureDetectors = 5;
+%         headDirectionSystem.build();
+% 
+%         lec.headDirectionSystem = headDirectionSystem; 
+%         headDirectionSystem.lec = lec; 
+%         lec.setEnvironment(env);         
+%         
+%         disp(['LEC: ', lec.printOutputIndices() ]); 
+%         for ii = 1:7
+%             headDirectionSystem.step();            
+%         end
+% %             % current HD = 10, cueHD = 1        
+%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+%             10, 'stable; now present features'); 
+%         lec.buildCanonicalCueActivation();         
+%         testCase.assertEqual(lec.cueHeadDirection, ...
+%             0, 'stable; now present features'); 
+% %             % associate features with 1        
+%         headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
+%         lec.featuresDetected = [0 0 1 0 1];         
+%         headDirectionSystem.step(); 
+%         lec.buildCanonicalCueActivation(); 
+%         testCase.assertEqual(lec.cueHeadDirection, ...
+%             0, '1: lec cue direction unchanged');                 
+%         disp(['LEC2 : ', lec.printOutputIndices() ]); 
+%         lec.updateFeatureWeights(); 
+%         w = headDirectionSystem.featureWeights; 
+%         lw = lec.featureWeights; 
+%         testCase.assertEqual(max(w(1,:)), 0); 
+%         testCase.assertThat(max(w(3,:)), ...            
+%             IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
+%         testCase.assertEqual(find(w(3,:) == max(w(3,:))), 10); 
+%         % randomly "place" animal elsewhere
+%         testCase.assertEqual(max(lw(1,:)), 0); 
+%         testCase.assertThat(max(lw(3,:)), ...            
+%             IsEqualTo(0.519338891167941, 'Within', RelativeTolerance(.00000000001))); 
+%         testCase.assertEqual(find(lw(3,:) == max(lw(3,:))), 60, ...
+%             'max has been shifted from 10 in hds to 60 in LDS'); 
+%         lec.buildCanonicalCueActivation(); 
+%         testCase.assertEqual(lec.cueHeadDirection, ...
+%             0, '2: lec cue direction unchanged');                 
+% %             % reinitialize HD, stable at 20        
+%         headDirectionSystem.pullFeatureWeightsFromLec = true; 
+%         headDirectionSystem.initializeActivation(true);
+%         headDirectionSystem.initializeActivation(true); 
+%         lec.featuresDetected = [0 0 0 0 0]; 
+%         headDirectionSystem.step();            
+%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
+%             20, 'stable activation at new random orientation');
+% %             % readMode        
+%         lec.featuresDetected = [0 0 1 0 1]; 
+%         headDirectionSystem.readMode = 1;
+%         lec.readMode = 1;
+%         % features now drive us back to the canonical view at which they 
+%         % were perceived: 60
+% %             headDirectionSystem.step(); 
+%         headDirectionSystem.updateActivationWithFeatureInputs();
+%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
+%             'pulled immediately'); 
+%         headDirectionSystem.updateActivationWithFeatureInputs();
+%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
+%             'pulled immediately'); 
+%         headDirectionSystem.updateActivationWithFeatureInputs();
+%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 60, ....
+%             'pulled immediately'); 
+%         lec.buildCanonicalCueActivation(); 
+%         testCase.assertEqual(lec.cueHeadDirection, ...
+%             0, '3: lec cue direction unchanged');         
+%         disp(['LEC3 : ', lec.printOutputIndices() ]); 
+%     end
+    
     function testHdsActivationToCanonicalHeadDirecionFromPreviousLecFeatures(testCase)
 %             % [when] do we need to do this? 
 %             % orient, turning 19? 9? until pointing at cue, currently HD

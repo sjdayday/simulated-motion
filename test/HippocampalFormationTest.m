@@ -3,6 +3,7 @@ classdef HippocampalFormationTest < AbstractTest
         hf
         h
         counter
+        environment
     end
     methods (Test)
         % testBinaryPerforantInputsStrengthenWeightsOnDirectPath
@@ -105,7 +106,13 @@ classdef HippocampalFormationTest < AbstractTest
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false; 
-            system.build();  
+            system.build(); 
+            testCase.buildEnvironment(); 
+            system.lecSystem.setEnvironment(testCase.environment); 
+            system.animal.place(testCase.environment, 1, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
 %             system.headDirectionSystem.pullVelocity = false;  
 %             system.updateAngularVelocity(pi/10);
             system.updateTurnVelocity(2);            
@@ -125,6 +132,18 @@ classdef HippocampalFormationTest < AbstractTest
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false; 
             system.build();  
+            testCase.buildEnvironment();             
+%             env = Environment();
+%             env.addWall([0 0],[0 2]); 
+%             env.addWall([0 2],[2 2]); 
+%             env.addWall([0 0],[2 0]); 
+%             env.addWall([2 0],[2 2]);
+%             env.directionIntervals = 60;
+%             env.build();
+            system.lecSystem.setEnvironment(testCase.environment); 
+%             env.setPosition([1 1]);             
+%             env.addCue([2 1]);  %  x   ------------- cue (at 0)
+            
             system.updateTurnVelocity(1);
 %             testCase.assertEqual(signedAngularVelocity, pi/20); 
             testCase.assertEqual(system.angularVelocity, pi/20);             
@@ -142,7 +161,13 @@ classdef HippocampalFormationTest < AbstractTest
             system = HippocampalFormation();
             system.nHeadDirectionCells = 60; 
             system.pullVelocity = false;             
-            system.build();  
+            system.build(); 
+            testCase.buildEnvironment(); 
+            system.lecSystem.setEnvironment(testCase.environment); 
+            system.animal.place(testCase.environment, 1, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
 %             system.headDirectionSystem.pullVelocity = false;  
 %       angular/turn velocity ignored
 %             system.updateAngularVelocity(pi/10); 
@@ -215,6 +240,12 @@ classdef HippocampalFormationTest < AbstractTest
 %             system.headDirectionSystem.pullVelocity = false;  
             system.pullVelocity = false; 
             system.build(); 
+            testCase.buildEnvironment(); 
+            system.lecSystem.setEnvironment(testCase.environment); 
+            system.animal.place(testCase.environment, 1, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
 %    angular / turn velocity unnecessary             
 %             system.updateAngularVelocity(0);
             system.step(); 
@@ -320,7 +351,11 @@ classdef HippocampalFormationTest < AbstractTest
             env.setPosition([0.5 1]);             
 %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
-            env.addCue([0 0]);            
+            env.addCue([0 0]); 
+            system.animal.place(env, 0.5, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
 %             currentHeadDirection = 10;
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
 
@@ -441,6 +476,7 @@ classdef HippocampalFormationTest < AbstractTest
 %           save canonical cue weights at head direction offset from cue.  
 %           re-initialize HDS
 %           manually turn to align physical head direction and primary cue
+%           animal.turn()
 %           readMode
 %           pulls to original head direction offset
             
@@ -450,6 +486,7 @@ classdef HippocampalFormationTest < AbstractTest
 %             = 11? 1?        
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
+            import matlab.unittest.constraints.AbsoluteTolerance                                    
             system = HippocampalFormation();
             system.nGridOrientations = 3; 
             system.nHeadDirectionCells = 60; 
@@ -467,15 +504,15 @@ classdef HippocampalFormationTest < AbstractTest
             system.nFeatures = 3;
             system.showIndices = true; 
 
-            testCase.hf = system; 
-            testCase.h=figure; 
-            testCase.counter = 0; 
-            hold on;  
-            system.h = testCase.h;
-            system.visual = true; 
+%             testCase.hf = system; 
+%             testCase.h=figure; 
+%             testCase.counter = 0; 
+%             hold on;  
+%             system.h = testCase.h;
+%             system.visual = true; 
             
             system.build(); 
-  
+
             
 %         lec = LecSystem();
 %         lec.nHeadDirectionCells = 60;
@@ -492,7 +529,8 @@ classdef HippocampalFormationTest < AbstractTest
             env.directionIntervals = 60;
             env.center = [1 1]; 
             env.build();  
-            env.setPosition([0.5 1]);             
+
+%             env.setPosition([0.5 1]);             
     %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
             env.addCue([0 0]);            
@@ -511,27 +549,26 @@ classdef HippocampalFormationTest < AbstractTest
 %         lec.setEnvironment(env);         
         
 %         disp(['LEC: ', lec.printOutputIndices() ]); 
+            system.animal.place(env, 1, 1, pi/2);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
             for ii = 1:7
                 system.step();            
                 disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
 %                 testCase.plotGrids();
             end
-%             % current HD = 10, cueHD = 1        
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
                 10, 'stable; now present features'); 
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 system.lecSystem.featuresDetected, 'both set by placeSystem'); 
+%             testCase.assertEqual(system.lecSystem.getCueMaxActivationIndex(), 40);
 
-%             lec.buildCanonicalCueActivation(); 
-            testCase.assertEqual(system.lecSystem.getCueMaxActivationIndex(), 60); 
-            testCase.assertEqual(system.lecSystem.cueActivation(1,60), ...
-                system.headDirectionSystem.uActivation(1,10), ...
+            testCase.assertEqual(system.lecSystem.getCueMaxActivationIndex(), 55);
+            testCase.assertEqual(system.lecSystem.cueActivation(1,55:60), ...
+                system.headDirectionSystem.uActivation(1,10:15), ...
                 'head direction activation copied and shifted to canonical view'); 
-            testCase.assertEqual(system.lecSystem.cueActivation(1,1:9), ...
-                system.headDirectionSystem.uActivation(1,11:19), ...
-                'head direction activation copied and shifted to canonical view'); 
-                        testCase.assertEqual(system.lecSystem.getCueMaxActivationIndex(), 60); 
-            testCase.assertEqual(system.placeOutputIndices(), [61 92]); 
+            testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
+            system.orienting = true; 
             system.headDirectionSystem.initializeActivation(true);
             for ii = 1:2
                 system.step();            
@@ -540,73 +577,52 @@ classdef HippocampalFormationTest < AbstractTest
             end
             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
                 45, 'new stable head direction'); 
-            testCase.assertEqual(system.placeOutputIndices(), [61 92]); 
-          % point self
-          % re-initialize
-          % 
-          % move physically to 0
-          % verify all along the way that LEC output is same
-          % pull HDS back 
-          % ----
-          % reinitialize grids
-          % use LEC output to pull full place
-          % use full place to pull grids back
-%         lec.buildCanonicalCueActivation();         
-%         testCase.assertEqual(lec.cueHeadDirection, ...
-%             0, 'stable; now present features'); 
-% %             % associate features with 1        
-%         headDirectionSystem.featuresDetected = [0 0 1 0 1]; 
-%         lec.featuresDetected = [0 0 1 0 1];         
-%         headDirectionSystem.step(); 
-%         lec.buildCanonicalCueActivation(); 
-%         testCase.assertEqual(lec.cueHeadDirection, ...
-%             0, '1: lec cue direction unchanged');                 
-%         disp(['LEC2 : ', lec.printOutputIndices() ]); 
-%         lec.updateFeatureWeights(); 
-%         w = headDirectionSystem.featureWeights; 
-%         lw = lec.featureWeights; 
-%         testCase.assertEqual(max(w(1,:)), 0); 
-%         testCase.assertThat(max(w(3,:)), ...            
-%             IsEqualTo(0.174664933360754, 'Within', RelativeTolerance(.00000000001))); 
-%         testCase.assertEqual(find(w(3,:) == max(w(3,:))), 10); 
-%         % randomly "place" animal elsewhere
-%         testCase.assertEqual(max(lw(1,:)), 0); 
-%         testCase.assertThat(max(lw(3,:)), ...            
-%             IsEqualTo(0.519338891167941, 'Within', RelativeTolerance(.00000000001))); 
-%         testCase.assertEqual(find(lw(3,:) == max(lw(3,:))), 60, ...
-%             'max has been shifted from 10 in hds to 1 in LDS'); 
-%         lec.buildCanonicalCueActivation(); 
-%         testCase.assertEqual(lec.cueHeadDirection, ...
-%             0, '2: lec cue direction unchanged');                 
-% %             % reinitialize HD, stable at 20        
-%         headDirectionSystem.pullFeatureWeightsFromLec = true; 
-%         headDirectionSystem.initializeActivation(true);
-%         headDirectionSystem.initializeActivation(true); 
-%         lec.featuresDetected = [0 0 0 0 0]; 
-%         headDirectionSystem.step();            
-%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), ...
-%             20, 'stable activation at new random orientation');
-% %             % readMode        
-%         lec.featuresDetected = [0 0 1 0 1]; 
-%         headDirectionSystem.readMode = 1;
-%         lec.readMode = 1;
-%         % features now drive us back to the canonical view at which they 
-%         % were perceived: 1
-% %             headDirectionSystem.step(); 
-%         headDirectionSystem.updateActivationWithFeatureInputs();
-%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
-%             'pulled immediately'); 
-%         headDirectionSystem.updateActivationWithFeatureInputs();
-%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 1, ....
-%             'pulled immediately'); 
-%         headDirectionSystem.updateActivationWithFeatureInputs();
-%         testCase.assertEqual(headDirectionSystem.getMaxActivationIndex(), 60, ....
-%             'pulled immediately'); 
-%         lec.buildCanonicalCueActivation(); 
-%         testCase.assertEqual(lec.cueHeadDirection, ...
-%             0, '3: lec cue direction unchanged');         
-%         disp(['LEC3 : ', lec.printOutputIndices() ]); 
+            testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
+            relativeSpeed = 1;
+            clockwiseNess = -1 ;  %clockwise 
+            
+            system.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertThat(system.animal.currentDirection, ...
+               IsEqualTo(pi*14/30, 'Within', RelativeTolerance(.00000001)));         
+            for ii = 1:14
+                system.animal.turn(clockwiseNess, relativeSpeed); 
+                disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
+%                 testCase.plotGrids();
+            end
+%                IsEqualTo(pi*29/30, 'Within', RelativeTolerance(.00000001)));         
+%             for ii = 1:29
+%                 system.animal.turn(clockwiseNess, relativeSpeed); 
+%                 disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
+% %                 testCase.plotGrids();
+%             end
 
+            testCase.assertThat(system.animal.currentDirection, ...
+               IsEqualTo(0, 'Within', AbsoluteTolerance(.00001)));         
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
+%                 18, 'new head direction...expected 45-30=15'); 
+
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
+                33, 'new head direction...expected 45-15=30'); 
+            testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
+            
+            system.headDirectionSystem.readMode = 1;
+            system.lecSystem.readMode = 1;
+%             figure; 
+%             hold on;
+            for ii = 1:14
+                system.step();            
+                disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
+%                 plot(system.headDirectionSystem.uActivation); 
+                disp(['LEC: ', num2str(system.lecSystem.getCueMaxActivationIndex()) ]); 
+%                 testCase.plotGrids();
+            end
+            system.orienting = false ; 
+        % features now drive us back to the canonical offset of HDS at which they 
+        % were perceived: 55
+            testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 54, ....
+                'pulled gradually to 54 (cue max is 55)'); 
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 39, ....
+%                 'pulled immediately'); 
         end
         
         
@@ -621,7 +637,13 @@ classdef HippocampalFormationTest < AbstractTest
             system.pullVelocity = false; 
             system.defaultFeatureDetectors = false; 
             system.updateFeatureDetectors = true;
-            system.build();  
+            system.build();
+            testCase.buildEnvironment(); 
+            system.lecSystem.setEnvironment(testCase.environment); 
+            system.animal.place(testCase.environment, 1, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
             testCase.assertEqual(system.headDirectionSystem.featuresDetected, ...
                 zeros(1,system.placeSystem.nCA3)); 
             s = size(system.headDirectionSystem.featureWeights); 
@@ -753,7 +775,11 @@ classdef HippocampalFormationTest < AbstractTest
             env.setPosition([0.5 1]);             
 %             env.setPosition([0.5 1]); 
             env.addCue([2 1]);  %  x   ------------- cue (at 0)
-            env.addCue([0 0]);            
+            env.addCue([0 0]);
+            system.animal.place(env, 0.5, 1, 0);  
+%             system.animal.place(env, 1, 1, pi); 
+            system.animal.hippocampalFormation = system; 
+            
 %             currentHeadDirection = 10;
 %             system.lecSystem.buildCanonicalView(currentHeadDirection); 
             testCase.plotGrids();
@@ -769,7 +795,8 @@ classdef HippocampalFormationTest < AbstractTest
             system.step(); % stepMec and stepPlace 
             testCase.plotGrids();
             testCase.assertEqual(system.mecOutputIndices(), ...
-               [17 33 87], 'original mec output'); 
+               [16  58  83], 'original mec output'); 
+%            [17 33 87], 'original mec output'); 
             testCase.assertEqual(system.lecOutputIndices(), ...
                [101 150], 'original lec output');  
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
@@ -803,7 +830,8 @@ classdef HippocampalFormationTest < AbstractTest
 %             pause(5);             
             testCase.plotGrids();
             testCase.assertEqual(system.mecOutputIndices(), ...
-               [17 33 87], 'settle back to original mec output');  
+               [16  58  83], 'settle back to original mec output');  
+%                [17 33 87], 'settle back to original mec output');             
         end
         function plotGrids(testCase)
             if ishandle(testCase.h)
@@ -820,6 +848,18 @@ classdef HippocampalFormationTest < AbstractTest
                 title({'counter ',sprintf('t = %d',testCase.counter)})
                 pause(1);                 
             end
+        end
+        function buildEnvironment(testCase)
+            testCase.environment = Environment();
+            testCase.environment.addWall([0 0],[0 2]); 
+            testCase.environment.addWall([0 2],[2 2]); 
+            testCase.environment.addWall([0 0],[2 0]); 
+            testCase.environment.addWall([2 0],[2 2]);
+            testCase.environment.directionIntervals = 60;
+            testCase.environment.build();
+            testCase.environment.setPosition([1 1]);             
+            testCase.environment.addCue([2 1]);  %  x   ------------- cue (at 0)
+%             system.lecSystem.setEnvironment(testCase.environment);             
         end
         
     end

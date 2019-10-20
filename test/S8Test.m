@@ -7,8 +7,8 @@ classdef S8Test < AbstractTest
             script = S8(false); 
             script.runAll();
             placeList = script.ec.animal.hippocampalFormation.placeListDisplay;
-            testCase.assertEqual(size(placeList), [24 10]); 
-            testCase.assertThat(placeList(20,:), ...
+            testCase.assertEqual(size(placeList), [27 10]); 
+            testCase.assertThat(placeList(23,:), ...
                 IsEqualTo([1 1 1  44  272  352  385  413  488  534], 'Within', RelativeTolerance(.1))); 
         end        
     end

@@ -59,6 +59,7 @@ classdef HippocampalFormation < System
         sparseOrthogonalizingNetwork
         separateMecLec
         hdsPullsFeatureWeightsFromLec
+        orienting
     end
     methods
         function obj = HippocampalFormation()
@@ -100,6 +101,7 @@ classdef HippocampalFormation < System
             obj.sparseOrthogonalizingNetwork = false; 
             obj.separateMecLec = false; 
             obj.hdsPullsFeatureWeightsFromLec = false; 
+            obj.orienting = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -249,7 +251,10 @@ classdef HippocampalFormation < System
         end
         function stepLec(obj)
 %             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
-            obj.lecSystem.buildCanonicalCueActivation(); 
+           if ~ obj.orienting
+             obj.lecSystem.buildCanonicalCueActivationForAnimalDirection(obj.animal.currentDirection); 
+           end
+%             obj.lecSystem.buildCanonicalCueActivation(); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
             if obj.showIndices
                 disp(['LEC output: ',obj.printLecOutputIndices()]);
@@ -261,7 +266,9 @@ classdef HippocampalFormation < System
            if obj.updateFeatureDetectors
                obj.headDirectionSystem.setFeaturesDetected(obj.placeOutput); 
                obj.lecSystem.featuresDetected = obj.placeOutput; 
-               obj.lecSystem.updateFeatureWeights();
+               if ~ obj.orienting
+                    obj.lecSystem.updateFeatureWeights();
+               end
                for jj = 1:obj.nGrids
                   obj.grids(1,jj).featuresDetected = obj.placeOutput; 
                end
