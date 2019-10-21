@@ -255,7 +255,7 @@ classdef MotorCortexTest < AbstractTest
             env.addWall([0 0],[2 0]); 
             env.addWall([2 0],[2 2]);
             env.build();
-            env.addCue([2 1]);  % cue (at pi/4 from position)
+            env.addCue([2 1]);  % cue (at 0 from position)
             
             animal = Animal();
             animal.build(); 
@@ -265,6 +265,7 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(animal.currentDirection, pi/2);            
             testCase.assertEqual(motorCortex.cuePhysicalHeadDirectionOffset(), 45);                        
         end
+
         
 % %         function testDrawRandomExecution(testCase)
 % %             motorCortex = TestingMotorExecutions; 

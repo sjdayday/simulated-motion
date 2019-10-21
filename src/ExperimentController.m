@@ -513,8 +513,13 @@ classdef ExperimentController < System
             end 
             for kk = 1:size(obj.environment.cues,1)
                 cue = obj.environment.cues(kk,:);
+                if kk == 1
+                    sizeMarker = 8;
+                else
+                    sizeMarker = 5;             
+                end
                 plot(cue(1),cue(2), ...
-                    'o','MarkerFaceColor','blue','MarkerSize',5,'MarkerEdgeColor','blue');       
+                    'o','MarkerFaceColor','blue','MarkerSize',sizeMarker,'MarkerEdgeColor','blue');       
             end
              axis off
 %             axis equal

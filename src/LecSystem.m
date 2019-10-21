@@ -111,13 +111,12 @@ classdef LecSystem < System
                 end
             end
         end
-        function buildCanonicalCueActivation(obj)
-            headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
-            obj.buildCanonicalView(headDirection); 
-            headActivation = obj.headDirectionSystem.uActivation; 
-            positions = obj.cueHeadDirection - headDirection; 
-            obj.cueActivation = circshift(headActivation, positions); 
-        end
+%  Canonical head direction is the internal head direction when the animal
+%  is pointing physically at the primary cue.  This allows us to "remember"
+%  what the discrepancy is between physical and internal head direction
+%  across placements in the environment. 
+
+%   for debugging: 
 %         function [radianPhysicalCueOffset, headDirectionRadians, radianHeadDirectionCueOffset, radianHeadDirectionOffset, canonicalHeadDirection] = ...
 %           calculateCanonicalHeadDirectionForAnimalDirection(obj, physicalDirection)
         function canonicalHeadDirection = calculateCanonicalHeadDirection(obj, physicalDirection)
@@ -145,18 +144,6 @@ classdef LecSystem < System
             positions = canonicalHeadDirection - headDirection; 
             obj.cueActivation = circshift(headActivation, positions); 
         end
-%         env.setHeadDirection(headDirection)
-%         offset = env.subtractAnglesConvertToOffset(animal.currentdirection)
-%         no. instead: simulating moving physical direction to primary cue, then offsetting to corresponding
-%         head direction
-        
-%         function buildCanonicalCueOffsetActivation(obj)
-%             headDirection = obj.headDirectionSystem.getMaxActivationIndex(); 
-%             obj.buildCanonicalView(headDirection); 
-%             headActivation = obj.headDirectionSystem.uActivation; 
-%             positions = obj.offset - headDirection; 
-%             obj.cueActivation = circshift(headActivation, positions); 
-%         end
         function maxIndex = getCueMaxActivationIndex(obj)
             maxIndex = find(obj.cueActivation==max(obj.cueActivation)); 
         end
@@ -171,21 +158,12 @@ classdef LecSystem < System
             obj.environment.setHeadDirection(headDirection);
             grossOffset = obj.environment.cueHeadDirectionOffset(1);  
             offset = obj.nHeadDirectionCells - grossOffset + 1;
-%             grossOffset = obj.environment.cueHeadDirectionOffset(1);  
-%             obj.offset = obj.nHeadDirectionCells - grossOffset + 1;
             cueHeadDirection = headDirection - offset; 
-            % save the cueHeadDirection, and then associate it to the place
-            % Id
-%             disp(['cueHeadDirection ',num2str(cueHeadDirection)]); 
             obj.environment.setHeadDirection(cueHeadDirection);
         end
         function updateFeatureWeights(obj)
-%             obj.updateFeaturesDetected(); 
-            % approximation of Skaggs, figure 4, "f()".  
-            % based on sigmoidal function, negative at small activation 
-            % values, linear over most of the activation range, 
-            % topping out about 0.35, which acts
-            % as an implementation of "Wmax"
+%             obj.updateFeaturesDetected();
+%             taken from HeadDirectionSystem
 
 %             activation = zeros(1, obj.nHeadDirectionCells); 
 %             activation(1,find(obj.uActivation == max(obj.uActivation))) = 0.3; 
@@ -214,10 +192,7 @@ classdef LecSystem < System
         end
         function print = printOutputIndices(obj)
            print = mat2str(obj.outputIndices());   
-        end
-        
-        
-        
+        end       
         
         %% Single time step 
          function  step(obj)

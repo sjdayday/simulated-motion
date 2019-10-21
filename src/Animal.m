@@ -221,7 +221,7 @@ classdef Animal < System
             obj.move = 1; 
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
                     obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
-                    calculateVertices(obj);
+                    obj.calculateVertices();
                     
                     obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseNess * relativeSpeed), 0); 
 
