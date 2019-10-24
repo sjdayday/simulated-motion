@@ -153,6 +153,20 @@ classdef EnvironmentTest < AbstractTest
                 IsEqualTo(3.926990816987241, 'Within', RelativeTolerance(.00000000001))); 
             testCase.assertEqual(env.headDirectionOffset(wallDirection), 37);
         end
+        function testBoundaryAt2PiOrGreaterOffsetFromCurrentDirection(testCase) 
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.directionIntervals = 60;
+
+            testCase.assertEqual(env.headDirectionOffset(2*pi), 0, ...
+                '2*pi = 0, so no offset');
+            testCase.assertEqual(env.headDirectionOffset(3*pi), 0, ...
+                '3*pi exceeds possible, so no offset');
+
+        end
         function testCalculatesHeadDirectionCellOffsetToCueFromCurrentDirection(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
 %             import matlab.unittest.constraints.RelativeTolerance

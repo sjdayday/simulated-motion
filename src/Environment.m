@@ -205,7 +205,10 @@ classdef Environment < System
         % head direction at this offset from current
         function headDirection = headDirectionOffset(obj, direction)
             headDirection = fix(direction/(2*pi) * obj.directionIntervals); % drop +1?
-            headDirection = min(headDirection, obj.directionIntervals); % if direction is exactly 2*pi             
+            if headDirection >= obj.directionIntervals
+               headDirection = 0;  
+            end
+%             headDirection = min(headDirection, obj.directionIntervals); % if direction is exactly 2*pi             
         end
         %% Single time step 
         function plot(obj)

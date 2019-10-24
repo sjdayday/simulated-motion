@@ -33,6 +33,7 @@ classdef LecSystem < System
         featuresDetected
         nFeatureDetectors
         readMode
+        twoCuesOnly
 %         offset 
     end
     methods
@@ -59,6 +60,7 @@ classdef LecSystem < System
 %             obj.featureGain = 10;
 %             obj.featureOffset = 0.65; 
 %             obj.offset = 0; 
+            obj.twoCuesOnly = false; 
         end
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()

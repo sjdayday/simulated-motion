@@ -1,6 +1,5 @@
-% Smaller grids, fewer head direction cells, but HDS doesnt yet stabilize in a range, 
-% and doesnt move reliably w physical motion
-% copy S12, with separateMecLec = true; two hashed place outputs 
+% Smaller grids (fewer head direction cells, see S13)
+
 classdef S12 < handle 
 
     properties
@@ -16,6 +15,7 @@ classdef S12 < handle
 %             obj.ec.includeHeadDirectionFeatureInput = false;
             obj.ec.visualize(visual);
             obj.ec.pullVelocityFromAnimal = false;
+%             obj.ec.pullFeaturesFromAnimal = false;  % probably needed; see S13              
             obj.ec.defaultFeatureDetectors = false; 
             obj.ec.updateFeatureDetectors = true; 
             obj.ec.settleToPlace = false;
