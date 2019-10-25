@@ -65,7 +65,11 @@ classdef LecSystem < System
         function build(obj)
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
                 if obj.environment.nCues == 2
-                    obj.nFeatures = 3;     
+                    if obj.twoCuesOnly
+                        obj.nFeatures = 1; 
+                    else
+                        obj.nFeatures = 3;     
+                    end
                 else
                     obj.nFeatures = obj.environment.nCues;  
                 end
@@ -103,11 +107,19 @@ classdef LecSystem < System
             if obj.isEnvironmentPresentWithAtLeastTwoCues()
                 obj.index = 0; 
                 obj.cueHeadDirection = obj.adjustHeadDirectionTowardSalientCue(headDirection); 
-                obj.updateLecOutput(obj.cueHeadDirection); 
+                if obj.twoCuesOnly
+                    % nothing needed
+                else
+                    obj.updateLecOutput(obj.cueHeadDirection); 
+                end
                 obj.updateLecOutput(obj.environment.cueHeadDirectionOffset(2));
                 if obj.environment.nCues == 2 
-                    wallDirection = obj.environment.closestWallDirection(); 
-                    obj.updateLecOutput(obj.environment.headDirectionOffset(wallDirection));
+                    if obj.twoCuesOnly
+                        % nothing needed
+                    else
+                        wallDirection = obj.environment.closestWallDirection(); 
+                        obj.updateLecOutput(obj.environment.headDirectionOffset(wallDirection));                        
+                    end
                 else
                     obj.updateLecOutput(obj.environment.cueHeadDirectionOffset(3));
                 end
