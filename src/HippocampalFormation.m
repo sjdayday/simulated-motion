@@ -60,6 +60,7 @@ classdef HippocampalFormation < System
         separateMecLec
         hdsPullsFeatureWeightsFromLec
         orienting
+        twoCuesOnly
     end
     methods
         function obj = HippocampalFormation()
@@ -102,6 +103,7 @@ classdef HippocampalFormation < System
             obj.separateMecLec = false; 
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.orienting = false; 
+            obj.twoCuesOnly = false;
          end
         function build(obj)
             calculateSizes(obj); 
@@ -203,6 +205,7 @@ classdef HippocampalFormation < System
         end
         function buildLec(obj)
             obj.lecSystem = LecSystem();
+            obj.lecSystem.twoCuesOnly = obj.twoCuesOnly; 
 %             obj.lecSystem.distanceUnits = obj.distanceUnits;
             obj.lecSystem.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.lecSystem.nFeatures = obj.nFeatures; 

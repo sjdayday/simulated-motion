@@ -75,9 +75,9 @@ classdef HippocampalFormationTest < AbstractTest
             system.gridSize = [6,5];
             system.build(); 
             system.stepMec(); 
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 8); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 17); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 14); 
+            testCase.assertEqual(system.grids(1).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(system.grids(2).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(system.grids(3).getMaxActivationIndex(), 14); 
 %             testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 4); 
 %             testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 15); 
 %             testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 24); 
@@ -92,9 +92,9 @@ classdef HippocampalFormationTest < AbstractTest
             for ii = 1:20    
                 system.stepMec(); 
             end
-            testCase.assertEqual(system.grids(1,1).getMaxActivationIndex(), 22); 
-            testCase.assertEqual(system.grids(1,2).getMaxActivationIndex(), 26); 
-            testCase.assertEqual(system.grids(1,3).getMaxActivationIndex(), 29); 
+            testCase.assertEqual(system.grids(1).getMaxActivationIndex(), 22); 
+            testCase.assertEqual(system.grids(2).getMaxActivationIndex(), 26); 
+            testCase.assertEqual(system.grids(3).getMaxActivationIndex(), 29); 
             
             testCase.assertEqual(system.mecOutput, ...
                 [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 ...

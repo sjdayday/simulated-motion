@@ -335,50 +335,132 @@ classdef AnimalTest < AbstractTest
 %         end
 % TODO:  model after copied/commented HF test, above
         function testBothHdsAndGridsRecallPositionDirectionAfterOrienting(testCase)
-%             system = HippocampalFormation();
-%             system.nGridOrientations = 3; 
-%             system.nHeadDirectionCells = 60; 
-%             system.gridDirectionBiasIncrement = pi/4;   
-%             system.gridExternalVelocity = true; 
-%             system.nGridGains = 1; 
-%             system.gridSize = [6,5];
-%             system.pullVelocity = false;
-%             system.pullFeatures = false; 
-%             system.defaultFeatureDetectors = false; 
-%             system.updateFeatureDetectors = true;
-%             system.sparseOrthogonalizingNetwork = true; 
-%             system.separateMecLec = true; 
-%             system.hdsPullsFeatureWeightsFromLec = true; 
-%             system.nFeatures = 3;
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance
+            import matlab.unittest.constraints.AbsoluteTolerance                                    
             
+%             system.nFeatures = 3;
             buildAnimalInEnvironment(testCase);
+            testCase.animal.nHeadDirectionCells = 30;
+            testCase.animal.nCueIntervals = 30;
+            testCase.animal.gridSize=[6,5]; 
+%             testCase.animal.includeHeadDirectionFeatureInput = false;
+            testCase.animal.pullVelocityFromAnimal = false;
+            testCase.animal.pullFeaturesFromAnimal = false;  % had missed this
+            testCase.animal.defaultFeatureDetectors = false; 
+            testCase.animal.updateFeatureDetectors = true; 
+            testCase.animal.settleToPlace = false;
+            testCase.animal.placeMatchThreshold = 1; % was 2  
+            testCase.animal.showHippocampalFormationECIndices = true; 
+            testCase.animal.sparseOrthogonalizingNetwork = true; 
+            testCase.animal.separateMecLec = true; 
+            testCase.animal.twoCuesOnly = true;
+            testCase.animal.hdsPullsFeatureWeightsFromLec = true;
             testCase.animal.keepRunnerForReporting = true;             
-            testCase.animal.build();            
-            testCase.animal.whiskerLength = 0.1;
-            testCase.animal.motorCortex.runDistance = 5;             
-            testCase.animal.place(testCase.environment, 1.69, 1, 0);              
-            testCase.animal.motorCortex.run();
-            testCase.assertEqual(testCase.animal.distanceTraveled, 0.1, 'one step'); 
-            result = testCase.animal.motorCortex.currentPlan.getPlaceReport(6).toCharArray()'; 
-            testCase.assertEqual(result, ...
-                ['Move.Ongoing: Default=1  ' newline,  ...
-                'Move.Run.Distance: Default=4  ' newline,  ...
-                'Move.Run.ObjectSensed: Default=1  ' newline,  ...
-                'Move.Run.Ongoing: Default=1  ' newline,  ...
-                'Move.Run.Running: Default=1  ' newline,  ...
-                'Move.Run.Speed: Default=1  ' newline,  ...
-                'Move.Run.Stepped: Default=1  ' newline], 'object sensed');
-            result2 = testCase.animal.motorCortex.currentPlan.getPlaceReport(8).toCharArray()'; 
-            testCase.assertEqual(result2, ...
-                ['Move.Ongoing: Default=1  ' newline,  ...
-                'Move.Run.CleaningUp: Default=1  ' newline,  ...
-                'Move.Run.Continuing: Default=1  ' newline,  ...
-                'Move.Run.Distance: Default=4  ' newline,  ...
-                'Move.Run.Ongoing: Default=1  ' newline,  ...
-                'Move.Run.Running: Default=1  ' newline,  ...
-                'Move.Run.Speed: Default=1  ' newline,  ...
-                'Move.Run.Stopped: Default=1  ' newline], 'stopped, heading to done');
-%              disp(testCase.animal.motorCortex.currentPlan.getPlaceReport(8));
+            testCase.animal.minimumVelocity = pi/15;
+            testCase.animal.build();
+            testCase.animal.setChildTimekeeper(testCase.animal);             
+            testCase.animal.hippocampalFormation.headDirectionSystem.minimumVelocity = pi/15;
+            testCase.animal.hippocampalFormation.headDirectionSystem.animalVelocityCalibration = 2.7; 
+            testCase.environment.addCue([2 1]);  %  x   ------------- cue (at 0)
+            testCase.environment.addCue([0 0]);
+            testCase.environment.directionIntervals = 30;
+            testCase.animal.place(testCase.environment, 1, 1, pi); 
+            testCase.animal.orientAnimal(pi);
+            for ii = 1:7
+                testCase.animal.step();            
+                disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
+%                 testCase.plotGrids();
+            end
+            testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                17, 'stable; now present features'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.nGrids, 4); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), 25); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 29); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 16); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 28);             
+            
+            testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.featuresDetected, ...
+                testCase.animal.hippocampalFormation.lecSystem.featuresDetected, 'both set by placeSystem'); 
+% %             testCase.assertEqual(system.lecSystem.getCueMaxActivationIndex(), 40);
+% 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.lecSystem.getCueMaxActivationIndex(), 1);
+            testCase.assertEqual(testCase.animal.hippocampalFormation.lecSystem.cueActivation(1,1:6), ...
+                testCase.animal.hippocampalFormation.headDirectionSystem.uActivation(1,17:22), ...
+                'head direction activation copied and shifted to canonical view'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), [88 163]); 
+            testCase.animal.hippocampalFormation.orienting = true; 
+            testCase.animal.hippocampalFormation.headDirectionSystem.initializeActivation(true);
+            testCase.animal.hippocampalFormation.grids(1).initializeActivation();
+            testCase.animal.hippocampalFormation.grids(2).initializeActivation();
+            testCase.animal.hippocampalFormation.grids(3).initializeActivation();
+            testCase.animal.hippocampalFormation.grids(4).initializeActivation();            
+            for ii = 1:4
+                testCase.animal.step();            
+                disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
+                disp(['Grid 1: ', num2str(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex()) ]);                 
+                disp(['Grid 2: ', num2str(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex()) ]);                 
+                disp(['Grid 3: ', num2str(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex()) ]);                 
+                disp(['Grid 4: ', num2str(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex()) ]);                                 
+%                 testCase.plotGrids();
+            end
+            testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                23, 'new stable head direction');
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), 16); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 13);             
+            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), [65 163]); % 88  163 ?              
+%             testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
+            relativeSpeed = 1;
+            clockwiseNess = -1 ;  %clockwise 
+            
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertThat(testCase.animal.currentDirection, ...
+               IsEqualTo(pi*14/15, 'Within', RelativeTolerance(.00000001)));         
+            for ii = 1:14
+                testCase.animal.turn(clockwiseNess, relativeSpeed); 
+                disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
+%                 testCase.plotGrids();
+            end
+
+            testCase.assertThat(testCase.animal.currentDirection, ...
+               IsEqualTo(0, 'Within', AbsoluteTolerance(.00001)));         
+            testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                8, 'turned 15 from 23'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), 16, ...
+                'turn only, so unchanged'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 13);             
+            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), [65 163]); % 88  163 ?              
+% %             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
+% %                 18, 'new head direction...expected 45-30=15'); 
+% 
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), ...
+%                 33, 'new head direction...expected 45-15=30'); 
+%             testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
+%             
+%             system.headDirectionSystem.readMode = 1;
+%             system.lecSystem.readMode = 1;
+% %             figure; 
+% %             hold on;
+%             for ii = 1:14
+%                 system.step();            
+%                 disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
+% %                 plot(system.headDirectionSystem.uActivation); 
+%                 disp(['LEC: ', num2str(system.lecSystem.getCueMaxActivationIndex()) ]); 
+% %                 testCase.plotGrids();
+%             end
+%             system.orienting = false ; 
+%         % features now drive us back to the canonical offset of HDS at which they 
+%         % were perceived: 55
+%             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 54, ....
+%                 'pulled gradually to 54 (cue max is 55)'); 
+% %             testCase.assertEqual(system.headDirectionSystem.getMaxActivationIndex(), 39, ....
+% %                 'pulled immediately'); 
+%         end
+            
         end          
         
         function testStopsRunIfWhiskerTouchingWall(testCase)

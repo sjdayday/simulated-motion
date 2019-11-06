@@ -76,6 +76,7 @@ classdef Animal < System
         sparseOrthogonalizingNetwork
         separateMecLec
         hdsPullsFeatureWeightsFromLec
+        twoCuesOnly
         keepRunnerForReporting
     end
     methods
@@ -131,7 +132,8 @@ classdef Animal < System
             obj.sparseOrthogonalizingNetwork = false; 
             obj.separateMecLec = false;
             obj.hdsPullsFeatureWeightsFromLec = false; 
-            obj.keepRunnerForReporting = false; 
+            obj.keepRunnerForReporting = false;
+            obj.twoCuesOnly = false; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -149,6 +151,7 @@ classdef Animal < System
             obj.hippocampalFormation.visual = obj.visual; 
             obj.hippocampalFormation.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.hippocampalFormation.separateMecLec = obj.separateMecLec;
+            obj.hippocampalFormation.twoCuesOnly = obj.twoCuesOnly; 
             obj.hippocampalFormation.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.hippocampalFormation.h = obj.h; 
             obj.hippocampalFormation.nGridOrientations = obj.nGridOrientations; 
@@ -252,6 +255,7 @@ classdef Animal < System
             obj.controller.step(); 
 
         end
+        % TODO:  should this be called by place? 
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
             updateUnitCirclePosition(obj); 

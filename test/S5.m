@@ -9,6 +9,7 @@ classdef S5 < handle
             close all;
             obj.ec = ExperimentController(); 
             obj.ec.visualize(visual);
+            obj.ec.pullVelocityFromAnimal = false; 
             obj.ec.build();
             if visual
                 obj.ec.setupDisplay(); 

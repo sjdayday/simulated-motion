@@ -52,6 +52,7 @@ classdef ExperimentController < System
 %         baseGain 
         gridSize            
         thirdCue
+        twoCuesOnly
     end
     methods
         function obj = ExperimentController()
@@ -72,6 +73,7 @@ classdef ExperimentController < System
             obj.separateMecLec = false; 
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.thirdCue = false; 
+            obj.twoCuesOnly = false; 
 %             obj.build(); 
         end
         function build(obj)
@@ -145,6 +147,7 @@ classdef ExperimentController < System
             obj.animal.settleToPlace = obj.settleToPlace;
             obj.animal.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.animal.separateMecLec = obj.separateMecLec; 
+            obj.animal.twoCuesOnly = obj.twoCuesOnly; 
             obj.animal.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.animal.h = obj.h;
             obj.animal.build(); 

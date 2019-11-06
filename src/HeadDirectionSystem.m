@@ -72,7 +72,7 @@ classdef HeadDirectionSystem < System
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8 was 0
             obj.minimumVelocity = pi/20; % radians per time step 
-            obj.animalVelocityCalibration = 1.4; % 2.5 didn't help for 20 cells... might not be needed if updateTurnVelocity reconciled w updateVelocity
+            obj.animalVelocityCalibration = 1.0; % overriddent in build 
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightPercent = 0.133; % 8/60
@@ -132,6 +132,9 @@ classdef HeadDirectionSystem < System
 %             disp('minimum velocity:'); 
 %             disp(obj.minimumVelocity); 
             obj.setChildTimekeeper(obj); 
+            if obj.pullVelocity
+                obj.animalVelocityCalibration = 1.4; 
+            end
         end
         function buildAngularWeightOffset(obj)
             obj.angularWeightOffset = ceil(obj.angularWeightPercent * obj.nHeadDirectionCells); % 8 for 60, 2 for 12
@@ -186,7 +189,7 @@ classdef HeadDirectionSystem < System
 %             disp(['HDS feature weights: ',mat2str(find(obj.featureWeights > 0))]);
         end
         function signedAngularVelocity = updateTurnVelocity(obj, velocity)
-            signedAngularVelocity = obj.minimumVelocity * velocity; 
+            signedAngularVelocity = obj.minimumVelocity * velocity * obj.animalVelocityCalibration; 
             obj.updateAngularVelocity(signedAngularVelocity);
         end
         function updateAngularVelocity(obj, velocity)
@@ -196,7 +199,7 @@ classdef HeadDirectionSystem < System
                obj.counterClockwiseVelocity = velocity; 
                obj.clockwiseVelocity = 0; 
            elseif velocity < 0
-               obj.clockwiseVelocity = -velocity; 
+               obj.clockwiseVelocity = -velocity; % ? 
                obj.counterClockwiseVelocity = 0; 
            else
                obj.counterClockwiseVelocity = 0;

@@ -76,6 +76,7 @@ classdef MotorCortexTest < AbstractTest
             env.addWall([2 0],[2 2]);
             env.build();
             animal = Animal();
+            animal.pullVelocityFromAnimal = false; 
             animal.build(); 
             animal.place(env, 1, 1, 0);
             motorCortex = animal.motorCortex; 
@@ -102,6 +103,7 @@ classdef MotorCortexTest < AbstractTest
             env.addWall([2 0],[2 2]);
             env.build();
             animal = Animal();
+            animal.pullVelocityFromAnimal = false; 
             animal.build(); 
             animal.place(env, 1, 1, 0);
             motorCortex = animal.motorCortex; 
