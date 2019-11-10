@@ -362,6 +362,7 @@ classdef HippocampalFormation < System
                 lastHdsActivation = obj.headDirectionSystem.getMaxActivationIndex();
                 disp(['settling HDS ', num2str(obj.headDirectionSystem.getMaxActivationIndex())]); 
                 obj.stepHds();
+                obj.stepHds(); % once more for good measure                
                 newHdsActivation = obj.headDirectionSystem.getMaxActivationIndex();
             end            
         end
@@ -375,10 +376,11 @@ classdef HippocampalFormation < System
         end
         function setReadMode(obj, mode)
             obj.headDirectionSystem.readMode = mode;
+            obj.lecSystem.readMode = mode; 
 % done in GCN settle
-%             for ii = 1:obj.nGrids
-%               obj.grids(ii).readMode = mode;  
-%            end
+            for ii = 1:obj.nGrids
+              obj.grids(ii).readMode = mode;  
+            end
         end
         function result = savePositionForPlace(obj, position, placeId)
            placeKey = mat2str(placeId,2);

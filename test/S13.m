@@ -3,7 +3,8 @@
 % place match threshold from 2 to 1
 % if 60 or 30, or 20 (maybe) HDS moves normally
 % if 16, moves occasionally
-% if 12, HDS doesn't move               
+% if 12, HDS doesn't move   
+% ....TODO two cues only; add test 
 classdef S13 < handle 
 
     properties
