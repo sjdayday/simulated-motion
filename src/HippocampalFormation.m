@@ -272,20 +272,39 @@ classdef HippocampalFormation < System
         end
         function stepPlace(obj)
            placeRecognized = obj.placeRecognized(); 
-           obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
-           if obj.updateFeatureDetectors
-               obj.updateSubsystemFeatureDetectors(); 
-           end
-           if placeRecognized && obj.settleToPlace
-              obj.settle();  
+           if  obj.orienting
+               obj.placeOutput = obj.placeSystem.read([obj.mecOutput, obj.lecOutput]);
+               if obj.updateFeatureDetectors
+                   obj.updateSubsystemFeatureDetectors(); 
+               end               
            else
+               obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
+               if obj.updateFeatureDetectors
+                   obj.updateSubsystemFeatureDetectors(); 
+               end
+               if placeRecognized && obj.settleToPlace
+                 obj.settle();  
+               else
+                 obj.lecSystem.updateFeatureWeights();
+                 obj.updateGridsFeatureWeights();  
+               end 
+               
+           end
                % TODO:  reconcile readMode, combine with LEC featureWeights
-           if ~ obj.orienting
-                obj.lecSystem.updateFeatureWeights();
-                obj.updateGridsFeatureWeights();  
-           end
+%            obj.placeOutput = obj.placeSystem.step(obj.mecOutput, obj.lecOutput);
+%            if obj.updateFeatureDetectors
+%                obj.updateSubsystemFeatureDetectors(); 
+%            end
+%            if placeRecognized && obj.settleToPlace
+%               obj.settle();  
+%            else
+%                % TODO:  reconcile readMode, combine with LEC featureWeights
+%            if ~ obj.orienting
+%                 obj.lecSystem.updateFeatureWeights();
+%                 obj.updateGridsFeatureWeights();  
+%            end
 %               obj.updateGridsFeatureWeights();  
-           end
+%            end
            obj.addPositionAndPlaceIfDifferent(); 
            if obj.showIndices
                 disp(['Place output: ',obj.printPlaceOutputIndices()]);

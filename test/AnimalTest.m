@@ -193,7 +193,7 @@ classdef AnimalTest < AbstractTest
             testCase.animal.defaultFeatureDetectors = false; 
             testCase.animal.updateFeatureDetectors = true; 
             testCase.animal.settleToPlace = false;
-            testCase.animal.placeMatchThreshold = 1; % was 2  
+            testCase.animal.placeMatchThreshold = 0; % was 2  
             testCase.animal.showHippocampalFormationECIndices = true; 
             testCase.animal.sparseOrthogonalizingNetwork = true; 
             testCase.animal.separateMecLec = true; 
@@ -210,11 +210,18 @@ classdef AnimalTest < AbstractTest
             testCase.environment.directionIntervals = 30;
             testCase.animal.place(testCase.environment, 1, 1, pi); 
             testCase.animal.orientAnimal(pi);
+            testCase.animal.hippocampalFormation.orienting = true;             
+%             testCase.animal.hippocampalFormation.settle();   
+% do the equivalent of settling, so we avoid activating a spurious place
+% index (205), until our activation has stabilized
+            
             for ii = 1:7
                 testCase.animal.step();            
                 disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
 %                 testCase.plotGrids();
             end
+            testCase.animal.hippocampalFormation.orienting = false;             
+            testCase.animal.step();            
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 17, 'stable; now present features'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.nGrids, 4); 
@@ -254,8 +261,13 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 17); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 8); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 13);             
+%             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+%                 [65 163], 'one index (LEC) matches previous [88 163]'); 
+%             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+%                 [88 163 205], 'read returns old place (at least), based on LEC input matching previous place]'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
-                [65 163], 'one index (LEC) matches previous [88 163]'); 
+                [88 163], 'read returns old place, based on LEC input matching previous place]'); 
+            
 %             testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
             relativeSpeed = 1;
             clockwiseNess = -1 ;  %clockwise 
@@ -278,7 +290,11 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 17); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 8); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 13);             
-            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), [65 163]); % 88  163 ?              
+%             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), [65 163]); % 88  163 ?              
+%             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+%                 [88 163 205], 'read returns old place (at least), based on LEC input matching previous place]'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+                [88 163], 'read returns old place, based on LEC input matching previous place]'); 
             testCase.animal.hippocampalFormation.settle();             
 %             testCase.animal.hippocampalFormation.setReadMode(1); 
 %             disp('read mode on'); 
@@ -299,6 +315,10 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 29); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 16); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 28);             
+%             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+%                 [88 163 205], 'place no longer reading, should return same as previous'); 
+            testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
+                [88 163], 'place no longer reading, should return same as previous'); 
 
         end          
         
