@@ -254,9 +254,9 @@ classdef HippocampalFormation < System
         end
         function stepLec(obj)
 %             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
-           if ~ obj.orienting
+%            if ~ obj.orienting
              obj.lecSystem.buildCanonicalCueActivationForAnimalDirection(obj.animal.currentDirection); 
-           end
+%            end
 %             obj.lecSystem.buildCanonicalCueActivation(); 
             obj.lecOutput = obj.lecSystem.lecOutput; 
             if obj.showIndices

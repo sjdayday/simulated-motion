@@ -37,6 +37,11 @@ classdef System < handle
         end
         function time = getTime(obj)
            time = obj.getTimekeeper().time;  
+           % deal with initial race conditions if timekeeper hasn't stepped
+           % yet.  not ideal; should really deal with the races...
+           if time == 0
+               time = 1; 
+           end
         end
         function  step(obj)
              stepTime(obj); 

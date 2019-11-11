@@ -215,13 +215,15 @@ classdef AnimalTest < AbstractTest
 % do the equivalent of settling, so we avoid activating a spurious place
 % index (205), until our activation has stabilized
             
-            for ii = 1:7
+            for ii = 1:3
                 testCase.animal.step();            
                 disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
 %                 testCase.plotGrids();
             end
-            testCase.animal.hippocampalFormation.orienting = false;             
-            testCase.animal.step();            
+            testCase.animal.hippocampalFormation.orienting = false;   
+            disp('first orientation'); 
+            testCase.animal.step();    
+            disp('step after first orientation'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 17, 'stable; now present features'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.nGrids, 4); 
@@ -522,7 +524,8 @@ classdef AnimalTest < AbstractTest
         function testControllerIsSteppedAtEachTurn(testCase)
             buildAnimalInEnvironment(testCase);
             testCase.animal.build();            
-            testCase.assertEqual(testCase.animal.controller.getTime(), 0); 
+            testCase.assertEqual(testCase.animal.controller.getTime(), 1, ...
+            'forced to 1 for the first call to avoid some races'); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
             clockwiseNess = -1;
             relativeSpeed = 1;

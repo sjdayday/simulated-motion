@@ -95,6 +95,7 @@ classdef HeadDirectionSystem < System
             obj.pullFeatures = true; 
 %             obj.includeFeatureInput = true; 
             obj.pullFeatureWeightsFromLec = false; 
+            obj.currentActivationRatio = 0; 
 
         end
         function initializeActivation(obj, random)
@@ -279,7 +280,7 @@ classdef HeadDirectionSystem < System
 %             obj.updateActivation(synapticInput); 
 %             obj.uActivation = (1-obj.normalizedWeight)*synapticInput + ... 
 %                   obj.normalizedWeight*(synapticInput/sum(obj.uActivation));
-
+            
             obj.Ahist(obj.getTime()) =  obj.currentActivationRatio ; 
             disp(['HeadDirectionSystem time: ',num2str(obj.getTime()),' activation: ',num2str(obj.getMaxActivationIndex())]); 
         end
