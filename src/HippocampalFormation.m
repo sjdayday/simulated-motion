@@ -286,7 +286,8 @@ classdef HippocampalFormation < System
                  obj.settle();  
                else
                  obj.lecSystem.updateFeatureWeights();
-                 obj.updateGridsFeatureWeights();  
+                 obj.updateGridsFeatureWeights();
+                 % same for HDS?  
                end 
                
            end
@@ -382,6 +383,8 @@ classdef HippocampalFormation < System
                 disp(['settling HDS ', num2str(obj.headDirectionSystem.getMaxActivationIndex())]); 
                 obj.stepHds();
                 obj.stepHds(); % once more for good measure                
+                obj.stepHds();
+                obj.stepHds();
                 newHdsActivation = obj.headDirectionSystem.getMaxActivationIndex();
             end            
         end

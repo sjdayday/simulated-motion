@@ -255,11 +255,12 @@ classdef HeadDirectionSystem < System
         function  step(obj)
             step@System(obj); 
 %             obj.updateVelocity(); 
-            obj.updateFeatureWeights(); % can this be independent?  
+%              % already being done in updateActivationWithFeatureInputs  
             if obj.readMode
                 obj.updateActivationWithFeatureInputs();
             else
-                obj.updateActivationWithMotionInputs(); 
+                obj.updateFeatureWeights();
+                obj.updateActivationWithMotionInputs();
             end
 %             obj.currentActivationRatio = min(obj.uActivation)/max(obj.uActivation);
 %             obj.activationFunction(); 
