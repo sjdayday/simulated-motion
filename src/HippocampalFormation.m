@@ -61,6 +61,7 @@ classdef HippocampalFormation < System
         hdsPullsFeatureWeightsFromLec
         orienting
         twoCuesOnly
+        placeRecognized
     end
     methods
         function obj = HippocampalFormation()
@@ -104,6 +105,7 @@ classdef HippocampalFormation < System
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.orienting = false; 
             obj.twoCuesOnly = false;
+            obj.placeRecognized = false;
          end
         function build(obj)
             calculateSizes(obj); 
@@ -118,6 +120,7 @@ classdef HippocampalFormation < System
         end
         function calculateSizes(obj)
             obj.nGrids = obj.nGridOrientations * obj.nGridGains; 
+%             obj.grids(1,obj.nGrids) = GridChartNetwork();
             grids(1,obj.nGrids) = GridChartNetwork();
             obj.grids = grids; 
             obj.nX = obj.gridSize(1,1);
@@ -271,7 +274,8 @@ classdef HippocampalFormation < System
            end            
         end
         function stepPlace(obj)
-           placeRecognized = obj.placeRecognized(); 
+%            placeRecognized = obj.recallPlace(); 
+           obj.recallPlace();            
            if  obj.orienting
                obj.placeOutput = obj.placeSystem.read([obj.mecOutput, obj.lecOutput]);
                if obj.updateFeatureDetectors
@@ -282,7 +286,7 @@ classdef HippocampalFormation < System
                if obj.updateFeatureDetectors
                    obj.updateSubsystemFeatureDetectors(); 
                end
-               if placeRecognized && obj.settleToPlace
+               if obj.placeRecognized && obj.settleToPlace
                  obj.settle();  
                else
                  obj.lecSystem.updateFeatureWeights();
@@ -313,9 +317,10 @@ classdef HippocampalFormation < System
            end
            
         end
-        function placeRecognized = placeRecognized(obj)
-           placeRecognized = obj.placeSystem.placeRecognized([obj.mecOutput, obj.lecOutput]); 
+        function placeRecognized = recallPlace(obj)
+           placeRecognized = obj.placeSystem.recallPlace([obj.mecOutput, obj.lecOutput]); 
            disp(['Place recognized: ',num2str(placeRecognized)]);                                 
+           obj.placeRecognized = placeRecognized; 
         end
         function updateGridsFeatureWeights(obj)
            for jj = 1:obj.nGrids

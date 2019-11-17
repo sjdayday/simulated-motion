@@ -55,7 +55,7 @@ classdef PlaceSystem < AutoassociativeNetwork
             retrieved = read@AutoassociativeNetwork(obj, ECOutput); 
             obj.placeId = retrieved; 
         end
-        function recognized = placeRecognized(obj, ECOutput) 
+        function recognized = recallPlace(obj, ECOutput) 
             if (obj.read(ECOutput) == zeros(1,obj.nNeurons))
                 recognized = false;
             else

@@ -35,17 +35,17 @@ classdef PlaceSystemTest < AbstractTest
             MecOutputMissing = zeros(1,10); 
             testCase.assertEqual(...
                 placeSystem.read([MecOutputPartial, LecOutputPartial]), Ca3Output); 
-            testCase.assertTrue(placeSystem.placeRecognized([MecOutputPartial, LecOutputPartial])); 
+            testCase.assertTrue(placeSystem.recallPlace([MecOutputPartial, LecOutputPartial])); 
             testCase.assertEqual(...
                 placeSystem.read([MecOutputMissing, LecOutput]), Ca3Output, ...
                 'retrieve places from LEC input only'); 
-            testCase.assertTrue(placeSystem.placeRecognized([MecOutputMissing, LecOutput]));             
+            testCase.assertTrue(placeSystem.recallPlace([MecOutputMissing, LecOutput]));             
             MecOutputOpposite = [ 0 0 0 0 0 1 1 1 1 1]; 
             LecOutputOpposite = [ 0 1 0 1 0 1 0 1 0 1];             
             testCase.assertEqual(...
                 placeSystem.read([MecOutputOpposite, LecOutputOpposite]), zeros(1,20), ...
                 'previously unseen inputs retrieve nothing'); 
-            testCase.assertFalse(placeSystem.placeRecognized([MecOutputOpposite, LecOutputOpposite]));                         
+            testCase.assertFalse(placeSystem.recallPlace([MecOutputOpposite, LecOutputOpposite]));                         
             
         end
         function testPlaceSystemRecognizesPlaces(testCase)
@@ -61,16 +61,16 @@ classdef PlaceSystemTest < AbstractTest
             MecOutputPartial = [ 1 0 0 1 1 0 0 0 0 0];             
             LecOutputPartial = [ 0 0 1 0 1 0 0 0 1 0]; 
             MecOutputMissing = zeros(1,10); 
-            testCase.assertTrue(placeSystem.placeRecognized([MecOutputPartial, LecOutputPartial]));             
+            testCase.assertTrue(placeSystem.recallPlace([MecOutputPartial, LecOutputPartial]));             
             testCase.assertEqual(...
                 placeSystem.placeId, Ca3Output); 
-            testCase.assertTrue(placeSystem.placeRecognized([MecOutputMissing, LecOutput]));             
+            testCase.assertTrue(placeSystem.recallPlace([MecOutputMissing, LecOutput]));             
             testCase.assertEqual(...
                 placeSystem.placeId, Ca3Output, ...
                 'retrieve places from LEC input only'); 
             MecOutputOpposite = [ 0 0 0 0 0 1 1 1 1 1]; 
             LecOutputOpposite = [ 0 1 0 1 0 1 0 1 0 1];             
-            testCase.assertFalse(placeSystem.placeRecognized([MecOutputOpposite, LecOutputOpposite]));                                     
+            testCase.assertFalse(placeSystem.recallPlace([MecOutputOpposite, LecOutputOpposite]));                                     
             testCase.assertEqual(...
                 placeSystem.placeId, zeros(1,20), ...
                 'previously unseen inputs retrieve nothing');           

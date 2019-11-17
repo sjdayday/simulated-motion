@@ -24,6 +24,10 @@ classdef MotorCortex < System
         maxBehaviorSteps
         behaviorHistory
         keepRunnerForReporting
+        turnBehavior
+        runBehavior
+        orientBehavior
+        placeRecognized
     end
     methods
         function obj = MotorCortex(animal)
@@ -47,7 +51,10 @@ classdef MotorCortex < System
             obj.remainingDistance = 0; 
             obj.maxBehaviorSteps = 5; 
             obj.behaviorHistory = [];
-            
+            obj.turnBehavior = 1; 
+            obj.runBehavior = 2;
+            obj.orientBehavior = 3; 
+            obj.placeRecognized = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -62,11 +69,25 @@ classdef MotorCortex < System
                 obj.nextRandomNavigation(); 
             end
         end
+        function orient(obj)
+           obj.behaviorHistory = [obj.behaviorHistory; [obj.orientBehavior 0 0]]; 
+           obj.animal.hippocampalFormation.orienting = true; 
+           obj.animal.stabilizeActivation(); 
+           obj.placeRecognized = obj.animal.hippocampalFormation.placeRecognized;
+           if obj.placeRecognized
+               
+           else
+%                obj.animal.step(); 
+           end
+           obj.animal.hippocampalFormation.orienting = false; 
+           
+           
+        end
         function nextRandomNavigation(obj)
            steps = obj.randomSteps(); 
            if obj.turnAwayFromWhiskersTouching(steps)
                disp('turning away from whiskers touching'); 
-               behavior = 1; 
+               behavior = obj.turnBehavior; 
            else
                behavior = obj.turnOrRun(steps); 
            end
@@ -85,7 +106,7 @@ classdef MotorCortex < System
         end
         function behavior = turnOrRun(obj, steps)
            behavior = randi(2); 
-           if (behavior == 1) 
+           if (behavior == obj.turnBehavior) 
                obj.turnDistance = steps; 
                direction = randi([0,1]);
                if direction 
@@ -93,7 +114,7 @@ classdef MotorCortex < System
                else
                   obj.clockwiseTurn(); 
                end
-           elseif (behavior == 2)
+           elseif (behavior == obj.runBehavior)
               obj.runDistance = steps;   
               obj.currentPlan = obj.run();
               obj.clockwiseNess = 0; 

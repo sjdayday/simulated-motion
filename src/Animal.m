@@ -78,6 +78,8 @@ classdef Animal < System
         hdsPullsFeatureWeightsFromLec
         twoCuesOnly
         keepRunnerForReporting
+        orientOnPlace
+        nStabilizationSteps
     end
     methods
         function obj = Animal()
@@ -133,7 +135,9 @@ classdef Animal < System
             obj.separateMecLec = false;
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.keepRunnerForReporting = false;
-            obj.twoCuesOnly = false; 
+            obj.twoCuesOnly = false;
+            obj.orientOnPlace = false; 
+            obj.nStabilizationSteps = 3; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -202,6 +206,12 @@ classdef Animal < System
         function rebuildHeadDirectionSystem(obj)
             obj.hippocampalFormation.nHeadDirectionCells = obj.nHeadDirectionCells;
             obj.hippocampalFormation.rebuildHeadDirectionSystem(); 
+        end
+        function stabilizeActivation(obj)
+            for ii = 1:obj.nStabilizationSteps
+                obj.step();            
+%                 disp(['HDS: ', num2str(obj.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
+            end
         end
 
         %% Single time step 
@@ -289,6 +299,9 @@ classdef Animal < System
             obj.translateShape();
             obj.calculateVertices(); 
             obj.lastShape.Vertices = obj.updateVerticesFromShape(); 
+            if obj.orientOnPlace
+               obj.motorCortex.orient();    
+            end
         end
         function setAxes(obj, axes)
            obj.subplotAxes = axes;

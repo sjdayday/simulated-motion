@@ -813,7 +813,7 @@ classdef HippocampalFormationTest < AbstractTest
             system.stepMec(); 
             system.stepLec(); 
 %             testCase.plotGrids();
-            testCase.assertTrue(system.placeRecognized()); 
+            testCase.assertTrue(system.recallPlace()); 
             testCase.assertEqual(system.placeSystem.outputIndices(), ...
                [82   243], ... % 95 161 243
                'common indices between current and original place'); % [51 72 95 161 225 243] full place Id 

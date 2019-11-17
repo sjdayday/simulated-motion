@@ -214,12 +214,12 @@ classdef AnimalTest < AbstractTest
 %             testCase.animal.hippocampalFormation.settle();   
 % do the equivalent of settling, so we avoid activating a spurious place
 % index (205), until our activation has stabilized
-            
-            for ii = 1:3
-                testCase.animal.step();            
-                disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
-%                 testCase.plotGrids();
-            end
+            testCase.animal.stabilizeActivation(); 
+%             for ii = 1:3
+%                 testCase.animal.step();            
+%                 disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
+% %                 testCase.plotGrids();
+%             end
             testCase.animal.hippocampalFormation.orienting = false;   
             disp('first orientation'); 
             testCase.animal.step();    
