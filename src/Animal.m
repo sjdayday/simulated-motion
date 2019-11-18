@@ -300,7 +300,7 @@ classdef Animal < System
             obj.calculateVertices(); 
             obj.lastShape.Vertices = obj.updateVerticesFromShape(); 
             if obj.orientOnPlace
-               obj.motorCortex.orient();    
+               obj.motorCortex.orient(true);    
             end
         end
         function setAxes(obj, axes)

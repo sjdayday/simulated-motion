@@ -69,19 +69,28 @@ classdef MotorCortex < System
                 obj.nextRandomNavigation(); 
             end
         end
-        function orient(obj)
+        function orient(obj, stabilize)
+           obj.startOrienting(stabilize); 
+           obj.finishOrienting(); 
+        end
+        function startOrienting(obj, stabilize)
            obj.behaviorHistory = [obj.behaviorHistory; [obj.orientBehavior 0 0]]; 
            obj.animal.hippocampalFormation.orienting = true; 
-           obj.animal.stabilizeActivation(); 
+           if stabilize
+                obj.animal.stabilizeActivation(); 
+           end
+        end
+        function finishOrienting(obj)
            obj.placeRecognized = obj.animal.hippocampalFormation.placeRecognized;
            if obj.placeRecognized
-               
+               obj.turnDistance = obj.cuePhysicalHeadDirectionOffset(); 
+               obj.counterClockwiseTurn(); 
+               obj.behaviorHistory = [obj.behaviorHistory; [obj.turnBehavior obj.turnDistance obj.clockwiseNess]];                
+               obj.animal.hippocampalFormation.settle();             
            else
-%                obj.animal.step(); 
            end
-           obj.animal.hippocampalFormation.orienting = false; 
-           
-           
+           obj.animal.hippocampalFormation.orienting = false;            
+ 
         end
         function nextRandomNavigation(obj)
            steps = obj.randomSteps(); 

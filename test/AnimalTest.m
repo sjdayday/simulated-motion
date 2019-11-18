@@ -242,12 +242,13 @@ classdef AnimalTest < AbstractTest
                 'head direction activation copied and shifted to canonical view'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [88 163]); 
-            testCase.animal.hippocampalFormation.orienting = true; 
+%             testCase.animal.hippocampalFormation.orienting = true; 
             testCase.animal.hippocampalFormation.headDirectionSystem.initializeActivation(true);
             testCase.animal.hippocampalFormation.grids(1).initializeActivation();
             testCase.animal.hippocampalFormation.grids(2).initializeActivation();
             testCase.animal.hippocampalFormation.grids(3).initializeActivation();
             testCase.animal.hippocampalFormation.grids(4).initializeActivation();            
+            testCase.animal.hippocampalFormation.orienting = true;             
             for ii = 1:4
                 testCase.animal.step();            
                 disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
