@@ -69,7 +69,10 @@ classdef MotorCortex < System
                 obj.nextRandomNavigation(); 
             end
         end
+        % orient(true) when placed, else orient(false), cause activation
+        % already stable
         function orient(obj, stabilize)
+           disp('about to orient'); 
            obj.startOrienting(stabilize); 
            obj.finishOrienting(); 
         end
@@ -86,6 +89,12 @@ classdef MotorCortex < System
                obj.turnDistance = obj.cuePhysicalHeadDirectionOffset(); 
                obj.counterClockwiseTurn(); 
                obj.behaviorHistory = [obj.behaviorHistory; [obj.turnBehavior obj.turnDistance obj.clockwiseNess]];                
+               if obj.animal.rightWhiskerTouching || obj.animal.leftWhiskerTouching
+                  disp('whisker touching while orienting, moving away');  
+                  obj.randomNavigation(15); 
+                  disp('random navigation done');  
+                  obj.orient(false); 
+               end
                obj.animal.hippocampalFormation.settle();             
            else
            end
