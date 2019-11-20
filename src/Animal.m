@@ -80,6 +80,7 @@ classdef Animal < System
         keepRunnerForReporting
         orientOnPlace
         nStabilizationSteps
+        simulatedMotion
     end
     methods
         function obj = Animal()
@@ -138,6 +139,7 @@ classdef Animal < System
             obj.twoCuesOnly = false;
             obj.orientOnPlace = false; 
             obj.nStabilizationSteps = 3; 
+            obj.simulatedMotion = false; 
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -233,9 +235,10 @@ classdef Animal < System
             obj.checkPlaced(); 
             obj.move = 1; 
                 if (clockwiseNess == 1) || (clockwiseNess == -1)
-                    obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
-                    obj.calculateVertices();
-                    
+                    if ~ obj.simulatedMotion
+                        obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+                        obj.calculateVertices();
+                    end
                     obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseNess * relativeSpeed), 0); 
 
                     obj.controller.step(); 
@@ -252,14 +255,17 @@ classdef Animal < System
         function runDone(obj)
             obj.hippocampalFormation.updateLinearVelocity(0); 
         end
-%         function behaviorDone(obj)
-%             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, 0); 
-%         end
         function run(obj, relativeSpeed)
             obj.checkPlaced(); 
             obj.move = 0; 
-            obj.distanceTraveled = relativeSpeed * obj.minimumRunVelocity; 
-            obj.calculateVertices(); 
+            distance = relativeSpeed * obj.minimumRunVelocity;
+            obj.linearVelocity = distance / obj.velocityUnitsConversion;                             
+            if obj.simulatedMotion
+                obj.distanceTraveled = 0; 
+            else
+                obj.distanceTraveled = distance; 
+                obj.calculateVertices();
+            end
             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, obj.linearVelocity); 
 
             obj.controller.step(); 
@@ -314,28 +320,15 @@ classdef Animal < System
         end
         function calculatePositionFromDistanceTraveled(obj)
             obj.updateUnitCirclePosition();
-%             unitX = cos(obj.currentDirection);
-%             unitY = sin(obj.currentDirection); 
-%             unitHyp = sqrt(unitX^2 + unitY^2); 
-%             alpha = d / (sqrt(2)*unitHyp);
             obj.deltaX = obj.distanceTraveled * obj.unitCirclePosition(1); 
             obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
             obj.x = obj.x + obj.deltaX;
             obj.y = obj.y + obj.deltaY;
-
-            obj.linearVelocity = obj.distanceTraveled / obj.velocityUnitsConversion; 
             obj.environment.setPosition([obj.x, obj.y]); 
-%             obj.calculateLinearVelocity(); 
         end
-%         function calculateCartesian]Velocity(obj)
-%             obj.cartesianVelocity = [obj.deltaX/obj.velocityUnitsConversion; ...
-%                 obj.deltaY/obj.velocityUnitsConversion];
-%         end
         function rotateShape(obj)
             radians = obj.currentDirection; 
             obj.calculateAxisOfRotation();
-%              x = obj.environment.position(1); 
-%              y = obj.environment.position(2); 
             % degrees needs to be difference between current and last
             degrees = radians * 180 / pi;
             obj.shape = rotate(obj.shape, degrees - obj.lastDegrees, obj.axisOfRotation(1,1:3), obj.axisOfRotation(2,1:3)); 

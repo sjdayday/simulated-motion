@@ -421,21 +421,6 @@ classdef MotorCortexTest < AbstractTest
             
         end
         
-%                     animal.place(env, 1, 1, 0);
-%             testCase.assertFalse(motorCortex.turnAwayFromWhiskersTouching(5));            
-%             animal.place(env, 1, 0.005, 0);
-%             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(5));
-%             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.counterClockwise);
-%             testCase.assertEqual(motorCortex.turnDistance, 5);            
-%             testCase.assertClass(motorCortex.currentPlan, 'Turn');            
-%             animal = Animal();
-%             animal.build(); 
-%             motorCortex = animal.motorCortex;
-%             animal.place(env, 1, 1.995, 0);
-%             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(4));
-%             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.clockwise);
-%             testCase.assertEqual(motorCortex.turnDistance, 4);            
-%             testCase.assertClass(motorCortex.currentPlan, 'Turn');            
         function testMovesAwayWhenWhiskersTouchWhileOrienting(testCase)
              env = Environment();
             env.addWall([0 0],[0 2]); 

@@ -521,6 +521,31 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.y, ...
                IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
         end
+        function testSimulatedMotionTurnLeavesAnimalStillButSendsVelocityToHF(testCase)
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
+            testCase.assertTrue(testCase.animal.hippocampalFormation.angularVelocity == 0);             
+            testCase.animal.simulatedMotion = true; 
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+            clockwiseNess = -1;
+            relativeSpeed = 1;
+            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.assertEqual(testCase.animal.currentDirection, 0);             
+            testCase.assertTrue(testCase.animal.hippocampalFormation.angularVelocity ~= 0);                         
+        end        
+        function testSimulatedMotionRunLeavesAnimalStillButSendsVelocityToHF(testCase)
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
+            testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity == 0);             
+            testCase.animal.simulatedMotion = true; 
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+            relativeSpeed = 1;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0);                         
+            testCase.assertEqual(testCase.animal.x, 1);             
+            testCase.assertEqual(testCase.animal.y, 1);                         
+            testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity > 0);                         
+        end        
         
         function testControllerIsSteppedAtEachTurn(testCase)
             buildAnimalInEnvironment(testCase);
