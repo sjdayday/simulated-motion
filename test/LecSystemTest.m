@@ -253,6 +253,7 @@ classdef LecSystemTest < AbstractTest
 
             %             disp(lec.lecOutput); 
         end
+ 
         function testCanonicalViewInvaryingWithHeadDirection2CuesOnly(testCase)
             lec = LecSystem();
 %             lec.distanceUnits = 8;

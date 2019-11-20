@@ -738,6 +738,30 @@ classdef HippocampalFormationTest < AbstractTest
             testCase.assertEqual(position(2), 0.1, 'first position saved is maintained'); 
 
         end
+       function testSimulatedMotionZerosLecOutput(testCase)
+            system = HippocampalFormation();
+            system.nGridOrientations = 3; 
+            system.nHeadDirectionCells = 60; 
+            system.gridDirectionBiasIncrement = pi/4;   
+            system.gridExternalVelocity = false; 
+            system.nGridGains = 1; 
+            system.gridSize = [6,5];
+            system.pullVelocity = false; 
+            system.defaultFeatureDetectors = false; 
+            system.updateFeatureDetectors = true;
+            system.twoCuesOnly = true; 
+            system.build();
+            testCase.buildEnvironment(); 
+            testCase.environment.addCue([0 0]);            
+            system.lecSystem.setEnvironment(testCase.environment); 
+            system.animal.place(testCase.environment, 1, 1, 0);  
+            system.animal.hippocampalFormation = system; 
+            system.simulatedMotion = true; 
+            system.step(); 
+            testCase.assertEqual(system.lecOutput, zeros(1,60), ...
+                'output suppressed when motion is simulated' );
+            
+        end        
         function testSettlesToOriginalPlaceWhenNear(testCase)
             system = HippocampalFormation();
 %             testCase.hf = system; 

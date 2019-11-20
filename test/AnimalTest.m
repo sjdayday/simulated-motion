@@ -525,7 +525,7 @@ classdef AnimalTest < AbstractTest
             buildAnimalInEnvironment(testCase);
             testCase.animal.build();            
             testCase.assertTrue(testCase.animal.hippocampalFormation.angularVelocity == 0);             
-            testCase.animal.simulatedMotion = true; 
+            testCase.animal.motorCortex.setSimulatedMotion(true); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
             clockwiseNess = -1;
             relativeSpeed = 1;
@@ -537,7 +537,7 @@ classdef AnimalTest < AbstractTest
             buildAnimalInEnvironment(testCase);
             testCase.animal.build();            
             testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity == 0);             
-            testCase.animal.simulatedMotion = true; 
+            testCase.animal.motorCortex.setSimulatedMotion(true); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
             relativeSpeed = 1;
             testCase.animal.run(relativeSpeed); 

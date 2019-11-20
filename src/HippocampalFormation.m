@@ -62,6 +62,7 @@ classdef HippocampalFormation < System
         orienting
         twoCuesOnly
         placeRecognized
+        simulatedMotion
     end
     methods
         function obj = HippocampalFormation()
@@ -106,6 +107,7 @@ classdef HippocampalFormation < System
             obj.orienting = false; 
             obj.twoCuesOnly = false;
             obj.placeRecognized = false;
+            obj.simulatedMotion = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -258,10 +260,13 @@ classdef HippocampalFormation < System
         function stepLec(obj)
 %             obj.lecSystem.buildCanonicalView(obj.currentHeadDirection); 
 %            if ~ obj.orienting
-             obj.lecSystem.buildCanonicalCueActivationForAnimalDirection(obj.animal.currentDirection); 
-%            end
-%             obj.lecSystem.buildCanonicalCueActivation(); 
-            obj.lecOutput = obj.lecSystem.lecOutput; 
+            if obj.simulatedMotion
+                obj.lecOutput = zeros(1,obj.nLecOutput);  
+            else
+                obj.lecSystem.buildCanonicalCueActivationForAnimalDirection(obj.animal.currentDirection); 
+                obj.lecOutput = obj.lecSystem.lecOutput; 
+                
+            end
             if obj.showIndices
                 disp(['LEC output: ',obj.printLecOutputIndices()]);
             end

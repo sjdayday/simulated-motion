@@ -28,6 +28,7 @@ classdef MotorCortex < System
         runBehavior
         orientBehavior
         placeRecognized
+        simulatedMotion
     end
     methods
         function obj = MotorCortex(animal)
@@ -55,6 +56,7 @@ classdef MotorCortex < System
             obj.runBehavior = 2;
             obj.orientBehavior = 3; 
             obj.placeRecognized = false; 
+            obj.simulatedMotion = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -181,6 +183,11 @@ classdef MotorCortex < System
             % head direction, so use animal's direction
             environment.setDirection(currentDirection); 
             offset = environment.cueHeadDirectionOffset(1); % 1 is primary cue
+        end
+        function setSimulatedMotion(obj, simulated)
+            obj.simulatedMotion = simulated; 
+            obj.animal.simulatedMotion = simulated;
+            obj.animal.hippocampalFormation.simulatedMotion = simulated; 
         end
         
         %% Single time step 
