@@ -63,6 +63,8 @@ classdef HippocampalFormation < System
         twoCuesOnly
         placeRecognized
         simulatedMotion
+        hdsMinimumVelocity
+        hdsAnimalVelocityCalibration        
     end
     methods
         function obj = HippocampalFormation()
@@ -108,6 +110,9 @@ classdef HippocampalFormation < System
             obj.twoCuesOnly = false;
             obj.placeRecognized = false;
             obj.simulatedMotion = false; 
+            obj.hdsMinimumVelocity = pi/20; 
+            obj.hdsAnimalVelocityCalibration = 1.0;       
+
          end
         function build(obj)
             calculateSizes(obj); 
@@ -169,6 +174,8 @@ classdef HippocampalFormation < System
             obj.headDirectionSystem.initializeActivation(obj.randomHeadDirection);
             obj.headDirectionSystem.pullVelocity = obj.pullVelocity; 
             obj.headDirectionSystem.pullFeatures = obj.pullFeatures; 
+            obj.headDirectionSystem.minimumVelocity = obj.hdsMinimumVelocity; 
+            obj.headDirectionSystem.animalVelocityCalibration  = obj.hdsAnimalVelocityCalibration;        
             obj.headDirectionSystem.pullFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             if not(obj.defaultFeatureDetectors)
                 obj.headDirectionSystem.nFeatureDetectors = obj.nFeatureDetectors; % obj.nMecOutput + obj.nLecOutput;             

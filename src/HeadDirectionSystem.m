@@ -72,7 +72,7 @@ classdef HeadDirectionSystem < System
             obj.Ahist = zeros(100,1);
             obj.normalizedWeight = 0.0;  % 0.8 was 0
             obj.minimumVelocity = pi/20; % radians per time step 
-            obj.animalVelocityCalibration = 1.0; % overriddent in build 
+            obj.animalVelocityCalibration = 1.0; % overridden in build 
             obj.counterClockwiseVelocity = 0;
             obj.clockwiseVelocity = 0;
             obj.angularWeightPercent = 0.133; % 8/60

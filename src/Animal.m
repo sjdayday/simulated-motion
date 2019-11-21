@@ -81,6 +81,9 @@ classdef Animal < System
         orientOnPlace
         nStabilizationSteps
         simulatedMotion
+        hdsMinimumVelocity
+        hdsAnimalVelocityCalibration       
+
     end
     methods
         function obj = Animal()
@@ -140,6 +143,8 @@ classdef Animal < System
             obj.orientOnPlace = false; 
             obj.nStabilizationSteps = 3; 
             obj.simulatedMotion = false; 
+            obj.hdsMinimumVelocity = pi/20; 
+            obj.hdsAnimalVelocityCalibration = 1.0;                   
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -168,6 +173,8 @@ classdef Animal < System
             obj.hippocampalFormation.motionInputWeights = obj.motionInputWeights; 
             obj.hippocampalFormation.placeMatchThreshold = obj.placeMatchThreshold;
             obj.hippocampalFormation.settleToPlace = obj.settleToPlace;
+            obj.hippocampalFormation.hdsMinimumVelocity = obj.hdsMinimumVelocity; 
+            obj.hippocampalFormation.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration; 
             obj.hippocampalFormation.build();  
             obj.headDirectionSystem = obj.hippocampalFormation.headDirectionSystem; 
             obj.buildInitialVertices(); 

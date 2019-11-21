@@ -420,6 +420,99 @@ classdef MotorCortexTest < AbstractTest
                 'counter clockwise turn for 15');
             
         end
+        function testSimulatedMotionNoPhysicalMotionReturnsToCurrentPlace(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.directionIntervals = 30;            
+            env.build();
+            env.addCue([2 1]);  % cue (at 0 from position)
+            env.addCue([0 0]);            
+            animal = Animal();
+            animal.nHeadDirectionCells = 30;
+            animal.nCueIntervals = 30;
+            animal.gridSize=[6,5]; 
+%             animal.includeHeadDirectionFeatureInput = false;
+            animal.pullVelocityFromAnimal = false;
+            animal.pullFeaturesFromAnimal = false;  % had missed this
+            animal.defaultFeatureDetectors = false; 
+            animal.updateFeatureDetectors = true; 
+            animal.settleToPlace = false;
+            animal.placeMatchThreshold = 0; % was 2  
+            animal.showHippocampalFormationECIndices = true; 
+            animal.sparseOrthogonalizingNetwork = true; 
+            animal.separateMecLec = true; 
+            animal.twoCuesOnly = true;
+            animal.hdsPullsFeatureWeightsFromLec = true;
+            animal.keepRunnerForReporting = true;             
+            animal.minimumVelocity = pi/15;
+            testCase.assertFalse(animal.orientOnPlace);            
+            animal.orientOnPlace = true; 
+            animal.hdsMinimumVelocity = pi/15;
+            animal.hdsAnimalVelocityCalibration = 2.7; 
+            animal.build();
+            animal.setChildTimekeeper(animal);             
+            %TODO:  make these behave like normal parameters 
+%             animal.hippocampalFormation.headDirectionSystem.minimumVelocity = pi/15;
+%             animal.hippocampalFormation.headDirectionSystem.animalVelocityCalibration = 2.7; 
+%             animal.orientAnimal(pi);
+%             animal.hippocampalFormation.orienting = true;             
+            
+            motorCortex = animal.motorCortex;            
+            animal.place(env, 1, 1, pi); 
+            testCase.assertEqual(motorCortex.behaviorHistory(1,:), [3 0 0], ...
+                'orienting');                        
+            testCase.assertEqual(animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                17, 'stable; now present features'); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(1).getMaxActivationIndex(), ...
+                25); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(2).getMaxActivationIndex(), ... 
+                29); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(3).getMaxActivationIndex(), ... 
+                16); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(4).getMaxActivationIndex(), ... 
+                28);             
+            testCase.assertFalse(motorCortex.placeRecognized); 
+            testCase.assertEqual(animal.hippocampalFormation.placeOutputIndices(), ...
+                find([2 2] == 1), 'place not found (dunno how else to create 1 0 size matrix)'); 
+            animal.step();
+            testCase.assertEqual(animal.hippocampalFormation.placeOutputIndices(), ...
+                [88 163]);
+            animal.hippocampalFormation.headDirectionSystem.initializeActivation(true);
+            animal.hippocampalFormation.grids(1).initializeActivation();
+            animal.hippocampalFormation.grids(2).initializeActivation();
+            animal.hippocampalFormation.grids(3).initializeActivation();
+            animal.hippocampalFormation.grids(4).initializeActivation();            
+%             motorCortex.orient(); 
+            motorCortex.startOrienting(true);
+
+            testCase.assertEqual(animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+                23, 'new stable head direction');
+            testCase.assertEqual(animal.hippocampalFormation.grids(1).getMaxActivationIndex(), 16); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 17); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 8); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 13);             
+            testCase.assertEqual(animal.hippocampalFormation.placeOutputIndices(), ...
+                [88 163], 'read returns old place, based on LEC input matching previous place]'); 
+            testCase.assertEqual(motorCortex.cuePhysicalHeadDirectionOffset(), 15);                        
+            motorCortex.finishOrienting();
+            
+            testCase.assertEqual(animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
+               2, 'when features were noted, physically at 15 (pi), hds at 17'); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(1).getMaxActivationIndex(), 25); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(2).getMaxActivationIndex(), 29); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(3).getMaxActivationIndex(), 16); 
+            testCase.assertEqual(animal.hippocampalFormation.grids(4).getMaxActivationIndex(), 28);             
+            testCase.assertEqual(animal.hippocampalFormation.placeOutputIndices(), ...
+                [88 163], 'place no longer reading, should return same as previous'); 
+            testCase.assertEqual(motorCortex.behaviorHistory(2,:), [3 0 0], ...
+                'orienting again');                                    
+            testCase.assertEqual(motorCortex.behaviorHistory(3,:), [1 15 1], ...
+                'counter clockwise turn for 15');
+            
+        end
         
         function testMovesAwayWhenWhiskersTouchWhileOrienting(testCase)
              env = Environment();

@@ -53,6 +53,9 @@ classdef ExperimentController < System
         gridSize            
         thirdCue
         twoCuesOnly
+        hdsMinimumVelocity
+        hdsAnimalVelocityCalibration
+        
     end
     methods
         function obj = ExperimentController()
@@ -74,6 +77,8 @@ classdef ExperimentController < System
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.thirdCue = false; 
             obj.twoCuesOnly = false; 
+            obj.hdsMinimumVelocity = pi/20; 
+            obj.hdsAnimalVelocityCalibration = 1.0;                               
 %             obj.build(); 
         end
         function build(obj)
@@ -149,6 +154,9 @@ classdef ExperimentController < System
             obj.animal.separateMecLec = obj.separateMecLec; 
             obj.animal.twoCuesOnly = obj.twoCuesOnly; 
             obj.animal.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
+            obj.animal.hdsMinimumVelocity = obj.hdsMinimumVelocity; 
+            obj.animal.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration;                   
+            
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 
