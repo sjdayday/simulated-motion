@@ -29,6 +29,7 @@ classdef MotorCortex < System
         orientBehavior
         placeRecognized
         simulatedMotion
+        physicalPlace
     end
     methods
         function obj = MotorCortex(animal)
@@ -57,6 +58,7 @@ classdef MotorCortex < System
             obj.orientBehavior = 3; 
             obj.placeRecognized = false; 
             obj.simulatedMotion = false; 
+            obj.physicalPlace = []; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -188,6 +190,9 @@ classdef MotorCortex < System
             obj.simulatedMotion = simulated; 
             obj.animal.simulatedMotion = simulated;
             obj.animal.hippocampalFormation.simulatedMotion = simulated; 
+            if simulated
+               obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
+            end
         end
         
         %% Single time step 

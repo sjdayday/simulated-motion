@@ -52,8 +52,14 @@ classdef OrthogonalizingNetwork < handle
            nBuckets = length(input); 
            if obj.separateMecLec
               first = obj.buildOneDigit(input(1:obj.nMEC), nBuckets);
-              second = obj.buildOneDigit(input(obj.nMEC+1:end), nBuckets);
-              sparseInput = [first second]; 
+              lecInput = input(obj.nMEC+1:end);
+              if any(lecInput)
+                 second = obj.buildOneDigit(lecInput, nBuckets);
+                 sparseInput = [first second]; 
+              else 
+                 sparseInput = first; 
+              end
+%               sparseInput = [first second]; 
            else
               sparseInput = obj.buildOneDigit(input, nBuckets); 
            end

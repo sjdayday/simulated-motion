@@ -66,6 +66,18 @@ classdef OrthogonalizingNetworkTest < AbstractTest
             sparseVector = network.buildSparseVector([3 3]);
             testCase.assertEqual(sparseVector, [0 0 0 1 0 0 0 0 0 0]);             
         end
+        function testIfLecIsZerosOnlyBuildOneDigitPlace(testCase)
+            network = createOrthogonalizingNetwork(10,100); 
+            network.nMEC = 5;        
+            network.separateMecLec = true; 
+            sparseInput = network.buildSparseInput([0 0 0 1 0 0 0 0 0 1]);            
+%             disp(['size: ',mat2str(size(sparseInput)),mat2str(sparseInput)]); 
+            testCase.assertEqual(sparseInput, [9 7], ...
+                'both parts of input non-zero, so two digits');             
+            sparseInput = network.buildSparseInput([0 0 0 1 0 0 0 0 0 0]);            
+            testCase.assertEqual(sparseInput, [9], ...
+                'LEC part of input is zero, so only one digit');             
+        end
         function testSimilarInputsForMecOrLecActivateTwoSparseRandomOutputs(testCase)
             network = createOrthogonalizingNetwork(10,100); 
             network.sparse = true; 
