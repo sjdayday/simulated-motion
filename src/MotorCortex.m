@@ -192,9 +192,21 @@ classdef MotorCortex < System
             obj.animal.hippocampalFormation.simulatedMotion = simulated; 
             if simulated
                obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
+               obj.turnDistance = 0; 
             end
         end
-        
+        function settlePhysical(obj)
+            obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
+            obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
+            obj.animal.hippocampalFormation.settleGrids(); 
+            obj.reverseSimulatedTurn(); 
+        end
+        function reverseSimulatedTurn(obj)
+            if obj.turnDistance > 0
+               obj.clockwiseNess = obj.clockwiseNess * -1; 
+               obj.turn(); 
+            end            
+        end
         %% Single time step 
         function  step(obj)
             step@System(obj); 
