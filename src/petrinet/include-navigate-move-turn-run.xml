@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<include name="Navigate" netLocation="Navigation.xml">
+<include name="Navigate" netLocation="Navigate.xml">
   <include name="Move" netLocation="Move.xml">
     <include name="Turn" netLocation="Turn.xml">
 	</include>

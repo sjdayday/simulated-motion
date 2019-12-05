@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pnml>
-    <net id="nav-simple">
+    <net id="navigate">
         <token id="Default" red="0" green="0" blue="0"/>
         <labels border="true" x="299" y="480" width="100" height="50">
-            <text>Move parameters populated by Plan or RandomPlan</text>
+            <text>Move parameters</text>
         </labels>
         <place id="Done">
             <graphics>
                 <position x="659.0" y="279.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Done</value>
                 <graphics>
                     <offset x="87.0" y="31.0"/>
                 </graphics>
@@ -24,13 +24,26 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Enabled">
             <graphics>
                 <position x="94.0" y="257.0"/>
             </graphics>
             <name>
-                <value>P1</value>
+                <value>Enabled</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -44,13 +57,26 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Energy">
             <graphics>
                 <position x="456.0" y="75.0"/>
             </graphics>
             <name>
-                <value>P4</value>
+                <value>Energy</value>
                 <graphics>
                     <offset x="0.0" y="38.0"/>
                 </graphics>
@@ -62,15 +88,17 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,0</value>
+                <value>Default,10</value>
             </initialMarking>
         </place>
+
         <place id="Move.Clockwise">
+           <!-- documentation only -->
             <graphics>
                 <position x="184.0" y="552.0"/>
             </graphics>
             <name>
-                <value>P3</value>
+                <value>Move.Clockwise</value>
                 <graphics>
                     <offset x="49.0" y="49.0"/>
                 </graphics>
@@ -86,11 +114,12 @@
             </initialMarking>
         </place>
         <place id="Move.CounterClockwise">
+           <!-- documentation only -->
             <graphics>
                 <position x="294.0" y="554.0"/>
             </graphics>
             <name>
-                <value>P4</value>
+                <value>Move.CounterClockwise</value>
                 <graphics>
                     <offset x="81.0" y="47.0"/>
                 </graphics>
@@ -106,11 +135,12 @@
             </initialMarking>
         </place>
         <place id="Move.Distance">
+           <!-- documentation only -->
             <graphics>
                 <position x="223.0" y="414.0"/>
             </graphics>
             <name>
-                <value>P1</value>
+                <value>Move.Distance</value>
                 <graphics>
                     <offset x="48.0" y="47.0"/>
                 </graphics>
@@ -130,7 +160,7 @@
                 <position x="570.0" y="389.0"/>
             </graphics>
             <name>
-                <value>P8</value>
+                <value>Move.Done</value>
                 <graphics>
                     <offset x="40.0" y="50.0"/>
                 </graphics>
@@ -144,13 +174,27 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Enabled">
             <graphics>
                 <position x="367.0" y="390.0"/>
             </graphics>
             <name>
-                <value>P7</value>
+                <value>Move.Enabled</value>
                 <graphics>
                     <offset x="48.0" y="52.0"/>
                 </graphics>
@@ -164,13 +208,27 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Run">
             <graphics>
                 <position x="149.0" y="432.0"/>
             </graphics>
             <name>
-                <value>P5</value>
+                <value>Move.Run</value>
                 <graphics>
                     <offset x="38.0" y="47.0"/>
                 </graphics>
@@ -184,13 +242,28 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Speed">
+           <!-- documentation only -->
             <graphics>
                 <position x="220.0" y="488.0"/>
             </graphics>
             <name>
-                <value>P2</value>
+                <value>Move.Speed</value>
                 <graphics>
                     <offset x="46.0" y="49.0"/>
                 </graphics>
@@ -210,7 +283,7 @@
                 <position x="147.0" y="497.0"/>
             </graphics>
             <name>
-                <value>P6</value>
+                <value>Move.Turn</value>
                 <graphics>
                     <offset x="43.0" y="48.0"/>
                 </graphics>
@@ -224,6 +297,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Ongoing">
             <graphics>
@@ -250,7 +337,7 @@
                 <position x="660.0" y="135.0"/>
             </graphics>
             <name>
-                <value>P7</value>
+                <value>QuietAwake</value>
                 <graphics>
                     <offset x="50.0" y="45.0"/>
                 </graphics>
@@ -284,13 +371,26 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Resources">
             <graphics>
                 <position x="367.0" y="132.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Resources</value>
                 <graphics>
                     <offset x="-5.0" y="16.0"/>
                 </graphics>
@@ -310,7 +410,7 @@
                 <position x="487.0" y="135.0"/>
             </graphics>
             <name>
-                <value>P5</value>
+                <value>RewardFound</value>
                 <graphics>
                     <offset x="-2.0" y="22.0"/>
                 </graphics>
@@ -324,13 +424,26 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Ripples">
             <graphics>
                 <position x="661.0" y="190.0"/>
             </graphics>
             <name>
-                <value>P6</value>
+                <value>Ripple</value>
                 <graphics>
                     <offset x="30.0" y="47.0"/>
                 </graphics>
@@ -350,7 +463,7 @@
                 <position x="742.0" y="27.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Simulated</value>
                 <graphics>
                     <offset x="92.0" y="21.0"/>
                 </graphics>
@@ -364,13 +477,26 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Tired">
             <graphics>
                 <position x="272.0" y="189.0"/>
             </graphics>
             <name>
-                <value>P3</value>
+                <value>Tired</value>
                 <graphics>
                     <offset x="30.0" y="-4.0"/>
                 </graphics>
@@ -390,7 +516,7 @@
                 <position x="752.0" y="135.0"/>
             </graphics>
             <name>
-                <value>T3</value>
+                <value>SimulateQuiet</value>
                 <graphics>
                     <offset x="54.0" y="34.0"/>
                 </graphics>
@@ -442,7 +568,7 @@
                 <position x="578.0" y="135.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>Consume</value>
                 <graphics>
                     <offset x="31.0" y="-3.0"/>
                 </graphics>
@@ -494,7 +620,7 @@
                 <position x="578.0" y="79.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>ExitSimulation</value>
                 <graphics>
                     <offset x="38.0" y="-3.0"/>
                 </graphics>
@@ -520,7 +646,7 @@
                 <position x="178.0" y="257.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>Prepare</value>
                 <graphics>
                     <offset x="33.0" y="-2.0"/>
                 </graphics>
@@ -546,7 +672,7 @@
                 <position x="804.0" y="279.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>ExitNavigation</value>
                 <graphics>
                     <offset x="91.0" y="29.0"/>
                 </graphics>
@@ -572,7 +698,7 @@
                 <position x="706.0" y="82.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>ExitQuietAwake</value>
                 <graphics>
                     <offset x="-7.0" y="13.0"/>
                 </graphics>
@@ -598,7 +724,7 @@
                 <position x="579.0" y="257.0"/>
             </graphics>
             <name>
-                <value>T3</value>
+                <value>Finish</value>
                 <graphics>
                     <offset x="85.0" y="11.0"/>
                 </graphics>
@@ -624,7 +750,7 @@
                 <position x="404.0" y="14.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>UseEnergy</value>
                 <graphics>
                     <offset x="-15.0" y="21.0"/>
                 </graphics>
@@ -650,7 +776,7 @@
                 <position x="377.0" y="27.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>NotUseEnergy</value>
                 <graphics>
                     <offset x="-16.0" y="20.0"/>
                 </graphics>
@@ -671,7 +797,7 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="NotUseEnergy TO P0" source="NotUseEnergy" target="Resources">
+        <arc id="NotUseEnergy TO Resources" source="NotUseEnergy" target="Resources">
             <arcpath id="" x="382.0" y="47.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="132.0" curvePoint="false"/>
             <type value="normal"/>
@@ -679,7 +805,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T3 TO Move.Simulated" source="SimulateQuiet" target="Simulated">
+        <arc id="SimulateQuiet TO Simulated" source="SimulateQuiet" target="Simulated">
             <arcpath id="" x="757.0" y="145.0" curvePoint="false"/>
             <arcpath id="" x="757.0" y="57.0" curvePoint="false"/>
             <type value="normal"/>
@@ -687,7 +813,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="UseEnergy TO P0" source="UseEnergy" target="Resources">
+        <arc id="UseEnergy TO Resources" source="UseEnergy" target="Resources">
             <arcpath id="" x="409.0" y="34.0" curvePoint="false"/>
             <arcpath id="" x="385.0" y="132.0" curvePoint="false"/>
             <type value="normal"/>
@@ -703,7 +829,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO P3" source="Prepare" target="Tired">
+        <arc id="Prepare TO Tired" source="Prepare" target="Tired">
             <arcpath id="" x="188.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="274.0" y="212.0" curvePoint="false"/>
             <type value="normal"/>
@@ -736,7 +862,7 @@
                 <value>Default,5</value>
             </inscription>
         </arc>
-        <arc id="NotUseEnergy TO Move.Simulated" source="NotUseEnergy" target="Simulated">
+        <arc id="NotUseEnergy TO Simulated" source="NotUseEnergy" target="Simulated">
             <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
             <arcpath id="" x="742.0" y="42.0" curvePoint="false"/>
             <type value="normal"/>
@@ -744,7 +870,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T3 TO QuietAwake" source="SimulateQuiet" target="QuietAwake">
+        <arc id="SimulateQuiet TO QuietAwake" source="SimulateQuiet" target="QuietAwake">
             <arcpath id="" x="742.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="690.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -752,7 +878,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T1 TO P4" source="Consume" target="Energy">
+        <arc id="Consume TO Energy" source="Consume" target="Energy">
             <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="530.0" y="104.0" curvePoint="false"/>
             <arcpath id="" x="486.0" y="93.0" curvePoint="false"/>
@@ -761,7 +887,7 @@
                 <value>Default,10</value>
             </inscription>
         </arc>
-        <arc id="FinishKnown TO P0" source="Finish" target="Done">
+        <arc id="FinishKnown TO Done" source="Finish" target="Done">
             <arcpath id="" x="589.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="659.0" y="290.0" curvePoint="false"/>
             <type value="normal"/>
@@ -769,7 +895,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO Ready" source="Prepare" target="Ready">
+        <arc id="Prepare TO Ready" source="Prepare" target="Ready">
             <arcpath id="" x="188.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="274.0" y="272.0" curvePoint="false"/>
             <type value="normal"/>
@@ -785,7 +911,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T3 TO P1" source="Finish" target="Enabled">
+        <arc id="Finish TO Enabled" source="Finish" target="Enabled">
             <arcpath id="" x="589.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="852.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="852.0" y="17.0" curvePoint="false"/>
@@ -796,7 +922,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T1 TO P7" source="Consume" target="QuietAwake">
+        <arc id="Consume TO QuietAwake" source="Consume" target="QuietAwake">
             <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="660.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -804,7 +930,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T1 TO P6" source="Consume" target="Ripples">
+        <arc id="Consume TO Ripples" source="Consume" target="Ripples">
             <arcpath id="" x="588.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="663.0" y="197.0" curvePoint="false"/>
             <type value="normal"/>
@@ -812,7 +938,7 @@
                 <value>Default,5</value>
             </inscription>
         </arc>
-        <arc id="Start TO P7" source="Start" target="Move.Enabled">
+        <arc id="Start TO Move.Enabled" source="Start" target="Move.Enabled">
             <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="390.0" curvePoint="false"/>
             <type value="normal"/>
@@ -828,7 +954,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T1" source="RewardFound" target="Consume">
+        <arc id="RewardFound TO Consume" source="RewardFound" target="Consume">
             <arcpath id="" x="517.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="578.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -836,7 +962,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Move.Simulated TO NotUseEnergy" source="Simulated" target="NotUseEnergy">
+        <arc id="Simulated TO NotUseEnergy" source="Simulated" target="NotUseEnergy">
             <arcpath id="" x="742.0" y="42.0" curvePoint="false"/>
             <arcpath id="" x="397.0" y="42.0" curvePoint="false"/>
             <type value="normal"/>
@@ -868,7 +994,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T3" source="RewardFound" target="Finish">
+        <arc id="RewardFound TO Finish" source="RewardFound" target="Finish">
             <arcpath id="" x="510.0" y="162.0" curvePoint="false"/>
             <arcpath id="" x="584.0" y="257.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -884,7 +1010,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Navigated TO T0" source="Done" target="ExitNavigation">
+        <arc id="Done TO ExitNavigation" source="Done" target="ExitNavigation">
             <arcpath id="" x="689.0" y="294.0" curvePoint="false"/>
             <arcpath id="" x="804.0" y="294.0" curvePoint="false"/>
             <type value="normal"/>
@@ -900,7 +1026,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="FoundFood TO Rest" source="RewardFound" target="Rest">
+        <arc id="RewardFound TO Rest" source="RewardFound" target="Rest">
             <arcpath id="" x="514.0" y="158.0" curvePoint="false"/>
             <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -908,7 +1034,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P0 TO SimulateQuiet" source="Done" target="SimulateQuiet">
+        <arc id="Done TO SimulateQuiet" source="Done" target="SimulateQuiet">
             <arcpath id="" x="681.0" y="281.0" curvePoint="false"/>
             <arcpath id="" x="757.0" y="155.0" curvePoint="false"/>
             <type value="normal"/>
@@ -916,7 +1042,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="QuietAwake TO T3" source="QuietAwake" target="SimulateQuiet">
+        <arc id="QuietAwake TO SimulateQuiet" source="QuietAwake" target="SimulateQuiet">
             <arcpath id="" x="690.0" y="150.0" curvePoint="false"/>
             <arcpath id="" x="742.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -932,7 +1058,7 @@
                 <value>Default,#(Simulated)</value>
             </inscription>
         </arc>
-        <arc id="Move.Simulated TO UseEnergy" source="Simulated" target="UseEnergy">
+        <arc id="Simulated TO UseEnergy" source="Simulated" target="UseEnergy">
             <arcpath id="" x="742.0" y="41.0" curvePoint="false"/>
             <arcpath id="" x="424.0" y="29.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -940,7 +1066,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="QuietAwake TO T1" source="QuietAwake" target="ExitQuietAwake">
+        <arc id="QuietAwake TO ExitQuietAwake" source="QuietAwake" target="ExitQuietAwake">
             <arcpath id="" x="683.0" y="138.0" curvePoint="false"/>
             <arcpath id="" x="711.0" y="112.0" curvePoint="false"/>
             <type value="normal"/>
@@ -948,7 +1074,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Ripples TO T1" source="Ripples" target="ExitQuietAwake">
+        <arc id="Ripples TO ExitQuietAwake" source="Ripples" target="ExitQuietAwake">
             <arcpath id="" x="681.0" y="191.0" curvePoint="false"/>
             <arcpath id="" x="711.0" y="112.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -956,7 +1082,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="Move.Simulated TO ExitSimulation" source="Simulated" target="ExitSimulation">
+        <arc id="Simulated TO ExitSimulation" source="Simulated" target="ExitSimulation">
             <arcpath id="" x="743.0" y="46.0" curvePoint="false"/>
             <arcpath id="" x="588.0" y="94.0" curvePoint="false"/>
             <type value="normal"/>
@@ -964,7 +1090,7 @@
                 <value>Default,#(Simulated)</value>
             </inscription>
         </arc>
-        <arc id="Ripples TO T3" source="Ripples" target="SimulateQuiet">
+        <arc id="Ripples TO SimulateQuiet" source="Ripples" target="SimulateQuiet">
             <arcpath id="" x="688.0" y="197.0" curvePoint="false"/>
             <arcpath id="" x="742.0" y="150.0" curvePoint="false"/>
             <type value="normal"/>
@@ -988,7 +1114,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Ongoing TO T3" source="Ongoing" target="Finish">
+        <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
             <arcpath id="" x="504.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="579.0" y="272.0" curvePoint="false"/>
             <type value="normal"/>
@@ -996,7 +1122,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P1 TO T0" source="Enabled" target="Prepare">
+        <arc id="Enabled TO Prepare" source="Enabled" target="Prepare">
             <arcpath id="" x="124.0" y="272.0" curvePoint="false"/>
             <arcpath id="" x="178.0" y="272.0" curvePoint="false"/>
             <type value="normal"/>
@@ -1012,7 +1138,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Simulated TO T0" source="Simulated" target="ExitNavigation">
+        <arc id="Simulated TO ExitNavigation" source="Simulated" target="ExitNavigation">
             <arcpath id="" x="760.0" y="57.0" curvePoint="false"/>
             <arcpath id="" x="809.0" y="279.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -1020,7 +1146,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P0 TO Execute" source="Resources" target="Start">
+        <arc id="Resources TO Start" source="Resources" target="Start">
             <arcpath id="" x="382.0" y="162.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="257.0" curvePoint="false"/>
             <type value="normal"/>
@@ -1028,7 +1154,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P3 TO T2" source="Tired" target="Rest">
+        <arc id="Tired TO Rest" source="Tired" target="Rest">
             <arcpath id="" x="302.0" y="204.0" curvePoint="false"/>
             <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="normal"/>
@@ -1036,7 +1162,7 @@
                 <value>Default,10</value>
             </inscription>
         </arc>
-        <arc id="Move.Done TO FinishKnown" source="Move.Done" target="Finish">
+        <arc id="Move.Done TO Finish" source="Move.Done" target="Finish">
             <arcpath id="" x="585.0" y="389.0" curvePoint="false"/>
             <arcpath id="" x="584.0" y="287.0" curvePoint="false"/>
             <type value="normal"/>

@@ -15,7 +15,7 @@ classdef BehaviorTest < AbstractTest
             animal.build(); 
 %             animal.headDirectionSystem = HeadDirectionSystem(60); 
             behavior = Behavior('', animal);
-            testCase.assertEqual(behavior.headDirectionSystem, animal.headDirectionSystem);
+            testCase.assertEqual(behavior.motorCortex, animal.motorCortex);
         end
     end
 end

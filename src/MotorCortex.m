@@ -15,6 +15,7 @@ classdef MotorCortex < System
         runSpeed
         currentPlan
         movePrefix
+        navigatePrefix
         turnSpeed
         clockwiseNess
         clockwise  % read-only 
@@ -30,6 +31,9 @@ classdef MotorCortex < System
         placeRecognized
         simulatedMotion
         physicalPlace
+        navigation
+        firingLimit
+        stopOnReadyForTesting
     end
     methods
         function obj = MotorCortex(animal)
@@ -45,6 +49,7 @@ classdef MotorCortex < System
             obj.runSpeed = 1; 
             obj.animal = animal; 
             obj.movePrefix = 'Move.'; % Turn.
+            obj.navigatePrefix = 'Navigate.'; 
             obj.clockwise = -1;
             obj.counterClockwise = 1; 
             obj.turnSpeed = 1;
@@ -59,6 +64,8 @@ classdef MotorCortex < System
             obj.placeRecognized = false; 
             obj.simulatedMotion = false; 
             obj.physicalPlace = []; 
+            obj.firingLimit = 10000000;
+            obj.stopOnReadyForTesting = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -66,7 +73,7 @@ classdef MotorCortex < System
             obj.reward = zeros(1,obj.rewardUnits);  
             obj.nOutput = length(obj.featureOutput) + obj.rewardUnits; 
         end
-        function randomNavigation(obj, steps)
+         function randomNavigation(obj, steps)
             obj.behaviorHistory = [];
             obj.remainingDistance = steps; 
             while (obj.remainingDistance > 0)
@@ -141,6 +148,27 @@ classdef MotorCortex < System
               obj.currentPlan = obj.run();
               obj.clockwiseNess = 0; 
            end
+        end
+        function prepareNavigate(obj)
+            obj.movePrefix = 'Navigate.Move.'; % Turn.
+            obj.navigation = Navigate(obj.navigatePrefix, obj.animal);
+            obj.navigation.firingLimit = obj.firingLimit; 
+            obj.navigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            obj.navigation.build(); 
+%             obj.currentPlan = aNavigation;             
+        end
+        function navigate(obj, steps)
+            if (obj.stopOnReadyForTesting) 
+                obj.navigation.stopOnReadyForTesting = true; 
+            end
+          % if end of steps...
+%               obj.navigation.finish = true; 
+%         end
+%             aNavigation = Navigate(obj.navigatePrefix, obj.animal); 
+%             aNavigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
+%             obj.currentPlan = aNavigation;             
+            obj.navigation.execute(); 
+            obj.markedPlaceReport = obj.navigation.placeReport;             
         end
         function steps = randomSteps(obj)
            if (obj.remainingDistance < obj.maxBehaviorSteps)
