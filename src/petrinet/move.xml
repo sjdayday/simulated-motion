@@ -1,47 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pnml>
-    <net>
+    <net id="move">
         <token id="Default" red="0" green="0" blue="0"/>
-        <place id="Enabled">
+        <place id="Clockwise">
             <graphics>
-                <position x="77.0" y="257.0"/>
+                <position x="336.0" y="440.0"/>
             </graphics>
             <name>
-                <value>Enabled</value>
-                <graphics>
-                    <offset x="3.0" y="45.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-                <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Turn">
-            <graphics>
-                <position x="255.0" y="420.0"/>
-            </graphics>
-            <name>
-                <value>Turn</value>
+                <value>Clockwise</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -53,7 +19,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value></value>
+                <value>Default,0</value>
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
@@ -70,258 +36,14 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Finishing">
+        <place id="CounterClockwise">
             <graphics>
-                <position x="571.0" y="332.0"/>
+                <position x="325.0" y="532.0"/>
             </graphics>
             <name>
-                <value>Finishing</value>
+                <value>CounterClockwise</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="Moving">
-            <graphics>
-                <position x="367.0" y="330.0"/>
-            </graphics>
-            <name>
-                <value>Moving</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="Turn.Distance">
-            <graphics>
-                <position x="79.0" y="374.0"/>
-            </graphics>
-            <name>
-                <value>Turn.Distance</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Run.Distance">
-          <graphics>
-            <position x="74.0" y="574.0"/>
-          </graphics>
-          <name>
-            <value>Run.Distance</value>
-            <graphics>
-             <offset x="-5.0" y="35.0"/>
-            </graphics>
-          </name>
-          <capacity>
-            <value>0</value>
-          </capacity>
-          <initialMarking>
-            <graphics>
-              <offset x="0.0" y="0.0"/>
-            </graphics>
-            <value></value>
-          </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Run.Speed">
-          <graphics>
-            <position x="74.0" y="625.0"/>
-          </graphics>
-          <name>
-            <value>Run.Speed</value>
-            <graphics>
-               <offset x="-5.0" y="35.0"/>
-            </graphics>
-          </name>
-          <capacity>
-            <value>0</value>
-          </capacity>
-          <initialMarking>
-            <graphics>
-               <offset x="0.0" y="0.0"/>
-            </graphics>
-            <value></value>
-          </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Turn.Done">
-            <graphics>
-                <position x="553.0" y="524.0"/>
-            </graphics>
-            <name>
-                <value>Turn.Done</value>
-                <graphics>
-                    <offset x="33.0" y="47.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>false</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Run.Enabled">
-            <graphics>
-                <position x="392.0" y="513.0"/>
-            </graphics>
-            <name>
-                <value>Run.Enabled</value>
-                <graphics>
-                    <offset x="62.0" y="46.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Turn.CounterClockwise">
-            <graphics>
-                <position x="77.0" y="517.0"/>
-            </graphics>
-            <name>
-                <value>Turn.CounterClockwise</value>
-                <graphics>
-                    <offset x="27.0" y="45.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Ready">
-            <graphics>
-                <position x="274.0" y="257.0"/>
-            </graphics>
-            <name>
-                <value>Ready</value>
-                <graphics>
-                    <offset x="4.0" y="46.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -333,42 +55,9 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-                <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>false</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Turn.Speed">
-            <graphics>
-                <position x="78.0" y="425.0"/>
-            </graphics>
-            <name>
-                <value>Turn.Speed</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -381,48 +70,14 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Turn.Clockwise">
+        <place id="Distance">
             <graphics>
-                <position x="78.0" y="473.0"/>
+                <position x="83.0" y="314.0"/>
             </graphics>
             <name>
-                <value>Turn.Clockwise</value>
+                <value>Distance</value>
                 <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Ongoing">
-            <graphics>
-                <position x="474.0" y="257.0"/>
-            </graphics>
-            <name>
-                <value>Ongoing</value>
-                <graphics>
-                    <offset x="1.0" y="45.0"/>
+                    <offset x="-7.0" y="18.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -434,29 +89,9 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-        </place>
-        <place id="Turn.Enabled">
-            <graphics>
-                <position x="349.0" y="513.0"/>
-            </graphics>
-            <name>
-                <value>Turn.Enabled</value>
-                <graphics>
-                    <offset x="27.0" y="44.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>
+                    <merge type="home"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -471,7 +106,7 @@
         </place>
         <place id="Done">
             <graphics>
-                <position x="678.0" y="257.0"/>
+                <position x="704.0" y="51.0"/>
             </graphics>
             <name>
                 <value>Done</value>
@@ -503,14 +138,14 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Run.Done">
+        <place id="Enabled">
             <graphics>
-                <position x="601.0" y="523.0"/>
+                <position x="103.0" y="51.0"/>
             </graphics>
             <name>
-                <value>Run.Done</value>
+                <value>Enabled</value>
                 <graphics>
-                    <offset x="56.0" y="47.0"/>
+                    <offset x="3.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -520,41 +155,7 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value></value>
-            </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="away"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>false</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Run">
-            <graphics>
-                <position x="254.0" y="328.0"/>
-            </graphics>
-            <name>
-                <value>Run</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
+                <value>Default,0</value>
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
@@ -571,68 +172,591 @@
                 </status>
             </toolspecificplace>
         </place>
-        <transition id="FinishRun">
+        <place id="Finishing">
             <graphics>
-                <position x="611.0" y="424.0"/>
+                <position x="597.0" y="149.0"/>
             </graphics>
             <name>
-                <value>FinishRun</value>
-                <graphics>
-                    <offset x="71.0" y="31.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="Start">
-            <graphics>
-                <position x="377.0" y="257.0"/>
-            </graphics>
-            <name>
-                <value>Start</value>
-                <graphics>
-                    <offset x="-2.0" y="46.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="FinishTurn">
-            <graphics>
-                <position x="563.0" y="423.0"/>
-            </graphics>
-            <name>
-                <value>FinishTurn</value>
+                <value>Finishing</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Moving">
+            <graphics>
+                <position x="393.0" y="147.0"/>
+            </graphics>
+            <name>
+                <value>Moving</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Ongoing">
+            <graphics>
+                <position x="500.0" y="51.0"/>
+            </graphics>
+            <name>
+                <value>Ongoing</value>
+                <graphics>
+                    <offset x="1.0" y="45.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Ready">
+            <graphics>
+                <position x="300.0" y="51.0"/>
+            </graphics>
+            <name>
+                <value>Ready</value>
+                <graphics>
+                    <offset x="4.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run">
+            <graphics>
+                <position x="85.0" y="198.0"/>
+            </graphics>
+            <name>
+                <value>Run</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run.Distance">
+            <graphics>
+                <position x="146.0" y="109.0"/>
+            </graphics>
+            <name>
+                <value>Run.Distance</value>
+                <graphics>
+                    <offset x="-10.0" y="17.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run.Done">
+            <graphics>
+                <position x="627.0" y="340.0"/>
+            </graphics>
+            <name>
+                <value>Run.Done</value>
+                <graphics>
+                    <offset x="56.0" y="47.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run.Enabled">
+            <graphics>
+                <position x="418.0" y="330.0"/>
+            </graphics>
+            <name>
+                <value>Run.Enabled</value>
+                <graphics>
+                    <offset x="62.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Run.Speed">
+            <graphics>
+                <position x="244.0" y="136.0"/>
+            </graphics>
+            <name>
+                <value>Run.Speed</value>
+                <graphics>
+                    <offset x="93.0" y="17.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="RunMotion">
+            <graphics>
+                <position x="282.0" y="198.0"/>
+            </graphics>
+            <name>
+                <value>Run</value>
+                <graphics>
+                    <offset x="48.0" y="-2.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Speed">
+            <graphics>
+                <position x="195.0" y="287.0"/>
+            </graphics>
+            <name>
+                <value>Speed</value>
+                <graphics>
+                    <offset x="71.0" y="22.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn">
+            <graphics>
+                <position x="82.0" y="381.0"/>
+            </graphics>
+            <name>
+                <value>Turn</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.Clockwise">
+            <graphics>
+                <position x="510.0" y="440.0"/>
+            </graphics>
+            <name>
+                <value>Turn.Clockwise</value>
+                <graphics>
+                    <offset x="62.0" y="50.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.CounterClockwise">
+            <graphics>
+                <position x="507.0" y="532.0"/>
+            </graphics>
+            <name>
+                <value>Turn.CounterClockwise</value>
+                <graphics>
+                    <offset x="120.0" y="50.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.Distance">
+            <graphics>
+                <position x="93.0" y="459.0"/>
+            </graphics>
+            <name>
+                <value>Turn.Distance</value>
+                <graphics>
+                    <offset x="47.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.Done">
+            <graphics>
+                <position x="579.0" y="341.0"/>
+            </graphics>
+            <name>
+                <value>Turn.Done</value>
+                <graphics>
+                    <offset x="33.0" y="47.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.Enabled">
+            <graphics>
+                <position x="375.0" y="330.0"/>
+            </graphics>
+            <name>
+                <value>Turn.Enabled</value>
+                <graphics>
+                    <offset x="27.0" y="44.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Turn.Speed">
+            <graphics>
+                <position x="194.0" y="484.0"/>
+            </graphics>
+            <name>
+                <value>Turn.Speed</value>
+                <graphics>
+                    <offset x="35.0" y="49.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="TurnMotion">
+            <graphics>
+                <position x="278.0" y="329.0"/>
+            </graphics>
+            <name>
+                <value>TurnMotion</value>
+                <graphics>
+                    <offset x="46.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <transition id="SetupClockwise">
+            <graphics>
+                <position x="418.0" y="440.0"/>
+            </graphics>
+            <name>
+                <value>SetupClockwise</value>
+                <graphics>
+                    <offset x="42.0" y="-8.0"/>
+                </graphics>
+            </name>
             <infiniteServer>
                 <value>false</value>
             </infiniteServer>
@@ -649,14 +773,14 @@
                 <value>1</value>
             </rate>
         </transition>
-        <transition id="Finish">
+        <transition id="SetupCounterClockwise">
             <graphics>
-                <position x="581.0" y="257.0"/>
+                <position x="417.0" y="532.0"/>
             </graphics>
             <name>
-                <value>Finish</value>
+                <value>SetupCounterClockwise</value>
                 <graphics>
-                    <offset x="-5.0" y="46.0"/>
+                    <offset x="66.0" y="54.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -677,7 +801,7 @@
         </transition>
         <transition id="EnableRun">
             <graphics>
-                <position x="402.0" y="419.0"/>
+                <position x="428.0" y="236.0"/>
             </graphics>
             <name>
                 <value>EnableRun</value>
@@ -701,9 +825,139 @@
                 <value>1</value>
             </rate>
         </transition>
+        <transition id="SetupRun">
+            <graphics>
+                <position x="206.0" y="198.0"/>
+            </graphics>
+            <name>
+                <value>SetupRun</value>
+                <graphics>
+                    <offset x="68.0" y="40.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="FinishTurn">
+            <graphics>
+                <position x="589.0" y="240.0"/>
+            </graphics>
+            <name>
+                <value>FinishTurn</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="Start">
+            <graphics>
+                <position x="403.0" y="51.0"/>
+            </graphics>
+            <name>
+                <value>Start</value>
+                <graphics>
+                    <offset x="-2.0" y="46.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="SetupTurn">
+            <graphics>
+                <position x="205.0" y="380.0"/>
+            </graphics>
+            <name>
+                <value>SetupTurn</value>
+                <graphics>
+                    <offset x="76.0" y="36.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="FinishRun">
+            <graphics>
+                <position x="637.0" y="241.0"/>
+            </graphics>
+            <name>
+                <value>FinishRun</value>
+                <graphics>
+                    <offset x="71.0" y="31.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
         <transition id="Prepare">
             <graphics>
-                <position x="177.0" y="257.0"/>
+                <position x="203.0" y="51.0"/>
             </graphics>
             <name>
                 <value>Prepare</value>
@@ -729,12 +983,12 @@
         </transition>
         <transition id="EnableTurn">
             <graphics>
-                <position x="359.0" y="420.0"/>
+                <position x="385.0" y="237.0"/>
             </graphics>
             <name>
                 <value>EnableTurn</value>
                 <graphics>
-                    <offset x="-5.0" y="35.0"/>
+                    <offset x="-8.0" y="15.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -753,145 +1007,299 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="EnableRun TO Run.Enabled" source="EnableRun" target="Run.Enabled">
-            <arcpath id="" x="407.0" y="449.0" curvePoint="false"/>
-            <arcpath id="" x="407.0" y="513.0" curvePoint="false"/>
+        <transition id="Finish">
+            <graphics>
+                <position x="607.0" y="51.0"/>
+            </graphics>
+            <name>
+                <value>Finish</value>
+                <graphics>
+                    <offset x="-5.0" y="46.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <arc id="SetupClockwise TO Turn.Clockwise" source="SetupClockwise" target="Turn.Clockwise">
+            <arcpath id="" x="428.0" y="455.0" curvePoint="false"/>
+            <arcpath id="" x="510.0" y="455.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="FinishTurn TO Finishing" source="FinishTurn" target="Finishing">
-            <arcpath id="" x="568.0" y="423.0" curvePoint="false"/>
-            <arcpath id="" x="583.0" y="362.0" curvePoint="false"/>
+            <arcpath id="" x="594.0" y="240.0" curvePoint="false"/>
+            <arcpath id="" x="609.0" y="179.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="SetupTurn TO TurnMotion" source="SetupTurn" target="TurnMotion">
+            <arcpath id="" x="215.0" y="395.0" curvePoint="false"/>
+            <arcpath id="" x="280.0" y="352.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="SetupCounterClockwise TO Turn.CounterClockwise" source="SetupCounterClockwise" target="Turn.CounterClockwise">
+            <arcpath id="" x="427.0" y="547.0" curvePoint="false"/>
+            <arcpath id="" x="507.0" y="547.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="SetupTurn TO Turn.Speed" source="SetupTurn" target="Turn.Speed">
+            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+            <arcpath id="" x="209.0" y="484.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
         <arc id="Finish TO Done" source="Finish" target="Done">
-            <arcpath id="" x="591.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="678.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="617.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="704.0" y="66.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Start TO Moving" source="Start" target="Moving">
-            <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
-            <arcpath id="" x="382.0" y="330.0" curvePoint="false"/>
+            <arcpath id="" x="408.0" y="81.0" curvePoint="false"/>
+            <arcpath id="" x="408.0" y="147.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="FinishRun TO Finishing" source="FinishRun" target="Finishing">
-            <arcpath id="" x="616.0" y="424.0" curvePoint="false"/>
-            <arcpath id="" x="591.0" y="361.0" curvePoint="false"/>
+        <arc id="SetupRun TO Run.Distance" source="SetupRun" target="Run.Distance">
+            <arcpath id="" x="211.0" y="198.0" curvePoint="false"/>
+            <arcpath id="" x="168.0" y="137.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="SetupRun TO Run.Speed" source="SetupRun" target="Run.Speed">
+            <arcpath id="" x="211.0" y="198.0" curvePoint="false"/>
+            <arcpath id="" x="250.0" y="163.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="SetupTurn TO Turn.Distance" source="SetupTurn" target="Turn.Distance">
+            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
+            <arcpath id="" x="120.0" y="465.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="Start TO Ongoing" source="Start" target="Ongoing">
+            <arcpath id="" x="413.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="500.0" y="66.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="SetupRun TO RunMotion" source="SetupRun" target="RunMotion">
+            <arcpath id="" x="216.0" y="213.0" curvePoint="false"/>
+            <arcpath id="" x="282.0" y="213.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="EnableTurn TO Turn.Enabled" source="EnableTurn" target="Turn.Enabled">
-            <arcpath id="" x="364.0" y="450.0" curvePoint="false"/>
-            <arcpath id="" x="364.0" y="513.0" curvePoint="false"/>
+            <arcpath id="" x="390.0" y="267.0" curvePoint="false"/>
+            <arcpath id="" x="390.0" y="330.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Start TO Ongoing" source="Start" target="Ongoing">
-            <arcpath id="" x="387.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="474.0" y="272.0" curvePoint="false"/>
+        <arc id="EnableRun TO Run.Enabled" source="EnableRun" target="Run.Enabled">
+            <arcpath id="" x="433.0" y="266.0" curvePoint="false"/>
+            <arcpath id="" x="433.0" y="330.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="FinishRun TO Finishing" source="FinishRun" target="Finishing">
+            <arcpath id="" x="642.0" y="241.0" curvePoint="false"/>
+            <arcpath id="" x="617.0" y="178.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Prepare TO Ready" source="Prepare" target="Ready">
-            <arcpath id="" x="187.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="274.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="213.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="300.0" y="66.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Distance TO SetupRun" source="Distance" target="SetupRun">
+            <arcpath id="" x="108.0" y="318.0" curvePoint="false"/>
+            <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="TurnMotion TO EnableTurn" source="TurnMotion" target="EnableTurn">
+            <arcpath id="" x="304.0" y="334.0" curvePoint="false"/>
+            <arcpath id="" x="385.0" y="252.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Moving TO EnableTurn" source="Moving" target="EnableTurn">
-            <arcpath id="" x="378.0" y="360.0" curvePoint="false"/>
-            <arcpath id="" x="364.0" y="420.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Finishing TO Finish" source="Finishing" target="Finish">
-            <arcpath id="" x="586.0" y="332.0" curvePoint="false"/>
-            <arcpath id="" x="586.0" y="287.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Moving TO EnableRun" source="Moving" target="EnableRun">
-            <arcpath id="" x="387.0" y="359.0" curvePoint="false"/>
-            <arcpath id="" x="407.0" y="419.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Run TO EnableRun" source="Run" target="EnableRun">
-            <arcpath id="" x="281.0" y="351.0" curvePoint="false"/>
-            <arcpath id="" x="402.0" y="434.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Ready TO Start" source="Ready" target="Start">
-            <arcpath id="" x="304.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="272.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Turn TO EnableTurn" source="Turn" target="EnableTurn">
-            <arcpath id="" x="285.0" y="435.0" curvePoint="false"/>
-            <arcpath id="" x="359.0" y="435.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Run.Done TO FinishRun" source="Run.Done" target="FinishRun">
-            <arcpath id="" x="616.0" y="523.0" curvePoint="false"/>
-            <arcpath id="" x="616.0" y="454.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Turn.Done TO FinishTurn" source="Turn.Done" target="FinishTurn">
-            <arcpath id="" x="568.0" y="524.0" curvePoint="false"/>
-            <arcpath id="" x="568.0" y="453.0" curvePoint="false"/>
+            <arcpath id="" x="405.0" y="177.0" curvePoint="false"/>
+            <arcpath id="" x="390.0" y="237.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
-            <arcpath id="" x="504.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="581.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="530.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="607.0" y="66.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Run.Done TO FinishRun" source="Run.Done" target="FinishRun">
+            <arcpath id="" x="642.0" y="340.0" curvePoint="false"/>
+            <arcpath id="" x="642.0" y="271.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Moving TO EnableRun" source="Moving" target="EnableRun">
+            <arcpath id="" x="412.0" y="176.0" curvePoint="false"/>
+            <arcpath id="" x="433.0" y="236.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Run TO SetupRun" source="Run" target="SetupRun">
+            <arcpath id="" x="115.0" y="213.0" curvePoint="false"/>
+            <arcpath id="" x="206.0" y="213.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Distance TO SetupTurn" source="Distance" target="SetupTurn">
+            <arcpath id="" x="111.0" y="337.0" curvePoint="false"/>
+            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="Turn.Done TO FinishTurn" source="Turn.Done" target="FinishTurn">
+            <arcpath id="" x="594.0" y="341.0" curvePoint="false"/>
+            <arcpath id="" x="594.0" y="270.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Ready TO Start" source="Ready" target="Start">
+            <arcpath id="" x="330.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="403.0" y="66.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Enabled TO Prepare" source="Enabled" target="Prepare">
-            <arcpath id="" x="107.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="177.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="133.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="203.0" y="66.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="CounterClockwise TO SetupCounterClockwise" source="CounterClockwise" target="SetupCounterClockwise">
+            <arcpath id="" x="355.0" y="547.0" curvePoint="false"/>
+            <arcpath id="" x="417.0" y="547.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turn TO SetupTurn" source="Turn" target="SetupTurn">
+            <arcpath id="" x="112.0" y="396.0" curvePoint="false"/>
+            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Speed TO SetupTurn" source="Speed" target="SetupTurn">
+            <arcpath id="" x="210.0" y="317.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="380.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="Finishing TO Finish" source="Finishing" target="Finish">
+            <arcpath id="" x="612.0" y="149.0" curvePoint="false"/>
+            <arcpath id="" x="612.0" y="81.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Speed TO SetupRun" source="Speed" target="SetupRun">
+            <arcpath id="" x="210.0" y="287.0" curvePoint="false"/>
+            <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="Clockwise TO SetupClockwise" source="Clockwise" target="SetupClockwise">
+            <arcpath id="" x="366.0" y="455.0" curvePoint="false"/>
+            <arcpath id="" x="418.0" y="455.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Run TO EnableRun" source="RunMotion" target="EnableRun">
+            <arcpath id="" x="311.0" y="217.0" curvePoint="false"/>
+            <arcpath id="" x="428.0" y="251.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
