@@ -4,13 +4,13 @@ classdef Behavior < handle
 
     properties
         animal
-        placeSystem
+%         placeSystem
         cortex
         motorCortex
-        visualCortex
+%         visualCortex
         subCortex
-        headDirectionSystem
-        chartSystem
+%         headDirectionSystem
+%         chartSystem
         runner
         thread
         threadRunner
@@ -27,15 +27,22 @@ classdef Behavior < handle
         listeners
         keepRunnerForReporting
         placeReportLimit
+        standalone
     end
     methods
-         function obj = Behavior(prefix, animal)
+         function obj = Behavior(prefix, animal, runner)
             import uk.ac.imperial.pipe.runner.*;
+            if (isempty(runner))
+                obj.standalone = true; 
+            else
+                obj.standalone = false; 
+                obj.runner = runner; 
+            end
             obj.petriNetPath = [cd, '/petrinet/'];
-            obj.defaultPetriNet = 'base-control.xml';
+            obj.defaultPetriNet = 'base-control.xml';        
             obj.isDone = false;
             obj.prefix = prefix; 
-            obj.firingLimit = 10000000; % 10M; don't stop prematurely 
+            obj.firingLimit = 10000000; % 10M; don't stop prematurely unless overridden
             obj.placeReportLimit = 0;  % unlimited; override for Navigate
             obj.behaviorPrefix = ''; % override in specific behavior
             obj.animal = animal; 
@@ -54,16 +61,17 @@ classdef Behavior < handle
 %             obj.chartSystem = obj.animal.chartSystem;
          end
          function buildRunner(obj)
-            import uk.ac.imperial.pipe.runner.*;
-            import java.lang.Thread;
-            obj.runner = PetriNetRunner(buildPetriNetName(obj));
-            obj.runner.setPlaceReporterParameters(true, true, 0); 
-            obj.enable();
-            obj.runner.setFiringLimit(obj.firingLimit);
-            obj.runner.setSeed(rand()*1000000);
-%             obj.runner.setFiringDelay(1000);
-            obj.waitForInput(true);
-             
+            if (obj.standalone)
+                import uk.ac.imperial.pipe.runner.*;
+                import java.lang.Thread;
+                obj.runner = PetriNetRunner(buildPetriNetName(obj));
+                obj.runner.setPlaceReporterParameters(true, true, 0); 
+                obj.enable();
+                obj.runner.setFiringLimit(obj.firingLimit);
+                obj.runner.setSeed(rand()*1000000);
+    %             obj.runner.setFiringDelay(1000);
+                obj.waitForInput(true);
+            end
          end
          function execute(obj)
             obj.thread.start(); 

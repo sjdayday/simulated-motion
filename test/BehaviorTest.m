@@ -1,7 +1,7 @@
 classdef BehaviorTest < AbstractTest
     methods (Test)
         function testBehaviorStandardSemantics(testCase)
-            behavior = Behavior('', Animal());
+            behavior = Behavior('', Animal(), []);
 %             testCase.assertEqual(behavior.getPetriNetPath(), [cd, '/petrinet/']);
             testCase.assertEqual(behavior.getDefaultPetriNet(), 'base-control.xml');
 %             testCase.assertEqual(behavior.buildPetriNetName(), [cd, '/petrinet/base-control.xml']);
@@ -14,8 +14,18 @@ classdef BehaviorTest < AbstractTest
             animal = Animal();
             animal.build(); 
 %             animal.headDirectionSystem = HeadDirectionSystem(60); 
-            behavior = Behavior('', animal);
+            behavior = Behavior('', animal, []);
             testCase.assertEqual(behavior.motorCortex, animal.motorCortex);
+        end
+        function testWhenIncludedBehaviorWillBePassedRunner(testCase)
+            animal = Animal();
+            animal.build(); 
+%             animal.headDirectionSystem = HeadDirectionSystem(60); 
+            behavior = Behavior('', animal, []);
+            behavior.buildRunner(); 
+            runner = behavior.runner; 
+            anotherBehavior = Behavior('', animal, runner);
+            testCase.assertEqual(anotherBehavior.runner, runner);
         end
     end
 end
