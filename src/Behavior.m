@@ -1,5 +1,6 @@
-%% ExperimentController class:  controller for ExperimentView
-% invokes classes as requested through the ExperimentView GUI 
+%% Behavior class:  base class for behaviors
+% Behaviors invoke correponding Petri nets, including:  Run, Turn, Move, Navigate 
+% Behaviors may be run as standalone Petri nets, or as part of include hierarchies 
 classdef Behavior < handle 
 
     properties
@@ -82,13 +83,24 @@ classdef Behavior < handle
          end
         function buildStandardSemantics(obj)
             obj.buildRunner(); 
-            obj.listenPlace([obj.prefix,'Done'], @obj.done); 
+            obj.listenPlaces(); 
+%             obj.listenPlace([obj.prefix,'Done'], @obj.done); 
+        end
+        function listenPlaces(obj)
+           if (obj.acknowledging) 
+                obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
+    %           needed for place report
+                obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready);                
+           else
+                obj.listenPlace([obj.prefix,'Done'], @obj.done); 
+           end
         end
         function buildThreadedStandardSemantics(obj)
             obj.buildThreadedRunner(); 
-            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
-%           needed for place report
-            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
+            obj.listenPlaces(); 
+%             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
+% %           needed for place report
+%             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
         end
         function buildThreadedRunner(obj)
             import uk.ac.imperial.pipe.runner.*;
@@ -202,19 +214,5 @@ classdef Behavior < handle
         function placeReport = getPlaceReport(obj, index)
            placeReport = obj.runner.getPlaceReport(index); 
         end
-%         function visualize(obj, visual)
-%             obj.visual = visual; 
-%             if visual
-%                 obj.h = figure; 
-%                 obj.chartSystem.h = obj.h;
-%                 obj.headDirectionSystem.h = obj.h; 
-%                 obj.animal.h = obj.h; 
-% %                 setupDisplay(obj);  % do later
-%             else
-%                 if isvalid(obj.h) 
-%                     close(obj.h)
-%                 end
-%             end
-%         end
     end
 end

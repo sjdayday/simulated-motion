@@ -16,7 +16,9 @@ classdef RunTest < AbstractTest
             testCase.assertEqual(v(1,:), [1 1.05]);                         
             testCase.assertEqual(v(2,:), [1 0.95]);                         
             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
-            run = Run('Move.', animal, 1, 3); 
+%             run = Run('Move.', animal, 1, 3); 
+            runner = []; 
+            run = Run('', animal, 1, 3, runner);             
             run.execute(); 
             testCase.assertTrue(run.isDone);
             testCase.assertEqual(3, run.distanceRun);

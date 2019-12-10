@@ -1,5 +1,5 @@
-%% Turn class:  
-% invokes turn.xml PetriNet with speed, direction and distance parameters, and tracks distance turned  
+%% Run class:  
+% invokes run.xml PetriNet with speed, and distance parameters, and tracks distance turned  
 classdef Run <  Behavior  
 
     properties
@@ -7,23 +7,47 @@ classdef Run <  Behavior
          speed
     end
     methods
-        function obj = Run(prefix, animal, speed, distance)
+        function obj = Run(prefix, animal, speed, distance, runner)
             import uk.ac.imperial.pipe.runner.*;
-            obj = obj@Behavior(prefix, animal);
-            obj.defaultPetriNet = 'include-move-turn-run.xml';
-            obj.behaviorPrefix = [prefix,'Run.'];
-            obj.buildThreadedStandardSemantics();
+            obj = obj@Behavior(prefix, animal, runner);
+            if (obj.standalone)
+                obj.defaultPetriNet = 'run-SA.xml';                
+                obj.behaviorPrefix = '';                
+%             obj.buildThreadedStandardSemantics();            
+                obj.buildThreadedRunner(); 
+                obj.listenPlaces(); 
+                obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
+                obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
+%                 obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped);                 
+            else
+% caller builds runner and listens to places 
+%                 obj.defaultPetriNet = 'include-move-turn-run.xml';               
+%                 obj.buildThreadedRunner();                 
+% move marks these 
+%                 obj.behaviorPrefix = [prefix,'Run.']; 
+%                 obj.markPlace([obj.prefix,'Run']);  
+%                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
+%                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
+% 
+% move has to mark this, or delegate here 
+%                obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped);                                 
+            end
+
+
 %             obj.runner.setFiringDelay(50);
 %             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
-            obj.markPlace([obj.prefix,'Run']);  
-            obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped); 
-            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
-            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
+
+
             obj.distanceRun = 0; 
             obj.speed = speed; 
 %             obj.execute(); 
            
         end
+        function listenPlaces(obj)
+           listenPlaces@Behavior(obj); 
+           obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped); 
+        end
+        
         function done(obj, ~, ~)
             done@Behavior(obj, 1, 1); 
             obj.animal.runDone(); 
