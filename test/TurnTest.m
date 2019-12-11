@@ -10,7 +10,9 @@ classdef TurnTest < AbstractTest
             animal = Animal();
             animal.build();
             animal.place(environment, 1, 1, 0);
-            turn = Turn('Move.', animal, -1, 1, 3); 
+            runner = []; 
+%             turn = Turn('Move.', animal, -1, 1, 3);             
+            turn = Turn('', animal, -1, 1, 3, runner); 
             turn.execute(); 
             testCase.assertTrue(turn.isDone);
             testCase.assertEqual(3, turn.distanceTurned);
