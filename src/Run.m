@@ -20,6 +20,8 @@ classdef Run <  Behavior
                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
 %                 obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped);                 
             else
+                obj.behaviorPrefix = obj.prefix;
+                obj.listenLocalPlaces(); 
 % caller builds runner and listens to places 
 %                 obj.defaultPetriNet = 'include-move-turn-run.xml';               
 %                 obj.buildThreadedRunner();                 
@@ -32,24 +34,24 @@ classdef Run <  Behavior
 % move has to mark this, or delegate here 
 %                obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped);                                 
             end
-
-
 %             obj.runner.setFiringDelay(50);
 %             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
-
-
             obj.distanceRun = 0; 
             obj.speed = speed; 
-%             obj.execute(); 
-           
-        end
+%             obj.execute();  
+        end             
         function listenPlaces(obj)
-           listenPlaces@Behavior(obj); 
+            listenPlaces@Behavior(obj); 
+            obj.listenLocalPlaces(); 
+        end        
+        function listenLocalPlaces(obj)
            obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped); 
         end
         
         function done(obj, ~, ~)
-            done@Behavior(obj, 1, 1); 
+            if (obj.standalone)
+                done@Behavior(obj, 1, 1); 
+            end
             obj.animal.runDone(); 
         end
         

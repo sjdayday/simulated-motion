@@ -1070,7 +1070,7 @@
             <arcpath id="" x="209.0" y="484.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Speed)</value>
             </inscription>
         </arc>
         <arc id="Finish TO Done" source="Finish" target="Done">
@@ -1094,7 +1094,7 @@
             <arcpath id="" x="168.0" y="137.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Distance)</value>
+                <value>Default,#(Move.Distance)</value>
             </inscription>
         </arc>
         <arc id="SetupRun TO Run.Speed" source="SetupRun" target="Run.Speed">
@@ -1102,7 +1102,7 @@
             <arcpath id="" x="250.0" y="163.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Speed)</value>
             </inscription>
         </arc>
         <arc id="SetupTurn TO Turn.Distance" source="SetupTurn" target="Turn.Distance">
@@ -1110,7 +1110,7 @@
             <arcpath id="" x="120.0" y="465.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Distance)</value>
+                <value>Default,#(Move.Distance)</value>
             </inscription>
         </arc>
         <arc id="Start TO Ongoing" source="Start" target="Ongoing">
@@ -1166,7 +1166,7 @@
             <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Distance)</value>
+                <value>Default,#(Move.Distance)</value>
             </inscription>
         </arc>
         <arc id="TurnMotion TO EnableTurn" source="TurnMotion" target="EnableTurn">
@@ -1222,7 +1222,7 @@
             <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Distance)</value>
+                <value>Default,#(Move.Distance)</value>
             </inscription>
         </arc>
         <arc id="Turn.Done TO FinishTurn" source="Turn.Done" target="FinishTurn">
@@ -1270,7 +1270,7 @@
             <arcpath id="" x="210.0" y="380.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Speed)</value>
             </inscription>
         </arc>
         <arc id="Finishing TO Finish" source="Finishing" target="Finish">
@@ -1286,7 +1286,7 @@
             <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,#(Speed)</value>
+                <value>Default,#(Move.Speed)</value>
             </inscription>
         </arc>
         <arc id="Clockwise TO SetupClockwise" source="Clockwise" target="SetupClockwise">

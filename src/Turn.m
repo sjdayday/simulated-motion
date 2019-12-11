@@ -11,7 +11,7 @@ classdef Turn <  Behavior
         function obj = Turn(prefix, animal, clockwiseNess, speed, distance, runner)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal, runner);
-            if (obj.standalone)
+             if (obj.standalone)
                 obj.defaultPetriNet = 'turn-SA.xml';
                 obj.behaviorPrefix = '';                
 %                 obj.buildThreadedStandardSemantics();   
@@ -27,6 +27,9 @@ classdef Turn <  Behavior
                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
 
             else
+% do we still neeed behaviorPrefix?               
+                obj.behaviorPrefix = obj.prefix;
+                obj.listenLocalPlaces(); 
 %                 obj.defaultPetriNet = 'include-move-turn-run.xml';
 %                 obj.markPlace([obj.prefix,'Turn']);  
             end 
@@ -36,11 +39,16 @@ classdef Turn <  Behavior
         end
         function listenPlaces(obj)
             listenPlaces@Behavior(obj); 
+            obj.listenLocalPlaces(); 
+        end
+        function listenLocalPlaces(obj)
             obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
         end
 
         function done(obj, ~, ~)
-            done@Behavior(obj, 1, 1); 
+            if (obj.standalone)
+                done@Behavior(obj, 1, 1); 
+            end
             obj.animal.turnDone(); 
         end
         function turned(obj, ~, ~) 
