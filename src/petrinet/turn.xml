@@ -109,6 +109,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="ObjectSensed">
             <graphics>
@@ -662,7 +675,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Start TO P0" source="Start" target="Continuing">
+        <arc id="Start TO Continuing" source="Start" target="Continuing">
             <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
             <arcpath id="" x="382.0" y="322.0" curvePoint="false"/>
             <type value="normal"/>
@@ -670,7 +683,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Start TO Partway" source="Start" target="Turning">
+        <arc id="Start TO Turning" source="Start" target="Turning">
             <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
             <arcpath id="" x="259.0" y="513.0" curvePoint="false"/>
             <type value="normal"/>
@@ -678,7 +691,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO Arrived" source="Stop" target="Stopped">
+        <arc id="Stop TO Stopped" source="Stop" target="Stopped">
             <arcpath id="" x="539.0" y="492.0" curvePoint="false"/>
             <arcpath id="" x="576.0" y="515.0" curvePoint="false"/>
             <type value="normal"/>
@@ -686,7 +699,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO P1" source="TurnCW" target="Turned">
+        <arc id="TurnCW TO Turned" source="TurnCW" target="Turned">
             <arcpath id="" x="349.0" y="396.0" curvePoint="false"/>
             <arcpath id="" x="481.0" y="420.0" curvePoint="false"/>
             <type value="normal"/>
@@ -694,7 +707,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T2 TO P3" source="Arrive" target="Stopped">
+        <arc id="Arrive TO Stopped" source="Arrive" target="Stopped">
             <arcpath id="" x="388.0" y="526.0" curvePoint="false"/>
             <arcpath id="" x="571.0" y="526.0" curvePoint="false"/>
             <type value="normal"/>
@@ -734,7 +747,7 @@
                 <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
-        <arc id="T1 TO P0" source="Continue" target="Continuing">
+        <arc id="Continue TO Continuing" source="Continue" target="Continuing">
             <arcpath id="" x="491.0" y="337.0" curvePoint="false"/>
             <arcpath id="" x="397.0" y="337.0" curvePoint="false"/>
             <type value="normal"/>
@@ -766,7 +779,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P0 TO T0" source="Continuing" target="TurnCW">
+        <arc id="Continuing TO TurnCW" source="Continuing" target="TurnCW">
             <arcpath id="" x="373.0" y="349.0" curvePoint="false"/>
             <arcpath id="" x="334.0" y="391.0" curvePoint="false"/>
             <type value="normal"/>
@@ -830,7 +843,7 @@
                 <value>Default,#(Move.Turn.Speed)</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T0" source="Distance" target="TurnCW">
+        <arc id="Distance TO TurnCW" source="Distance" target="TurnCW">
             <arcpath id="" x="218.0" y="374.0" curvePoint="false"/>
             <arcpath id="" x="319.0" y="396.0" curvePoint="false"/>
             <type value="normal"/>
@@ -838,7 +851,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="ObjectSensed TO T0" source="ObjectSensed" target="Stop">
+        <arc id="ObjectSensed TO Stop" source="ObjectSensed" target="Stop">
             <arcpath id="" x="539.0" y="411.0" curvePoint="false"/>
             <arcpath id="" x="539.0" y="462.0" curvePoint="false"/>
             <type value="normal"/>
@@ -854,7 +867,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P4 TO T2" source="Turning" target="Arrive">
+        <arc id="Turning TO Arrive" source="Turning" target="Arrive">
             <arcpath id="" x="267.0" y="526.0" curvePoint="false"/>
             <arcpath id="" x="378.0" y="526.0" curvePoint="false"/>
             <type value="normal"/>
@@ -878,7 +891,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO T2" source="Distance" target="Arrive">
+        <arc id="Distance TO Arrive" source="Distance" target="Arrive">
             <arcpath id="" x="214.0" y="381.0" curvePoint="false"/>
             <arcpath id="" x="378.0" y="526.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -918,7 +931,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P3 TO Finish" source="Stopped" target="Finish">
+        <arc id="Stopped TO Finish" source="Stopped" target="Finish">
             <arcpath id="" x="586.0" y="511.0" curvePoint="false"/>
             <arcpath id="" x="586.0" y="287.0" curvePoint="false"/>
             <type value="normal"/>
@@ -934,7 +947,7 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="ObjectSensed TO Step" source="ObjectSensed" target="TurnCW">
+        <arc id="ObjectSensed TO TurnCW" source="ObjectSensed" target="TurnCW">
             <arcpath id="" x="524.0" y="396.0" curvePoint="false"/>
             <arcpath id="" x="349.0" y="396.0" curvePoint="false"/>
             <type value="inhibitor"/>
@@ -942,7 +955,7 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P1 TO T1" source="Turned" target="Continue">
+        <arc id="Turned TO Continue" source="Turned" target="Continue">
             <arcpath id="" x="496.0" y="407.0" curvePoint="false"/>
             <arcpath id="" x="496.0" y="352.0" curvePoint="false"/>
             <type value="normal"/>
