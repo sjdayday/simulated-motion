@@ -55,10 +55,10 @@ classdef Move <  Behavior
                 if (turn)
                    obj.behaviorPrefix = [obj.prefix,'Turn.'];
                    obj.markPlace([obj.prefix,'Turn']);
-                   if (clockwiseNess == 1)
+                   if (clockwiseness == 1)
                         obj.markPlace([obj.prefix, 'CounterClockwise']);
                    end 
-                   if (clockwiseNess == -1)
+                   if (clockwiseness == -1)
                         obj.markPlace([obj.prefix, 'Clockwise']);                
                    end
                    obj.behavior = Turn(obj.behaviorPrefix, animal, clockwiseness, speed, distance, obj.runner); 

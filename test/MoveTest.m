@@ -32,6 +32,28 @@ classdef MoveTest < AbstractTest
             testCase.assertThat(vv(3,:), ...            
                  IsEqualTo([1.5 1.0], 'Within', RelativeTolerance(.00001))); 
         end
-        
+        function testTurnExecutedInOneCommand(testCase)
+            environment = Environment();
+            environment.addWall([0 0],[0 2]); 
+            environment.addWall([0 2],[2 2]); 
+            environment.addWall([0 0],[2 0]); 
+            environment.addWall([2 0],[2 2]);
+            environment.build();            
+            animal = Animal();
+            animal.build();
+            animal.place(environment, 1, 1, 0);
+            runner = []; 
+%             turn = Turn('', animal, -1, 1, 3, runner); 
+            turn = true; 
+            clockwiseness = -1; 
+            move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner);             
+            move.execute(); 
+%             testCase.assertTrue(turn.isDone);
+%             testCase.assertEqual(3, turn.distanceTurned);
+            testCase.assertTrue(move.isDone);
+            testCase.assertEqual(move.distanceMoved, 3);
+            
+        end
+ 
     end
 end
