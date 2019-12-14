@@ -13,7 +13,6 @@ classdef Turn <  Behavior
             obj = obj@Behavior(prefix, animal, runner);
              if (obj.standalone)
                 obj.defaultPetriNet = 'turn-SA.xml';
-                obj.behaviorPrefix = '';                
 %                 obj.buildThreadedStandardSemantics();   
                 obj.buildThreadedRunner(); 
                 obj.listenPlaces(); 
@@ -27,8 +26,6 @@ classdef Turn <  Behavior
                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
 
             else
-% do we still neeed behaviorPrefix?               
-                obj.behaviorPrefix = obj.prefix;
                 obj.listenLocalPlaces(); 
 %                 obj.defaultPetriNet = 'include-move-turn-run.xml';
 %                 obj.markPlace([obj.prefix,'Turn']);  
@@ -42,7 +39,7 @@ classdef Turn <  Behavior
             obj.listenLocalPlaces(); 
         end
         function listenLocalPlaces(obj)
-            obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
+            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Turned'], @obj.turned); 
         end
 
         function done(obj, ~, ~)

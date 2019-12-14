@@ -12,7 +12,6 @@ classdef Run <  Behavior
             obj = obj@Behavior(prefix, animal, runner);
             if (obj.standalone)
                 obj.defaultPetriNet = 'run-SA.xml';                
-                obj.behaviorPrefix = '';                
 %             obj.buildThreadedStandardSemantics();            
                 obj.buildThreadedRunner(); 
                 obj.listenPlaces(); 
@@ -20,7 +19,6 @@ classdef Run <  Behavior
                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
 %                 obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped);                 
             else
-                obj.behaviorPrefix = obj.prefix;
                 obj.listenLocalPlaces(); 
 % caller builds runner and listens to places 
 %                 obj.defaultPetriNet = 'include-move-turn-run.xml';               
@@ -45,7 +43,7 @@ classdef Run <  Behavior
             obj.listenLocalPlaces(); 
         end        
         function listenLocalPlaces(obj)
-           obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Stepped'], @obj.stepped); 
+           obj.listenPlaceWithAcknowledgement([obj.prefix, 'Stepped'], @obj.stepped); 
         end
         
         function done(obj, ~, ~)
