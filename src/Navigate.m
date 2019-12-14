@@ -12,7 +12,8 @@ classdef Navigate <  Behavior
     methods
         function obj = Navigate(prefix, animal)
             import uk.ac.imperial.pipe.runner.*;
-            obj = obj@Behavior(prefix, animal);
+            runner = []; 
+            obj = obj@Behavior(prefix, animal, runner);
             obj.placeReportLimit = 100; % otherwise, will consume lots of memory
             obj.defaultPetriNet = 'include-navigate-move-turn-run.xml';
             obj.behaviorPrefix = [prefix,'Move.']; % Turn or Run...

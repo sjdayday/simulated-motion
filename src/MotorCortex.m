@@ -192,15 +192,35 @@ classdef MotorCortex < System
             obj.clockwiseNess = obj.clockwise; 
             obj.turn(); 
         end
+        
+%             clockwiseness = 0; 
+%             turn = false;
+%             runner = []; 
+%             move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner); 
+%            
+%             move.execute(); 
+
+
+%             turn = Turn('Move.', animal, -1, 1, 3);             
+%             turn = Turn('', animal, -1, 1, 3, runner); 
+%             turn.execute(); 
+%             runner = []; 
+%             run = Run('', animal, 1, 3, runner);             
+        
+
         function aTurn = turn(obj)
-            aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
+%             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
+            runner = []; 
+            aTurn = Turn('', obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance, runner); 
             aTurn.keepRunnerForReporting = obj.keepRunnerForReporting; 
             obj.currentPlan = aTurn;             
             aTurn.execute(); 
             obj.markedPlaceReport = aTurn.placeReport; 
         end
         function aRun = run(obj)
-            aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance); 
+            runner = []; 
+%             aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance);             
+            aRun = Run('', obj.animal, obj.runSpeed, obj.runDistance, runner); 
             aRun.keepRunnerForReporting = obj.keepRunnerForReporting;             
             obj.currentPlan = aRun; 
             aRun.execute(); 

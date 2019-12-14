@@ -2,9 +2,6 @@
 <pnml>
     <net id="navigate">
         <token id="Default" red="0" green="0" blue="0"/>
-        <labels border="true" x="299" y="480" width="100" height="50">
-            <text>Move parameters</text>
-        </labels>
         <place id="Done">
             <graphics>
                 <position x="659.0" y="279.0"/>
