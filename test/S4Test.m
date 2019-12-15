@@ -15,6 +15,7 @@ classdef S4Test < AbstractTest
             testCase.assertEqual(script.ec.getTime(), 22); 
         end
         function testOrientAnimalDrivesHdsBack(testCase)
+            % when PN is done, should stop angular motion of HDS 
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             script = S4(false); 

@@ -9,38 +9,7 @@ classdef Move <  Behavior
          turn
          behavior
     end
-    methods
-%         function obj = Turn(prefix, animal, clockwiseNess, speed, distance, runner)
-%             import uk.ac.imperial.pipe.runner.*;
-%             obj = obj@Behavior(prefix, animal, runner);
-%             if (obj.standalone)
-%                 obj.defaultPetriNet = 'turn-SA.xml';
-%                 obj.behaviorPrefix = '';                
-% %                 obj.buildThreadedStandardSemantics();   
-%                 obj.buildThreadedRunner(); 
-%                 obj.listenPlaces(); 
-%                 if (clockwiseNess == 1)
-%                     obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
-%                 end 
-%                 if (clockwiseNess == -1)
-%                     obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
-%                 end
-%                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
-%                 obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
-% 
-%             else
-% %                 obj.defaultPetriNet = 'include-move-turn-run.xml';
-% %                 obj.markPlace([obj.prefix,'Turn']);  
-%             end 
-%             obj.distanceTurned = 0; 
-%             obj.clockwiseNess = clockwiseNess; 
-%             obj.speed = speed;
-%         end
-%         function listenPlaces(obj)
-%             listenPlaces@Behavior(obj); 
-%             obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
-%         end
-                
+    methods                
         function obj = Move(prefix, animal, speed, distance, clockwiseness, turn, runner)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal, runner);
@@ -62,6 +31,7 @@ classdef Move <  Behavior
                         obj.markPlace([obj.prefix, 'Clockwise']);                
                    end
                    obj.behavior = Turn(obj.behaviorPrefix, animal, clockwiseness, speed, distance, obj.runner); 
+                   obj.behavior.acknowledging = true; 
                 else     
                    obj.behaviorPrefix = [obj.prefix,'Run.']; 
                    obj.markPlace([obj.prefix,'Run']);  
@@ -75,13 +45,19 @@ classdef Move <  Behavior
             obj.distanceMoved = 0; 
             obj.speed = speed; 
             obj.clockwiseness = clockwiseness; 
+%            disp('move acknowledging: ');
+%            disp(obj.acknowledging);           
+%            disp('move standalone: ');
+%            disp(obj.standalone);           
+
 %             obj.execute(); 
            
         end
         function done(obj, ~, ~)
-            if (obj.standalone)
+%             if (obj.standalone)
+                disp(['prefix for move.done: ', obj.prefix]);
                 done@Behavior(obj, 1, 1); 
-            end
+%             end
             if (obj.turn)
                 obj.distanceMoved = obj.behavior.distanceTurned; 
             else

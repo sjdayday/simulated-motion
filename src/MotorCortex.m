@@ -161,9 +161,13 @@ classdef MotorCortex < System
             if (obj.stopOnReadyForTesting) 
                 obj.navigation.stopOnReadyForTesting = true; 
             end
-          % if end of steps...
-%               obj.navigation.finish = true; 
-%         end
+            obj.behaviorHistory = [];
+            obj.remainingDistance = steps; 
+            while (obj.remainingDistance > 0)
+                obj.nextRandomNavigation(); 
+            end
+            obj.navigation.finish = true; 
+
 %             aNavigation = Navigate(obj.navigatePrefix, obj.animal); 
 %             aNavigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
 %             obj.currentPlan = aNavigation;             
@@ -208,16 +212,30 @@ classdef MotorCortex < System
 %             run = Run('', animal, 1, 3, runner);             
         
 
-        function aTurn = turn(obj)
+        function aMove = turn(obj)
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance); 
+            turn = true;
             runner = []; 
-            aTurn = Turn('', obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance, runner); 
-            aTurn.keepRunnerForReporting = obj.keepRunnerForReporting; 
-            obj.currentPlan = aTurn;             
-            aTurn.execute(); 
-            obj.markedPlaceReport = aTurn.placeReport; 
+            aMove = Move('Move.', obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseNess, turn, runner); 
+%             aMove.execute(); 
+%             aTurn = Turn('', obj.animal, obj.clockwiseNess, obj.turnSpeed, obj.turnDistance, runner); 
+%             aTurn.keepRunnerForReporting = obj.keepRunnerForReporting; 
+%             obj.currentPlan = aTurn;             
+%             aTurn.execute(); 
+%             obj.markedPlaceReport = aTurn.placeReport; 
+            aMove.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            obj.currentPlan = aMove;             
+            aMove.execute(); 
+            obj.markedPlaceReport = aMove.placeReport; 
         end
         function aRun = run(obj)
+%             clockwiseness = 0; 
+%             turn = false;
+%             runner = []; 
+%             move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner); 
+%            
+%             move.execute(); 
+            
             runner = []; 
 %             aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance);             
             aRun = Run('', obj.animal, obj.runSpeed, obj.runDistance, runner); 

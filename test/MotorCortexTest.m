@@ -38,15 +38,20 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.clockwiseTurn();
             result = motorCortex.markedPlaceReport.toCharArray()'; 
             testCase.assertEqual(result, ...
-               ['Clockwise: Default=1  ' newline,  ...
-                'Distance: Default=2  ' newline, ...                 
-                'Enabled: Default=1  ' newline, ...
-                'Speed: Default=1  ' newline]);
-%                ['Move.Enabled: Default=1  ' newline,  ...
-%                 'Move.Turn.Clockwise: Default=1  ' newline, ... 
-%                 'Move.Turn.Distance: Default=2  ' newline, ...                 
-%                 'Move.Turn.Speed: Default=1  ' newline, ...
-%                 'Move.Turn: Default=1  ' newline]);
+               ['Move.Enabled: Default=1  ' newline,  ...
+                'Move.Turn.Clockwise: Default=1  ' newline, ... 
+                'Move.Turn.Distance: Default=2  ' newline, ...                 
+                'Move.Turn.Speed: Default=1  ' newline, ...
+                'Move.TurnMotion: Default=1  ' newline]);
+%                ['Clockwise: Default=1  ' newline,  ...
+%                 'Distance: Default=2  ' newline, ...                 
+%                 'Enabled: Default=1  ' newline, ...
+%                 'Speed: Default=1  ' newline]);
+%                     Move.Enabled: Default=1  
+%         Move.Turn.Clockwise: Default=1  
+%         Move.Turn.Distance: Default=2  
+%         Move.Turn.Speed: Default=1  
+%         Move.TurnMotion: Default=1  
         end
 %         function testExpectedPlacesAreMarkedInNavigatePN(testCase)
 %             env = Environment();
@@ -59,38 +64,39 @@ classdef MotorCortexTest < AbstractTest
 %             testCase.animal.build(); 
 %             testCase.animal.place(env, 1, 1, 0);
 %             motorCortex = testCase.animal.motorCortex; 
+%             motorCortex.keepRunnerForReporting = true;             
 %             motorCortex.prepareNavigate(); 
 %             motorCortex.navigation.firingLimit = 2; 
-% %             motorCortex.navigate(10); 
+%             motorCortex.navigate(10); 
 %             result = motorCortex.markedPlaceReport.toCharArray()'; 
 %             testCase.assertEqual(result, ...
 %                ['Navigate.Enabled: Default=1  ' newline,  ...
 %                 'Navigate.Energy: Default=10  ' newline]);
 %         end
-        function testExpectedPlacesAreMarkedAfterNavigateZeroSteps(testCase)
-            env = Environment();
-            env.addWall([0 0],[0 2]); 
-            env.addWall([0 2],[2 2]); 
-            env.addWall([0 0],[2 0]); 
-            env.addWall([2 0],[2 2]);
-            env.build();
-            testCase.animal = Animal(); 
-            testCase.animal.build(); 
-            testCase.animal.place(env, 1, 1, 0);
-            motorCortex = testCase.animal.motorCortex; 
-            motorCortex.firingLimit = 3;  
-            motorCortex.keepRunnerForReporting = true; 
-            motorCortex.prepareNavigate(); 
-            motorCortex.stopOnReadyForTesting = true; 
-            motorCortex.navigate(0); 
-%             result = motorCortex.markedPlaceReport.toCharArray()'; 
-            result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
-            testCase.assertEqual(result, ...
-               ['Navigate.Energy: Default=9  ' newline,  ...
-                'Navigate.Ready: Default=1  ' newline,  ...
-                'Navigate.Resources: Default=1  ' newline,  ...                
-                'Navigate.Tired: Default=1  ' newline]);
-        end
+%         function testExpectedPlacesAreMarkedAfterNavigateZeroSteps(testCase)
+%             env = Environment();
+%             env.addWall([0 0],[0 2]); 
+%             env.addWall([0 2],[2 2]); 
+%             env.addWall([0 0],[2 0]); 
+%             env.addWall([2 0],[2 2]);
+%             env.build();
+%             testCase.animal = Animal(); 
+%             testCase.animal.build(); 
+%             testCase.animal.place(env, 1, 1, 0);
+%             motorCortex = testCase.animal.motorCortex; 
+%             motorCortex.firingLimit = 3;  
+%             motorCortex.keepRunnerForReporting = true; 
+%             motorCortex.prepareNavigate(); 
+%             motorCortex.stopOnReadyForTesting = true; 
+%             motorCortex.navigate(0); 
+% %             result = motorCortex.markedPlaceReport.toCharArray()'; 
+%             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
+%             testCase.assertEqual(result, ...
+%                ['Navigate.Energy: Default=9  ' newline,  ...
+%                 'Navigate.Ready: Default=1  ' newline,  ...
+%                 'Navigate.Resources: Default=1  ' newline,  ...                
+%                 'Navigate.Tired: Default=1  ' newline]);
+%         end
         function testTurnUpdatesAnimalPositionAndSumsMultipleTurns(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 
@@ -105,9 +111,10 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.turnDistance = 10;
             motorCortex.counterClockwiseTurn();
 %             pause(5); 
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertTrue(motorCortex.currentPlan.turn);
             %  seems to be evaluating after 5 instead of 10.  
-            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 10);
+            testCase.assertEqual(motorCortex.currentPlan.distanceMoved, 10);
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
             testCase.assertThat(testCase.animal.currentDirection, ...            
@@ -116,8 +123,9 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.turnDistance = 15;
             motorCortex.clockwiseTurn();
 %             pause(5); 
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');
-            testCase.assertEqual(motorCortex.currentPlan.distanceTurned, 15);
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertTrue(motorCortex.currentPlan.turn);
+            testCase.assertEqual(motorCortex.currentPlan.distanceMoved, 15);
             testCase.assertThat(testCase.animal.currentDirection, ...            
                  IsEqualTo(-pi/6, 'Within', RelativeTolerance(.00001))); 
         end
@@ -185,14 +193,14 @@ classdef MotorCortexTest < AbstractTest
             testCase.animal.place(env, 1, 0.005, 0);
             motorCortex = testCase.animal.motorCortex;
             motorCortex.randomNavigation(5);
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.counterClockwise);
             testCase.animal = Animal();
             testCase.animal.build(); 
             testCase.animal.place(env, 1, 1.995, 0);
             motorCortex = testCase.animal.motorCortex;
             motorCortex.randomNavigation(5);
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.clockwise);
         end
         function testBehaviorsRandomlyAlternateWithStepsDecrementing(testCase)
@@ -261,7 +269,7 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(5));
             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.counterClockwise);
             testCase.assertEqual(motorCortex.turnDistance, 5);            
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');            
+            testCase.assertClass(motorCortex.currentPlan, 'Move');            
             testCase.animal = Animal();
             testCase.animal.build(); 
             motorCortex = testCase.animal.motorCortex;
@@ -269,7 +277,7 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(4));
             testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.clockwise);
             testCase.assertEqual(motorCortex.turnDistance, 4);            
-            testCase.assertClass(motorCortex.currentPlan, 'Turn');            
+            testCase.assertClass(motorCortex.currentPlan, 'Move');            
         end
         function testRandomStepsDecrementsToZero(testCase)
             env = Environment();

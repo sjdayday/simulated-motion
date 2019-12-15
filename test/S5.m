@@ -1,4 +1,4 @@
-% System interface:  all systems implement System
+% S5:  (compare to S4, S6) 
 classdef S5 < handle 
 
     properties

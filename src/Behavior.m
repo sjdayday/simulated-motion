@@ -159,14 +159,23 @@ classdef Behavior < handle
         function doDone(obj)
 %            disp(obj.runner.getPlaceReport()); % setMarkedPlaces(false)
 
-           obj.waitForInput(false);
+%            obj.waitForInput(false);
+%            disp('behavior acknowledging: ');
+%            disp(obj.acknowledging);           
+%            disp('behavior standalone: ');
+%            disp(obj.standalone);           
            if (obj.acknowledging) 
+               
                 obj.acknowledge('Done'); 
            else
                 obj.run();  % concurrentModificationException if run() here when threaded
            end
+           if (obj.standalone)
+               obj.waitForInput(false);
+               obj.cleanupJvmMemory();
+           end
            obj.isDone = true;
-           obj.cleanupJvmMemory(); 
+%            obj.cleanupJvmMemory(); 
            disp('isdone: ');
            disp(obj.isDone);
 %            obj.animal.behaviorDone();             

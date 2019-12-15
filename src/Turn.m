@@ -40,12 +40,18 @@ classdef Turn <  Behavior
         end
         function listenLocalPlaces(obj)
             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Turned'], @obj.turned); 
+            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done);             
         end
 
         function done(obj, ~, ~)
-            if (obj.standalone)
+%            disp('done turn acknowledging: ');
+%            disp(obj.acknowledging);           
+%            disp('done turn standalone: ');
+%            disp(obj.standalone);           
+            
+%             if (obj.standalone)
                 done@Behavior(obj, 1, 1); 
-            end
+%             end
             obj.animal.turnDone(); 
         end
         function turned(obj, ~, ~) 
