@@ -149,7 +149,8 @@ classdef AnimalTest < AbstractTest
             buildAnimalInEnvironment(testCase);
             testCase.animal.build();            
             testCase.animal.whiskerLength = 0.01;
-            testCase.animal.motorCortex.run(); 
+%             testCase.animal.motorCortex.runDistance = 1; 
+%             testCase.animal.motorCortex.run(); 
             testCase.animal.place(testCase.environment, 1, 1, pi/4);              
             testCase.assertFalse(testCase.animal.rightWhiskerTouching);
             testCase.assertFalse(testCase.animal.leftWhiskerTouching);
@@ -273,13 +274,13 @@ classdef AnimalTest < AbstractTest
             
 %             testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
             relativeSpeed = 1;
-            clockwiseNess = -1 ;  %clockwise 
+            clockwiseness = -1 ;  %clockwise 
             
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(pi*14/15, 'Within', RelativeTolerance(.00000001)));         
             for ii = 1:14
-                testCase.animal.turn(clockwiseNess, relativeSpeed); 
+                testCase.animal.turn(clockwiseness, relativeSpeed); 
                 disp(['HDS: ', num2str(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex()) ]); 
 %                 testCase.plotGrids();
             end
@@ -334,30 +335,25 @@ classdef AnimalTest < AbstractTest
             testCase.animal.place(testCase.environment, 1.69, 1, 0);              
             testCase.animal.motorCortex.run();
             testCase.assertEqual(testCase.animal.distanceTraveled, 0.1, 'one step'); 
-            result = testCase.animal.motorCortex.currentPlan.getPlaceReport(3).toCharArray()'; 
+            result = testCase.animal.motorCortex.currentPlan.getPlaceReport(7).toCharArray()'; 
             testCase.assertEqual(result, ...
-                ['Distance: Default=4  ' newline,  ...
-                'ObjectSensed: Default=1  ' newline,  ...
-                'Ongoing: Default=1  ' newline,  ...
-                'Running: Default=1  ' newline,  ...
-                'Speed: Default=1  ' newline,  ...
-                'Stepped: Default=1  ' newline], 'object sensed');
-%                 ['Move.Ongoing: Default=1  ' newline,  ...
-%                 'Move.Run.Distance: Default=4  ' newline,  ...
-%                 'Move.Run.ObjectSensed: Default=1  ' newline,  ...
-%                 'Move.Run.Ongoing: Default=1  ' newline,  ...
-%                 'Move.Run.Running: Default=1  ' newline,  ...
-%                 'Move.Run.Speed: Default=1  ' newline,  ...
-%                 'Move.Run.Stepped: Default=1  ' newline], 'object sensed');
-            result2 = testCase.animal.motorCortex.currentPlan.getPlaceReport(5).toCharArray()'; 
+                ['Move.Ongoing: Default=1  ' newline,  ...
+                'Move.Run.Distance: Default=4  ' newline,  ...
+                'Move.Run.ObjectSensed: Default=1  ' newline,  ...
+                'Move.Run.Ongoing: Default=1  ' newline,  ...
+                'Move.Run.Running: Default=1  ' newline,  ...
+                'Move.Run.Speed: Default=1  ' newline,  ...
+                'Move.Run.Stepped: Default=1  ' newline], 'object sensed');
+            result2 = testCase.animal.motorCortex.currentPlan.getPlaceReport(9).toCharArray()'; 
             testCase.assertEqual(result2, ...
-                ['CleaningUp: Default=1  ' newline,  ...
-                'Continuing: Default=1  ' newline,  ...
-                'Distance: Default=4  ' newline,  ...
-                'Ongoing: Default=1  ' newline,  ...
-                'Running: Default=1  ' newline,  ...
-                'Speed: Default=1  ' newline,  ...
-                'Stopped: Default=1  ' newline], 'stopped, heading to done');
+                ['Move.Ongoing: Default=1  ' newline,  ...
+                'Move.Run.CleaningUp: Default=1  ' newline,  ...
+                'Move.Run.Continuing: Default=1  ' newline,  ...
+                'Move.Run.Distance: Default=4  ' newline,  ...
+                'Move.Run.Ongoing: Default=1  ' newline,  ...
+                'Move.Run.Running: Default=1  ' newline,  ...
+                'Move.Run.Speed: Default=1  ' newline,  ...
+                'Move.Run.Stopped: Default=1  ' newline], 'stopped, heading to done');
 %              disp(testCase.animal.motorCortex.currentPlan.getPlaceReport(8));
         end          
         function testAnimalCalculatesItsAxisOfRotation(testCase) 
@@ -399,16 +395,16 @@ classdef AnimalTest < AbstractTest
             testCase.animal.place(testCase.environment, 1, 1, 0);
             testCase.animal.orientAnimal(0);
             relativeSpeed = 1;
-            clockwiseNess = -1 ;  %clockwise  
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            clockwiseness = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(-pi/30, 'Within', RelativeTolerance(.00000001)));         
             relativeSpeed = 2;
-            clockwiseNess = 1 ;  %counterclockwise  
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            clockwiseness = 1 ;  %counterclockwise  
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(pi/30, 'Within', RelativeTolerance(.00000001)));         
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(3*pi/30, 'Within', RelativeTolerance(.00000001)));         
         end
@@ -426,8 +422,8 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.animal.headDirectionSystem.counterClockwiseVelocity, 0);                                     
             testCase.assertEqual(testCase.animal.headDirectionSystem.clockwiseVelocity, 0);                                     
             relativeSpeed = 1;
-            clockwiseNess = -1 ;  %clockwise  
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            clockwiseness = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.animal.turnDone(); % called by Turn.done 
             testCase.assertEqual(testCase.animal.headDirectionSystem.counterClockwiseVelocity, 0);                                     
             testCase.assertEqual(testCase.animal.headDirectionSystem.clockwiseVelocity, 0);                                     
@@ -514,8 +510,8 @@ classdef AnimalTest < AbstractTest
                IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
             testCase.assertThat(testCase.animal.y, ...
                IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
-            clockwiseNess = -1 ;  %clockwise  
-            testCase.animal.turn(clockwiseNess, 15); 
+            clockwiseness = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseness, 15); 
             testCase.assertThat(testCase.animal.currentDirection, ...
                IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
             relativeSpeed = 2;
@@ -532,9 +528,9 @@ classdef AnimalTest < AbstractTest
             testCase.assertTrue(testCase.animal.hippocampalFormation.angularVelocity == 0);             
             testCase.animal.motorCortex.setSimulatedMotion(true); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
-            clockwiseNess = -1;
+            clockwiseness = -1;
             relativeSpeed = 1;
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertEqual(testCase.animal.currentDirection, 0);             
             testCase.assertTrue(testCase.animal.hippocampalFormation.angularVelocity ~= 0);                         
         end        
@@ -558,24 +554,24 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.animal.controller.getTime(), 1, ...
             'forced to 1 for the first call to avoid some races'); 
             testCase.animal.place(testCase.environment, 1, 1, 0);
-            clockwiseNess = -1;
+            clockwiseness = -1;
             relativeSpeed = 1;
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
-            testCase.animal.turn(clockwiseNess, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
+            testCase.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertEqual(testCase.animal.controller.getTime(), 3);             
         end        
         function testClockwisenessMustBeOneOrMinusOne(testCase)
             buildAnimalInEnvironment(testCase);
             testCase.animal.build();            
             testCase.animal.place(testCase.environment, 1, 1, 0);
-            clockwiseNess = -2 ;   
+            clockwiseness = -2 ;   
             try 
-                testCase.animal.turn(clockwiseNess, 1); 
+                testCase.animal.turn(clockwiseness, 1); 
                 testCase.assertFail('should throw'); 
             catch  ME
-                testCase.assertEqual(ME.identifier, 'Animal:ClockwiseNess'); 
-                testCase.assertEqual(ME.message, 'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).'); 
+                testCase.assertEqual(ME.identifier, 'Animal:clockwiseness'); 
+                testCase.assertEqual(ME.message, 'turn(clockwiseness, relativeSpeed) clockwiseness must be 1 (CCW) or -1 (CW).'); 
             end
         end
 % see S8        function testRunThen180HeadDirectionRunBackSettlesToSamePlace(testCase)
@@ -592,8 +588,8 @@ classdef AnimalTest < AbstractTest
 %                IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
 %             testCase.assertThat(testCase.animal.y, ...
 %                IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
-%             clockwiseNess = -1 ;  %clockwise  
-%             testCase.animal.turn(clockwiseNess, 15); 
+%             clockwiseness = -1 ;  %clockwise  
+%             testCase.animal.turn(clockwiseness, 15); 
 %             testCase.assertThat(testCase.animal.currentDirection, ...
 %                IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
 %             relativeSpeed = 2;

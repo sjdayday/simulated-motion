@@ -1,10 +1,11 @@
-%% Turn class:  
-% invokes turn.xml PetriNet with speed, direction and distance parameters, and tracks distance turned  
+%% Navigate class:  
+% invokes navigate.xml PetriNet 
+% ...with speed, direction and distance parameters, and tracks distance turned  
 classdef Navigate <  Behavior  
 
     properties
          distanceTurned
-         clockwiseNess
+         clockwiseness
          speed
          finish
          stopOnReadyForTesting
@@ -28,16 +29,16 @@ classdef Navigate <  Behavior
             obj.listenPlaceWithAcknowledgementBothEvents([obj.prefix,'Simulated'], @obj.simulateChanged); 
 %             obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
 % %             obj.listenPlaceWithAcknowledgementBothEvents
-%             if (clockwiseNess == 1)
+%             if (clockwiseness == 1)
 %                 obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
 %             end 
-%             if (clockwiseNess == -1)
+%             if (clockwiseness == -1)
 %                 obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
 %             end
 %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
 %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
 %             obj.distanceTurned = 0; 
-%             obj.clockwiseNess = clockwiseNess; 
+%             obj.clockwiseness = clockwiseness; 
 %             obj.speed = speed;
 %             obj.execute();             
         end
@@ -68,8 +69,8 @@ classdef Navigate <  Behavior
 % %              pause(1); 
 %             obj.distanceTurned = obj.distanceTurned + 1;
 %              disp(['distanceTurned: ',num2str(obj.distanceTurned)]); 
-%             obj.animal.turn(obj.clockwiseNess, obj.speed); 
-% %             obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseNess * obj.speed); 
+%             obj.animal.turn(obj.clockwiseness, obj.speed); 
+% %             obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseness * obj.speed); 
 % %             obj.animal.hippocampalFormation.headDirectionSystem.step(); 
 % %             disp(obj.animal.hippocampalFormation.headDirectionSystem.time); 
 %             obj.acknowledge('Turned'); 

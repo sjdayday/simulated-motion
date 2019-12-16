@@ -194,14 +194,14 @@ classdef MotorCortexTest < AbstractTest
             motorCortex = testCase.animal.motorCortex;
             motorCortex.randomNavigation(5);
             testCase.assertClass(motorCortex.currentPlan, 'Move');
-            testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.counterClockwise);
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.counterClockwise);
             testCase.animal = Animal();
             testCase.animal.build(); 
             testCase.animal.place(env, 1, 1.995, 0);
             motorCortex = testCase.animal.motorCortex;
             motorCortex.randomNavigation(5);
             testCase.assertClass(motorCortex.currentPlan, 'Move');
-            testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.clockwise);
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.clockwise);
         end
         function testBehaviorsRandomlyAlternateWithStepsDecrementing(testCase)
             env = Environment();
@@ -267,7 +267,7 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertFalse(motorCortex.turnAwayFromWhiskersTouching(5));            
             testCase.animal.place(env, 1, 0.005, 0);
             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(5));
-            testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.counterClockwise);
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.counterClockwise);
             testCase.assertEqual(motorCortex.turnDistance, 5);            
             testCase.assertClass(motorCortex.currentPlan, 'Move');            
             testCase.animal = Animal();
@@ -275,7 +275,7 @@ classdef MotorCortexTest < AbstractTest
             motorCortex = testCase.animal.motorCortex;
             testCase.animal.place(env, 1, 1.995, 0);
             testCase.assertTrue(motorCortex.turnAwayFromWhiskersTouching(4));
-            testCase.assertEqual(motorCortex.clockwiseNess, motorCortex.clockwise);
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.clockwise);
             testCase.assertEqual(motorCortex.turnDistance, 4);            
             testCase.assertClass(motorCortex.currentPlan, 'Move');            
         end

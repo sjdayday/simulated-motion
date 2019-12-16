@@ -36,6 +36,7 @@ classdef Move <  Behavior
                    obj.behaviorPrefix = [obj.prefix,'Run.']; 
                    obj.markPlace([obj.prefix,'Run']);  
                    obj.behavior = Run(obj.behaviorPrefix, animal, speed, distance, obj.runner);             
+                   obj.behavior.acknowledging = true;                    
                 end
             else
                 % navigate here

@@ -238,21 +238,21 @@ classdef Animal < System
                     'animal must be placed before it can move (turn or run):  place(...)') ;
            end
         end
-        function turn(obj, clockwiseNess, relativeSpeed)
+        function turn(obj, clockwiseness, relativeSpeed)
             obj.checkPlaced(); 
             obj.move = 1; 
-                if (clockwiseNess == 1) || (clockwiseNess == -1)
+                if (clockwiseness == 1) || (clockwiseness == -1)
                     if ~ obj.simulatedMotion
-                        obj.currentDirection = obj.currentDirection + (clockwiseNess * (relativeSpeed * obj.minimumVelocity));
+                        obj.currentDirection = obj.currentDirection + (clockwiseness * (relativeSpeed * obj.minimumVelocity));
                         obj.calculateVertices();
                     end
-                    obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseNess * relativeSpeed), 0); 
+                    obj.hippocampalFormation.updateTurnAndLinearVelocity((clockwiseness * relativeSpeed), 0); 
 
                     obj.controller.step(); 
 
                 else
-                    error('Animal:ClockwiseNess', ...
-                        'turn(clockwiseNess, relativeSpeed) clockwiseNess must be 1 (CCW) or -1 (CW).') ;
+                    error('Animal:clockwiseness', ...
+                        'turn(clockwiseness, relativeSpeed) clockwiseness must be 1 (CCW) or -1 (CW).') ;
                 end
         end
 

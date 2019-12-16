@@ -44,12 +44,13 @@ classdef Run <  Behavior
         end        
         function listenLocalPlaces(obj)
            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Stepped'], @obj.stepped); 
+           obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done);             
         end
         
         function done(obj, ~, ~)
-            if (obj.standalone)
+%             if (obj.standalone)
                 done@Behavior(obj, 1, 1); 
-            end
+%             end
             obj.animal.runDone(); 
         end
         
@@ -63,7 +64,7 @@ classdef Run <  Behavior
             obj.distanceRun = obj.distanceRun + 1;
              disp(['distanceRun: ',num2str(obj.distanceRun)]); 
             obj.animal.run(obj.speed); 
-%             obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseNess * obj.speed); 
+%             obj.animal.hippocampalFormation.headDirectionSystem.updateTurnVelocity(obj.clockwiseness * obj.speed); 
 %             obj.animal.hippocampalFormation.headDirectionSystem.step(); 
 %             disp(obj.animal.hippocampalFormation.headDirectionSystem.time); 
             obj.acknowledge('Stepped'); 

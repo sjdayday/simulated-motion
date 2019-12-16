@@ -579,19 +579,19 @@ classdef HippocampalFormationTest < AbstractTest
                 45, 'new stable head direction'); 
             testCase.assertEqual(system.placeOutputIndices(), [92 230]); 
             relativeSpeed = 1;
-            clockwiseNess = -1 ;  %clockwise 
+            clockwiseness = -1 ;  %clockwise 
             
-            system.animal.turn(clockwiseNess, relativeSpeed); 
+            system.animal.turn(clockwiseness, relativeSpeed); 
             testCase.assertThat(system.animal.currentDirection, ...
                IsEqualTo(pi*14/30, 'Within', RelativeTolerance(.00000001)));         
             for ii = 1:14
-                system.animal.turn(clockwiseNess, relativeSpeed); 
+                system.animal.turn(clockwiseness, relativeSpeed); 
                 disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
 %                 testCase.plotGrids();
             end
 %                IsEqualTo(pi*29/30, 'Within', RelativeTolerance(.00000001)));         
 %             for ii = 1:29
-%                 system.animal.turn(clockwiseNess, relativeSpeed); 
+%                 system.animal.turn(clockwiseness, relativeSpeed); 
 %                 disp(['HDS: ', num2str(system.headDirectionSystem.getMaxActivationIndex()) ]); 
 % %                 testCase.plotGrids();
 %             end
