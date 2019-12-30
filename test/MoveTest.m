@@ -18,11 +18,13 @@ classdef MoveTest < AbstractTest
             testCase.assertEqual(v(3,:), [1.2 1.0]);    
             clockwiseness = 0; 
             turn = false;
-            runner = []; 
-            move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner); 
+            status = []; 
+%             listenAndMark = true;
+% readyAck? 
+            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status); 
            
             move.execute(); 
-            testCase.assertTrue(move.isDone);
+            testCase.assertTrue(move.behaviorStatus.isDone);
             testCase.assertEqual(move.distanceMoved, 3);
             vv = animal.vertices; 
             testCase.assertThat(vv(1,:), ...            
@@ -42,15 +44,16 @@ classdef MoveTest < AbstractTest
             animal = Animal();
             animal.build();
             animal.place(environment, 1, 1, 0);
-            runner = []; 
+            status = []; 
 %             turn = Turn('', animal, -1, 1, 3, runner); 
             turn = true; 
-            clockwiseness = -1; 
-            move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner);             
+            clockwiseness = -1;
+%             listenAndMark = true; 
+            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status);             
             move.execute(); 
 %             testCase.assertTrue(turn.isDone);
 %             testCase.assertEqual(3, turn.distanceTurned);
-            testCase.assertTrue(move.isDone);
+            testCase.assertTrue(move.behaviorStatus.isDone);
             testCase.assertEqual(move.distanceMoved, 3);
             
         end

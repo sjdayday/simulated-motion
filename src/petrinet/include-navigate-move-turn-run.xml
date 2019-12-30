@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<include name="Navigate" netLocation="Navigate.xml">
-  <include name="Move" netLocation="Move.xml">
-    <include name="Turn" netLocation="Turn.xml">
+<include name="Navigate" netLocation="navigate.xml">
+  <include name="Move" netLocation="move-include.xml">
+    <include name="Turn" netLocation="turn-include.xml">
 	</include>
-    <include name="Run" netLocation="Run.xml">
+    <include name="Run" netLocation="run-include.xml">
 	</include>
   </include>
 </include>

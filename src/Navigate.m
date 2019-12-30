@@ -54,6 +54,7 @@ classdef Navigate <  Behavior
             if (obj.finish)
                 done@Behavior(obj, 1, 1);                 
             end
+            obj.animal.motorCortex.nextRandomNavigation(); 
         end
         function simulateChanged(obj, source, event)
             disp(['source name: ', source.Name]); 

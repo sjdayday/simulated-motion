@@ -107,6 +107,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+          <!-- may be useful in testing to examine state after Prepare transition --> 
+          <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <transition id="Start">
             <graphics>

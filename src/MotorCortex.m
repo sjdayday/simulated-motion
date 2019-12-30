@@ -34,6 +34,9 @@ classdef MotorCortex < System
         navigation
         firingLimit
         stopOnReadyForTesting
+        runner
+        standaloneMoves
+        listenAndMark
     end
     methods
         function obj = MotorCortex(animal)
@@ -66,6 +69,10 @@ classdef MotorCortex < System
             obj.physicalPlace = []; 
             obj.firingLimit = 10000000;
             obj.stopOnReadyForTesting = false; 
+            obj.runner = []; 
+            obj.movePrefix = 'Move.';
+            obj.standaloneMoves = true; 
+            obj.listenAndMark = true; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -114,13 +121,17 @@ classdef MotorCortex < System
         end
         function nextRandomNavigation(obj)
            steps = obj.randomSteps(); 
-           if obj.turnAwayFromWhiskersTouching(steps)
-               disp('turning away from whiskers touching'); 
-               behavior = obj.turnBehavior; 
-           else
-               behavior = obj.turnOrRun(steps); 
+           if (steps == 0)
+              obj.navigation.finish = true;  
+           else 
+               if obj.turnAwayFromWhiskersTouching(steps)
+                   disp('turning away from whiskers touching'); 
+                   behavior = obj.turnBehavior; 
+               else
+                   behavior = obj.turnOrRun(steps); 
+               end
+               obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
            end
-           obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
         end
       function turnAway = turnAwayFromWhiskersTouching(obj, steps)
             obj.turnDistance = steps; 
@@ -150,12 +161,28 @@ classdef MotorCortex < System
            end
         end
         function prepareNavigate(obj)
+            obj.standaloneMoves = false; 
             obj.movePrefix = 'Navigate.Move.'; % Turn.
             obj.navigation = Navigate(obj.navigatePrefix, obj.animal);
             obj.navigation.firingLimit = obj.firingLimit; 
             obj.navigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
             obj.navigation.build(); 
+            obj.runner = obj.navigation.runner; 
+            obj.setupListeners(); 
 %             obj.currentPlan = aNavigation;             
+        end
+        function setupListeners(obj)
+           obj.listenAndMark = false;  
+           aMove = obj.turn(); 
+           aMove.acknowledging = true;            
+           aMove.listenPlaces(); 
+
+%            aMove.markPlaces(obj.listenAndMark);
+           aMove.behavior.listenLocalPlaces();
+%            aMove.behavior.markPlaces();
+           aMove = obj.run(); 
+           aMove.behavior.listenLocalPlaces(); 
+           obj.listenAndMark = true; 
         end
         function navigate(obj, steps)
             if (obj.stopOnReadyForTesting) 
@@ -163,10 +190,10 @@ classdef MotorCortex < System
             end
             obj.behaviorHistory = [];
             obj.remainingDistance = steps; 
-            while (obj.remainingDistance > 0)
+%             while (obj.remainingDistance > 0)
                 obj.nextRandomNavigation(); 
-            end
-            obj.navigation.finish = true; 
+%             end
+         
 
 %             aNavigation = Navigate(obj.navigatePrefix, obj.animal); 
 %             aNavigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
@@ -196,60 +223,28 @@ classdef MotorCortex < System
             obj.clockwiseness = obj.clockwise; 
             obj.turn(); 
         end
-        
-%             clockwiseness = 0; 
-%             turn = false;
-%             runner = []; 
-%             move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner); 
-%            
-%             move.execute(); 
-
-
-%             turn = Turn('Move.', animal, -1, 1, 3);             
-%             turn = Turn('', animal, -1, 1, 3, runner); 
-%             turn.execute(); 
-%             runner = []; 
-%             run = Run('', animal, 1, 3, runner);             
-        
-
         function aMove = turn(obj)
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
             turn = true;
-            runner = []; 
-            aMove = Move('Move.', obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, runner); 
-%             aMove.execute(); 
-%             aTurn = Turn('', obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance, runner); 
-%             aTurn.keepRunnerForReporting = obj.keepRunnerForReporting; 
-%             obj.currentPlan = aTurn;             
-%             aTurn.execute(); 
-%             obj.markedPlaceReport = aTurn.placeReport; 
-            aMove.keepRunnerForReporting = obj.keepRunnerForReporting; 
-            obj.currentPlan = aMove;             
-            aMove.execute(); 
-            obj.markedPlaceReport = aMove.placeReport; 
+%             runner = []; 
+            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.runner, obj.listenAndMark); 
+            if (obj.standaloneMoves) 
+                obj.doMove(aMove); 
+            end            
         end
         function aMove = run(obj)
             obj.clockwiseness = 0; 
             turn = false;
-%             runner = []; 
-%             move = Move('Move.', animal, 1, 3, clockwiseness, turn, runner); 
-%            
-%             move.execute(); 
-            
-            runner = []; 
-%             aRun = Run(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance);             
-            aMove = Move('Move.', obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, runner); 
-
-%             aRun = Run('', obj.animal, obj.runSpeed, obj.runDistance, runner); 
-%             aRun.keepRunnerForReporting = obj.keepRunnerForReporting;             
-%             obj.currentPlan = aRun; 
-%             aRun.execute(); 
-%             obj.markedPlaceReport = aRun.placeReport; 
+            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.runner, obj.listenAndMark); 
+            if (obj.standaloneMoves) 
+                obj.doMove(aMove); 
+            end                        
+        end
+        function doMove(obj, aMove)
             aMove.keepRunnerForReporting = obj.keepRunnerForReporting; 
             obj.currentPlan = aMove;             
             aMove.execute(); 
-            obj.markedPlaceReport = aMove.placeReport; 
-            
+            obj.markedPlaceReport = aMove.placeReport;             
         end
         function offset = cuePhysicalHeadDirectionOffset(obj)
             environment = obj.animal.environment; 

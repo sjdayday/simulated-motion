@@ -17,10 +17,12 @@ classdef RunTest < AbstractTest
             testCase.assertEqual(v(2,:), [1 0.95]);                         
             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
 %             run = Run('Move.', animal, 1, 3); 
-            runner = []; 
-            run = Run('', animal, 1, 3, runner);             
+            status = []; 
+%             listenAndMark = true; 
+            run = Run('', animal, 1, 3, status);             
+%             run = Run('', animal, 1, 3, runner);             
             run.execute(); 
-            testCase.assertTrue(run.isDone);
+            testCase.assertTrue(run.behaviorStatus.isDone);
             testCase.assertEqual(3, run.distanceRun);
             vv = animal.vertices; 
             testCase.assertThat(vv(1,:), ...            

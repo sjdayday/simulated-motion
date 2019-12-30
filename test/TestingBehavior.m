@@ -1,61 +1,67 @@
-%% Behavior class:  base class for behaviors
-% Behaviors invoke correponding Petri nets, including:  Run, Turn, Move, Navigate 
-% Behaviors may be run as standalone Petri nets, or as part of include hierarchies 
-classdef Behavior < handle 
+%% TestingBehavior class:  class for unit testing Behavior
+classdef TestingBehavior < Behavior 
 
     properties
-        animal
-%         placeSystem
-        cortex
-        motorCortex
-%         visualCortex
-        subCortex
-%         headDirectionSystem
-%         chartSystem
-        runner
-        thread
-        threadRunner
-%         listener
-%         petriNetPath
-%         defaultPetriNet
-        petriNet
-%         isDone
-        prefix
-%         firingLimit
-%         behaviorPrefix
-        acknowledging
-        placeReport
-%         listeners
-        keepRunnerForReporting
-%         placeReportLimit
-%         standalone
-        behaviorStatus 
-        
+%         animal
+% %         placeSystem
+%         cortex
+%         motorCortex
+% %         visualCortex
+%         subCortex
+% %         headDirectionSystem
+% %         chartSystem
+%         runner
+%         thread
+%         threadRunner
+% %         listener
+% %         petriNetPath
+% %         defaultPetriNet
+%         petriNet
+% %         isDone
+%         prefix
+% %         firingLimit
+% %         behaviorPrefix
+%         acknowledging
+%         placeReport
+% %         listeners
+%         keepRunnerForReporting
+% %         placeReportLimit
+% %         standalone
+%         behaviorStatus 
     end
     methods
-         function obj = Behavior(prefix, animal, behaviorStatus)
+         function obj = TestingBehavior(prefix, animal, behaviorStatus)
             import uk.ac.imperial.pipe.runner.*;
-
-            obj.prefix = prefix;             
-            obj.buildStatus(behaviorStatus); 
-
-            obj.behaviorStatus.petriNetPath = [cd, '/petrinet/'];
-
-            obj.behaviorStatus.isDone = false;
-            
-%             obj.behaviorStatus.prefix = prefix; 
-            obj.behaviorStatus.firingLimit = 10000000; % 10M; don't stop prematurely unless overridden
-            obj.behaviorStatus.placeReportLimit = 0;  % unlimited; override for Navigate
-%             obj.behaviorStatus.behaviorPrefix = ''; % override in specific behavior
-            obj.animal = animal; 
-%             obj.behaviorStatus.acknowledging = false; 
-            getSystemsFromAnimal(obj); 
-            if (size(obj.behaviorStatus.listeners) == 0) 
-                obj.behaviorStatus.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
-            end
-            obj.behaviorStatus.keepRunnerForReporting = false; 
+            obj = obj@Behavior(prefix, animal, behaviorStatus);
+%             obj.behaviorStatus.defaultPetriNet = 'base-control.xml';                    
+%             obj.buildStatus(behaviorStatus); 
+% 
+%             obj.behaviorStatus.petriNetPath = [cd, '/petrinet/'];
+% 
+%             obj.behaviorStatus.isDone = false;
+% 
+% %             obj.behaviorStatus.prefix = prefix; 
+%             obj.behaviorStatus.firingLimit = 10000000; % 10M; don't stop prematurely unless overridden
+%             obj.behaviorStatus.placeReportLimit = 0;  % unlimited; override for Navigate
+% %             obj.behaviorStatus.behaviorPrefix = ''; % override in specific behavior
+%             obj.animal = animal; 
+% %             obj.behaviorStatus.acknowledging = false; 
+%             getSystemsFromAnimal(obj); 
+%             if (size(obj.behaviorStatus.listeners) == 0) 
+%                 obj.behaviorStatus.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
+%             end
+%             obj.behaviorStatus.keepRunnerForReporting = false; 
+% 
+%             obj.runner = obj.behaviorStatus.buildRunner(); 
 
          end
+         function behaviorStatus = getStandaloneStatus(obj)
+            behaviorStatus = TestingBehaviorStatusStandalone('', []);  
+         end
+         function behaviorStatus = getIncludeStatus(obj)
+            behaviorStatus = TestingBehaviorStatusInclude('', []); 
+         end
+
          function buildStatus(obj, behaviorStatus)
             if (isempty(behaviorStatus))
                 obj.behaviorStatus = obj.getStandaloneStatus();
@@ -243,10 +249,6 @@ classdef Behavior < handle
         function placeReport = getPlaceReport(obj, index)
            placeReport = obj.runner.getPlaceReport(index); 
         end
-    end
-    methods (Abstract)
-        status = getStandaloneStatus(obj)
-        status = getIncludeStatus(obj)
     end
 
 end

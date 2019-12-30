@@ -10,11 +10,12 @@ classdef TurnTest < AbstractTest
             animal = Animal();
             animal.build();
             animal.place(environment, 1, 1, 0);
-            runner = []; 
+            status = []; 
+%             listenAndMark = true;
 %             turn = Turn('Move.', animal, -1, 1, 3);             
-            turn = Turn('', animal, -1, 1, 3, runner); 
+            turn = Turn('', animal, -1, 1, 3, status); 
             turn.execute(); 
-            testCase.assertTrue(turn.isDone);
+            testCase.assertTrue(turn.behaviorStatus.isDone);
             testCase.assertEqual(3, turn.distanceTurned);
         end
         

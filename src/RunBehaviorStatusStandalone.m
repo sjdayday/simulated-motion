@@ -1,83 +1,103 @@
-%% Behavior class:  base class for behaviors
-% Behaviors invoke correponding Petri nets, including:  Run, Turn, Move, Navigate 
-% Behaviors may be run as standalone Petri nets, or as part of include hierarchies 
-classdef Behavior < handle 
+%% BehaviorStatus class:  base class for behaviorStatus 
+% BehaviorStatus handles the different possible life cycles for a Behavior 
+% Standalone behaviors map one to one with a single Petri net, creating and destroying 
+%  a single PetrinetRunner
+% Include behaviors map to an IncludeHierarchy.  Only the top level
+%  creates a PetrinetRunner; lower levels use the existing runner. 
+% For included Petri nets that might execute multiple times, listeners may just be 
+%  created once, while places that act as input parameters may be marked at each 
+%  execution. 
+classdef RunBehaviorStatusStandalone < BehaviorStatus 
 
     properties
-        animal
-%         placeSystem
-        cortex
-        motorCortex
-%         visualCortex
-        subCortex
-%         headDirectionSystem
-%         chartSystem
-        runner
-        thread
-        threadRunner
-%         listener
+         speed
+         distance 
+
+%         behavior
+%         runner 
+% %         placeSystem
+%         cortex
+%         motorCortex
+% %         visualCortex
+%         subCortex
+% %         headDirectionSystem
+% %         chartSystem
+%         runner
+%         thread
+%         threadRunner
+% %         listener
 %         petriNetPath
 %         defaultPetriNet
-        petriNet
+%         petriNet
 %         isDone
-        prefix
+%         prefix
 %         firingLimit
 %         behaviorPrefix
-        acknowledging
-        placeReport
+%         acknowledging
+%         placeReport
 %         listeners
-        keepRunnerForReporting
+%         keepRunnerForReporting
 %         placeReportLimit
 %         standalone
-        behaviorStatus 
-        
     end
     methods
-         function obj = Behavior(prefix, animal, behaviorStatus)
+         function obj = RunBehaviorStatusStandalone(prefix, runner)
             import uk.ac.imperial.pipe.runner.*;
-
-            obj.prefix = prefix;             
-            obj.buildStatus(behaviorStatus); 
-
-            obj.behaviorStatus.petriNetPath = [cd, '/petrinet/'];
-
-            obj.behaviorStatus.isDone = false;
-            
-%             obj.behaviorStatus.prefix = prefix; 
-            obj.behaviorStatus.firingLimit = 10000000; % 10M; don't stop prematurely unless overridden
-            obj.behaviorStatus.placeReportLimit = 0;  % unlimited; override for Navigate
-%             obj.behaviorStatus.behaviorPrefix = ''; % override in specific behavior
-            obj.animal = animal; 
-%             obj.behaviorStatus.acknowledging = false; 
-            getSystemsFromAnimal(obj); 
-            if (size(obj.behaviorStatus.listeners) == 0) 
-                obj.behaviorStatus.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
-            end
-            obj.behaviorStatus.keepRunnerForReporting = false; 
-
-         end
-         function buildStatus(obj, behaviorStatus)
-            if (isempty(behaviorStatus))
-                obj.behaviorStatus = obj.getStandaloneStatus();
+            obj = obj@BehaviorStatus(prefix, runner);
+            obj.defaultPetriNet = 'run-SA.xml';
+%             obj.prefix = prefix; 
+%             obj.behavior = behavior;  <---- must be set later
+%             obj.runner = runner;
+%             if (isempty(runner))
 %                 obj.standalone = true; 
-            else
-%                 obj.behaviorStatus = obj.getIncludeStatus();                 
-                obj.behaviorStatus = behaviorStatus; 
+%             else
 %                 obj.standalone = false; 
-            end
-        
+%                 obj.runner = runner; 
+%             end
+%             obj.petriNetPath = [cd, '/petrinet/'];
+%             obj.defaultPetriNet = 'base-control.xml';        
+%             obj.isDone = false;
+%             obj.prefix = prefix; 
+%             obj.firingLimit = 10000000; % 10M; don't stop prematurely unless overridden
+%             obj.placeReportLimit = 0;  % unlimited; override for Navigate
+%             obj.behaviorPrefix = ''; % override in specific behavior
+%             obj.animal = animal; 
+            obj.acknowledging = true; 
+%             getSystemsFromAnimal(obj); 
+%             obj.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
+%             obj.keepRunnerForReporting = false; 
          end
-         function getSystemsFromAnimal(obj)     
-%             obj.placeSystem = obj.animal.placeSystem; 
-            obj.cortex = obj.animal.cortex;
-            obj.motorCortex = obj.animal.motorCortex;
-%             obj.visualCortex = obj.animal.visualCortex;
-            obj.subCortex = obj.animal.subCortex;
-%             obj.headDirectionSystem = obj.animal.headDirectionSystem;
-%             obj.chartSystem = obj.animal.chartSystem;
+         function setupListeners(obj)
+            setupListeners@BehaviorStatus(obj); 
+            obj.listenPlaceWithAcknowledgement([obj.prefix, 'Stepped'], @obj.stepped); 
          end
-         function buildRunner(obj)
-            obj.runner = obj.behaviorStatus.buildRunner();                          
+         function markPlaces(obj)
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], obj.speed); 
+            obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], obj.distance); 
+         end
+        function done(obj, ~, ~)
+            done@BehaviorStatus(obj, 1, 1);             
+            obj.behavior.done(); 
+        end         
+        function stepped(obj, ~, ~) 
+            obj.behavior.stepped(); 
+%             obj.behavior.distanceTurned = obj.behavior.distanceTurned + 1;
+%              disp(['distanceTurned: ',num2str(obj.behavior.distanceTurned)]); 
+%             obj.behavior.animal.turn(obj.clockwiseness, obj.speed); 
+%             obj.behavior.acknowledge('Turned'); 
+%             disp('exiting turned'); 
+        end         
+        function cleanup(obj)
+           obj.standaloneCleanup();  
+        end
+% buildRunner()
+% setupListeners()
+% markPlaces
+% execute
+
+%         function runner = buildRunner(obj)
+% %             obj.buildThreadedRunner();              
+% %             runner = obj.runner; 
 %             if (obj.standalone)
 %                 import uk.ac.imperial.pipe.runner.*;
 %                 import java.lang.Thread;
@@ -89,22 +109,20 @@ classdef Behavior < handle
 %     %             obj.runner.setFiringDelay(1000);
 %                 obj.waitForInput(true);
 %             end
-         end
-         function execute(obj)
-             obj.behaviorStatus.execute(); 
+%          end
+%          function execute(obj)
 %             obj.thread.start(); 
 % %             obj.run();
 %             while (~obj.isDone)
 %                 pause(0.1); 
 %             end   
-         end
-        function buildStandardSemantics(obj)
-            obj.buildRunner(); 
-            obj.listenPlaces(); 
-%             obj.listenPlace([obj.prefix,'Done'], @obj.done); 
-        end
-        function listenPlaces(obj)
-            obj.behaviorStatus.listenPlaces(); 
+%          end
+%         function buildStandardSemantics(obj)
+%             obj.buildRunner(); 
+%             obj.listenPlaces(); 
+% %             obj.listenPlace([obj.prefix,'Done'], @obj.done); 
+%         end
+%         function listenPlaces(obj)
 %            if (obj.acknowledging) 
 %                 obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
 %     %           needed for place report
@@ -112,15 +130,14 @@ classdef Behavior < handle
 %            else
 %                 obj.listenPlace([obj.prefix,'Done'], @obj.done); 
 %            end
-        end
-        function buildThreadedStandardSemantics(obj)
-            obj.behaviorStatus.buildThreadedStandardSemantics(); 
+%         end
+%         function buildThreadedStandardSemantics(obj)
 %             obj.buildThreadedRunner(); 
 %             obj.listenPlaces(); 
-%             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
-% %           needed for place report
-%             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
-        end
+% %             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
+% % %           needed for place report
+% %             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
+%         end
 %         function buildThreadedRunner(obj)
 %             import uk.ac.imperial.pipe.runner.*;
 %             import java.lang.Thread;
@@ -135,10 +152,9 @@ classdef Behavior < handle
 %         function waitForInput(obj, wait)
 %             obj.runner.setWaitForExternalInput(wait);
 %         end
-        function run(obj)
-            obj.behaviorStatus.run(); 
+%         function run(obj)
 %             obj.runner.run();    
-        end
+%         end
 %         function listenPlace(obj, place, evaluator)
 % %             f = java.lang.Boolean(false); 
 %             listenPlaceBare(obj, place, evaluator, false, false); % false 
@@ -159,9 +175,9 @@ classdef Behavior < handle
 %             set(listener,'PropertyChangeCallback',evaluator);
 %             obj.listeners = [obj.listeners; listener];
 %         end           
-        function acknowledge(obj, place) 
-           obj.runner.acknowledge(place);  
-        end
+%         function acknowledge(obj, place) 
+%            obj.runner.acknowledge(place);  
+%         end
 %         function ready(obj, ~, ~)
 %            disp('ready');
 %            obj.placeReport = obj.runner.getPlaceReport();
@@ -170,10 +186,7 @@ classdef Behavior < handle
 %            end
 % 
 %         end
-
-%         function done(obj, ~, ~)
-%             obj.doDone(); 
-%         end
+% 
 %         % move done logic to a method that can be called anywhere, not just
 %         % from a subclass
 %         function doDone(obj)
@@ -237,16 +250,11 @@ classdef Behavior < handle
 %         function defaultPetriNet = getDefaultPetriNet(obj)
 %             defaultPetriNet = obj.defaultPetriNet;
 %         end
-        function resetRandomSeed(obj, reset)
-            obj.resetSeed = reset; 
-        end
-        function placeReport = getPlaceReport(obj, index)
-           placeReport = obj.runner.getPlaceReport(index); 
-        end
+%         function resetRandomSeed(obj, reset)
+%             obj.resetSeed = reset; 
+%         end
+%         function placeReport = getPlaceReport(obj, index)
+%            placeReport = obj.runner.getPlaceReport(index); 
+%         end
     end
-    methods (Abstract)
-        status = getStandaloneStatus(obj)
-        status = getIncludeStatus(obj)
-    end
-
 end
