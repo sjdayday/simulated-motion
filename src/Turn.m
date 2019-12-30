@@ -9,7 +9,7 @@ classdef Turn <  Behavior
 %          distance 
     end
     methods        
-        function obj = Turn(prefix, animal, clockwiseness, speed, distance, behaviorStatus)
+        function obj = Turn(prefix, animal, clockwiseness, speed, distance, behaviorStatus, build)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal, behaviorStatus);
             obj.distanceTurned = 0; 
@@ -19,9 +19,9 @@ classdef Turn <  Behavior
             obj.behaviorStatus.speed = speed;            
             obj.behaviorStatus.distance = distance; 
             obj.behaviorStatus.behavior = obj; 
-            obj.runner = obj.behaviorStatus.buildThreadedRunner(); 
-            obj.behaviorStatus.setupListeners();
-            obj.behaviorStatus.markPlaces(); 
+            if (build)
+                obj.build(); 
+            end            
 %              if (obj.standalone)
 %                 obj.defaultPetriNet = 'turn-SA.xml';
 %                 obj.buildThreadedStandardSemantics();   

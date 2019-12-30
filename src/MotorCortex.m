@@ -25,6 +25,7 @@ classdef MotorCortex < System
         maxBehaviorSteps
         behaviorHistory
         keepRunnerForReporting
+        readyAcknowledgeBuildsPlaceReport
         turnBehavior
         runBehavior
         orientBehavior
@@ -73,6 +74,7 @@ classdef MotorCortex < System
             obj.movePrefix = 'Move.';
             obj.standaloneMoves = true; 
             obj.listenAndMark = true; 
+            obj.readyAcknowledgeBuildsPlaceReport = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -161,9 +163,10 @@ classdef MotorCortex < System
            end
         end
         function prepareNavigate(obj)
+            build = false; 
             obj.standaloneMoves = false; 
             obj.movePrefix = 'Navigate.Move.'; % Turn.
-            obj.navigation = Navigate(obj.navigatePrefix, obj.animal);
+            obj.navigation = Navigate(obj.navigatePrefix, obj.animal, build);
             obj.navigation.firingLimit = obj.firingLimit; 
             obj.navigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
             obj.navigation.build(); 
@@ -226,8 +229,10 @@ classdef MotorCortex < System
         function aMove = turn(obj)
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
             turn = true;
+            build = false; 
 %             runner = []; 
-            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.runner, obj.listenAndMark); 
+            behaviorStatus = []; 
+            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, behaviorStatus, build); % obj.runner obj.listenAndMark
             if (obj.standaloneMoves) 
                 obj.doMove(aMove); 
             end            
@@ -235,16 +240,22 @@ classdef MotorCortex < System
         function aMove = run(obj)
             obj.clockwiseness = 0; 
             turn = false;
-            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.runner, obj.listenAndMark); 
+            build = false;
+            behaviorStatus = [];
+            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, behaviorStatus, build); 
             if (obj.standaloneMoves) 
                 obj.doMove(aMove); 
             end                        
         end
         function doMove(obj, aMove)
-            aMove.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            aMove.keepRunnerForReporting = obj.keepRunnerForReporting;
+            aMove.behaviorStatus.keepRunnerForReporting = obj.keepRunnerForReporting;
+%             aMove.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
+            aMove.behaviorStatus.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
             obj.currentPlan = aMove;             
+            aMove.build(); 
             aMove.execute(); 
-            obj.markedPlaceReport = aMove.placeReport;             
+            obj.markedPlaceReport = aMove.behaviorStatus.placeReport;             
         end
         function offset = cuePhysicalHeadDirectionOffset(obj)
             environment = obj.animal.environment; 

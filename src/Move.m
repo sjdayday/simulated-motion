@@ -11,7 +11,7 @@ classdef Move <  Behavior
          includeBehavior % needs to be set by behaviorStatus
     end
     methods                
-        function obj = Move(prefix, animal, speed, distance, clockwiseness, turn, behaviorStatus)
+        function obj = Move(prefix, animal, speed, distance, clockwiseness, turn, behaviorStatus, build)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal, behaviorStatus);
             obj.distanceMoved = 0; 
@@ -21,9 +21,9 @@ classdef Move <  Behavior
             obj.turn = turn; 
             obj.behaviorStatus.turn = turn; 
             obj.behaviorStatus.behavior = obj; 
-            obj.runner = obj.behaviorStatus.buildThreadedRunner(); 
-            obj.behaviorStatus.setupListeners();
-            obj.behaviorStatus.markPlaces(); 
+            if (build)
+                obj.build(); 
+            end
             
 %             if (obj.standalone)
 %                 obj.defaultPetriNet = 'include-move-turn-run.xml';

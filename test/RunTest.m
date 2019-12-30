@@ -18,8 +18,9 @@ classdef RunTest < AbstractTest
             testCase.assertEqual(v(3,:), [1.2 1.0]);                         
 %             run = Run('Move.', animal, 1, 3); 
             status = []; 
+            build = true; 
 %             listenAndMark = true; 
-            run = Run('', animal, 1, 3, status);             
+            run = Run('', animal, 1, 3, status, build);             
 %             run = Run('', animal, 1, 3, runner);             
             run.execute(); 
             testCase.assertTrue(run.behaviorStatus.isDone);

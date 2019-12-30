@@ -11,51 +11,61 @@ classdef Navigate <  Behavior
          stopOnReadyForTesting
     end
     methods
-        function obj = Navigate(prefix, animal)
+        function obj = Navigate(prefix, animal, build)
             import uk.ac.imperial.pipe.runner.*;
             runner = []; 
             obj = obj@Behavior(prefix, animal, runner);
             obj.placeReportLimit = 100; % otherwise, will consume lots of memory
-            obj.defaultPetriNet = 'include-navigate-move-turn-run.xml';
+%             obj.defaultPetriNet = 'include-navigate-move-turn-run.xml';
             obj.behaviorPrefix = [prefix,'Move.']; % Turn or Run...
             obj.finish = false;
             obj.stopOnReadyForTesting = false; 
+            obj.behaviorStatus.behavior = obj; 
+            if (build)
+                obj.build(); 
+            end
+            
         end
-        function build(obj)
-            obj.buildThreadedStandardSemantics(); 
-%             obj.runner.setFiringDelay(50);
-%             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
-%             obj.markPlace([obj.prefix,'Turn']); 
-            obj.listenPlaceWithAcknowledgementBothEvents([obj.prefix,'Simulated'], @obj.simulateChanged); 
-%             obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
-% %             obj.listenPlaceWithAcknowledgementBothEvents
-%             if (clockwiseness == 1)
-%                 obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
-%             end 
-%             if (clockwiseness == -1)
-%                 obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
-%             end
-%             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
-%             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
-%             obj.distanceTurned = 0; 
-%             obj.clockwiseness = clockwiseness; 
-%             obj.speed = speed;
-%             obj.execute();             
+%         function build(obj)
+% >             obj.buildThreadedStandardSemantics(); 
+% %             obj.runner.setFiringDelay(50);
+% %             obj.listenPlace([prefix, 'Turned'], @obj.turned);      
+% %             obj.markPlace([obj.prefix,'Turn']); 
+% >            obj.listenPlaceWithAcknowledgementBothEvents([obj.prefix,'Simulated'], @obj.simulateChanged); 
+% %             obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
+% % %             obj.listenPlaceWithAcknowledgementBothEvents
+% %             if (clockwiseness == 1)
+% %                 obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
+% %             end 
+% %             if (clockwiseness == -1)
+% %                 obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
+% %             end
+% %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], speed); 
+% %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], distance); 
+% %             obj.distanceTurned = 0; 
+% %             obj.clockwiseness = clockwiseness; 
+% %             obj.speed = speed;
+% %             obj.execute();             
+%         end
+        function status = getStandaloneStatus(obj)
+           status = NavigateBehaviorStatusStandalone(obj.prefix, []);
         end
-        function ready(obj, ~, ~)
-           ready@Behavior(obj, 1, 1); 
-           if (obj.stopOnReadyForTesting)
-              obj.doDone();  
-           end
-
+        function status = getIncludeStatus(obj)
+            % currently unused 
+%            status = NavigateBehaviorStatusInclude(obj.prefix, obj.runner); 
         end
         
-        function done(obj, ~, ~)
-            if (obj.finish)
-                done@Behavior(obj, 1, 1);                 
-            end
+%         function ready(obj)
+%            ready@Behavior(obj, 1, 1); 
+%            if (obj.stopOnReadyForTesting)
+%               obj.doDone();  
+%            end
+%         end
+        
+        function done(obj)
             obj.animal.motorCortex.nextRandomNavigation(); 
         end
+        
         function simulateChanged(obj, source, event)
             disp(['source name: ', source.Name]); 
             disp(['event class: ', class(event)]); 

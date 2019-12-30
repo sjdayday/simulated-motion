@@ -67,6 +67,13 @@ classdef Behavior < handle
             end
         
          end
+         function build(obj)
+            % should be driven by a flag to choose threaded or not threaded
+            % runner 
+            obj.runner = obj.behaviorStatus.buildThreadedRunner(); 
+            obj.behaviorStatus.setupListeners();
+            obj.behaviorStatus.markPlaces(); 
+         end
          function getSystemsFromAnimal(obj)     
 %             obj.placeSystem = obj.animal.placeSystem; 
             obj.cortex = obj.animal.cortex;

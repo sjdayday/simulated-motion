@@ -21,7 +21,8 @@ classdef MoveTest < AbstractTest
             status = []; 
 %             listenAndMark = true;
 % readyAck? 
-            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status); 
+            build = true; 
+            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status, build); 
            
             move.execute(); 
             testCase.assertTrue(move.behaviorStatus.isDone);
@@ -48,8 +49,9 @@ classdef MoveTest < AbstractTest
 %             turn = Turn('', animal, -1, 1, 3, runner); 
             turn = true; 
             clockwiseness = -1;
-%             listenAndMark = true; 
-            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status);             
+%             listenAndMark = true;
+            build = true; 
+            move = Move('Move.', animal, 1, 3, clockwiseness, turn, status, build);             
             move.execute(); 
 %             testCase.assertTrue(turn.isDone);
 %             testCase.assertEqual(3, turn.distanceTurned);

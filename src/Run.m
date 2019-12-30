@@ -8,7 +8,7 @@ classdef Run <  Behavior
          speed
     end
     methods
-        function obj = Run(prefix, animal, speed, distance, behaviorStatus)
+        function obj = Run(prefix, animal, speed, distance, behaviorStatus, build)
             import uk.ac.imperial.pipe.runner.*;
             obj = obj@Behavior(prefix, animal, behaviorStatus);
             obj.distanceRun = 0; 
@@ -17,9 +17,9 @@ classdef Run <  Behavior
             obj.distance = distance; 
             obj.behaviorStatus.distance = distance; 
             obj.behaviorStatus.behavior = obj; 
-            obj.runner = obj.behaviorStatus.buildThreadedRunner(); 
-            obj.behaviorStatus.setupListeners();
-            obj.behaviorStatus.markPlaces(); 
+            if (build)
+                obj.build(); 
+            end            
             
 %             if (obj.standalone)
 %                 obj.defaultPetriNet = 'run-SA.xml';                

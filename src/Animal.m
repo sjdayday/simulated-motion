@@ -400,9 +400,9 @@ classdef Animal < System
             if obj.rightWhiskerTouching || obj.leftWhiskerTouching
                behavior = obj.motorCortex.currentPlan;   
                if isa(behavior, 'Behavior')
-                   place = [behavior.behaviorPrefix, 'ObjectSensed'];
+                   place = [behavior.behaviorStatus.behaviorPrefix, 'ObjectSensed'];
     %                disp(place);
-                   behavior.markPlace(place);                 
+                   behavior.behaviorStatus.markPlace(place);                 
                end
             end
         end        
