@@ -126,6 +126,7 @@ classdef MoveBehaviorStatusInclude < BehaviorStatus
             obj.behavior.done(); 
         end 
         function cleanup(~)
+%             disp('MoveBehaviorStatusInclude: no op cleanup'); 
 %            obj.standaloneCleanup(); % cleanup done higher up  
         end
         function turned(obj, ~, ~) 

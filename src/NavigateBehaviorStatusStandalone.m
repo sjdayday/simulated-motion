@@ -8,6 +8,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
          distance 
          turn  
          moveBehaviorStatus
+         finish
 
 %          includeBehavior
 
@@ -124,6 +125,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
 % %             disp('exiting turned'); 
 %         end  
         function cleanup(obj)
+%            disp('NavigateBehaviorStatusInclude: about to cleanup');  
            obj.standaloneCleanup(); 
         end
         
@@ -242,7 +244,9 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
   
         function done(obj, ~, ~)
             if (obj.finish)
-                done@BehaviorStatus(obj, 1, 1);             
+                done@BehaviorStatus(obj, 1, 1); 
+            else
+                obj.acknowledgeDone();   
             end
             obj.behavior.done(); 
         end

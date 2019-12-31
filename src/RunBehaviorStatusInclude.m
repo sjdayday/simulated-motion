@@ -103,6 +103,7 @@ classdef RunBehaviorStatusInclude < BehaviorStatus
             obj.behavior.done(); 
         end 
         function cleanup(~)
+            disp('RunBehaviorStatusInclude: no op cleanup'); 
 %            obj.standaloneCleanup(); % cleanup done higher up  
         end
         function stepped(obj, ~, ~) 

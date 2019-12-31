@@ -38,6 +38,7 @@ classdef MotorCortex < System
         runner
         standaloneMoves
         listenAndMark
+        moveBehaviorStatus
     end
     methods
         function obj = MotorCortex(animal)
@@ -124,7 +125,9 @@ classdef MotorCortex < System
         function nextRandomNavigation(obj)
            steps = obj.randomSteps(); 
            if (steps == 0)
-              obj.navigation.finish = true;  
+              obj.navigation.behaviorStatus.finish = true;
+              obj.navigation.behaviorStatus.waitForInput(false); 
+              obj.navigation.behaviorStatus.isDone = true;
            else 
                if obj.turnAwayFromWhiskersTouching(steps)
                    disp('turning away from whiskers touching'); 
@@ -173,6 +176,7 @@ classdef MotorCortex < System
             obj.navigation.behaviorStatus.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
             obj.navigation.build(); 
             obj.runner = obj.navigation.runner; 
+            obj.moveBehaviorStatus = obj.navigation.behaviorStatus.moveBehaviorStatus; 
 %             obj.setupListeners(); % <<< 
 %             obj.currentPlan = aNavigation;             
         end
@@ -228,26 +232,34 @@ classdef MotorCortex < System
             obj.clockwiseness = obj.clockwise; 
             obj.turn(); 
         end
+        function moveBehaviorStatus = getMoveBehaviorStatus(obj)
+            if (obj.standaloneMoves) 
+                moveBehaviorStatus = []; 
+            else
+                moveBehaviorStatus = obj.moveBehaviorStatus; 
+            end                        
+ 
+        end
         function aMove = turn(obj)
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
             turn = true;
             build = false; 
 %             runner = []; 
-            behaviorStatus = []; 
-            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, behaviorStatus, build); % obj.runner obj.listenAndMark
-            if (obj.standaloneMoves) 
+%             behaviorStatus = []; 
+            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); % obj.runner obj.listenAndMark
+%             if (obj.standaloneMoves) 
                 obj.doMove(aMove); 
-            end            
+%             end            
         end
         function aMove = run(obj)
             obj.clockwiseness = 0; 
             turn = false;
             build = false;
-            behaviorStatus = [];
-            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, behaviorStatus, build); 
-            if (obj.standaloneMoves) 
+%             behaviorStatus = [];
+            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); 
+%             if (obj.standaloneMoves) 
                 obj.doMove(aMove); 
-            end                        
+%             end                        
         end
         function doMove(obj, aMove)
             aMove.keepRunnerForReporting = obj.keepRunnerForReporting;

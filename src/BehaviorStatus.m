@@ -159,13 +159,15 @@ classdef BehaviorStatus < handle
         function acknowledge(obj, place) 
            obj.runner.acknowledge(place);  
         end
+        function acknowledgeDone(obj)
+             obj.acknowledge('Done'); 
+        end
         function ready(obj, ~, ~)
            disp('ready');
            obj.placeReport = obj.runner.getPlaceReport();
            if (obj.acknowledging) 
                 obj.acknowledge('Ready'); 
            end
-
         end
 % 
         function done(obj, ~, ~)
@@ -182,8 +184,7 @@ classdef BehaviorStatus < handle
 %            disp('behavior standalone: ');
 %            disp(obj.standalone);           
            if (obj.acknowledging) 
-               
-                obj.acknowledge('Done'); 
+                obj.acknowledgeDone();   
            else
                 obj.run();  % concurrentModificationException if run() here when threaded
            end
@@ -194,11 +195,12 @@ classdef BehaviorStatus < handle
 %            end
            obj.isDone = true;
 %            obj.cleanupJvmMemory(); 
-           disp('isdone: ');
-           disp(obj.isDone);
+           disp(['isdone: ', num2str(obj.isDone)]);
+%            disp(obj.isDone);
 %            obj.animal.behaviorDone();             
         end
         function standaloneCleanup(obj)
+            disp('standaloneCleanup'); 
         % include behavior will override with null
                obj.waitForInput(false);
                obj.cleanupJvmMemory();
