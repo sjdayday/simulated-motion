@@ -69,30 +69,32 @@ classdef MotorCortexTest < AbstractTest
 % %                ['Navigate.Enabled: Default=1  ' newline,  ...
 % %                 'Navigate.Energy: Default=10  ' newline]);
 % %         end
-%         function testExpectedPlacesAreMarkedAfterNavigateZeroSteps(testCase)
-%             env = Environment();
-%             env.addWall([0 0],[0 2]); 
-%             env.addWall([0 2],[2 2]); 
-%             env.addWall([0 0],[2 0]); 
-%             env.addWall([2 0],[2 2]);
-%             env.build();
-%             testCase.animal = Animal(); 
-%             testCase.animal.build(); 
-%             testCase.animal.place(env, 1, 1, 0);
-%             motorCortex = testCase.animal.motorCortex; 
-%             motorCortex.firingLimit = 3;  
-%             motorCortex.keepRunnerForReporting = true; 
-%             motorCortex.prepareNavigate(); 
-%             motorCortex.stopOnReadyForTesting = true; 
-%             motorCortex.navigate(0); 
-% %             result = motorCortex.markedPlaceReport.toCharArray()'; 
-%             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
-%             testCase.assertEqual(result, ...
-%                ['Navigate.Energy: Default=9  ' newline,  ...
-%                 'Navigate.Ready: Default=1  ' newline,  ...
-%                 'Navigate.Resources: Default=1  ' newline,  ...                
-%                 'Navigate.Tired: Default=1  ' newline]);
-%         end
+        function testExpectedPlacesAreMarkedAfterNavigateZeroSteps(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.build();
+            testCase.animal = Animal(); 
+            testCase.animal.build(); 
+            testCase.animal.place(env, 1, 1, 0);
+            motorCortex = testCase.animal.motorCortex; 
+            motorCortex.firingLimit = 3;  
+            motorCortex.keepRunnerForReporting = true; 
+            motorCortex.readyAcknowledgeBuildsPlaceReport = true;             
+            motorCortex.stopOnReadyForTesting = true; 
+            motorCortex.prepareNavigate(); 
+            motorCortex.navigate(0); 
+%             result = motorCortex.markedPlaceReport.toCharArray()'; 
+            result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
+            testCase.assertEqual(result, ...
+               ['Navigate.Energy: Default=9  ' newline,  ...
+                'Navigate.Move.Run: Default=1  ' newline,  ...
+                'Navigate.Ready: Default=1  ' newline,  ...
+                'Navigate.Resources: Default=1  ' newline,  ...                
+                'Navigate.Tired: Default=1  ' newline]);
+        end
         function testTurnUpdatesAnimalPositionAndSumsMultipleTurns(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 

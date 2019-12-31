@@ -9,15 +9,15 @@ classdef Navigate <  Behavior
          speed
          finish
          stopOnReadyForTesting
+         includeBehavior
     end
     methods
-        function obj = Navigate(prefix, animal, build)
+        function obj = Navigate(prefix, animal, behaviorStatus, build)
             import uk.ac.imperial.pipe.runner.*;
-            runner = []; 
-            obj = obj@Behavior(prefix, animal, runner);
-            obj.placeReportLimit = 100; % otherwise, will consume lots of memory
+            obj = obj@Behavior(prefix, animal, behaviorStatus);
+            obj.behaviorStatus.placeReportLimit = 100; % otherwise, will consume lots of memory
 %             obj.defaultPetriNet = 'include-navigate-move-turn-run.xml';
-            obj.behaviorPrefix = [prefix,'Move.']; % Turn or Run...
+            obj.behaviorStatus.behaviorPrefix = [prefix,'Move.']; % Turn or Run...
             obj.finish = false;
             obj.stopOnReadyForTesting = false; 
             obj.behaviorStatus.behavior = obj; 

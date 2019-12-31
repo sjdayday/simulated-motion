@@ -60,13 +60,19 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
 %             obj.behaviorPrefix = ''; % override in specific behavior
 %             obj.animal = animal; 
             obj.acknowledging = true; 
+            obj.speed = 0; 
+            obj.distance = 0; 
+            obj.clockwiseness = 0; 
+            obj.turn = false; 
 %             getSystemsFromAnimal(obj); 
 %             obj.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
 %             obj.keepRunnerForReporting = false; 
          end
          function setupListeners(obj)
             setupListeners@BehaviorStatus(obj); 
-            obj.moveBehaviorStatus = MoveBehaviorStatusInclude(obj.prefix, obj.runner); 
+            obj.moveBehaviorStatus = MoveBehaviorStatusInclude(obj.prefix, obj.runner);
+            % premature?  behavior is Navigate; no Move exists yet
+            obj.moveBehaviorStatus.behavior = obj.behavior; 
             obj.moveBehaviorStatus.setupListeners(); 
          end
 %          function markPlaces(obj)
@@ -79,29 +85,34 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
 %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], obj.speed); 
 %             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], obj.distance); 
 %          end
-        function markPlaces(obj) 
-            obj.markPlaceMultipleTokens([obj.prefix, 'Speed'], obj.speed); 
-            obj.markPlaceMultipleTokens([obj.prefix, 'Distance'], obj.distance); 
-            
-            if (obj.turn)
-               obj.behaviorPrefix = [obj.prefix,'Turn.'];
-               obj.markPlace([obj.prefix,'Turn']);
-               if (obj.clockwiseness == 1)
-                    obj.markPlace([obj.prefix, 'CounterClockwise']);
-               end 
-               if (obj.clockwiseness == -1)
-                    obj.markPlace([obj.prefix, 'Clockwise']);                
-               end
-               obj.behavior.includeBehavior = Turn(obj.behaviorPrefix, obj.behavior.animal, obj.clockwiseness, obj.speed, obj.distance, obj.turnBehaviorStatus); 
-               obj.behavior.acknowledging = true; 
-            else     
-               obj.behaviorPrefix = [obj.prefix,'Run.']; 
-               obj.markPlace([obj.prefix,'Run']);  
-               obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runBehaviorStatus);                            
-%                obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runner, listenAndMark);             
-               obj.behavior.acknowledging = true;                    
-            end
- 
+        function markPlaces(obj)
+            obj.moveBehaviorStatus.speed = obj.speed; 
+            obj.moveBehaviorStatus.distance = obj.distance; 
+            obj.moveBehaviorStatus.clockwiseness = obj.clockwiseness; 
+            obj.moveBehaviorStatus.turn = obj.turn; 
+            obj.moveBehaviorStatus.markPlaces(); 
+%             obj.markPlaceMultipleTokens([obj.prefix, 'Speed'], obj.speed); 
+%             obj.markPlaceMultipleTokens([obj.prefix, 'Distance'], obj.distance); 
+%             
+%             if (obj.turn)
+%                obj.behaviorPrefix = [obj.prefix,'Turn.'];
+%                obj.markPlace([obj.prefix,'Turn']);
+%                if (obj.clockwiseness == 1)
+%                     obj.markPlace([obj.prefix, 'CounterClockwise']);
+%                end 
+%                if (obj.clockwiseness == -1)
+%                     obj.markPlace([obj.prefix, 'Clockwise']);                
+%                end
+%                obj.behavior.includeBehavior = Turn(obj.behaviorPrefix, obj.behavior.animal, obj.clockwiseness, obj.speed, obj.distance, obj.turnBehaviorStatus); 
+%                obj.behavior.acknowledging = true; 
+%             else     
+%                obj.behaviorPrefix = [obj.prefix,'Run.']; 
+%                obj.markPlace([obj.prefix,'Run']);  
+%                obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runBehaviorStatus);                            
+% %                obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runner, listenAndMark);             
+%                obj.behavior.acknowledging = true;                    
+%             end
+%  
         end
          
 %         function turned(obj, ~, ~) 

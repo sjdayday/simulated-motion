@@ -221,6 +221,7 @@ classdef BehaviorStatus < handle
 %            obj.runner.markPlace(place, 'Default', 1); 
         end
         function markPlaceMultipleTokens(obj, place, tokens)
+           import uk.ac.imperial.pipe.runner.*; 
            obj.runner.markPlace(place,'Default', tokens); 
         end
         function petriNet = buildPetriNetName(obj)

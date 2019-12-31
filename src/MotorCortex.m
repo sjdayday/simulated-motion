@@ -166,15 +166,17 @@ classdef MotorCortex < System
             build = false; 
             obj.standaloneMoves = false; 
             obj.movePrefix = 'Navigate.Move.'; % Turn.
-            obj.navigation = Navigate(obj.navigatePrefix, obj.animal, build);
-            obj.navigation.firingLimit = obj.firingLimit; 
-            obj.navigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            behaviorStatus = []; 
+            obj.navigation = Navigate(obj.navigatePrefix, obj.animal, behaviorStatus, build);
+            obj.navigation.behaviorStatus.firingLimit = obj.firingLimit; 
+            obj.navigation.behaviorStatus.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            obj.navigation.behaviorStatus.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
             obj.navigation.build(); 
             obj.runner = obj.navigation.runner; 
-            obj.setupListeners(); 
+%             obj.setupListeners(); % <<< 
 %             obj.currentPlan = aNavigation;             
         end
-        function setupListeners(obj)
+        function setupListeners(obj) % <<<
            obj.listenAndMark = false;  
            aMove = obj.turn(); 
            aMove.acknowledging = true;            

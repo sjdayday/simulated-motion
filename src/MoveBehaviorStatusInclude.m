@@ -7,13 +7,16 @@
 % For included Petri nets that might execute multiple times, listeners may just be 
 %  created once, while places that act as input parameters may be marked at each 
 %  execution. 
-classdef TurnBehaviorStatusInclude < BehaviorStatus 
+classdef MoveBehaviorStatusInclude < BehaviorStatus 
 
     properties
          clockwiseness
          speed
          distance 
+         turn
          areListenersSetup
+         turnBehaviorStatus
+         runBehaviorStatus
 
 %         behavior
 %         runner 
@@ -43,11 +46,11 @@ classdef TurnBehaviorStatusInclude < BehaviorStatus
 %         standalone
     end
     methods
-         function obj = TurnBehaviorStatusInclude(prefix, runner)
+         function obj = MoveBehaviorStatusInclude(prefix, runner)
 %             import uk.ac.imperial.pipe.runner.*;
             obj = obj@BehaviorStatus(prefix, runner);
 %             obj.prefix = prefix; 
-            obj.behaviorPrefix = [obj.prefix,'Turn.'];
+            obj.behaviorPrefix = [obj.prefix,'Move.'];
             obj.prefix = obj.behaviorPrefix; 
 %             obj.defaultPetriNet = 'turn-SA.xml';
 %             obj.behavior = behavior;
@@ -68,6 +71,10 @@ classdef TurnBehaviorStatusInclude < BehaviorStatus
 %             obj.animal = animal; 
             obj.acknowledging = true; 
             obj.areListenersSetup = false; 
+            obj.speed = 0; 
+            obj.distance = 0; 
+            obj.clockwiseness = 0; 
+            obj.turn = false; 
 %             getSystemsFromAnimal(obj); 
 %             obj.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
 %             obj.keepRunnerForReporting = false; 
@@ -81,23 +88,38 @@ classdef TurnBehaviorStatusInclude < BehaviorStatus
          function setupListeners(obj)
              if (~obj.areListenersSetup)
                 setupListeners@BehaviorStatus(obj); 
-                obj.listenPlaceWithAcknowledgement([obj.behaviorPrefix, 'Turned'], @obj.turned); 
+                obj.turnBehaviorStatus = TurnBehaviorStatusInclude(obj.prefix, obj.runner); 
+                obj.turnBehaviorStatus.setupListeners(); 
+                obj.runBehaviorStatus = RunBehaviorStatusInclude(obj.prefix, obj.runner);
+                obj.runBehaviorStatus.setupListeners(); 
                 obj.areListenersSetup = true; 
             end
          end
          function execute(~)
            % included behaviors begin execution once, at the standalone level  
          end
-         function markPlaces(~)
-             % marked by Move
-%             if (obj.clockwiseness == 1)
-%                 obj.markPlace([obj.behaviorPrefix, 'CounterClockwise']);
-%             end 
-%             if (obj.clockwiseness == -1)
-%                 obj.markPlace([obj.behaviorPrefix, 'Clockwise']);                
-%             end
-%             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Speed'], obj.speed); 
-%             obj.markPlaceMultipleTokens([obj.behaviorPrefix, 'Distance'], obj.distance); 
+         function markPlaces(obj)
+            obj.markPlaceMultipleTokens([obj.prefix, 'Speed'], obj.speed); 
+            obj.markPlaceMultipleTokens([obj.prefix, 'Distance'], obj.distance); 
+            build = true; 
+            if (obj.turn)
+               obj.behaviorPrefix = [obj.prefix,'Turn.'];
+               obj.markPlace([obj.prefix,'Turn']);
+               if (obj.clockwiseness == 1)
+                    obj.markPlace([obj.prefix, 'CounterClockwise']);
+               end 
+               if (obj.clockwiseness == -1)
+                    obj.markPlace([obj.prefix, 'Clockwise']);                
+               end
+               obj.behavior.includeBehavior = Turn(obj.behaviorPrefix, obj.behavior.animal, obj.clockwiseness, obj.speed, obj.distance, obj.turnBehaviorStatus, build); 
+               obj.behavior.acknowledging = true; 
+            else     
+               obj.behaviorPrefix = [obj.prefix,'Run.']; 
+               obj.markPlace([obj.prefix,'Run']);  
+               obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runBehaviorStatus, build);                            
+%                obj.behavior.includeBehavior = Run(obj.behaviorPrefix, obj.behavior.animal, obj.speed, obj.distance, obj.runner, listenAndMark);             
+               obj.behavior.acknowledging = true;                    
+            end
          end
         function done(obj, ~, ~)
             done@BehaviorStatus(obj, 1, 1);             
