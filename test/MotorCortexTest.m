@@ -66,7 +66,7 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.stopOnReadyForTesting = true; 
             motorCortex.prepareNavigate(); 
             motorCortex.navigate(0); 
-            pause(0.1); 
+            pause(0.2); 
 %             result = motorCortex.markedPlaceReport.toCharArray()'; 
             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
             testCase.assertEqual(result, ...
@@ -93,6 +93,7 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.stopOnReadyForTesting = false; 
             motorCortex.prepareNavigate(); 
             motorCortex.navigate(10); 
+            pause(0.2); 
 %             result = motorCortex.markedPlaceReport.toCharArray()'; 
             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
             testCase.assertEqual(result, ...

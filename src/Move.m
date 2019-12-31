@@ -24,24 +24,6 @@ classdef Move <  Behavior
             if (build)
                 obj.build(); 
             end
-            
-%             if (obj.standalone)
-%                 obj.defaultPetriNet = 'include-move-turn-run.xml';
-%                 obj.buildThreadedStandardSemantics();                
-%                 obj.buildThreadedRunner(); 
-%                 obj.listenPlaces(); % must be explicitly called (once) when included
-%             end
-%             if (listenAndMark)
-%                 obj.listenPlaces(); % must be explicitly called (once) when included
-%                 obj.markPlaces(listenAndMark);
-%             end
-%            disp('move acknowledging: ');
-%            disp(obj.acknowledging);           
-%            disp('move standalone: ');
-%            disp(obj.standalone);           
-
-%             obj.execute(); 
-           
         end
         function status = getStandaloneStatus(obj)
             status = MoveBehaviorStatusStandalone(obj.prefix, []);
@@ -49,35 +31,8 @@ classdef Move <  Behavior
         function status = getIncludeStatus(obj)
             status = MoveBehaviorStatusInclude(obj.prefix, obj.runner); 
         end        
-%         function markPlaces(obj, listenAndMark)
-%             obj.markPlaceMultipleTokens([obj.prefix, 'Speed'], obj.speed); 
-%             obj.markPlaceMultipleTokens([obj.prefix, 'Distance'], obj.distance); 
-%             
-%             if (obj.turn)
-%                obj.behaviorPrefix = [obj.prefix,'Turn.'];
-%                obj.markPlace([obj.prefix,'Turn']);
-%                if (obj.clockwiseness == 1)
-%                     obj.markPlace([obj.prefix, 'CounterClockwise']);
-%                end 
-%                if (obj.clockwiseness == -1)
-%                     obj.markPlace([obj.prefix, 'Clockwise']);                
-%                end
-%                obj.behavior = Turn(obj.behaviorPrefix, obj.animal, obj.clockwiseness, obj.speed, obj.distance, obj.behaviorStatus); 
-%                obj.behavior.acknowledging = true; 
-%             else     
-%                obj.behaviorPrefix = [obj.prefix,'Run.']; 
-%                obj.markPlace([obj.prefix,'Run']);  
-% %                obj.behavior = Run(obj.behaviorPrefix, obj.animal, obj.speed, obj.distance, obj.behaviorStatus);                            
-%                obj.behavior = Run(obj.behaviorPrefix, obj.animal, obj.speed, obj.distance, obj.runner, listenAndMark);             
-%                obj.behavior.acknowledging = true;                    
-%             end
-%  
-%         end
-        function done(obj) % , ~, ~
-%             if (obj.standalone)
+        function done(obj) 
                 disp(['prefix for move.done: ', obj.behaviorStatus.prefix]);
-%                 done@Behavior(obj, 1, 1); 
-%             end
             if (obj.turn)
                 obj.distanceMoved = obj.includeBehavior.distanceTurned; 
             else

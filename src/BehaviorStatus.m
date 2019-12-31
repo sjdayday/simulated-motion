@@ -12,17 +12,8 @@ classdef BehaviorStatus < handle
     properties
         behavior
         runner 
-% %         placeSystem
-%         cortex
-%         motorCortex
-% %         visualCortex
-%         subCortex
-% %         headDirectionSystem
-% %         chartSystem
-%         runner
         thread
         threadRunner
-% %         listener
         petriNetPath
         defaultPetriNet
         petriNet
@@ -36,43 +27,17 @@ classdef BehaviorStatus < handle
         keepRunnerForReporting
         placeReportLimit
         readyAcknowledgeBuildsPlaceReport
-%         standalone
     end
     methods
          function obj = BehaviorStatus(prefix, runner)
             import uk.ac.imperial.pipe.runner.*;
-%             obj.behavior = behavior; <--- set when a behavior is created
             obj.prefix = prefix; 
             obj.runner = runner;
             obj.defaultPetriNet = 'base-control.xml';                                
-%             if (isempty(runner))
-%                 obj.standalone = true; 
-%             else
-%                 obj.standalone = false; 
-%                 obj.runner = runner; 
-%             end
-%             obj.petriNetPath = [cd, '/petrinet/'];
-%             obj.defaultPetriNet = 'base-control.xml';        
-%             obj.isDone = false;
-%             obj.prefix = obj.behavior.prefix; 
-%             obj.firingLimit = obj.behavior.firingLimit; %10000000; % 10M; don't stop prematurely unless overridden
-%             obj.placeReportLimit = 0;  % unlimited; override for Navigate
-%             obj.behaviorPrefix = ''; % override in specific behavior
-%             obj.animal = animal; 
             obj.acknowledging = false; 
             obj.readyAcknowledgeBuildsPlaceReport = false;
-%             getSystemsFromAnimal(obj); 
-%             obj.listeners = [BooleanPlaceListener('dummy')]; % avoid error in cleanup when only one BPL is added
-%             obj.keepRunnerForReporting = false; 
          end
-       
-% buildRunner()
-% setupListeners()
-% markPlaces
-% execute
-
          function runner = buildRunner(obj)
-%             if (obj.standalone)
                 import uk.ac.imperial.pipe.runner.*;
                 import java.lang.Thread;
                 obj.runner = PetriNetRunner(buildPetriNetName(obj));
@@ -80,23 +45,15 @@ classdef BehaviorStatus < handle
                 obj.enable();
                 obj.runner.setFiringLimit(obj.firingLimit);
                 obj.runner.setSeed(rand()*1000000);
-    %             obj.runner.setFiringDelay(1000);
                 obj.waitForInput(true);
                 runner = obj.runner; 
-%             end
          end
          function execute(obj)
             obj.thread.start(); 
-%             obj.run();
             while (~obj.isDone)
                 pause(0.1); 
             end   
          end
-%         function buildStandardSemantics(obj)
-%             obj.buildRunner(); 
-%             obj.listenPlaces(); 
-% %             obj.listenPlace([obj.prefix,'Done'], @obj.done); 
-%         end
         function setupListeners(obj)
             obj.listenPlaces(); 
         end
@@ -111,13 +68,6 @@ classdef BehaviorStatus < handle
                 obj.listenPlace([obj.prefix,'Done'], @obj.done); 
            end
         end
-%         function buildThreadedStandardSemantics(obj)
-%             obj.buildThreadedRunner(); 
-%             obj.listenPlaces(); 
-% %             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Done'], @obj.done)
-% % %           needed for place report
-% %             obj.listenPlaceWithAcknowledgement([obj.prefix, 'Ready'], @obj.ready); 
-%         end
         function runner = buildThreadedRunner(obj)
             import uk.ac.imperial.pipe.runner.*;
             import java.lang.Thread;
@@ -137,13 +87,11 @@ classdef BehaviorStatus < handle
             obj.runner.run();    
         end
         function listenPlace(obj, place, evaluator)
-%             f = java.lang.Boolean(false); 
             listenPlaceBare(obj, place, evaluator, false, false); % false 
         end
 % %       After dispatching this evaluator, 
 % %       Runner will not proceed without explicit acknowledgement: acknowledge(obj, place)  
         function listenPlaceWithAcknowledgement(obj, place, evaluator)
-%             t = java.lang.Boolean(true); 
             listenPlaceBare(obj, place, evaluator, true, false);  % true  
         end
         function listenPlaceWithAcknowledgementBothEvents(obj, place, evaluator)
@@ -173,34 +121,18 @@ classdef BehaviorStatus < handle
         function done(obj, ~, ~)
             obj.doDone(); 
         end
-        % move done logic to a method that can be called anywhere, not just
-        % from a subclass
         function doDone(obj)
-%            disp(obj.runner.getPlaceReport()); % setMarkedPlaces(false)
-
-%            obj.waitForInput(false);
-%            disp('behavior acknowledging: ');
-%            disp(obj.acknowledging);           
-%            disp('behavior standalone: ');
-%            disp(obj.standalone);           
            if (obj.acknowledging) 
                 obj.acknowledgeDone();   
            else
                 obj.run();  % concurrentModificationException if run() here when threaded
            end
            obj.cleanup(); % abstract, so overridden in standalone and include subclasses 
-%            if (obj.standalone)
-%                obj.waitForInput(false);
-%                obj.cleanupJvmMemory();
-%            end
            obj.isDone = true;
-%            obj.cleanupJvmMemory(); 
            disp(['isdone: ', num2str(obj.isDone)]);
-%            disp(obj.isDone);
-%            obj.animal.behaviorDone();             
         end
         function standaloneCleanup(obj)
-            disp('standaloneCleanup'); 
+%             disp('standaloneCleanup'); 
         % include behavior will override with null
                obj.waitForInput(false);
                obj.cleanupJvmMemory();
@@ -220,7 +152,6 @@ classdef BehaviorStatus < handle
         end
         function markPlace(obj, place)
            obj.markPlaceMultipleTokens(place, 1);
-%            obj.runner.markPlace(place, 'Default', 1); 
         end
         function markPlaceMultipleTokens(obj, place, tokens)
            import uk.ac.imperial.pipe.runner.*; 
