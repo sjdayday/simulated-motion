@@ -90,7 +90,6 @@
         </place>
 
         <place id="Move.Clockwise">
-           <!-- documentation only -->
             <graphics>
                 <position x="184.0" y="552.0"/>
             </graphics>
@@ -125,7 +124,6 @@
             </toolspecificplace>
         </place>
         <place id="Move.CounterClockwise">
-           <!-- documentation only -->
             <graphics>
                 <position x="294.0" y="554.0"/>
             </graphics>
@@ -160,7 +158,6 @@
             </toolspecificplace>
         </place>
         <place id="Move.Distance">
-           <!-- documentation only -->
             <graphics>
                 <position x="223.0" y="414.0"/>
             </graphics>
@@ -297,7 +294,6 @@
             </toolspecificplace>
         </place>
         <place id="Move.Speed">
-           <!-- documentation only -->
             <graphics>
                 <position x="220.0" y="488.0"/>
             </graphics>
@@ -1212,7 +1208,7 @@
             <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,10</value>
+                <value>Default,#(Navigate.Tired)</value>
             </inscription>
         </arc>
         <arc id="Move.Done TO Finish" source="Move.Done" target="Finish">

@@ -90,7 +90,6 @@
         </place>
 
         <place id="Move.Clockwise">
-           <!-- documentation only -->
             <graphics>
                 <position x="184.0" y="552.0"/>
             </graphics>
@@ -109,9 +108,22 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.CounterClockwise">
-           <!-- documentation only -->
             <graphics>
                 <position x="294.0" y="554.0"/>
             </graphics>
@@ -130,9 +142,22 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Distance">
-           <!-- documentation only -->
             <graphics>
                 <position x="223.0" y="414.0"/>
             </graphics>
@@ -151,6 +176,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Done">
             <graphics>
@@ -255,7 +294,6 @@
             </toolspecificplace>
         </place>
         <place id="Move.Speed">
-           <!-- documentation only -->
             <graphics>
                 <position x="220.0" y="488.0"/>
             </graphics>
@@ -274,6 +312,20 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <!-- <merge type="away"/> -->
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Move.Turn">
             <graphics>
@@ -1156,7 +1208,7 @@
             <arcpath id="" x="579.0" y="205.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,10</value>
+                <value>Default,#(Tired)</value>
             </inscription>
         </arc>
         <arc id="Move.Done TO Finish" source="Move.Done" target="Finish">

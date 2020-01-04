@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pnml>
-    <net id="move">
+    <net id="move-include">
         <token id="Default" red="0" green="0" blue="0"/>
         <place id="Clockwise">
             <graphics>
-                <position x="336.0" y="440.0"/>
+                <position x="409.0" y="445.0"/>
             </graphics>
             <name>
                 <value>Clockwise</value>
@@ -38,7 +38,7 @@
         </place>
         <place id="CounterClockwise">
             <graphics>
-                <position x="325.0" y="532.0"/>
+                <position x="398.0" y="537.0"/>
             </graphics>
             <name>
                 <value>CounterClockwise</value>
@@ -299,6 +299,40 @@
                 </status>
             </toolspecificplace>
         </place>
+        <place id="Run.CleaningInputs">
+            <graphics>
+                <position x="295.0" y="391.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="135.0" y="11.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <!-- <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly> -->
+                </status>
+            </toolspecificplace>
+        </place>
         <place id="Run.Distance">
             <graphics>
                 <position x="146.0" y="109.0"/>
@@ -523,9 +557,43 @@
                 </status>
             </toolspecificplace>
         </place>
+        <place id="Turn.CleaningInputs">
+            <graphics>
+                <position x="297.0" y="495.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="70.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="away"/>
+                    <!-- <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly> -->
+                </status>
+            </toolspecificplace>
+        </place>
         <place id="Turn.Clockwise">
             <graphics>
-                <position x="510.0" y="440.0"/>
+                <position x="583.0" y="445.0"/>
             </graphics>
             <name>
                 <value>Turn.Clockwise</value>
@@ -559,7 +627,7 @@
         </place>
         <place id="Turn.CounterClockwise">
             <graphics>
-                <position x="507.0" y="532.0"/>
+                <position x="580.0" y="537.0"/>
             </graphics>
             <name>
                 <value>Turn.CounterClockwise</value>
@@ -729,12 +797,12 @@
         </place>
         <place id="TurnMotion">
             <graphics>
-                <position x="278.0" y="329.0"/>
+                <position x="282.0" y="257.0"/>
             </graphics>
             <name>
                 <value>TurnMotion</value>
                 <graphics>
-                    <offset x="46.0" y="46.0"/>
+                    <offset x="70.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -749,7 +817,7 @@
         </place>
         <transition id="SetupClockwise">
             <graphics>
-                <position x="418.0" y="440.0"/>
+                <position x="491.0" y="445.0"/>
             </graphics>
             <name>
                 <value>SetupClockwise</value>
@@ -775,7 +843,7 @@
         </transition>
         <transition id="SetupCounterClockwise">
             <graphics>
-                <position x="417.0" y="532.0"/>
+                <position x="490.0" y="537.0"/>
             </graphics>
             <name>
                 <value>SetupCounterClockwise</value>
@@ -1034,8 +1102,8 @@
             </rate>
         </transition>
         <arc id="SetupClockwise TO Turn.Clockwise" source="SetupClockwise" target="Turn.Clockwise">
-            <arcpath id="" x="428.0" y="455.0" curvePoint="false"/>
-            <arcpath id="" x="510.0" y="455.0" curvePoint="false"/>
+            <arcpath id="" x="501.0" y="460.0" curvePoint="false"/>
+            <arcpath id="" x="583.0" y="460.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1050,16 +1118,16 @@
             </inscription>
         </arc>
         <arc id="SetupTurn TO TurnMotion" source="SetupTurn" target="TurnMotion">
-            <arcpath id="" x="215.0" y="395.0" curvePoint="false"/>
-            <arcpath id="" x="280.0" y="352.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="380.0" curvePoint="false"/>
+            <arcpath id="" x="288.0" y="284.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="SetupCounterClockwise TO Turn.CounterClockwise" source="SetupCounterClockwise" target="Turn.CounterClockwise">
-            <arcpath id="" x="427.0" y="547.0" curvePoint="false"/>
-            <arcpath id="" x="507.0" y="547.0" curvePoint="false"/>
+            <arcpath id="" x="500.0" y="552.0" curvePoint="false"/>
+            <arcpath id="" x="580.0" y="552.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1169,12 +1237,28 @@
                 <value>Default,#(Navigate.Move.Distance)</value>
             </inscription>
         </arc>
+        <arc id="Run.CleaningInputs TO SetupRun" source="Run.CleaningInputs" target="SetupRun">
+            <arcpath id="" x="303.0" y="393.0" curvePoint="false"/>
+            <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="TurnMotion TO EnableTurn" source="TurnMotion" target="EnableTurn">
-            <arcpath id="" x="304.0" y="334.0" curvePoint="false"/>
+            <arcpath id="" x="312.0" y="269.0" curvePoint="false"/>
             <arcpath id="" x="385.0" y="252.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turn.CleaningInputs TO SetupCounterClockwise" source="Turn.CleaningInputs" target="SetupCounterClockwise">
+            <arcpath id="" x="327.0" y="513.0" curvePoint="false"/>
+            <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="Moving TO EnableTurn" source="Moving" target="EnableTurn">
@@ -1233,6 +1317,14 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="Run.CleaningInputs TO SetupCounterClockwise" source="Run.CleaningInputs" target="SetupCounterClockwise">
+            <arcpath id="" x="322.0" y="415.0" curvePoint="false"/>
+            <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="Ready TO Start" source="Ready" target="Start">
             <arcpath id="" x="330.0" y="66.0" curvePoint="false"/>
             <arcpath id="" x="403.0" y="66.0" curvePoint="false"/>
@@ -1250,11 +1342,19 @@
             </inscription>
         </arc>
         <arc id="CounterClockwise TO SetupCounterClockwise" source="CounterClockwise" target="SetupCounterClockwise">
-            <arcpath id="" x="355.0" y="547.0" curvePoint="false"/>
-            <arcpath id="" x="417.0" y="547.0" curvePoint="false"/>
+            <arcpath id="" x="428.0" y="552.0" curvePoint="false"/>
+            <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Run.CleaningInputs TO SetupClockwise" source="Run.CleaningInputs" target="SetupClockwise">
+            <arcpath id="" x="324.0" y="410.0" curvePoint="false"/>
+            <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="Turn TO SetupTurn" source="Turn" target="SetupTurn">
@@ -1263,6 +1363,14 @@
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turn.CleaningInputs TO SetupClockwise" source="Turn.CleaningInputs" target="SetupClockwise">
+            <arcpath id="" x="326.0" y="506.0" curvePoint="false"/>
+            <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="Speed TO SetupTurn" source="Speed" target="SetupTurn">
@@ -1289,9 +1397,17 @@
                 <value>Default,#(Navigate.Move.Speed)</value>
             </inscription>
         </arc>
+        <arc id="Turn.CleaningInputs TO SetupTurn" source="Turn.CleaningInputs" target="SetupTurn">
+            <arcpath id="" x="301.0" y="499.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="Clockwise TO SetupClockwise" source="Clockwise" target="SetupClockwise">
-            <arcpath id="" x="366.0" y="455.0" curvePoint="false"/>
-            <arcpath id="" x="418.0" y="455.0" curvePoint="false"/>
+            <arcpath id="" x="439.0" y="460.0" curvePoint="false"/>
+            <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>

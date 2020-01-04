@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pnml>
-    <net>
+    <net id="run">
         <token id="Default" red="0" green="0" blue="0"/>
-        <place id="Ready">
+        <place id="CleaningInputs">
             <graphics>
-                <position x="274.0" y="257.0"/>
+                <position x="240.0" y="253.0"/>
             </graphics>
             <name>
-                <value>Ready</value>
+                <value>Default</value>
                 <graphics>
-                    <offset x="4.0" y="46.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -23,24 +23,65 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <external>
+                    <merge type="home"/>
+                    <!-- <external>
                         <value>true</value>
                     </external>
                     <inputOnly>
-                        <value>false</value>
+                        <value>true</value>
                     </inputOnly>
                     <outputOnly>
-                        <value>true</value>
-                    </outputOnly>
+                        <value>false</value>
+                    </outputOnly> -->
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Speed">
+        <place id="CleaningUp">
             <graphics>
-                <position x="250.0" y="409.0"/>
+                <position x="577.0" y="296.0"/>
             </graphics>
             <name>
-                <value>P6</value>
+                <value>CleaningUp</value>
+                <graphics>
+                    <offset x="90.0" y="31.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Continuing">
+            <graphics>
+                <position x="521.0" y="166.0"/>
+            </graphics>
+            <name>
+                <value>Continuing</value>
+                <graphics>
+                    <offset x="90.0" y="13.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Distance">
+            <graphics>
+                <position x="401.0" y="176.0"/>
+            </graphics>
+            <name>
+                <value>Distance</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -71,7 +112,7 @@
         </place>
         <place id="Done">
             <graphics>
-                <position x="678.0" y="257.0"/>
+                <position x="832.0" y="101.0"/>
             </graphics>
             <name>
                 <value>Done</value>
@@ -103,14 +144,14 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Stopped">
+        <place id="Enabled">
             <graphics>
-                <position x="571.0" y="490.0"/>
+                <position x="231.0" y="101.0"/>
             </graphics>
             <name>
-                <value>P3</value>
+                <value>Enabled</value>
                 <graphics>
-                    <offset x="-5.0" y="35.0"/>
+                    <offset x="3.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -120,15 +161,29 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value></value>
+                <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="ObjectSensed">
             <graphics>
-                <position x="521.0" y="363.0"/>
+                <position x="675.0" y="207.0"/>
             </graphics>
             <name>
-                <value>P2</value>
+                <value>ObjectSensed</value>
                 <graphics>
                     <offset x="51.0" y="-3.0"/>
                 </graphics>
@@ -144,7 +199,6 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <!-- may not be needed -->
                     <merge type="home"/>
                     <external>
                         <value>true</value>
@@ -158,12 +212,65 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Running">
+        <place id="Ongoing">
             <graphics>
-                <position x="245.0" y="490.0"/>
+                <position x="628.0" y="101.0"/>
             </graphics>
             <name>
-                <value>P4</value>
+                <value>Ongoing</value>
+                <graphics>
+                    <offset x="36.0" y="-6.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="Ready">
+            <graphics>
+                <position x="428.0" y="101.0"/>
+            </graphics>
+            <name>
+                <value>Ready</value>
+                <graphics>
+                    <offset x="4.0" y="46.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>true</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Running">
+            <graphics>
+                <position x="399.0" y="334.0"/>
+            </graphics>
+            <name>
+                <value>Running</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -178,12 +285,46 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
-        <place id="Stepped">
+        <place id="Speed">
             <graphics>
-                <position x="469.0" y="409.0"/>
+                <position x="404.0" y="253.0"/>
             </graphics>
             <name>
-                <value>P1</value>
+                <value>Speed</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <merge type="home"/>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="Stepped">
+            <graphics>
+                <position x="623.0" y="253.0"/>
+            </graphics>
+            <name>
+                <value>Stepped</value>
                 <graphics>
                     <offset x="40.0" y="40.0"/>
                 </graphics>
@@ -212,106 +353,12 @@
                 </status>
             </toolspecificplace>
         </place>
-        <place id="Enabled">
+        <place id="Stopped">
             <graphics>
-                <position x="77.0" y="257.0"/>
+                <position x="725.0" y="334.0"/>
             </graphics>
             <name>
-                <value>Enabled</value>
-                <graphics>
-                    <offset x="3.0" y="45.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-           <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
-        </place>
-        <place id="Ongoing">
-            <graphics>
-                <position x="474.0" y="257.0"/>
-            </graphics>
-            <name>
-                <value>Ongoing</value>
-                <graphics>
-                    <offset x="36.0" y="-6.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value>Default,0</value>
-            </initialMarking>
-        </place>
-        <place id="Continuing">
-            <graphics>
-                <position x="367.0" y="322.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="90.0" y="13.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="CleaningUp">
-            <graphics>
-                <position x="423.0" y="452.0"/>
-            </graphics>
-            <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="90.0" y="31.0"/>
-                </graphics>
-            </name>
-            <capacity>
-                <value>0</value>
-            </capacity>
-            <initialMarking>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-                <value></value>
-            </initialMarking>
-        </place>
-        <place id="Distance">
-            <graphics>
-                <position x="247.0" y="332.0"/>
-            </graphics>
-            <name>
-                <value>P5</value>
+                <value>Stopped</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -325,27 +372,13 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
-            <toolspecificplace tool="PIPE" version="5">
-                <status>
-                    <merge type="home"/>
-                    <external>
-                        <value>true</value>
-                    </external>
-                    <inputOnly>
-                        <value>true</value>
-                    </inputOnly>
-                    <outputOnly>
-                        <value>false</value>
-                    </outputOnly>
-                </status>
-            </toolspecificplace>
         </place>
         <transition id="Arrive">
             <graphics>
-                <position x="377.0" y="490.0"/>
+                <position x="531.0" y="334.0"/>
             </graphics>
             <name>
-                <value>T2</value>
+                <value>Arrive</value>
                 <graphics>
                     <offset x="-4.0" y="34.0"/>
                 </graphics>
@@ -368,7 +401,7 @@
         </transition>
         <transition id="Start">
             <graphics>
-                <position x="377.0" y="257.0"/>
+                <position x="531.0" y="101.0"/>
             </graphics>
             <name>
                 <value>Start</value>
@@ -394,10 +427,10 @@
         </transition>
         <transition id="Stop">
             <graphics>
-                <position x="531.0" y="452.0"/>
+                <position x="685.0" y="296.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>Stop</value>
                 <graphics>
                     <offset x="38.0" y="3.0"/>
                 </graphics>
@@ -420,7 +453,7 @@
         </transition>
         <transition id="Prepare">
             <graphics>
-                <position x="177.0" y="257.0"/>
+                <position x="331.0" y="101.0"/>
             </graphics>
             <name>
                 <value>Prepare</value>
@@ -444,12 +477,38 @@
                 <value>1</value>
             </rate>
         </transition>
-        <transition id="Step">
+        <transition id="CleanInput">
             <graphics>
-                <position x="377.0" y="409.0"/>
+                <position x="309.0" y="253.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>CleanInput</value>
+                <graphics>
+                    <offset x="32.0" y="47.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="Step">
+            <graphics>
+                <position x="531.0" y="253.0"/>
+            </graphics>
+            <name>
+                <value>Step</value>
                 <graphics>
                     <offset x="15.0" y="49.0"/>
                 </graphics>
@@ -472,10 +531,10 @@
         </transition>
         <transition id="Clean2">
             <graphics>
-                <position x="436.0" y="365.0"/>
+                <position x="590.0" y="209.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>Clean2</value>
                 <graphics>
                     <offset x="-14.0" y="23.0"/>
                 </graphics>
@@ -498,10 +557,10 @@
         </transition>
         <transition id="Continue">
             <graphics>
-                <position x="479.0" y="322.0"/>
+                <position x="633.0" y="166.0"/>
             </graphics>
             <name>
-                <value>T1</value>
+                <value>Continue</value>
                 <graphics>
                     <offset x="46.0" y="-1.0"/>
                 </graphics>
@@ -524,10 +583,10 @@
         </transition>
         <transition id="Clean1">
             <graphics>
-                <position x="433.0" y="376.0"/>
+                <position x="587.0" y="220.0"/>
             </graphics>
             <name>
-                <value>T0</value>
+                <value>Clean1</value>
                 <graphics>
                     <offset x="-11.0" y="22.0"/>
                 </graphics>
@@ -550,7 +609,7 @@
         </transition>
         <transition id="Finish">
             <graphics>
-                <position x="581.0" y="257.0"/>
+                <position x="735.0" y="101.0"/>
             </graphics>
             <name>
                 <value>Finish</value>
@@ -574,234 +633,260 @@
                 <value>1</value>
             </rate>
         </transition>
-        <arc id="Arrive TO CleaningUp" source="Arrive" target="CleaningUp">
-            <arcpath id="" x="387.0" y="505.0" curvePoint="false"/>
-            <arcpath id="" x="426.0" y="475.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T1 TO P0" source="Continue" target="Continuing">
-            <arcpath id="" x="479.0" y="337.0" curvePoint="false"/>
-            <arcpath id="" x="397.0" y="337.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Start TO P0" source="Start" target="Continuing">
-            <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
-            <arcpath id="" x="382.0" y="322.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Start TO Partway" source="Start" target="Running">
-            <arcpath id="" x="382.0" y="287.0" curvePoint="false"/>
-            <arcpath id="" x="267.0" y="492.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="Stop TO CleaningUp" source="Stop" target="CleaningUp">
-            <arcpath id="" x="531.0" y="467.0" curvePoint="false"/>
-            <arcpath id="" x="453.0" y="467.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Start TO Ongoing" source="Start" target="Ongoing">
-            <arcpath id="" x="387.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="474.0" y="272.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="T0 TO Arrived" source="Stop" target="Stopped">
-            <arcpath id="" x="541.0" y="467.0" curvePoint="false"/>
-            <arcpath id="" x="574.0" y="496.0" curvePoint="false"/>
+            <arcpath id="" x="685.0" y="311.0" curvePoint="false"/>
+            <arcpath id="" x="607.0" y="311.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Finish TO Done" source="Finish" target="Done">
-            <arcpath id="" x="591.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="678.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="745.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="832.0" y="116.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO P6" source="Step" target="Speed">
-            <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
-            <arcpath id="" x="309.0" y="441.0" curvePoint="false"/>
-            <arcpath id="" x="279.0" y="429.0" curvePoint="false"/>
+        <arc id="Step TO Speed" source="Step" target="Speed">
+            <arcpath id="" x="531.0" y="268.0" curvePoint="false"/>
+            <arcpath id="" x="460.0" y="285.0" curvePoint="false"/>
+            <arcpath id="" x="433.0" y="274.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Move.Run.Speed)</value>
             </inscription>
         </arc>
+        <arc id="Finish TO CleaningInputs" source="Finish" target="CleaningInputs">
+            <arcpath id="" x="740.0" y="131.0" curvePoint="false"/>
+            <arcpath id="" x="765.0" y="406.0" curvePoint="false"/>
+            <arcpath id="" x="255.0" y="407.0" curvePoint="false"/>
+            <arcpath id="" x="255.0" y="283.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Step TO Stepped" source="Step" target="Stepped">
+            <arcpath id="" x="541.0" y="268.0" curvePoint="false"/>
+            <arcpath id="" x="623.0" y="268.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Arrive TO CleaningUp" source="Arrive" target="CleaningUp">
+            <arcpath id="" x="541.0" y="349.0" curvePoint="false"/>
+            <arcpath id="" x="580.0" y="320.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Continue TO Continuing" source="Continue" target="Continuing">
+            <arcpath id="" x="633.0" y="181.0" curvePoint="false"/>
+            <arcpath id="" x="551.0" y="181.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Start TO Continuing" source="Start" target="Continuing">
+            <arcpath id="" x="536.0" y="131.0" curvePoint="false"/>
+            <arcpath id="" x="536.0" y="166.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Start TO Partway" source="Start" target="Running">
+            <arcpath id="" x="536.0" y="131.0" curvePoint="false"/>
+            <arcpath id="" x="421.0" y="336.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Start TO Ongoing" source="Start" target="Ongoing">
+            <arcpath id="" x="541.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="628.0" y="116.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Stop TO Arrived" source="Stop" target="Stopped">
+            <arcpath id="" x="695.0" y="311.0" curvePoint="false"/>
+            <arcpath id="" x="729.0" y="339.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
         <arc id="Prepare TO Ready" source="Prepare" target="Ready">
-            <arcpath id="" x="187.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="274.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="341.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="428.0" y="116.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T0 TO P1" source="Step" target="Stepped">
-            <arcpath id="" x="387.0" y="424.0" curvePoint="false"/>
-            <arcpath id="" x="469.0" y="424.0" curvePoint="false"/>
+        <arc id="Arrive TO Stopped" source="Arrive" target="Stopped">
+            <arcpath id="" x="541.0" y="349.0" curvePoint="false"/>
+            <arcpath id="" x="725.0" y="349.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="T2 TO P3" source="Arrive" target="Stopped">
-            <arcpath id="" x="387.0" y="505.0" curvePoint="false"/>
-            <arcpath id="" x="571.0" y="505.0" curvePoint="false"/>
+        <arc id="Distance TO Step" source="Distance" target="Step">
+            <arcpath id="" x="428.0" y="199.0" curvePoint="false"/>
+            <arcpath id="" x="531.0" y="268.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P5 TO T0" source="Distance" target="Step">
-            <arcpath id="" x="275.0" y="355.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
+        <arc id="CleaningInputs TO CleanInput" source="CleaningInputs" target="CleanInput">
+            <arcpath id="" x="270.0" y="268.0" curvePoint="false"/>
+            <arcpath id="" x="309.0" y="268.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO T2" source="Distance" target="Arrive">
-            <arcpath id="" x="271.0" y="359.0" curvePoint="false"/>
-            <arcpath id="" x="382.0" y="490.0" curvePoint="false"/>
+        <arc id="Distance TO Arrive" source="Distance" target="Arrive">
+            <arcpath id="" x="426.0" y="202.0" curvePoint="false"/>
+            <arcpath id="" x="536.0" y="334.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
+        <arc id="Speed TO CleanInput" source="Speed" target="CleanInput">
+            <arcpath id="" x="404.0" y="268.0" curvePoint="false"/>
+            <arcpath id="" x="319.0" y="268.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Move.Run.Speed)</value>
+            </inscription>
+        </arc>
         <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
-            <arcpath id="" x="504.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="581.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="658.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="735.0" y="116.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P4 TO T2" source="Running" target="Arrive">
-            <arcpath id="" x="275.0" y="505.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="505.0" curvePoint="false"/>
+        <arc id="Running TO Arrive" source="Running" target="Arrive">
+            <arcpath id="" x="429.0" y="349.0" curvePoint="false"/>
+            <arcpath id="" x="531.0" y="349.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P0 TO T0" source="Continuing" target="Step">
-            <arcpath id="" x="382.0" y="352.0" curvePoint="false"/>
-            <arcpath id="" x="382.0" y="409.0" curvePoint="false"/>
+        <arc id="Continuing TO Step" source="Continuing" target="Step">
+            <arcpath id="" x="536.0" y="196.0" curvePoint="false"/>
+            <arcpath id="" x="536.0" y="253.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P0 TO T1" source="CleaningUp" target="Clean2">
-            <arcpath id="" x="439.0" y="452.0" curvePoint="false"/>
-            <arcpath id="" x="441.0" y="385.0" curvePoint="false"/>
+        <arc id="CleaningUp TO Clean2" source="CleaningUp" target="Clean2">
+            <arcpath id="" x="593.0" y="296.0" curvePoint="false"/>
+            <arcpath id="" x="595.0" y="229.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Ready TO Start" source="Ready" target="Start">
-            <arcpath id="" x="304.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="458.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="531.0" y="116.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="CleaningUp TO Step" source="CleaningUp" target="Step">
-            <arcpath id="" x="426.0" y="458.0" curvePoint="false"/>
-            <arcpath id="" x="387.0" y="424.0" curvePoint="false"/>
+            <arcpath id="" x="581.0" y="301.0" curvePoint="false"/>
+            <arcpath id="" x="541.0" y="268.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
         <arc id="Enabled TO Prepare" source="Enabled" target="Prepare">
-            <arcpath id="" x="107.0" y="272.0" curvePoint="false"/>
-            <arcpath id="" x="177.0" y="272.0" curvePoint="false"/>
+            <arcpath id="" x="261.0" y="116.0" curvePoint="false"/>
+            <arcpath id="" x="331.0" y="116.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P1 TO T1" source="Stepped" target="Continue">
-            <arcpath id="" x="484.0" y="409.0" curvePoint="false"/>
-            <arcpath id="" x="484.0" y="352.0" curvePoint="false"/>
+        <arc id="Stepped TO Continue" source="Stepped" target="Continue">
+            <arcpath id="" x="638.0" y="253.0" curvePoint="false"/>
+            <arcpath id="" x="638.0" y="196.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="P0 TO Clean1" source="CleaningUp" target="Clean1">
-            <arcpath id="" x="438.0" y="452.0" curvePoint="false"/>
-            <arcpath id="" x="438.0" y="396.0" curvePoint="false"/>
+        <arc id="CleaningUp TO Clean1" source="CleaningUp" target="Clean1">
+            <arcpath id="" x="592.0" y="296.0" curvePoint="false"/>
+            <arcpath id="" x="592.0" y="240.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Stepped TO Clean1" source="Stepped" target="Clean1">
-            <arcpath id="" x="472.0" y="415.0" curvePoint="false"/>
-            <arcpath id="" x="453.0" y="391.0" curvePoint="false"/>
+            <arcpath id="" x="628.0" y="257.0" curvePoint="false"/>
+            <arcpath id="" x="607.0" y="235.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="ObjectSensed TO Step" source="ObjectSensed" target="Step">
-            <arcpath id="" x="522.0" y="382.0" curvePoint="false"/>
-            <arcpath id="" x="387.0" y="424.0" curvePoint="false"/>
+            <arcpath id="" x="676.0" y="226.0" curvePoint="false"/>
+            <arcpath id="" x="541.0" y="268.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
-        <arc id="P3 TO Finish" source="Stopped" target="Finish">
-            <arcpath id="" x="586.0" y="490.0" curvePoint="false"/>
-            <arcpath id="" x="586.0" y="287.0" curvePoint="false"/>
+        <arc id="Stopped TO Finish" source="Stopped" target="Finish">
+            <arcpath id="" x="740.0" y="334.0" curvePoint="false"/>
+            <arcpath id="" x="740.0" y="131.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Speed TO Step" source="Speed" target="Step">
-            <arcpath id="" x="280.0" y="424.0" curvePoint="false"/>
-            <arcpath id="" x="377.0" y="424.0" curvePoint="false"/>
+            <arcpath id="" x="434.0" y="268.0" curvePoint="false"/>
+            <arcpath id="" x="531.0" y="268.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Move.Run.Speed)</value>
             </inscription>
         </arc>
-        <arc id="ObjectSensed TO T0" source="ObjectSensed" target="Stop">
-            <arcpath id="" x="536.0" y="393.0" curvePoint="false"/>
-            <arcpath id="" x="536.0" y="452.0" curvePoint="false"/>
+        <arc id="ObjectSensed TO Stop" source="ObjectSensed" target="Stop">
+            <arcpath id="" x="690.0" y="237.0" curvePoint="false"/>
+            <arcpath id="" x="690.0" y="296.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Continuing TO Clean2" source="Continuing" target="Clean2">
-            <arcpath id="" x="394.0" y="346.0" curvePoint="false"/>
-            <arcpath id="" x="426.0" y="380.0" curvePoint="false"/>
+            <arcpath id="" x="547.0" y="191.0" curvePoint="false"/>
+            <arcpath id="" x="580.0" y="224.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>

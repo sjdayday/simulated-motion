@@ -51,6 +51,8 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
                 done@BehaviorStatus(obj, 1, 1); 
             else
                 obj.acknowledgeDone();   
+                disp('placereport: '); 
+                disp(obj.runner.getPlaceReport()); 
             end
             obj.behavior.done(); 
         end
