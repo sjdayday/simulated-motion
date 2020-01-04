@@ -23,6 +23,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
          end
          function setupListeners(obj)
             setupListeners@BehaviorStatus(obj); 
+            obj.listenPlaceWithAcknowledgementBothEvents([obj.prefix, 'Simulated'], @obj.simulated);
             obj.moveBehaviorStatus = MoveBehaviorStatusInclude(obj.prefix, obj.runner);
             % premature?  behavior is Navigate; no Move exists yet
             obj.moveBehaviorStatus.behavior = obj.behavior; 
@@ -45,6 +46,12 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
            if (obj.behavior.stopOnReadyForTesting)
               obj.doDone();  
            end
+        end
+        function simulated(obj, ~, propertyChangeEvent)
+            simulation = propertyChangeEvent.getNewValue();
+            disp('simulation'); 
+            disp(simulation); 
+            obj.behavior.simulate(simulation); 
         end
         function done(obj, ~, ~)
             if (obj.finish)

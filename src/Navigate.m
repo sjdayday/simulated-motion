@@ -33,6 +33,10 @@ classdef Navigate <  Behavior
             % currently unused 
 %            status = NavigateBehaviorStatusInclude(obj.prefix, obj.runner); 
         end
+        
+        function simulate(obj, simulated)
+            obj.animal.motorCortex.setSimulatedMotion(simulated); 
+        end
         function done(obj)
             obj.animal.motorCortex.nextRandomNavigation(); 
         end

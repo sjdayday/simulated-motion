@@ -1317,14 +1317,6 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Run.CleaningInputs TO SetupCounterClockwise" source="Run.CleaningInputs" target="SetupCounterClockwise">
-            <arcpath id="" x="322.0" y="415.0" curvePoint="false"/>
-            <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
-            <type value="inhibitor"/>
-            <inscription>
-                <value></value>
-            </inscription>
-        </arc>
         <arc id="Ready TO Start" source="Ready" target="Start">
             <arcpath id="" x="330.0" y="66.0" curvePoint="false"/>
             <arcpath id="" x="403.0" y="66.0" curvePoint="false"/>
@@ -1347,14 +1339,6 @@
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Run.CleaningInputs TO SetupClockwise" source="Run.CleaningInputs" target="SetupClockwise">
-            <arcpath id="" x="324.0" y="410.0" curvePoint="false"/>
-            <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
-            <type value="inhibitor"/>
-            <inscription>
-                <value></value>
             </inscription>
         </arc>
         <arc id="Turn TO SetupTurn" source="Turn" target="SetupTurn">

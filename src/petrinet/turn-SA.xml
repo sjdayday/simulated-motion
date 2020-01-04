@@ -2,14 +2,34 @@
 <pnml>
     <net id="turn-SA">
         <token id="Default" red="0" green="0" blue="0"/>
-        <place id="CleaningInputs">
+        <place id="CleaningDirection">
             <graphics>
                 <position x="79.0" y="234.0"/>
             </graphics>
             <name>
+                <value>CleaningDirection</value>
+                <graphics>
+                    <offset x="19.0" y="-3.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+        </place>
+        <place id="CleaningInputs">
+            <graphics>
+                <position x="150.0" y="234.0"/>
+            </graphics>
+            <name>
                 <value>CleaningInputs</value>
                 <graphics>
-                    <offset x="4.0" y="0.0"/>
+                    <offset x="89.0" y="-10.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -24,15 +44,15 @@
             <toolspecificplace tool="PIPE" version="5">
                 <status>
                     <merge type="home"/>
-                    <!-- <external>
-                        <value>true</value>
+                    <external>
+                        <value>false</value>
                     </external>
                     <inputOnly>
-                        <value>true</value>
+                        <value>false</value>
                     </inputOnly>
                     <outputOnly>
                         <value>false</value>
-                    </outputOnly> -->
+                    </outputOnly>
                 </status>
             </toolspecificplace>
         </place>
@@ -58,12 +78,12 @@
         </place>
         <place id="Clockwise">
             <graphics>
-                <position x="343.0" y="163.0"/>
+                <position x="342.0" y="161.0"/>
             </graphics>
             <name>
                 <value>Clockwise</value>
                 <graphics>
-                    <offset x="-4.0" y="17.0"/>
+                    <offset x="85.0" y="24.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -117,7 +137,7 @@
             <name>
                 <value>CounterClockwise</value>
                 <graphics>
-                    <offset x="-4.0" y="38.0"/>
+                    <offset x="62.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -146,12 +166,12 @@
         </place>
         <place id="Distance">
             <graphics>
-                <position x="343.0" y="213.0"/>
+                <position x="341.0" y="213.0"/>
             </graphics>
             <name>
                 <value>Distance</value>
                 <graphics>
-                    <offset x="-7.0" y="19.0"/>
+                    <offset x="38.0" y="-2.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -335,12 +355,12 @@
         </place>
         <place id="Speed">
             <graphics>
-                <position x="341.0" y="264.0"/>
+                <position x="341.0" y="268.0"/>
             </graphics>
             <name>
                 <value>Speed</value>
                 <graphics>
-                    <offset x="-5.0" y="35.0"/>
+                    <offset x="30.0" y="-2.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -422,7 +442,7 @@
         </place>
         <place id="Turning">
             <graphics>
-                <position x="392.0" y="368.0"/>
+                <position x="379.0" y="368.0"/>
             </graphics>
             <name>
                 <value>Turning</value>
@@ -440,6 +460,110 @@
                 <value>Default,0</value>
             </initialMarking>
         </place>
+        <transition id="Start">
+            <graphics>
+                <position x="532.0" y="114.0"/>
+            </graphics>
+            <name>
+                <value>Start</value>
+                <graphics>
+                    <offset x="15.0" y="-7.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="Stop">
+            <graphics>
+                <position x="689.0" y="319.0"/>
+            </graphics>
+            <name>
+                <value>Stop</value>
+                <graphics>
+                    <offset x="37.0" y="29.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="TurnCW">
+            <graphics>
+                <position x="484.0" y="238.0"/>
+            </graphics>
+            <name>
+                <value>TurnCW</value>
+                <graphics>
+                    <offset x="26.0" y="8.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>90</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="Continue">
+            <graphics>
+                <position x="646.0" y="179.0"/>
+            </graphics>
+            <name>
+                <value>Continue</value>
+                <graphics>
+                    <offset x="46.0" y="-1.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
         <transition id="TurnCCW">
             <graphics>
                 <position x="484.0" y="264.0"/>
@@ -494,7 +618,7 @@
         </transition>
         <transition id="CleanCW">
             <graphics>
-                <position x="140.0" y="215.0"/>
+                <position x="139.0" y="162.0"/>
             </graphics>
             <name>
                 <value>CleanCW</value>
@@ -518,40 +642,14 @@
                 <value>1</value>
             </rate>
         </transition>
-        <transition id="Start">
+        <transition id="CleanInputSpeed">
             <graphics>
-                <position x="532.0" y="114.0"/>
+                <position x="214.0" y="333.0"/>
             </graphics>
             <name>
-                <value>Start</value>
+                <value>CleanInputSpeed</value>
                 <graphics>
-                    <offset x="15.0" y="-7.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="Stop">
-            <graphics>
-                <position x="689.0" y="319.0"/>
-            </graphics>
-            <name>
-                <value>Stop</value>
-                <graphics>
-                    <offset x="37.0" y="29.0"/>
+                    <offset x="51.0" y="45.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -596,6 +694,32 @@
                 <value>1</value>
             </rate>
         </transition>
+        <transition id="CleanInput">
+            <graphics>
+                <position x="213.0" y="234.0"/>
+            </graphics>
+            <name>
+                <value>CleanInput</value>
+                <graphics>
+                    <offset x="34.0" y="47.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
         <transition id="Clean2">
             <graphics>
                 <position x="596.0" y="216.0"/>
@@ -617,58 +741,6 @@
             </priority>
             <orientation>
                 <value>90</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="TurnCW">
-            <graphics>
-                <position x="484.0" y="238.0"/>
-            </graphics>
-            <name>
-                <value>TurnCW</value>
-                <graphics>
-                    <offset x="26.0" y="8.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>90</value>
-            </orientation>
-            <rate>
-                <value>1</value>
-            </rate>
-        </transition>
-        <transition id="Continue">
-            <graphics>
-                <position x="646.0" y="179.0"/>
-            </graphics>
-            <name>
-                <value>Continue</value>
-                <graphics>
-                    <offset x="46.0" y="-1.0"/>
-                </graphics>
-            </name>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <timed>
-                <value>false</value>
-            </timed>
-            <priority>
-                <value>1</value>
-            </priority>
-            <orientation>
-                <value>0</value>
             </orientation>
             <rate>
                 <value>1</value>
@@ -728,7 +800,7 @@
         </transition>
         <transition id="CleanCCW">
             <graphics>
-                <position x="140.0" y="270.0"/>
+                <position x="139.0" y="309.0"/>
             </graphics>
             <name>
                 <value>CleanCCW</value>
@@ -754,7 +826,7 @@
         </transition>
         <arc id="Stop TO Stopped" source="Stop" target="Stopped">
             <arcpath id="" x="694.0" y="349.0" curvePoint="false"/>
-            <arcpath id="" x="729.0" y="374.0" curvePoint="false"/>
+            <arcpath id="" x="731.0" y="372.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -762,7 +834,7 @@
         </arc>
         <arc id="TurnCW TO Turned" source="TurnCW" target="Turned">
             <arcpath id="" x="504.0" y="253.0" curvePoint="false"/>
-            <arcpath id="" x="636.0" y="276.0" curvePoint="false"/>
+            <arcpath id="" x="636.0" y="277.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -770,7 +842,7 @@
         </arc>
         <arc id="Start TO Turning" source="Start" target="Turning">
             <arcpath id="" x="537.0" y="144.0" curvePoint="false"/>
-            <arcpath id="" x="414.0" y="370.0" curvePoint="false"/>
+            <arcpath id="" x="401.0" y="370.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -802,7 +874,7 @@
         </arc>
         <arc id="TurnCCW TO Speed" source="TurnCCW" target="Speed">
             <arcpath id="" x="474.0" y="279.0" curvePoint="false"/>
-            <arcpath id="" x="371.0" y="279.0" curvePoint="false"/>
+            <arcpath id="" x="371.0" y="283.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Speed)</value>
@@ -810,10 +882,18 @@
         </arc>
         <arc id="TurnCW TO Speed" source="TurnCW" target="Speed">
             <arcpath id="" x="474.0" y="253.0" curvePoint="false"/>
-            <arcpath id="" x="371.0" y="276.0" curvePoint="false"/>
+            <arcpath id="" x="371.0" y="280.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="CleanCCW TO CleaningInputs" source="CleanCCW" target="CleaningInputs">
+            <arcpath id="" x="144.0" y="309.0" curvePoint="false"/>
+            <arcpath id="" x="161.0" y="263.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Start TO Continuing" source="Start" target="Continuing">
@@ -824,19 +904,27 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Finish TO CleaningInputs" source="Finish" target="CleaningInputs">
+        <arc id="Arrive TO CleaningUp" source="Arrive" target="CleaningUp">
+            <arcpath id="" x="543.0" y="383.0" curvePoint="false"/>
+            <arcpath id="" x="585.0" y="344.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Finish TO CleaningDirection" source="Finish" target="CleaningDirection">
             <arcpath id="" x="741.0" y="144.0" curvePoint="false"/>
-            <arcpath id="" x="772.0" y="446.0" curvePoint="false"/>
-            <arcpath id="" x="95.0" y="445.0" curvePoint="false"/>
+            <arcpath id="" x="769.0" y="437.0" curvePoint="false"/>
+            <arcpath id="" x="95.0" y="436.0" curvePoint="false"/>
             <arcpath id="" x="94.0" y="264.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Arrive TO CleaningUp" source="Arrive" target="CleaningUp">
-            <arcpath id="" x="543.0" y="383.0" curvePoint="false"/>
-            <arcpath id="" x="586.0" y="344.0" curvePoint="false"/>
+        <arc id="CleanCW TO CleaningInputs" source="CleanCW" target="CleaningInputs">
+            <arcpath id="" x="144.0" y="192.0" curvePoint="false"/>
+            <arcpath id="" x="161.0" y="235.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -875,7 +963,7 @@
             </inscription>
         </arc>
         <arc id="CounterClockWise TO TurnCW" source="CounterClockwise" target="TurnCW">
-            <arcpath id="" x="370.0" y="316.0" curvePoint="false"/>
+            <arcpath id="" x="370.0" y="317.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="253.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
@@ -883,23 +971,39 @@
             </inscription>
         </arc>
         <arc id="Distance TO Arrive" source="Distance" target="Arrive">
-            <arcpath id="" x="369.0" y="238.0" curvePoint="false"/>
+            <arcpath id="" x="367.0" y="238.0" curvePoint="false"/>
             <arcpath id="" x="533.0" y="383.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
+        <arc id="CleaningInputs TO CleanInput" source="CleaningInputs" target="CleanInput">
+            <arcpath id="" x="180.0" y="249.0" curvePoint="false"/>
+            <arcpath id="" x="213.0" y="249.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
         <arc id="ClockWise TO TurnCCW" source="Clockwise" target="TurnCCW">
-            <arcpath id="" x="369.0" y="188.0" curvePoint="false"/>
+            <arcpath id="" x="369.0" y="185.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="279.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
+        <arc id="Distance TO CleanInput" source="Distance" target="CleanInput">
+            <arcpath id="" x="341.0" y="230.0" curvePoint="false"/>
+            <arcpath id="" x="223.0" y="249.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
         <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
-            <arcpath id="" x="659.0" y="131.0" curvePoint="false"/>
+            <arcpath id="" x="659.0" y="129.0" curvePoint="false"/>
             <arcpath id="" x="736.0" y="129.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -923,7 +1027,7 @@
             </inscription>
         </arc>
         <arc id="ObjectSensed TO TurnCCW" source="ObjectSensed" target="TurnCCW">
-            <arcpath id="" x="679.0" y="256.0" curvePoint="false"/>
+            <arcpath id="" x="679.0" y="255.0" curvePoint="false"/>
             <arcpath id="" x="504.0" y="279.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
@@ -931,7 +1035,7 @@
             </inscription>
         </arc>
         <arc id="CleaningUp TO TurnCW" source="CleaningUp" target="TurnCW">
-            <arcpath id="" x="586.0" y="324.0" curvePoint="false"/>
+            <arcpath id="" x="585.0" y="325.0" curvePoint="false"/>
             <arcpath id="" x="504.0" y="253.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
@@ -939,23 +1043,15 @@
             </inscription>
         </arc>
         <arc id="Turning TO Arrive" source="Turning" target="Arrive">
-            <arcpath id="" x="422.0" y="384.0" curvePoint="false"/>
+            <arcpath id="" x="409.0" y="383.0" curvePoint="false"/>
             <arcpath id="" x="533.0" y="383.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Speed TO CleanCW" source="Speed" target="CleanCW">
-            <arcpath id="" x="341.0" y="276.0" curvePoint="false"/>
-            <arcpath id="" x="150.0" y="230.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,#(Speed)</value>
-            </inscription>
-        </arc>
         <arc id="Distance TO TurnCW" source="Distance" target="TurnCW">
-            <arcpath id="" x="373.0" y="231.0" curvePoint="false"/>
+            <arcpath id="" x="371.0" y="231.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="253.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -971,15 +1067,15 @@
             </inscription>
         </arc>
         <arc id="Clockwise TO CleanCW" source="Clockwise" target="CleanCW">
-            <arcpath id="" x="343.0" y="182.0" curvePoint="false"/>
-            <arcpath id="" x="150.0" y="230.0" curvePoint="false"/>
+            <arcpath id="" x="342.0" y="176.0" curvePoint="false"/>
+            <arcpath id="" x="149.0" y="177.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Distance TO TurnCCW" source="Distance" target="TurnCCW">
-            <arcpath id="" x="371.0" y="235.0" curvePoint="false"/>
+            <arcpath id="" x="370.0" y="233.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="279.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -987,23 +1083,15 @@
             </inscription>
         </arc>
         <arc id="Speed TO TurnCCW" source="Speed" target="TurnCCW">
-            <arcpath id="" x="371.0" y="280.0" curvePoint="false"/>
+            <arcpath id="" x="371.0" y="283.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="279.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Speed)</value>
             </inscription>
         </arc>
-        <arc id="CleaningInputs TO CleanCW" source="CleaningInputs" target="CleanCW">
-            <arcpath id="" x="108.0" y="243.0" curvePoint="false"/>
-            <arcpath id="" x="140.0" y="230.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="CleaningUp TO TurnCCW" source="CleaningUp" target="TurnCCW">
-            <arcpath id="" x="583.0" y="327.0" curvePoint="false"/>
+            <arcpath id="" x="584.0" y="327.0" curvePoint="false"/>
             <arcpath id="" x="504.0" y="279.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
@@ -1018,16 +1106,8 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="CleaningInputs TO CleanCCW" source="CleaningInputs" target="CleanCCW">
-            <arcpath id="" x="106.0" y="258.0" curvePoint="false"/>
-            <arcpath id="" x="140.0" y="285.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="Continuing TO Clean1" source="Continuing" target="Clean1">
-            <arcpath id="" x="549.0" y="204.0" curvePoint="false"/>
+            <arcpath id="" x="551.0" y="200.0" curvePoint="false"/>
             <arcpath id="" x="582.0" y="221.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -1042,8 +1122,32 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="Speed TO CleanInput" source="Speed" target="CleanInput">
+            <arcpath id="" x="341.0" y="279.0" curvePoint="false"/>
+            <arcpath id="" x="223.0" y="249.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="Turning TO CleanInput" source="Turning" target="CleanInput">
+            <arcpath id="" x="382.0" y="374.0" curvePoint="false"/>
+            <arcpath id="" x="223.0" y="249.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turning TO CleanInputSpeed" source="Turning" target="CleanInputSpeed">
+            <arcpath id="" x="379.0" y="380.0" curvePoint="false"/>
+            <arcpath id="" x="224.0" y="348.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="Continuing TO TurnCW" source="Continuing" target="TurnCW">
-            <arcpath id="" x="527.0" y="205.0" curvePoint="false"/>
+            <arcpath id="" x="528.0" y="206.0" curvePoint="false"/>
             <arcpath id="" x="489.0" y="248.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -1051,8 +1155,16 @@
             </inscription>
         </arc>
         <arc id="CounterClockwise TO CleanCCW" source="CounterClockwise" target="CleanCCW">
-            <arcpath id="" x="342.0" y="321.0" curvePoint="false"/>
-            <arcpath id="" x="150.0" y="285.0" curvePoint="false"/>
+            <arcpath id="" x="342.0" y="324.0" curvePoint="false"/>
+            <arcpath id="" x="149.0" y="324.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="CleaningInputs TO CleanInputSpeed" source="CleaningInputs" target="CleanInputSpeed">
+            <arcpath id="" x="172.0" y="262.0" curvePoint="false"/>
+            <arcpath id="" x="219.0" y="333.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1083,11 +1195,27 @@
             </inscription>
         </arc>
         <arc id="Speed TO TurnCW" source="Speed" target="TurnCW">
-            <arcpath id="" x="371.0" y="276.0" curvePoint="false"/>
+            <arcpath id="" x="371.0" y="280.0" curvePoint="false"/>
             <arcpath id="" x="474.0" y="253.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="Speed TO CleanInputSpeed" source="Speed" target="CleanInputSpeed">
+            <arcpath id="" x="342.0" y="289.0" curvePoint="false"/>
+            <arcpath id="" x="224.0" y="348.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Speed)</value>
+            </inscription>
+        </arc>
+        <arc id="CleaningDirection TO CleanCW" source="CleaningDirection" target="CleanCW">
+            <arcpath id="" x="103.0" y="237.0" curvePoint="false"/>
+            <arcpath id="" x="144.0" y="192.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Continuing TO TurnCCW" source="Continuing" target="TurnCCW">
@@ -1098,17 +1226,17 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Speed TO CleanCCW" source="Speed" target="CleanCCW">
-            <arcpath id="" x="341.0" y="279.0" curvePoint="false"/>
-            <arcpath id="" x="150.0" y="285.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,#(Speed)</value>
-            </inscription>
-        </arc>
         <arc id="Turned TO Clean2" source="Turned" target="Clean2">
             <arcpath id="" x="640.0" y="269.0" curvePoint="false"/>
             <arcpath id="" x="616.0" y="231.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="CleaningDirection TO CleanCCW" source="CleaningDirection" target="CleanCCW">
+            <arcpath id="" x="102.0" y="261.0" curvePoint="false"/>
+            <arcpath id="" x="144.0" y="309.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
