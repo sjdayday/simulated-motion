@@ -51,6 +51,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
             simulation = propertyChangeEvent.getNewValue();
             disp('simulation'); 
             disp(simulation); 
+            obj.acknowledge('Simulated'); 
             obj.behavior.simulate(simulation); 
         end
         function done(obj, ~, ~)

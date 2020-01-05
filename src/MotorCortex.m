@@ -24,6 +24,7 @@ classdef MotorCortex < System
         remainingDistance
         maxBehaviorSteps
         behaviorHistory
+        simulatedBehaviorHistory
         keepRunnerForReporting
         readyAcknowledgeBuildsPlaceReport
         turnBehavior
@@ -58,7 +59,7 @@ classdef MotorCortex < System
             obj.clockwise = -1;
             obj.counterClockwise = 1; 
             obj.turnSpeed = 1;
-            obj.clockwiseness = obj.counterClockwise; 
+            obj.clockwiseness = obj.counterClockwise; % default to start 
             obj.markedPlaceReport = '';
             obj.remainingDistance = 0; 
             obj.maxBehaviorSteps = 5; 
@@ -135,7 +136,13 @@ classdef MotorCortex < System
                else
                    behavior = obj.turnOrRun(steps); 
                end
-               obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+               if (obj.simulatedMotion)
+                   obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
+                   obj.settlePhysical(); 
+               else
+                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+               end
+               
            end
         end
       function turnAway = turnAwayFromWhiskersTouching(obj, steps)
@@ -153,6 +160,7 @@ classdef MotorCortex < System
            behavior = randi(2); 
            if (behavior == obj.turnBehavior) 
                obj.turnDistance = steps; 
+               obj.runDistance = 0; 
                direction = randi([0,1]);
                if direction 
                   obj.counterClockwiseTurn(); 
@@ -160,7 +168,8 @@ classdef MotorCortex < System
                   obj.clockwiseTurn(); 
                end
            elseif (behavior == obj.runBehavior)
-              obj.runDistance = steps;   
+              obj.runDistance = steps;  
+              obj.turnDistance = 0; 
               obj.currentPlan = obj.run();
               obj.clockwiseness = 0; 
            end
@@ -241,6 +250,7 @@ classdef MotorCortex < System
  
         end
         function aMove = turn(obj)
+            disp(['clockwiseness: ', num2str(obj.clockwiseness)]);  
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
             turn = true;
             build = false; 
@@ -280,12 +290,15 @@ classdef MotorCortex < System
             offset = environment.cueHeadDirectionOffset(1); % 1 is primary cue
         end
         function setSimulatedMotion(obj, simulated)
+            disp('setSimulatedMotion'); 
+            disp(simulated); 
             obj.simulatedMotion = simulated; 
             obj.animal.simulatedMotion = simulated;
             obj.animal.hippocampalFormation.simulatedMotion = simulated; 
             if simulated
                obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
-               obj.turnDistance = 0; 
+               obj.turnDistance = 0; % needed for reverseSimulatedTurn; run reversal is automatic
+               obj.simulatedBehaviorHistory = [];
             end
         end
         function settlePhysical(obj)
@@ -295,6 +308,7 @@ classdef MotorCortex < System
             obj.reverseSimulatedTurn(); 
         end
         function reverseSimulatedTurn(obj)
+            disp(['reverse simulated turn; turnDistance: ',num2str(obj.turnDistance)]);  
             if obj.turnDistance > 0
                obj.clockwiseness = obj.clockwiseness * -1; 
                obj.turn(); 
