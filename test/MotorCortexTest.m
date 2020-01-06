@@ -24,37 +24,37 @@ classdef MotorCortexTest < AbstractTest
 %             disp(motorCortex.behaviorHistory); 
 %         end
 
-        function testNavigateLotsOfSteps(testCase)
-            env = Environment();
-            env.addWall([0 0],[0 2]); 
-            env.addWall([0 2],[2 2]); 
-            env.addWall([0 0],[2 0]); 
-            env.addWall([2 0],[2 2]);
-            env.build();
-            testCase.animal = Animal(); 
-            testCase.animal.build(); 
-            testCase.animal.place(env, 1, 1, 0);
-            motorCortex = testCase.animal.motorCortex; 
-            motorCortex.firingLimit = 10000;  
-            motorCortex.keepRunnerForReporting = true; 
-            motorCortex.readyAcknowledgeBuildsPlaceReport = true;             
-            motorCortex.stopOnReadyForTesting = false; 
-            motorCortex.prepareNavigate(); 
-            motorCortex.navigate(200); 
-            pause(0.2); 
-%             result = motorCortex.markedPlaceReport.toCharArray()'; 
-            result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
-            testCase.assertEqual(result, ...
-                ['Navigate.Energy: Default=5  ' newline,  ...
-                'Navigate.Move.Moving: Default=1  ' newline,  ...
-                'Navigate.Move.Ongoing: Default=1  ' newline,  ...
-                'Navigate.Move.Run.Speed: Default=1  ' newline,  ...
-                'Navigate.Move.Turn.CounterClockwise: Default=2  ' newline,  ...
-                'Navigate.Move.Turn.Speed: Default=2  ' newline,  ...
-                'Navigate.Ongoing: Default=1  ' newline,  ...
-                'Navigate.Resources: Default=1  ' newline,  ...
-                'Navigate.Tired: Default=4  ' newline]);
-        end
+%         function testNavigateLotsOfSteps(testCase)
+%             env = Environment();
+%             env.addWall([0 0],[0 2]); 
+%             env.addWall([0 2],[2 2]); 
+%             env.addWall([0 0],[2 0]); 
+%             env.addWall([2 0],[2 2]);
+%             env.build();
+%             testCase.animal = Animal(); 
+%             testCase.animal.build(); 
+%             testCase.animal.place(env, 1, 1, 0);
+%             motorCortex = testCase.animal.motorCortex; 
+%             motorCortex.firingLimit = 10000;  
+%             motorCortex.keepRunnerForReporting = true; 
+%             motorCortex.readyAcknowledgeBuildsPlaceReport = true;             
+%             motorCortex.stopOnReadyForTesting = false; 
+%             motorCortex.prepareNavigate(); 
+%             motorCortex.navigate(200); 
+%             pause(0.2); 
+% %             result = motorCortex.markedPlaceReport.toCharArray()'; 
+%             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
+%             testCase.assertEqual(result, ...
+%                 ['Navigate.Energy: Default=5  ' newline,  ...
+%                 'Navigate.Move.Moving: Default=1  ' newline,  ...
+%                 'Navigate.Move.Ongoing: Default=1  ' newline,  ...
+%                 'Navigate.Move.Run.Speed: Default=1  ' newline,  ...
+%                 'Navigate.Move.Turn.CounterClockwise: Default=2  ' newline,  ...
+%                 'Navigate.Move.Turn.Speed: Default=2  ' newline,  ...
+%                 'Navigate.Ongoing: Default=1  ' newline,  ...
+%                 'Navigate.Resources: Default=1  ' newline,  ...
+%                 'Navigate.Tired: Default=4  ' newline]);
+%         end
 
 
 
