@@ -82,6 +82,7 @@ classdef HebbMarrNetwork < handle
         end
         function percent = saturation(obj)
             percent = obj.activationCount() / (obj.nNeurons * obj.nSynapses); 
+            disp(['synapse saturation percent: ', num2str(percent)]);
         end
 
         function plot(obj)

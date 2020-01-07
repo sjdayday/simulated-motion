@@ -56,7 +56,7 @@ classdef ExperimentController < System
         nFeatures
         hdsMinimumVelocity
         hdsAnimalVelocityCalibration
-        
+        keepRunnerForReporting
     end
     methods
         function obj = ExperimentController()
@@ -80,7 +80,8 @@ classdef ExperimentController < System
             obj.twoCuesOnly = false; 
             obj.nFeatures = 3;
             obj.hdsMinimumVelocity = pi/20; 
-            obj.hdsAnimalVelocityCalibration = 1.0;                               
+            obj.hdsAnimalVelocityCalibration = 1.0; 
+            obj.keepRunnerForReporting = false; 
 %             obj.build(); 
         end
         function build(obj)
