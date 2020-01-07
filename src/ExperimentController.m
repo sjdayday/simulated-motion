@@ -53,6 +53,7 @@ classdef ExperimentController < System
         gridSize            
         thirdCue
         twoCuesOnly
+        nFeatures
         hdsMinimumVelocity
         hdsAnimalVelocityCalibration
         
@@ -77,6 +78,7 @@ classdef ExperimentController < System
             obj.hdsPullsFeatureWeightsFromLec = false; 
             obj.thirdCue = false; 
             obj.twoCuesOnly = false; 
+            obj.nFeatures = 3;
             obj.hdsMinimumVelocity = pi/20; 
             obj.hdsAnimalVelocityCalibration = 1.0;                               
 %             obj.build(); 
@@ -153,6 +155,7 @@ classdef ExperimentController < System
             obj.animal.sparseOrthogonalizingNetwork = obj.sparseOrthogonalizingNetwork; 
             obj.animal.separateMecLec = obj.separateMecLec; 
             obj.animal.twoCuesOnly = obj.twoCuesOnly; 
+            obj.animal.nFeatures = obj.nFeatures; 
             obj.animal.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.animal.hdsMinimumVelocity = obj.hdsMinimumVelocity; 
             obj.animal.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration;                   

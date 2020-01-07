@@ -1,10 +1,10 @@
 % Smaller grids, fewer head direction cells, two hashed place outputs
 % copy S12, with separateMecLec = true; two hashed place outputs
+% two cues only, and nFeatures = 1
 % place match threshold from 2 to 1
 % if 60 or 30, or 20 (maybe) HDS moves normally
 % if 16, moves occasionally
 % if 12, HDS doesn't move   
-% ....TODO two cues only; add test 
 classdef S13 < handle 
 
     properties
@@ -28,7 +28,8 @@ classdef S13 < handle
             obj.ec.showHippocampalFormationECIndices = true; 
             obj.ec.sparseOrthogonalizingNetwork = true; 
             obj.ec.separateMecLec = true; 
-            obj.ec.thirdCue = true; 
+            obj.ec.twoCuesOnly = true; 
+            obj.ec.nFeatures = 1; 
             obj.ec.hdsPullsFeatureWeightsFromLec = true;
             obj.ec.build(); 
             if visual
