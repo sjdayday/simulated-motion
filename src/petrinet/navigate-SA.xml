@@ -189,7 +189,7 @@
         </place>
         <place id="Move.Done">
             <graphics>
-                <position x="577.0" y="458.0"/>
+                <position x="577.0" y="463.0"/>
             </graphics>
             <name>
                 <value>Move.Done</value>
@@ -222,7 +222,7 @@
         </place>
         <place id="Move.Enabled">
             <graphics>
-                <position x="374.0" y="459.0"/>
+                <position x="374.0" y="464.0"/>
             </graphics>
             <name>
                 <value>Move.Enabled</value>
@@ -536,7 +536,7 @@
                 <position x="606.0" y="87.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>SimulationResources</value>
                 <graphics>
                     <offset x="68.0" y="-3.0"/>
                 </graphics>
@@ -886,15 +886,7 @@
         </arc>
         <arc id="Start TO Move.Enabled" source="Start" target="Move.Enabled">
             <arcpath id="" x="389.0" y="356.0" curvePoint="false"/>
-            <arcpath id="" x="389.0" y="459.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="NotUseEnergy TO Energy" source="NotUseEnergy" target="Energy">
-            <arcpath id="" x="404.0" y="101.0" curvePoint="false"/>
-            <arcpath id="" x="465.0" y="151.0" curvePoint="false"/>
+            <arcpath id="" x="389.0" y="464.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -931,7 +923,7 @@
             <arcpath id="" x="668.0" y="274.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,5</value>
+                <value>Default,3</value>
             </inscription>
         </arc>
         <arc id="Rest TO Energy" source="Rest" target="Energy">
@@ -948,7 +940,7 @@
             <arcpath id="" x="670.0" y="266.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,5</value>
+                <value>Default,3</value>
             </inscription>
         </arc>
         <arc id="FinishKnown TO Done" source="Finish" target="Done">
@@ -1002,14 +994,6 @@
         <arc id="Prepare TO Ready" source="Prepare" target="Ready">
             <arcpath id="" x="195.0" y="341.0" curvePoint="false"/>
             <arcpath id="" x="281.0" y="341.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Energy TO NotUseEnergy" source="Energy" target="NotUseEnergy">
-            <arcpath id="" x="465.0" y="151.0" curvePoint="false"/>
-            <arcpath id="" x="404.0" y="101.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1208,7 +1192,7 @@
             </inscription>
         </arc>
         <arc id="Move.Done TO Finish" source="Move.Done" target="Finish">
-            <arcpath id="" x="592.0" y="458.0" curvePoint="false"/>
+            <arcpath id="" x="592.0" y="463.0" curvePoint="false"/>
             <arcpath id="" x="591.0" y="356.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
