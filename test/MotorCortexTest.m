@@ -106,7 +106,6 @@ classdef MotorCortexTest < AbstractTest
             result = motorCortex.navigation.runner.getPlaceReport().toCharArray()'; 
             testCase.assertEqual(result, ...
                ['Navigate.Energy: Default=9  ' newline,  ...
-                'Navigate.Move.Run: Default=1  ' newline,  ...
                 'Navigate.Ready: Default=1  ' newline,  ...
                 'Navigate.Resources: Default=1  ' newline,  ...                
                 'Navigate.Tired: Default=1  ' newline]);
@@ -551,7 +550,8 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(find(lastPlace == 1), [88 163]);
             
             motorCortex.runDistance = 3; 
-            motorCortex.setSimulatedMotion(true); 
+%             motorCortex.setSimulatedMotion(true); 
+            motorCortex.simulationOn(); 
             motorCortex.run(); 
             testCase.assertEqual(motorCortex.physicalPlace, lastPlace);
             testCase.assertEqual(testCase.animal.x , 1);            
@@ -612,7 +612,8 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(find(lastPlace == 1), [88 163]);
             
             motorCortex.runDistance = 3; 
-            motorCortex.setSimulatedMotion(true); 
+%             motorCortex.setSimulatedMotion(true); 
+            motorCortex.simulationOn(); 
             motorCortex.run(); 
             testCase.assertEqual(motorCortex.physicalPlace, lastPlace);
             testCase.assertEqual(testCase.animal.x , 1);            
@@ -644,7 +645,8 @@ classdef MotorCortexTest < AbstractTest
                 28);             
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [88 163]);
-            motorCortex.setSimulatedMotion(false);   % <-- moved here from prior to settle          
+%             motorCortex.setSimulatedMotion(false);   % <-- moved here from prior to settle  
+            motorCortex.simulationOff(); 
             motorCortex.runDistance = 3; 
             motorCortex.run(); 
 %             testCase.assertEqual(motorCortex.physicalPlace, lastPlace);
@@ -690,7 +692,8 @@ classdef MotorCortexTest < AbstractTest
                 [88 163]);
             lastPlace = testCase.animal.hippocampalFormation.placeOutput; 
             testCase.assertEqual(find(lastPlace == 1), [88 163]);
-            motorCortex.setSimulatedMotion(true); 
+%             motorCortex.setSimulatedMotion(true); 
+            motorCortex.simulationOn(); 
             motorCortex.maxBehaviorSteps = 3; 
             motorCortex.randomNavigation(15);
             disp(motorCortex.simulatedBehaviorHistory); 
@@ -727,7 +730,8 @@ classdef MotorCortexTest < AbstractTest
             testCase.animal.step();
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [88], 'still simulated, so no LEC component'); 
-            motorCortex.setSimulatedMotion(false);            
+%             motorCortex.setSimulatedMotion(false); 
+            motorCortex.simulationOff(); 
             testCase.animal.step();
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [88 163], 'out of simulation, so LEC component included');
@@ -755,7 +759,8 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(find(lastPlace == 1), [88 163]);
             
 
-            motorCortex.setSimulatedMotion(true); 
+%             motorCortex.setSimulatedMotion(true); 
+            motorCortex.simulationOn(); 
             motorCortex.turnDistance = 4;             
             motorCortex.clockwiseTurn();             
 %             motorCortex.counterClockwiseTurn(); 
@@ -778,19 +783,22 @@ classdef MotorCortexTest < AbstractTest
 %                 15); 
 %             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), ... 
 %                 10);             
-            motorCortex.setSimulatedMotion(false); 
+%             motorCortex.setSimulatedMotion(false); 
+            motorCortex.simulationOff(); 
             motorCortex.settlePhysical(); 
 %             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
 %                 19, 'return to former head direction; should be back to 17'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 19, 'return to former head direction; should be back to 17'); 
-            motorCortex.setSimulatedMotion(true); 
+%             motorCortex.setSimulatedMotion(true); 
+            motorCortex.simulationOn(); 
             motorCortex.turnDistance = 4;             
             motorCortex.counterClockwiseTurn();             
 %             motorCortex.clockwiseTurn();  
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 23, 'should be 13 if steps 1 for 1'); 
-            motorCortex.setSimulatedMotion(false); 
+%             motorCortex.setSimulatedMotion(false); 
+            motorCortex.simulationOff(); 
             motorCortex.settlePhysical(); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
                 19, 'return to former head direction; should be back to 17');             

@@ -38,15 +38,15 @@ classdef BehaviorStatus < handle
             obj.readyAcknowledgeBuildsPlaceReport = false;
          end
          function runner = buildRunner(obj)
-                import uk.ac.imperial.pipe.runner.*;
-                import java.lang.Thread;
-                obj.runner = PetriNetRunner(buildPetriNetName(obj));
-                obj.runner.setPlaceReporterParameters(true, true, 0); 
-                obj.enable();
-                obj.runner.setFiringLimit(obj.firingLimit);
-                obj.runner.setSeed(rand()*1000000);
-                obj.waitForInput(true);
-                runner = obj.runner; 
+            import uk.ac.imperial.pipe.runner.*;
+            import java.lang.Thread;
+            obj.runner = PetriNetRunner(buildPetriNetName(obj));
+            obj.runner.setPlaceReporterParameters(true, true, 0); 
+            obj.enable();
+            obj.runner.setFiringLimit(obj.firingLimit);
+            obj.runner.setSeed(rand()*1000000);
+            obj.waitForInput(true);
+            runner = obj.runner; 
          end
          function execute(obj)
             obj.thread.start(); 

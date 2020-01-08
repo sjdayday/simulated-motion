@@ -44,6 +44,8 @@ classdef MotorCortex < System
         moveBehaviorStatus
         navigateFirstSimulatedRun
         simulationSettleRequired
+        pendingSimulationOn
+        pendingSimulationOff
     end
     methods
         function obj = MotorCortex(animal)
@@ -85,6 +87,8 @@ classdef MotorCortex < System
             obj.readyAcknowledgeBuildsPlaceReport = false; 
             obj.navigateFirstSimulatedRun = false; 
             obj.simulationSettleRequired = false;
+            obj.pendingSimulationOn = false;
+            obj.pendingSimulationOff = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -136,6 +140,12 @@ classdef MotorCortex < System
  
         end
         function nextRandomNavigation(obj)
+           disp('nextRandomNavigation');
+           if (obj.pendingSimulationOff)
+              disp('simulation off');  
+              obj.simulationOff(); 
+              obj.pendingSimulationOff = false; 
+           end           
            steps = obj.randomSteps(); 
            if (steps == 0)
               obj.navigation.behaviorStatus.finish = true;
@@ -149,6 +159,7 @@ classdef MotorCortex < System
                    obj.nextRandomSimulatedNavigation(); 
                else
                    if (obj.navigateFirstSimulatedRun)
+                       disp('about to retraceFirstSimulatedRun');
                        nextBehavior = obj.retraceFirstSimulatedRun(steps); 
                        behavior = nextBehavior(1);
                    else
@@ -167,6 +178,12 @@ classdef MotorCortex < System
            end
         end
         function nextRandomSimulatedNavigation(obj)
+           disp('nextRandomSimulatedNavigation'); 
+           if (obj.pendingSimulationOn)
+              disp('simulation on'); 
+              obj.simulationOn();  
+              obj.pendingSimulationOn = false; 
+           end
            steps = obj.randomSteps(); 
            if (steps == 0)
               obj.navigation.behaviorStatus.finish = true;
@@ -179,6 +196,7 @@ classdef MotorCortex < System
 %                end
 %                if (obj.simulatedMotion)
                    if (obj.simulationSettleRequired)
+                        disp('simulationSettleRequired, about to settle'); 
                         obj.simulationSettleRequired = false; 
                         obj.settlePhysical(); 
                    else
@@ -369,17 +387,26 @@ classdef MotorCortex < System
         function setSimulatedMotion(obj, simulated)
             disp('setSimulatedMotion'); 
             disp(simulated); 
-            obj.simulatedMotion = simulated; 
-            obj.animal.simulatedMotion = simulated;
-            obj.animal.hippocampalFormation.simulatedMotion = simulated; 
-            if simulated
-               obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
-               obj.turnDistance = 0; % needed for reverseSimulatedTurn; run reversal is automatic
-               obj.simulatedBehaviorHistory = [];
-            else 
-               obj.navigateFirstSimulatedRun = true;  
-            end
+            obj.pendingSimulationOn = simulated; 
+            obj.pendingSimulationOff = ~simulated;             
         end
+        function simulationOn(obj)
+            obj.simulatedMotion = true; 
+            obj.animal.simulatedMotion = true;
+            obj.animal.hippocampalFormation.simulatedMotion = true; 
+
+            obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
+            obj.turnDistance = 0; % needed for reverseSimulatedTurn; run reversal is automatic
+            obj.simulatedBehaviorHistory = [];
+        end
+        function simulationOff(obj)
+            obj.simulatedMotion = false; 
+            obj.animal.simulatedMotion = false;
+            obj.animal.hippocampalFormation.simulatedMotion = false; 
+            
+            obj.navigateFirstSimulatedRun = true;  
+        end
+        
         function settlePhysical(obj)
             obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
             obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
