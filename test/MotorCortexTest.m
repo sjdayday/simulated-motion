@@ -295,6 +295,77 @@ classdef MotorCortexTest < AbstractTest
                 'counter clockwise turn for 1');
             testCase.assertEqual(motorCortex.remainingDistance, 0);            
         end
+        function testRetraceFirstSimulatedRun(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            env.build();
+            testCase.animal = Animal();
+            testCase.animal.build(); 
+            testCase.animal.place(env, 1, 1, 0);
+            motorCortex = testCase.animal.motorCortex;
+            
+%             turn/skip/run / turn (ignored)
+            motorCortex.simulatedBehaviorHistory = [ 1 1 1; 11 1 -1; 2 3 0; 1 2 1; 11 2 -1];
+            motorCortex.navigateFirstSimulatedRun = true;             
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+            behavior = nextBehavior(1); 
+            testCase.assertEqual(motorCortex.turnDistance, 1);
+            testCase.assertEqual(motorCortex.runDistance, 0);  
+            testCase.assertEqual(motorCortex.clockwiseness, 1); 
+            testCase.assertEqual(behavior, motorCortex.turnBehavior); 
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertTrue(motorCortex.navigateFirstSimulatedRun); 
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+            behavior = nextBehavior(1); 
+            testCase.assertEqual(motorCortex.turnDistance, 0);
+            testCase.assertEqual(motorCortex.runDistance, 3);  
+            testCase.assertEqual(motorCortex.clockwiseness, 0); 
+            testCase.assertEqual(behavior, motorCortex.runBehavior); 
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertFalse(motorCortex.navigateFirstSimulatedRun); 
+            
+%             run / turn (ignored)
+            motorCortex.simulatedBehaviorHistory = [ 2 3 0; 1 2 1; 11 2 -1];
+            motorCortex.navigateFirstSimulatedRun = true;             
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+            behavior = nextBehavior(1); 
+            testCase.assertEqual(motorCortex.turnDistance, 0);
+            testCase.assertEqual(motorCortex.runDistance, 3);  
+            testCase.assertEqual(motorCortex.clockwiseness, 0); 
+            testCase.assertEqual(behavior, motorCortex.runBehavior); 
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertFalse(motorCortex.navigateFirstSimulatedRun); 
+            
+%             turn/skip/turn/skip/ next random  
+            motorCortex.simulatedBehaviorHistory = [ 1 1 1; 11 1 -1; 1 2 -1; 11 2 1; ];
+            motorCortex.navigateFirstSimulatedRun = true;             
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+            behavior = nextBehavior(1); 
+            testCase.assertEqual(motorCortex.turnDistance, 1);
+            testCase.assertEqual(motorCortex.runDistance, 0);  
+            testCase.assertEqual(motorCortex.clockwiseness, 1); 
+            testCase.assertEqual(behavior, motorCortex.turnBehavior); 
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertTrue(motorCortex.navigateFirstSimulatedRun); 
+            
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+            behavior = nextBehavior(1); 
+            testCase.assertEqual(motorCortex.turnDistance, 2);
+            testCase.assertEqual(motorCortex.runDistance, 0);  
+            testCase.assertEqual(motorCortex.clockwiseness, -1); 
+            testCase.assertEqual(behavior, motorCortex.turnBehavior); 
+            testCase.assertClass(motorCortex.currentPlan, 'Move');
+            testCase.assertTrue(motorCortex.navigateFirstSimulatedRun); 
+            
+            nextBehavior = motorCortex.retraceFirstSimulatedRun(4); 
+%             behavior = nextBehavior(1); 
+            testCase.assertFalse(motorCortex.navigateFirstSimulatedRun);          
+            distance = max(motorCortex.turnDistance, motorCortex.runDistance);
+            testCase.assertEqual(distance, 4);
+        end
         function testTurnsAwayWhenWhiskersTouching(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 
@@ -622,20 +693,29 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.maxBehaviorSteps = 3; 
             motorCortex.randomNavigation(10);
             disp(motorCortex.simulatedBehaviorHistory); 
-            %      1     2     1
-            %      1     1     1
-            %      2     3     0
-            %      1     2    -1 clockwise
-            %      2     2     0            
+        %      1     2     1
+        %     11     2    -1
+        %      1     1     1
+        %     11     1    -1
+        %      2     3     0
+        %      1     2    -1
+        %     11     2     1
+        %      2     2     0            
              testCase.assertEqual(motorCortex.simulatedBehaviorHistory(1,:), [1 2 1], ...
                 'counter clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(2,:), [1 1 1], ...
+             testCase.assertEqual(motorCortex.simulatedBehaviorHistory(2,:), [11 2 -1], ...
+                'reverse counter clockwise turn 2');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [1 1 1], ...
                 'counter clockwise turn 1');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [2 3 0], ...
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [11 1 -1], ...
+                'reverse counter clockwise turn 1');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [2 3 0], ...
                 'run for 3');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [1 2 -1], ...
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(6,:), [1 2 -1], ...
                 'clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [2 2 0], ...
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(7,:), [11 2 1], ...
+                'reverse clockwise turn 2');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(8,:), [2 2 0], ...
                 'run for 2');
 
             

@@ -28,6 +28,8 @@ classdef MotorCortex < System
         keepRunnerForReporting
         readyAcknowledgeBuildsPlaceReport
         turnBehavior
+        noBehavior
+        reverseSimulatedTurnBehavior
         runBehavior
         orientBehavior
         placeRecognized
@@ -40,6 +42,7 @@ classdef MotorCortex < System
         standaloneMoves
         listenAndMark
         moveBehaviorStatus
+        navigateFirstSimulatedRun
     end
     methods
         function obj = MotorCortex(animal)
@@ -65,6 +68,8 @@ classdef MotorCortex < System
             obj.maxBehaviorSteps = 5; 
             obj.behaviorHistory = [];
             obj.turnBehavior = 1; 
+            obj.reverseSimulatedTurnBehavior = 11; 
+            obj.noBehavior= -1;
             obj.runBehavior = 2;
             obj.orientBehavior = 3; 
             obj.placeRecognized = false; 
@@ -77,6 +82,7 @@ classdef MotorCortex < System
             obj.standaloneMoves = true; 
             obj.listenAndMark = true; 
             obj.readyAcknowledgeBuildsPlaceReport = false; 
+            obj.navigateFirstSimulatedRun = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -129,15 +135,22 @@ classdef MotorCortex < System
               obj.navigation.behaviorStatus.finish = true;
               obj.navigation.behaviorStatus.waitForInput(false); 
               obj.navigation.behaviorStatus.isDone = true;
-           else 
+           else
                if obj.turnAwayFromWhiskersTouching(steps)
                    disp('turning away from whiskers touching'); 
                    behavior = obj.turnBehavior; 
                else
-                   behavior = obj.turnOrRun(steps); 
+                   if (obj.navigateFirstSimulatedRun)
+                       nextBehavior = obj.retraceFirstSimulatedRun(steps); 
+                       behavior = nextBehavior(1);
+                   else
+                       behavior = obj.turnOrRun(steps); 
+                   end
                end
                if (obj.simulatedMotion)
                    obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
+                   disp('obj.simulatedBehaviorHistory: '); 
+                   disp(obj.simulatedBehaviorHistory); 
                    obj.settlePhysical(); 
                else
                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
@@ -174,6 +187,44 @@ classdef MotorCortex < System
               obj.clockwiseness = 0; 
            end
         end
+        function nextBehavior = retraceFirstSimulatedRun(obj, steps)
+           nextBehavior = obj.popNextSimulatedBehavior(); 
+           if (nextBehavior(1) == obj.reverseSimulatedTurnBehavior)
+              nextBehavior = obj.retraceFirstSimulatedRun(steps); 
+           end
+           if (obj.navigateFirstSimulatedRun)                
+               if (nextBehavior(1) == obj.turnBehavior)
+                  obj.turnDistance = nextBehavior(2); 
+                  obj.runDistance = 0; 
+                  obj.clockwiseness = nextBehavior(3); 
+                  obj.currentPlan = obj.turn();
+               end
+               if (nextBehavior(1) == obj.runBehavior)
+                  obj.navigateFirstSimulatedRun = false;  
+                  obj.turnDistance = 0; 
+                  obj.runDistance = nextBehavior(2); 
+                  obj.clockwiseness = 0; 
+                  obj.currentPlan = obj.run();
+               end 
+               if (nextBehavior(1) == obj.noBehavior)
+                  obj.navigateFirstSimulatedRun = false;  
+                  nextBehavior = obj.turnOrRun(steps);                
+               end            
+           end
+        end
+        function behavior = popNextSimulatedBehavior(obj)
+           rows = size(obj.simulatedBehaviorHistory, 1); 
+           if (rows == 0)
+               behavior = obj.noBehavior;
+           else
+               behavior = obj.simulatedBehaviorHistory(1,:);    
+               if (rows == 1)
+                  obj.simulatedBehaviorHistory = []; 
+               else
+                  obj.simulatedBehaviorHistory = obj.simulatedBehaviorHistory(2:end,:); 
+               end
+           end
+        end
         function prepareNavigate(obj)
             build = false; 
             obj.standaloneMoves = false; 
@@ -189,19 +240,6 @@ classdef MotorCortex < System
 %             obj.setupListeners(); % <<< 
 %             obj.currentPlan = aNavigation;             
         end
-        function setupListeners(obj) % <<<
-           obj.listenAndMark = false;  
-           aMove = obj.turn(); 
-           aMove.acknowledging = true;            
-           aMove.listenPlaces(); 
-
-%            aMove.markPlaces(obj.listenAndMark);
-           aMove.behavior.listenLocalPlaces();
-%            aMove.behavior.markPlaces();
-           aMove = obj.run(); 
-           aMove.behavior.listenLocalPlaces(); 
-           obj.listenAndMark = true; 
-        end
         function navigate(obj, steps)
             if (obj.stopOnReadyForTesting) 
                 obj.navigation.stopOnReadyForTesting = true; 
@@ -215,7 +253,8 @@ classdef MotorCortex < System
 
 %             aNavigation = Navigate(obj.navigatePrefix, obj.animal); 
 %             aNavigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
-%             obj.currentPlan = aNavigation;             
+%             obj.currentPlan = aNavigation; 
+
             obj.navigation.execute(); 
             obj.markedPlaceReport = obj.navigation.placeReport;             
         end
@@ -299,6 +338,8 @@ classdef MotorCortex < System
                obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
                obj.turnDistance = 0; % needed for reverseSimulatedTurn; run reversal is automatic
                obj.simulatedBehaviorHistory = [];
+            else 
+               obj.navigateFirstSimulatedRun = true;  
             end
         end
         function settlePhysical(obj)
@@ -308,10 +349,13 @@ classdef MotorCortex < System
             obj.reverseSimulatedTurn(); 
         end
         function reverseSimulatedTurn(obj)
-            disp(['reverse simulated turn; turnDistance: ',num2str(obj.turnDistance)]);  
             if obj.turnDistance > 0
+               disp(['reverse simulated turn; turnDistance: ',num2str(obj.turnDistance)]);                  
                obj.clockwiseness = obj.clockwiseness * -1; 
                obj.turn(); 
+               obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [obj.reverseSimulatedTurnBehavior obj.turnDistance obj.clockwiseness]];
+               disp('obj.simulatedBehaviorHistory: '); 
+               disp(obj.simulatedBehaviorHistory); 
             end            
         end
         %% Single time step 
