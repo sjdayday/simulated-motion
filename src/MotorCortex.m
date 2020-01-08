@@ -43,6 +43,7 @@ classdef MotorCortex < System
         listenAndMark
         moveBehaviorStatus
         navigateFirstSimulatedRun
+        simulationSettleRequired
     end
     methods
         function obj = MotorCortex(animal)
@@ -83,6 +84,7 @@ classdef MotorCortex < System
             obj.listenAndMark = true; 
             obj.readyAcknowledgeBuildsPlaceReport = false; 
             obj.navigateFirstSimulatedRun = false; 
+            obj.simulationSettleRequired = false;
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -94,7 +96,11 @@ classdef MotorCortex < System
             obj.behaviorHistory = [];
             obj.remainingDistance = steps; 
             while (obj.remainingDistance > 0)
-                obj.nextRandomNavigation(); 
+                if (obj.simulatedMotion)
+                    obj.nextRandomSimulatedNavigation(); 
+                else
+                    obj.nextRandomNavigation(); 
+                end
             end
         end
         % orient(true) when placed, else orient(false), cause activation
@@ -139,6 +145,8 @@ classdef MotorCortex < System
                if obj.turnAwayFromWhiskersTouching(steps)
                    disp('turning away from whiskers touching'); 
                    behavior = obj.turnBehavior; 
+               elseif (obj.simulationSettleRequired)
+                   obj.nextRandomSimulatedNavigation(); 
                else
                    if (obj.navigateFirstSimulatedRun)
                        nextBehavior = obj.retraceFirstSimulatedRun(steps); 
@@ -147,18 +155,48 @@ classdef MotorCortex < System
                        behavior = obj.turnOrRun(steps); 
                    end
                end
-               if (obj.simulatedMotion)
-                   obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
-                   disp('obj.simulatedBehaviorHistory: '); 
-                   disp(obj.simulatedBehaviorHistory); 
-                   obj.settlePhysical(); 
-               else
-                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-               end
+%                if (obj.simulatedMotion)
+%                    obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
+%                    disp('obj.simulatedBehaviorHistory: '); 
+%                    disp(obj.simulatedBehaviorHistory); 
+%                    obj.settlePhysical(); 
+%                else
+               obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+%                end
                
            end
         end
-      function turnAway = turnAwayFromWhiskersTouching(obj, steps)
+        function nextRandomSimulatedNavigation(obj)
+           steps = obj.randomSteps(); 
+           if (steps == 0)
+              obj.navigation.behaviorStatus.finish = true;
+              obj.navigation.behaviorStatus.waitForInput(false); 
+              obj.navigation.behaviorStatus.isDone = true;
+           else
+%                if (obj.navigateFirstSimulatedRun)
+%                    nextBehavior = obj.retraceFirstSimulatedRun(steps); 
+%                    behavior = nextBehavior(1);
+%                end
+%                if (obj.simulatedMotion)
+                   if (obj.simulationSettleRequired)
+                        obj.simulationSettleRequired = false; 
+                        obj.settlePhysical(); 
+                   else
+                      obj.simulationSettleRequired = true;  
+                      behavior = obj.turnOrRun(steps);
+                      obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
+                      disp('obj.simulatedBehaviorHistory: '); 
+                      disp(obj.simulatedBehaviorHistory); 
+
+    %            else
+    %                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+                   end
+%                else 
+%                    error('MotorCortex:nextRandomSimulatedNavigation', 'simulatedMotion flag is false but expected to be true'); 
+%                end               
+           end
+        end
+        function turnAway = turnAwayFromWhiskersTouching(obj, steps)
             obj.turnDistance = steps; 
             turnAway = true; 
             if (obj.animal.rightWhiskerTouching) 

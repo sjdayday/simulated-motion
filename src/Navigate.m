@@ -10,6 +10,7 @@ classdef Navigate <  Behavior
          finish
          stopOnReadyForTesting
          includeBehavior
+         simulation
     end
     methods
         function obj = Navigate(prefix, animal, behaviorStatus, build)
@@ -21,6 +22,7 @@ classdef Navigate <  Behavior
             obj.finish = false;
             obj.stopOnReadyForTesting = false; 
             obj.behaviorStatus.behavior = obj; 
+            obj.simulation = false; 
             if (build)
                 obj.build(); 
             end
@@ -35,16 +37,21 @@ classdef Navigate <  Behavior
         end
         
         function simulate(obj, simulation)
-            obj.animal.motorCortex.setSimulatedMotion(simulation); 
+            obj.simulation = simulation;
+            obj.animal.motorCortex.setSimulatedMotion(simulation);          
         end
         function done(obj)
-            obj.animal.motorCortex.nextRandomNavigation(); 
+            if (obj.simulation)
+                obj.animal.motorCortex.nextRandomSimulatedNavigation(); 
+            else
+                obj.animal.motorCortex.nextRandomNavigation(); 
+            end
         end
         
-        function simulateChanged(obj, source, event)
-            disp(['source name: ', source.Name]); 
-            disp(['event class: ', class(event)]); 
-            disp(['event name: ', event.Name]); 
-        end
+%         function simulateChanged(obj, source, event)
+%             disp(['source name: ', source.Name]); 
+%             disp(['event class: ', class(event)]); 
+%             disp(['event name: ', event.Name]); 
+%         end
     end
 end

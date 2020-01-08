@@ -666,7 +666,8 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), ... 
                 10);             
 
-        end        
+        end   
+%         
         function testSimulatedRandomNavigationReturnsToOriginalPositionDirection(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance 
@@ -691,32 +692,26 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(find(lastPlace == 1), [88 163]);
             motorCortex.setSimulatedMotion(true); 
             motorCortex.maxBehaviorSteps = 3; 
-            motorCortex.randomNavigation(10);
+            motorCortex.randomNavigation(15);
             disp(motorCortex.simulatedBehaviorHistory); 
         %      1     2     1
         %     11     2    -1
-        %      1     1     1
-        %     11     1    -1
+        %      2     2     0
         %      2     3     0
-        %      1     2    -1
-        %     11     2     1
-        %      2     2     0            
+        %      1     1     1
+        %     11     1    -1        
              testCase.assertEqual(motorCortex.simulatedBehaviorHistory(1,:), [1 2 1], ...
                 'counter clockwise turn 2');
              testCase.assertEqual(motorCortex.simulatedBehaviorHistory(2,:), [11 2 -1], ...
                 'reverse counter clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [1 1 1], ...
-                'counter clockwise turn 1');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [11 1 -1], ...
-                'reverse counter clockwise turn 1');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [2 3 0], ...
-                'run for 3');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(6,:), [1 2 -1], ...
-                'clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(7,:), [11 2 1], ...
-                'reverse clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(8,:), [2 2 0], ...
-                'run for 2');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [2 2 0], ...
+                'run for 2, settle consumes addtl steps');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [2 3 0], ...
+                'run for 3, settle consumes addtl steps');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [1 1 1], ...
+                'counterclockwise turn 1');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(6,:), [11 1 -1], ...
+                'reverse counterclockwise turn 1');
 
             
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
