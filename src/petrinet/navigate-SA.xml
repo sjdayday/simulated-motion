@@ -786,7 +786,7 @@
             <name>
                 <value>Finish</value>
                 <graphics>
-                    <offset x="85.0" y="11.0"/>
+                    <offset x="48.0" y="5.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -983,14 +983,6 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="SimulateQuiet TO QuietAwake" source="SimulateQuiet" target="QuietAwake">
-            <arcpath id="" x="770.0" y="219.0" curvePoint="false"/>
-            <arcpath id="" x="697.0" y="219.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="Prepare TO Ready" source="Prepare" target="Ready">
             <arcpath id="" x="195.0" y="341.0" curvePoint="false"/>
             <arcpath id="" x="281.0" y="341.0" curvePoint="false"/>
@@ -1037,14 +1029,6 @@
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
-            </inscription>
-        </arc>
-        <arc id="QuietAwake TO SimulateQuiet" source="QuietAwake" target="SimulateQuiet">
-            <arcpath id="" x="697.0" y="219.0" curvePoint="false"/>
-            <arcpath id="" x="770.0" y="219.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Simulated TO ExitSimulation" source="Simulated" target="ExitSimulation">

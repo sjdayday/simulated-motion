@@ -148,6 +148,7 @@ classdef MotorCortex < System
            end           
            steps = obj.randomSteps(); 
            if (steps == 0)
+              disp('no remaining steps...exiting');  
               obj.navigation.behaviorStatus.finish = true;
               obj.navigation.behaviorStatus.waitForInput(false); 
               obj.navigation.behaviorStatus.isDone = true;
@@ -155,6 +156,7 @@ classdef MotorCortex < System
                if obj.turnAwayFromWhiskersTouching(steps)
                    disp('turning away from whiskers touching'); 
                    behavior = obj.turnBehavior; 
+                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
                elseif (obj.simulationSettleRequired)
                    obj.nextRandomSimulatedNavigation(); 
                else
@@ -165,16 +167,8 @@ classdef MotorCortex < System
                    else
                        behavior = obj.turnOrRun(steps); 
                    end
+                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
                end
-%                if (obj.simulatedMotion)
-%                    obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
-%                    disp('obj.simulatedBehaviorHistory: '); 
-%                    disp(obj.simulatedBehaviorHistory); 
-%                    obj.settlePhysical(); 
-%                else
-               obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-%                end
-               
            end
         end
         function nextRandomSimulatedNavigation(obj)
@@ -186,33 +180,29 @@ classdef MotorCortex < System
            end
            steps = obj.randomSteps(); 
            if (steps == 0)
+              disp('no remaining steps...exiting'); 
               obj.navigation.behaviorStatus.finish = true;
               obj.navigation.behaviorStatus.waitForInput(false); 
               obj.navigation.behaviorStatus.isDone = true;
            else
-%                if (obj.navigateFirstSimulatedRun)
-%                    nextBehavior = obj.retraceFirstSimulatedRun(steps); 
-%                    behavior = nextBehavior(1);
-%                end
-%                if (obj.simulatedMotion)
-                   if (obj.simulationSettleRequired)
-                        disp('simulationSettleRequired, about to settle'); 
-                        obj.simulationSettleRequired = false; 
-                        obj.settlePhysical(); 
-                   else
-                      obj.simulationSettleRequired = true;  
-                      behavior = obj.turnOrRun(steps);
-                      obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
-                      disp('obj.simulatedBehaviorHistory: '); 
-                      disp(obj.simulatedBehaviorHistory); 
-
-    %            else
-    %                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-                   end
-%                else 
-%                    error('MotorCortex:nextRandomSimulatedNavigation', 'simulatedMotion flag is false but expected to be true'); 
-%                end               
+               if (obj.simulationSettleRequired)
+                    disp('simulationSettleRequired, about to settle'); 
+                    obj.simulationSettleRequired = false; 
+                    turned = obj.settlePhysical();
+                    if (~turned)
+                        obj.simulatedMove(steps);
+                    end
+               else
+                   obj.simulatedMove(steps);
+               end
            end
+        end
+        function simulatedMove(obj, steps)
+              obj.simulationSettleRequired = true;  
+              behavior = obj.turnOrRun(steps);
+              obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
+              disp('obj.simulatedBehaviorHistory: '); 
+              disp(obj.simulatedBehaviorHistory);             
         end
         function turnAway = turnAwayFromWhiskersTouching(obj, steps)
             obj.turnDistance = steps; 
@@ -407,20 +397,22 @@ classdef MotorCortex < System
             obj.navigateFirstSimulatedRun = true;  
         end
         
-        function settlePhysical(obj)
+        function turned = settlePhysical(obj)
             obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
             obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
             obj.animal.hippocampalFormation.settleGrids(); 
-            obj.reverseSimulatedTurn(); 
+            turned = obj.reverseSimulatedTurn(); 
         end
-        function reverseSimulatedTurn(obj)
-            if obj.turnDistance > 0
+        function turned = reverseSimulatedTurn(obj)
+            turned = false;
+            if ((obj.turnDistance > 0) && (obj.clockwiseness ~= 0))
+               turned = true; 
                disp(['reverse simulated turn; turnDistance: ',num2str(obj.turnDistance)]);                  
                obj.clockwiseness = obj.clockwiseness * -1; 
                obj.turn(); 
                obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [obj.reverseSimulatedTurnBehavior obj.turnDistance obj.clockwiseness]];
                disp('obj.simulatedBehaviorHistory: '); 
-               disp(obj.simulatedBehaviorHistory); 
+               disp(obj.simulatedBehaviorHistory);
             end            
         end
         %% Single time step 
