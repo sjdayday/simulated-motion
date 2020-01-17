@@ -4,7 +4,7 @@
         <token id="Default" red="0" green="0" blue="0"/>
         <place id="Clockwise">
             <graphics>
-                <position x="409.0" y="445.0"/>
+                <position x="398.0" y="444.0"/>
             </graphics>
             <name>
                 <value>Clockwise</value>
@@ -301,12 +301,12 @@
         </place>
         <place id="Run.CleaningInputs">
             <graphics>
-                <position x="295.0" y="391.0"/>
+                <position x="298.0" y="328.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Run.CleaningInputs</value>
                 <graphics>
-                    <offset x="78.0" y="46.0"/>
+                    <offset x="64.0" y="45.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -316,8 +316,21 @@
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
-                <value>Default,0</value>
+                <value>Default,-1</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>false</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Run.Distance">
             <graphics>
@@ -387,7 +400,7 @@
         </place>
         <place id="Run.Enabled">
             <graphics>
-                <position x="418.0" y="330.0"/>
+                <position x="419.0" y="353.0"/>
             </graphics>
             <name>
                 <value>Run.Enabled</value>
@@ -539,12 +552,45 @@
                 </status>
             </toolspecificplace>
         </place>
+        <place id="Turn.CleaningDirection">
+            <graphics>
+                <position x="296.0" y="404.0"/>
+            </graphics>
+            <name>
+                <value>Turn.CleaningDirection</value>
+                <graphics>
+                    <offset x="79.0" y="44.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>false</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
         <place id="Turn.CleaningInputs">
             <graphics>
                 <position x="297.0" y="495.0"/>
             </graphics>
             <name>
-                <value>P0</value>
+                <value>Turn.CleaningInputs</value>
                 <graphics>
                     <offset x="70.0" y="46.0"/>
                 </graphics>
@@ -558,6 +604,19 @@
                 </graphics>
                 <value>Default,0</value>
             </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>false</value>
+                    </external>
+                    <inputOnly>
+                        <value>false</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
         </place>
         <place id="Turn.Clockwise">
             <graphics>
@@ -693,7 +752,7 @@
         </place>
         <place id="Turn.Enabled">
             <graphics>
-                <position x="375.0" y="330.0"/>
+                <position x="375.0" y="353.0"/>
             </graphics>
             <name>
                 <value>Turn.Enabled</value>
@@ -940,7 +999,7 @@
             <name>
                 <value>SetupTurn</value>
                 <graphics>
-                    <offset x="73.0" y="19.0"/>
+                    <offset x="73.0" y="11.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -1161,7 +1220,7 @@
         </arc>
         <arc id="EnableTurn TO Turn.Enabled" source="EnableTurn" target="Turn.Enabled">
             <arcpath id="" x="390.0" y="267.0" curvePoint="false"/>
-            <arcpath id="" x="390.0" y="330.0" curvePoint="false"/>
+            <arcpath id="" x="390.0" y="353.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1169,7 +1228,7 @@
         </arc>
         <arc id="EnableRun TO Run.Enabled" source="EnableRun" target="Run.Enabled">
             <arcpath id="" x="433.0" y="266.0" curvePoint="false"/>
-            <arcpath id="" x="433.0" y="330.0" curvePoint="false"/>
+            <arcpath id="" x="434.0" y="353.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1191,16 +1250,8 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO SetupRun" source="Distance" target="SetupRun">
-            <arcpath id="" x="108.0" y="318.0" curvePoint="false"/>
-            <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,#(Distance)</value>
-            </inscription>
-        </arc>
         <arc id="Run.CleaningInputs TO SetupRun" source="Run.CleaningInputs" target="SetupRun">
-            <arcpath id="" x="303.0" y="393.0" curvePoint="false"/>
+            <arcpath id="" x="304.0" y="331.0" curvePoint="false"/>
             <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
@@ -1223,14 +1274,6 @@
                 <value></value>
             </inscription>
         </arc>
-        <arc id="Moving TO EnableTurn" source="Moving" target="EnableTurn">
-            <arcpath id="" x="405.0" y="177.0" curvePoint="false"/>
-            <arcpath id="" x="390.0" y="237.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
             <arcpath id="" x="530.0" y="66.0" curvePoint="false"/>
             <arcpath id="" x="607.0" y="66.0" curvePoint="false"/>
@@ -1242,6 +1285,78 @@
         <arc id="Run.Done TO FinishRun" source="Run.Done" target="FinishRun">
             <arcpath id="" x="642.0" y="340.0" curvePoint="false"/>
             <arcpath id="" x="642.0" y="271.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Distance TO SetupTurn" source="Distance" target="SetupTurn">
+            <arcpath id="" x="111.0" y="337.0" curvePoint="false"/>
+            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="Enabled TO Prepare" source="Enabled" target="Prepare">
+            <arcpath id="" x="133.0" y="66.0" curvePoint="false"/>
+            <arcpath id="" x="203.0" y="66.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turn TO SetupTurn" source="Turn" target="SetupTurn">
+            <arcpath id="" x="112.0" y="396.0" curvePoint="false"/>
+            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Turn.CleaningInputs TO SetupTurn" source="Turn.CleaningInputs" target="SetupTurn">
+            <arcpath id="" x="302.0" y="499.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
+        <arc id="Turn.CleaningDirection TO SetupTurn" source="Turn.CleaningDirection" target="SetupTurn">
+            <arcpath id="" x="296.0" y="415.0" curvePoint="false"/>
+            <arcpath id="" x="215.0" y="395.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
+        <arc id="Run TO EnableRun" source="RunMotion" target="EnableRun">
+            <arcpath id="" x="311.0" y="217.0" curvePoint="false"/>
+            <arcpath id="" x="428.0" y="251.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Distance TO SetupRun" source="Distance" target="SetupRun">
+            <arcpath id="" x="108.0" y="318.0" curvePoint="false"/>
+            <arcpath id="" x="211.0" y="228.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,#(Distance)</value>
+            </inscription>
+        </arc>
+        <arc id="Turn.CleaningDirection TO SetupCounterClockwise" source="Turn.CleaningDirection" target="SetupCounterClockwise">
+            <arcpath id="" x="323.0" y="428.0" curvePoint="false"/>
+            <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
+        <arc id="Moving TO EnableTurn" source="Moving" target="EnableTurn">
+            <arcpath id="" x="405.0" y="177.0" curvePoint="false"/>
+            <arcpath id="" x="390.0" y="237.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1263,14 +1378,6 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Distance TO SetupTurn" source="Distance" target="SetupTurn">
-            <arcpath id="" x="111.0" y="337.0" curvePoint="false"/>
-            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,#(Distance)</value>
-            </inscription>
-        </arc>
         <arc id="Turn.Done TO FinishTurn" source="Turn.Done" target="FinishTurn">
             <arcpath id="" x="594.0" y="341.0" curvePoint="false"/>
             <arcpath id="" x="594.0" y="270.0" curvePoint="false"/>
@@ -1287,25 +1394,9 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
-        <arc id="Enabled TO Prepare" source="Enabled" target="Prepare">
-            <arcpath id="" x="133.0" y="66.0" curvePoint="false"/>
-            <arcpath id="" x="203.0" y="66.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
         <arc id="CounterClockwise TO SetupCounterClockwise" source="CounterClockwise" target="SetupCounterClockwise">
             <arcpath id="" x="428.0" y="552.0" curvePoint="false"/>
             <arcpath id="" x="490.0" y="552.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Turn TO SetupTurn" source="Turn" target="SetupTurn">
-            <arcpath id="" x="112.0" y="396.0" curvePoint="false"/>
-            <arcpath id="" x="205.0" y="395.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1343,25 +1434,17 @@
                 <value>Default,#(Speed)</value>
             </inscription>
         </arc>
-        <arc id="Turn.CleaningInputs TO SetupTurn" source="Turn.CleaningInputs" target="SetupTurn">
-            <arcpath id="" x="302.0" y="499.0" curvePoint="false"/>
-            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+        <arc id="Turn.CleaningDirection TO SetupClockwise" source="Turn.CleaningDirection" target="SetupClockwise">
+            <arcpath id="" x="326.0" y="422.0" curvePoint="false"/>
+            <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
                 <value></value>
             </inscription>
         </arc>
         <arc id="Clockwise TO SetupClockwise" source="Clockwise" target="SetupClockwise">
-            <arcpath id="" x="439.0" y="460.0" curvePoint="false"/>
+            <arcpath id="" x="428.0" y="459.0" curvePoint="false"/>
             <arcpath id="" x="491.0" y="460.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
-            </inscription>
-        </arc>
-        <arc id="Run TO EnableRun" source="RunMotion" target="EnableRun">
-            <arcpath id="" x="311.0" y="217.0" curvePoint="false"/>
-            <arcpath id="" x="428.0" y="251.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
