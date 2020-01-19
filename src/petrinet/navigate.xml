@@ -931,7 +931,7 @@
             <arcpath id="" x="668.0" y="274.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,3</value>
+                <value>Default,4</value>
             </inscription>
         </arc>
         <arc id="Rest TO Energy" source="Rest" target="Energy">
@@ -948,7 +948,7 @@
             <arcpath id="" x="670.0" y="266.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,3</value>
+                <value>Default,4</value>
             </inscription>
         </arc>
         <arc id="FinishKnown TO Done" source="Finish" target="Done">
