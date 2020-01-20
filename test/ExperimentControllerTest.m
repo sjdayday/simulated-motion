@@ -1,5 +1,19 @@
 classdef ExperimentControllerTest < AbstractTest
     methods (Test)
+        function testCreatesPredictableSequenceOfSeedsForRandomNumberGenerator(testCase)
+         % This test depends on the implementation of rng().  If it breaks,
+         % much of the ability of the system to replicate past results is
+         % likely to be affected.  If replication is important, it may be necessary to fall 
+         % back to an older version of Matlab.  
+            controller = ExperimentController(); 
+            controller.build(); 
+            testCase.assertEqual(controller.bumpRandomSeed(), ...
+                uint32(1301868182), 'use second entry in current rng State as the seed'); 
+            testCase.assertEqual(controller.bumpRandomSeed(), ...
+                uint32(2938499220), 'use second entry in current rng State as the seed'); 
+            testCase.assertEqual(controller.bumpRandomSeed(), ...
+                uint32(1137848623), 'use second entry in current rng State as the seed'); 
+        end
         function testCreatesControllerWithDefaultHeadDirectionAndChartSystems(testCase)
             controller = ExperimentController(); 
             controller.build(); 

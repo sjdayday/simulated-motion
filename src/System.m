@@ -5,12 +5,14 @@ classdef System < handle
         eventMap
         time
         timekeeper
+        seed
     end
     methods 
         function obj = System()
             obj.eventMap = containers.Map('KeyType','double','ValueType','char');
             obj.time = 0; 
             obj.setTimekeeper(obj); 
+            obj.seed = uint32(0); 
         end
         function addEvent(obj, time, event)
             obj.eventMap(time) = event; 
@@ -49,7 +51,7 @@ classdef System < handle
         end
         function loadFixedRandom(~)
            load '../rngDefaultSettings';
-           rng(rngDefault);                
+           rng(rngDefault);  
         end
     end
     methods (Abstract)

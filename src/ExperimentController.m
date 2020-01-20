@@ -110,6 +110,7 @@ classdef ExperimentController < System
 %             motorCortex.counterClockwiseTurn();
 
             obj.setChildTimekeeper(obj); 
+            obj.loadFixedRandom(); 
         end
         function buildSystemMap(obj)
             obj.systemMap = containers.Map('KeyType','char','ValueType','double');
@@ -478,6 +479,12 @@ classdef ExperimentController < System
             addChartSystemProperty(obj, 'normalizedWeight');
             addChartSystemProperty(obj, 'sigmaAngularWeight');
             addChartSystemProperty(obj, 'sigmaWeightPattern');             
+        end
+        function seed = bumpRandomSeed(obj)
+           rng(obj.seed);
+           rr = rng(obj.seed); % seems to not take the first time           
+           obj.seed = rr.State(2); 
+           seed = obj.seed; 
         end
         function setupDisplay(obj)
             hold on;  
