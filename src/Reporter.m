@@ -10,6 +10,7 @@ classdef Reporter < handle
         tag
         pipeTag
         animal
+        stepFileId
     end
     methods 
         function obj = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal)
@@ -31,22 +32,36 @@ classdef Reporter < handle
            set(0,'diaryFile',obj.getDiaryFile()); 
            diary on; 
            disp(get(0,'diaryFile'));  
-           disp('somestuff'); 
+%            matrix2 = [100;200;300];
+           fid = fopen( obj.getStepFile(), 'w' );
+% for jj = 1 : length( matrix1 )
+%            fprintf( fid, '%s,%d\n', matrix1{jj}, matrix2(jj) );
+           fprintf( fid, '%s\n', obj.getHeader() );
+% end
+           fclose( fid );
+           obj.stepFileId = fopen( obj.getStepFile(), 'a' );
         end
         function header = getHeader(obj)
-           header = '"seed","tag","pipeTag","step","placeId","simulated","turn/step","placeRecognized","retracedTrajectory","successfulRetrace","gridSquare"';
+           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquare"';
         end
         function diaryFile = getDiaryFile(obj)
-           diaryFile = [obj.filepath,'diary_',obj.formattedDateTime,'.txt'];  
+           diaryFile = [obj.filepath,obj.formattedDateTime,'_diary.txt'];  
         end
         function stepFile = getStepFile(obj)
-           stepFile = [obj.filepath,'step_',obj.formattedDateTime,'.csv'];   
+           stepFile = [obj.filepath,obj.formattedDateTime,'_step.csv'];   
+        end
+        function writeRecord(obj, step, placeId, simulated, turnRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquare)
+           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%d\n', obj.seed,step,placeId,simulated,turnRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquare);
+%             12,'[19 108]',1,2,0,1,0,75);  
+        end
+        function closeStepFile(obj)
+           fclose(obj.stepFileId);  
         end
         function time = getTime(obj)
            time = obj.getTimekeeper().time;  
            % deal with initial race conditions if timekeeper hasn't stepped
            % yet.  not ideal; should really deal with the races...
-           if time == 0
+           if (time == 0)
                time = 1; 
            end
         end
