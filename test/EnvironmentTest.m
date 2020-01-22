@@ -238,40 +238,6 @@ classdef EnvironmentTest < AbstractTest
 %             env.setDirection((2*pi));
 %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
         end
-%         function testCalculatesHeadDirectionCellOffsetFromAnotherDirection(testCase)
-% %             import matlab.unittest.constraints.IsEqualTo
-% %             import matlab.unittest.constraints.RelativeTolerance
-%             env = Environment();
-%             env.addWall([0 0],[0 2]); 
-%             env.addWall([0 2],[2 2]); 
-%             env.addWall([0 0],[2 0]); 
-%             env.addWall([2 0],[2 2]);
-%             env.distanceIntervals = 8;
-%             env.directionIntervals = 60;
-%             env.center = [1 1]; 
-%             env.build();  
-%             env.setPosition([1 1]);             
-%             
-%             % animal:  obj.currentDirection (radians) 
-%             % env.setHeadDirection(16);
-%             % shared position
-% %             env.setPosition([0.5 1]); 
-%             env.addCue([2 1]);  %  x   ------------- cue (at 0)
-%             env.setHeadDirection(16);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 45);
-%             env.setHeadDirection(46);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 15);
-%             env.setHeadDirection(1);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 0);
-%             env.setHeadDirection(2);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 59);
-%             env.setHeadDirection(60);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 1);
-%             env.setHeadDirection(59);
-%             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
-% %             env.setDirection((2*pi));
-% %             testCase.assertEqual(env.cueHeadDirectionOffset(1), 2);
-%         end
         function testCalculatesHeadDirectionCellOffsetFromVariousPositions(testCase)
             env = Environment();
             env.addWall([0 0],[0 2]); 
@@ -290,6 +256,49 @@ classdef EnvironmentTest < AbstractTest
             % same cue and head direction, new position
             env.setPosition([1 1.5]);             
             testCase.assertEqual(env.cueHeadDirectionOffset(1), 40);
+        end
+        function testCalculatesGridSquareAnimalOccupies(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            
+%             env.distanceIntervals = 8;
+%             env.directionIntervals = 60;
+%             env.center = [1 1]; 
+            env.build();  
+
+            % explicit build for gridSquares because will need to
+            % re-initialize when parameters change in long test run
+            env.buildGridSquares(); 
+            testCase.assertEqual(size(env.gridSquares), [10 10]);
+            env.calculateGridSquare([0.1, 0.1]); 
+            testCase.assertEqual(env.gridSquares(1,1), 1, ...
+                'lower left in the arena is upper left in the grid matrix');
+            env.calculateGridSquare([0.1, 0.3]); 
+            testCase.assertEqual(env.gridSquares(2,1), 1, ...
+                'row is the y value, column is the x value');
+            % same cue and head direction, new position
+            env.calculateGridSquare([0.1, 2]); 
+            testCase.assertEqual(env.gridSquares(10,1), 1);
+            env.calculateGridSquare([1, 2]); 
+            testCase.assertEqual(env.gridSquares(10,5), 1);
+            testCase.assertEqual(env.showGridSquares(), ... 
+            [1 0 0 0 1 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             0 0 0 0 0 0 0 0 0 0; ...
+             1 0 0 0 0 0 0 0 0 0; ...
+             1 0 0 0 0 0 0 0 0 0], ...
+             'flipped so it matches arena display');
+%             disp(env.showGridSquares()); 
+            testCase.assertEqual(env.gridSquareTotal(), 4);
+            testCase.assertEqual(env.gridSquarePercent(), 0.04);
         end
     end
 end

@@ -47,6 +47,7 @@ classdef MotorCortex < System
         pendingSimulationOn
         pendingSimulationOff
         debugSteps
+        currentBehavior
     end
     methods
         function obj = MotorCortex(animal)
@@ -91,6 +92,7 @@ classdef MotorCortex < System
             obj.pendingSimulationOn = false;
             obj.pendingSimulationOff = false; 
             obj.debugSteps = 0; 
+            obj.currentBehavior = 0; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -367,6 +369,7 @@ classdef MotorCortex < System
             disp(['clockwiseness: ', num2str(obj.clockwiseness)]);  
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
             turn = true;
+            obj.currentBehavior = obj.turnBehavior; 
             build = false; 
 %             runner = []; 
 %             behaviorStatus = []; 
@@ -378,6 +381,7 @@ classdef MotorCortex < System
         function aMove = run(obj)
             obj.clockwiseness = 0; 
             turn = false;
+            obj.currentBehavior = obj.runBehavior; 
             build = false;
 %             behaviorStatus = [];
             aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); 

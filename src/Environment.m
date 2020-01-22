@@ -29,6 +29,8 @@ classdef Environment < System
         relativeDistanceInterval
         direction
         directionIntervals
+        gridSquares
+        hardcodedGridDimension
     end
     methods
         function obj = Environment()
@@ -43,11 +45,17 @@ classdef Environment < System
             obj.relativeDistanceInterval = 0; 
             obj.direction = 0; 
             obj.directionIntervals = 60; 
+            % gridSquares are 0.2 on a side for a 2 x 2 arena; hard-coded
+            obj.hardcodedGridDimension = 0.2; 
         end
         function build(obj)
             maxDistance = calculateMaxDistanceFromCenter(obj);
             obj.relativeDistanceInterval= ... 
                 (maxDistance*2)/(obj.distanceIntervals-1); 
+            obj.buildGridSquares(); 
+        end
+        function buildGridSquares(obj)
+            obj.gridSquares = zeros(10, 10);
         end
         function maxDistance = calculateMaxDistanceFromCenter(obj)
             distances = []; 
@@ -209,6 +217,24 @@ classdef Environment < System
                headDirection = 0;  
             end
 %             headDirection = min(headDirection, obj.directionIntervals); % if direction is exactly 2*pi             
+        end
+        % calculates which gridSquare corresponds to animal's position 
+        % note that lower left in the arena, e.g., 0.1, 0.1, is upper left
+        % in the matrix: (1, 1).  Also, the x position in the arena is the   
+        % column in the matrix, and the y position is the row
+        function calculateGridSquare(obj, position)
+            column = ceil(position(1) / obj.hardcodedGridDimension); 
+            row = ceil(position(2) / obj.hardcodedGridDimension); 
+            obj.gridSquares(row, column) = 1; 
+        end
+        function arenaDisplay = showGridSquares(obj)
+           arenaDisplay = flipud(obj.gridSquares); 
+        end
+        function total = gridSquareTotal(obj)
+           total = sum(sum(obj.gridSquares));  
+        end
+        function percent = gridSquarePercent(obj)
+           percent = obj.gridSquareTotal() / 100; 
         end
         %% Single time step 
         function plot(obj)
