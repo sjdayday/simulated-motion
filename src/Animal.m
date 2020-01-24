@@ -47,8 +47,6 @@ classdef Animal < System
         length
         lastX
         lastY
-        deltaX
-        deltaY
         lastDegrees
         shape
         lastShape
@@ -82,7 +80,10 @@ classdef Animal < System
         nStabilizationSteps
         simulatedMotion
         hdsMinimumVelocity
-        hdsAnimalVelocityCalibration       
+        hdsAnimalVelocityCalibration   
+        simulatedDistanceTraveled
+        xSimulated
+        ySimulated
 
     end
     methods
@@ -119,6 +120,7 @@ classdef Animal < System
             obj.axesSet = 0;
             obj.minimumRunVelocity = 0.1; 
             obj.distanceTraveled = 0; 
+            obj.simulatedDistanceTraveled = 0; 
             obj.skipFirstPlot = 1; 
             obj.controller = SimpleController(obj); % default; overridden by ExperimentController
             obj.move = 1; % 1=turn, 0=run
@@ -132,6 +134,8 @@ classdef Animal < System
             obj.motionInputWeights = false; 
             obj.x = 0;
             obj.y = 0; 
+            obj.xSimulated = 0; 
+            obj.ySimulated = 0; 
             obj.showHippocampalFormationECIndices = false;
             obj.placeMatchThreshold = 0;
             obj.settleToPlace = false; 
@@ -194,8 +198,6 @@ classdef Animal < System
 %             obj.y = 0; 
             obj.lastX = 0; 
             obj.lastY = 0;
-            obj.deltaX = 0;
-            obj.deltaY = 0;
             obj.lastDegrees = 0;
             if ishandle(obj.h) 
                 figure(obj.h);
@@ -242,7 +244,9 @@ classdef Animal < System
             obj.checkPlaced(); 
             obj.move = 1; 
                 if (clockwiseness == 1) || (clockwiseness == -1)
-                    if ~ obj.simulatedMotion
+                    if obj.simulatedMotion
+                        % calculateSimulatedPositionFromSimulatedDistanceTraveled
+                    else
                         obj.currentDirection = obj.currentDirection + (clockwiseness * (relativeSpeed * obj.minimumVelocity));
                         obj.calculateVertices();
                     end
@@ -269,6 +273,8 @@ classdef Animal < System
             obj.linearVelocity = distance / obj.velocityUnitsConversion;                             
             if obj.simulatedMotion
                 obj.distanceTraveled = 0; 
+                obj.simulatedDistanceTraveled = distance; 
+                obj.calculateSimulatedPositionFromSimulatedDistanceTraveled(); 
             else
                 obj.distanceTraveled = distance; 
                 obj.calculateVertices();
@@ -307,6 +313,7 @@ classdef Animal < System
             obj.environment.setPosition([x y]); 
             obj.x = obj.environment.position(1); 
             obj.y = obj.environment.position(2); 
+            obj.resetSimulatedPositionToPhysicalPosition();
             obj.currentDirection = radians; 
             obj.calculateAxisOfRotation(); 
             obj.translateShape();
@@ -327,11 +334,24 @@ classdef Animal < System
         end
         function calculatePositionFromDistanceTraveled(obj)
             obj.updateUnitCirclePosition();
-            obj.deltaX = obj.distanceTraveled * obj.unitCirclePosition(1); 
-            obj.deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
-            obj.x = obj.x + obj.deltaX;
-            obj.y = obj.y + obj.deltaY;
+            deltaX = obj.distanceTraveled * obj.unitCirclePosition(1); 
+            deltaY = obj.distanceTraveled * obj.unitCirclePosition(2); 
+            obj.x = obj.x + deltaX;
+            obj.y = obj.y + deltaY;
             obj.environment.setPosition([obj.x, obj.y]); 
+            obj.resetSimulatedPositionToPhysicalPosition(); 
+        end
+        function resetSimulatedPositionToPhysicalPosition(obj)
+            obj.xSimulated = obj.x; 
+            obj.ySimulated = obj.y;
+        end      
+        function calculateSimulatedPositionFromSimulatedDistanceTraveled(obj)
+            obj.updateUnitCirclePosition();
+            deltaX = obj.simulatedDistanceTraveled * obj.unitCirclePosition(1); 
+            deltaY = obj.simulatedDistanceTraveled * obj.unitCirclePosition(2); 
+            obj.xSimulated = obj.xSimulated + deltaX;
+            obj.ySimulated = obj.ySimulated + deltaY;
+            obj.environment.calculateGridSquare([obj.xSimulated, obj.ySimulated]); 
         end
         function rotateShape(obj)
             radians = obj.currentDirection; 

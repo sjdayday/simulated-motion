@@ -578,6 +578,32 @@ classdef AnimalTest < AbstractTest
                 testCase.assertEqual(ME.message, 'turn(clockwiseness, relativeSpeed) clockwiseness must be 1 (CCW) or -1 (CW).'); 
             end
         end
+        function testTracksSimulatedPositionForStatsReporting(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance            
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
+            testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity == 0);             
+%             testCase.animal.motorCortex.setSimulatedMotion(true); 
+            testCase.animal.motorCortex.simulationOn(); 
+            testCase.animal.place(testCase.environment, 1, 1, 0);
+            relativeSpeed = 1;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0);                         
+            testCase.assertEqual(testCase.animal.x, 1);             
+            testCase.assertEqual(testCase.animal.y, 1);                         
+            testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity > 0); 
+            testCase.assertEqual(testCase.animal.simulatedDistanceTraveled, 0.1);                         
+            testCase.assertEqual(testCase.animal.xSimulated, 1.1);             
+            testCase.assertEqual(testCase.animal.ySimulated, 1);                         
+            testCase.assertThat(testCase.animal.xSimulated, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertThat(testCase.animal.ySimulated, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001))); 
+            % animal's position in the environment is also updated 
+            testCase.assertEqual(testCase.environment.gridSquares(5, 6), 1) ...
+            
+        end
 % see S8        function testRunThen180HeadDirectionRunBackSettlesToSamePlace(testCase)
 %             import matlab.unittest.constraints.IsEqualTo
 %             import matlab.unittest.constraints.RelativeTolerance
