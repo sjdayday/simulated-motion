@@ -17,6 +17,8 @@ classdef Reporter < handle
         turnOrRun
         simulated
         gridSquarePercent
+        retracedTrajectory
+        successfulRetrace
     end
     methods 
         function obj = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal)
@@ -30,6 +32,7 @@ classdef Reporter < handle
             obj.turnOrRun = 0; 
             obj.simulated = false; 
             obj.gridSquarePercent = 0.0;
+            obj.successfulRetrace = false; 
         end
         function setTimekeeper(obj, timekeeper) 
            obj.timekeeper = timekeeper; 
@@ -72,6 +75,13 @@ classdef Reporter < handle
            obj.turnOrRun = obj.animal.motorCortex.currentBehavior; 
            obj.simulated = obj.animal.simulatedMotion; 
            obj.gridSquarePercent = obj.animal.environment.gridSquarePercent(); 
+           obj.retracedTrajectory = obj.animal.motorCortex.navigateFirstSimulatedRun; 
+           obj.successfulRetrace = false; % FIXME
+        end
+        function reportStep(obj)
+            obj.buildStepFields(); 
+            obj.writeRecord(obj.step, obj.placeId, obj.simulated, obj.turnOrRun, obj.placeRecognized, ...
+                obj.retracedTrajectory, obj.successfulRetrace, obj.gridSquarePercent)
         end
         function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquarePercent)
            fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent);

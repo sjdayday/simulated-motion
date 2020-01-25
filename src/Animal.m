@@ -234,6 +234,7 @@ classdef Animal < System
 %             obj.hippocampalFormation.stepHds();
 %             obj.hippocampalFormation.stepMec();            
             disp(['Animal   time: ',num2str(obj.getTime()),' currentDirection: ',num2str(obj.currentDirection),' x: ',num2str(obj.x),' y: ',num2str(obj.y)]); 
+            disp(['Animal:  simulatedCurrentDirection: ',num2str(obj.simulatedCurrentDirection),' xSimulated: ',num2str(obj.xSimulated),' ySimulated: ',num2str(obj.ySimulated)]); 
             disp(obj.vertices); 
         end
         function checkPlaced(obj)

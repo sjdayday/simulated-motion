@@ -1,7 +1,23 @@
 classdef ExperimentControllerTest < AbstractTest
     methods (Test)
+        function testCreatesReporterForEachRun(testCase)
+            controller = ExperimentController(); 
+            controller.report = true; 
+            controller.reportTag = '0123EF456';
+            controller.reportPipeTag = 'v1.2.1'; 
+            controller.reportFilepath =  '../test/logs/';
+            formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+            controller.reportFormattedDateTime = formattedDateTime;
+            controller.build(); 
+            controller.reporter.cleanFilesForTesting(); 
+            controller.reporter.buildFiles();  
+            testCase.assertEqual(controller.reporter.getStepFile(), ...
+                '../test/logs/2020-01-19--16-00-55_step.csv'); 
+            testCase.assertEqual(controller.reporter.seed, ...
+                uint32(1301868182), 'use second entry in current rng State as the seed'); 
+        end
         function testCreatesPredictableSequenceOfSeedsForRandomNumberGenerator(testCase)
-         % This test depends on the implementation of rng().  If it breaks,
+         % This test depends on the details of the implementation of rng().  If this test breaks,
          % much of the ability of the system to replicate past results is
          % likely to be affected.  If replication is important, it may be necessary to fall 
          % back to an older version of Matlab.  

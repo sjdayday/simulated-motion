@@ -57,6 +57,12 @@ classdef ExperimentController < System
         hdsMinimumVelocity
         hdsAnimalVelocityCalibration
         keepRunnerForReporting
+        report
+        reportTag
+        reportPipeTag
+        reportFilepath
+        reportFormattedDateTime
+        reporter 
     end
     methods
         function obj = ExperimentController()
@@ -82,7 +88,11 @@ classdef ExperimentController < System
             obj.hdsMinimumVelocity = pi/20; 
             obj.hdsAnimalVelocityCalibration = 1.0; 
             obj.keepRunnerForReporting = false; 
-%             obj.build(); 
+            obj.report = false; 
+            obj.reportTag = ''; 
+            obj.reportPipeTag = ''; 
+            obj.reportFormattedDateTime = ''; 
+            obj.reportFilepath = ''; 
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -110,7 +120,10 @@ classdef ExperimentController < System
 %             motorCortex.counterClockwiseTurn();
 
             obj.setChildTimekeeper(obj); 
-            obj.loadFixedRandom(); 
+            obj.loadFixedRandom();
+            if (obj.report)
+                obj.buildReporter(); 
+            end
         end
         function buildSystemMap(obj)
             obj.systemMap = containers.Map('KeyType','char','ValueType','double');
@@ -308,6 +321,9 @@ classdef ExperimentController < System
            events(obj);
 %            disp('experiment controller step: before animal.step');
            obj.animal.step(); 
+           if (obj.report)
+              obj.reporter.reportStep();  
+           end
 %            disp('experiment controller step: before doStep');                          
            obj.doStep(obj.lastSystem); 
         end
@@ -485,6 +501,10 @@ classdef ExperimentController < System
            rr = rng(obj.seed); % seems to not take the first time           
            obj.seed = rr.State(2); 
            seed = obj.seed; 
+        end
+        function buildReporter(obj)
+           obj.reporter = Reporter(obj.reportFilepath, obj.reportFormattedDateTime, ...
+               obj.bumpRandomSeed(), obj.reportTag, obj.reportPipeTag, obj.animal);  
         end
         function setupDisplay(obj)
             hold on;  

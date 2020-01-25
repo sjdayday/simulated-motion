@@ -21,7 +21,7 @@ classdef ReporterTest < AbstractTest
             reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06); 
             reporter.closeStepFile(); 
         end
-        function testBuildRecordFields(testCase)
+        function testBuildRecordFieldsExceptSuccessfulRetraceTrue(testCase)
             seed = uint32(123456); 
             tag = '0123EF456';
             pipeTag = 'v1.2.1'; 
@@ -68,6 +68,7 @@ classdef ReporterTest < AbstractTest
             testCase.assertEqual(reporter.placeRecognized, false); 
             testCase.assertEqual(reporter.simulated, false);
             testCase.assertEqual(reporter.gridSquarePercent, 0.04); 
+            testCase.assertEqual(reporter.retracedTrajectory, false); 
             animal.motorCortex.pendingSimulationOn = true; 
             animal.motorCortex.remainingDistance = 2; 
             animal.motorCortex.nextRandomSimulatedNavigation(); 
@@ -76,18 +77,27 @@ classdef ReporterTest < AbstractTest
             testCase.assertEqual(reporter.step, 12);
             testCase.assertEqual(reporter.simulated, true);
             testCase.assertEqual(reporter.gridSquarePercent, 0.05); 
-%             reporter.cleanFilesForTesting(); 
-%             reporter.buildFiles(); 
-%             testCase.assertEqual(reporter.getHeader(), ...
-%                 '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquare"'); 
-%             testCase.assertEqual(reporter.getDiaryFile(), ...
-%                 '../test/logs/2020-01-19--16-00-55_diary.txt'); 
-%             testCase.assertEqual(reporter.getStepFile(), ...
-%                 '../test/logs/2020-01-19--16-00-55_step.csv'); 
-%             % TODO read and assert...
-%             reporter.writeRecord(12,'[19 108]',1,2,0,1,0,75); 
-%             reporter.writeRecord(13,'[64 110]',0,1,0,1,0,76); 
-%             reporter.closeStepFile(); 
+%             disp(environment.showGridSquares()); 
+
+            animal.motorCortex.simulationOff(); % manually invoke, instead of setting flag:
+%             animal.motorCortex.pendingSimulationOff = true; 
+            
+            animal.motorCortex.simulationSettleRequired = false; 
+            animal.motorCortex.remainingDistance = 12; 
+            reporter.buildStepFields();            
+            testCase.assertEqual(reporter.retracedTrajectory, true); 
+%             animal.motorCortex.navigateFirstSimulatedRun = true;      
+            animal.motorCortex.nextRandomNavigation(); 
+            pause(0.5); 
+            reporter.buildStepFields();  
+%             disp(environment.showGridSquares());
+            testCase.assertEqual(reporter.step, 14);
+            testCase.assertEqual(reporter.simulated, false);
+            testCase.assertEqual(reporter.retracedTrajectory, false);
+            testCase.assertEqual(reporter.successfulRetrace, false, ...
+                'default; didnt settle so couldnt retrace successfully');
+            testCase.assertEqual(reporter.gridSquarePercent, 0.05, ...
+                'retraced two steps that we visited in simulation'); 
         end
         
     end

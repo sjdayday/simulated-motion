@@ -277,11 +277,12 @@ classdef MotorCortex < System
                   obj.currentPlan = obj.turn();
                end
                if (nextBehavior(1) == obj.runBehavior)
-                  obj.navigateFirstSimulatedRun = false;  
+%                   obj.navigateFirstSimulatedRun = false;  
                   obj.turnDistance = 0; 
                   obj.runDistance = nextBehavior(2); 
                   obj.clockwiseness = 0; 
                   obj.currentPlan = obj.run();
+                  obj.navigateFirstSimulatedRun = false; % for reporting, don't turn off til run is done
                end 
                if (nextBehavior(1) == obj.noBehavior)
                   obj.navigateFirstSimulatedRun = false;  
