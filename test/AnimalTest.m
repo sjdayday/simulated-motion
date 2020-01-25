@@ -444,7 +444,8 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.x, ...
                IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
             testCase.assertThat(testCase.animal.y, ...
-               IsEqualTo(1, 'Within', RelativeTolerance(.00000001)));         
+               IsEqualTo(1, 'Within', RelativeTolerance(.00000001))); 
+            testCase.assertEqual(testCase.environment.gridSquares(5, 5), 1);
             testCase.animal.run(relativeSpeed); 
             testCase.assertEqual(testCase.animal.distanceTraveled, 0.1);                         
             testCase.assertThat(testCase.animal.x, ...
@@ -454,7 +455,7 @@ classdef AnimalTest < AbstractTest
             % animal's position in the environment is also updated 
             testCase.assertThat(testCase.environment.position, ...
                IsEqualTo([1.1, 1], 'Within', RelativeTolerance(.00000001)));         
-           
+            testCase.assertEqual(testCase.environment.gridSquares(5, 6), 1);
            
         end
         function testRunAtAngle(testCase)
@@ -578,7 +579,7 @@ classdef AnimalTest < AbstractTest
                 testCase.assertEqual(ME.message, 'turn(clockwiseness, relativeSpeed) clockwiseness must be 1 (CCW) or -1 (CW).'); 
             end
         end
-        function testTracksSimulatedPositionForStatsReporting(testCase)
+        function testTracksSimulatedPositionAfterRunForStatsReporting(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance            
             buildAnimalInEnvironment(testCase);
@@ -603,6 +604,52 @@ classdef AnimalTest < AbstractTest
             % animal's position in the environment is also updated 
             testCase.assertEqual(testCase.environment.gridSquares(5, 6), 1) ...
             
+        end
+        function testTracksSimulatedPositionAfterTurnAndRunForStatsReporting(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance            
+            buildAnimalInEnvironment(testCase);
+            testCase.animal.build();            
+            testCase.assertTrue(testCase.animal.hippocampalFormation.linearVelocity == 0);             
+            testCase.animal.minimumRunVelocity = 0.1; 
+%             testCase.animal.motorCortex.setSimulatedMotion(true); 
+            testCase.animal.motorCortex.simulationOn(); 
+            testCase.animal.place(testCase.environment, 1, 1, pi/2);
+%            testCase.animal.orientAnimal(0);
+            relativeSpeed = 1;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.simulatedDistanceTraveled, 0.1);                         
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.xSimulated, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.ySimulated, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertEqual(testCase.environment.gridSquares(6, 5), 1);           
+            clockwiseness = -1 ;  %clockwise  
+            testCase.animal.turn(clockwiseness, 15); 
+            testCase.assertThat(testCase.animal.currentDirection, ...
+               IsEqualTo(pi/2, 'Within', RelativeTolerance(.00000001)));         
+            testCase.assertThat(testCase.animal.simulatedCurrentDirection, ...
+               IsEqualTo(0, 'Within', RelativeTolerance(.00000001)));         
+            relativeSpeed = 2;
+            testCase.animal.run(relativeSpeed); 
+            testCase.assertEqual(testCase.animal.distanceTraveled, 0);                         
+            testCase.assertEqual(testCase.animal.simulatedDistanceTraveled, 0.2);                                     
+            testCase.assertThat(testCase.animal.x, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.y, ...
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.xSimulated, ...
+               IsEqualTo(1.2, 'Within', RelativeTolerance(.00001)));         
+            testCase.assertThat(testCase.animal.ySimulated, ...
+               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+            % animal's position in the environment is also updated 
+            testCase.assertEqual(testCase.environment.gridSquares(6, 6), 1);
+
+           
         end
 % see S8        function testRunThen180HeadDirectionRunBackSettlesToSamePlace(testCase)
 %             import matlab.unittest.constraints.IsEqualTo

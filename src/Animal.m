@@ -30,7 +30,9 @@ classdef Animal < System
         directions
         positions
         currentDirection
+        simulatedCurrentDirection
         unitCirclePosition
+        simulatedUnitCirclePosition
         minimumVelocity
         minimumRunVelocity
         linearVelocity
@@ -246,6 +248,7 @@ classdef Animal < System
                 if (clockwiseness == 1) || (clockwiseness == -1)
                     if obj.simulatedMotion
                         % calculateSimulatedPositionFromSimulatedDistanceTraveled
+                        obj.simulatedCurrentDirection = obj.simulatedCurrentDirection + (clockwiseness * (relativeSpeed * obj.minimumVelocity));
                     else
                         obj.currentDirection = obj.currentDirection + (clockwiseness * (relativeSpeed * obj.minimumVelocity));
                         obj.calculateVertices();
@@ -287,6 +290,7 @@ classdef Animal < System
         % TODO:  should this be called by place? 
         function orientAnimal(obj, direction)
             obj.currentDirection = direction; 
+            obj.simulatedCurrentDirection = direction; 
             updateUnitCirclePosition(obj); 
             obj.justOriented = 1;
 %             obj.calculateVertices(); 
@@ -313,8 +317,9 @@ classdef Animal < System
             obj.environment.setPosition([x y]); 
             obj.x = obj.environment.position(1); 
             obj.y = obj.environment.position(2); 
-            obj.resetSimulatedPositionToPhysicalPosition();
             obj.currentDirection = radians; 
+            obj.resetSimulatedPositionToPhysicalPosition(); 
+            obj.environment.calculateGridSquare([obj.x, obj.y]); 
             obj.calculateAxisOfRotation(); 
             obj.translateShape();
             obj.calculateVertices(); 
@@ -339,16 +344,18 @@ classdef Animal < System
             obj.x = obj.x + deltaX;
             obj.y = obj.y + deltaY;
             obj.environment.setPosition([obj.x, obj.y]); 
+            obj.environment.calculateGridSquare([obj.x, obj.y]); 
             obj.resetSimulatedPositionToPhysicalPosition(); 
         end
         function resetSimulatedPositionToPhysicalPosition(obj)
             obj.xSimulated = obj.x; 
             obj.ySimulated = obj.y;
+            obj.simulatedCurrentDirection = obj.currentDirection; 
         end      
         function calculateSimulatedPositionFromSimulatedDistanceTraveled(obj)
-            obj.updateUnitCirclePosition();
-            deltaX = obj.simulatedDistanceTraveled * obj.unitCirclePosition(1); 
-            deltaY = obj.simulatedDistanceTraveled * obj.unitCirclePosition(2); 
+            obj.updateSimulatedUnitCirclePosition();
+            deltaX = obj.simulatedDistanceTraveled * obj.simulatedUnitCirclePosition(1); 
+            deltaY = obj.simulatedDistanceTraveled * obj.simulatedUnitCirclePosition(2); 
             obj.xSimulated = obj.xSimulated + deltaX;
             obj.ySimulated = obj.ySimulated + deltaY;
             obj.environment.calculateGridSquare([obj.xSimulated, obj.ySimulated]); 
@@ -435,6 +442,9 @@ classdef Animal < System
         end
         function updateUnitCirclePosition(obj)
             obj.unitCirclePosition = [cos(obj.currentDirection) sin(obj.currentDirection)];
+        end
+        function updateSimulatedUnitCirclePosition(obj)
+            obj.simulatedUnitCirclePosition = [cos(obj.simulatedCurrentDirection) sin(obj.simulatedCurrentDirection)];
         end
         function setupMarkers(obj)
             hold on;

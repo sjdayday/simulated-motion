@@ -11,14 +11,14 @@ classdef ReporterTest < AbstractTest
             reporter.cleanFilesForTesting(); 
             reporter.buildFiles(); 
             testCase.assertEqual(reporter.getHeader(), ...
-                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquare"'); 
+                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent"'); 
             testCase.assertEqual(reporter.getDiaryFile(), ...
                 '../test/logs/2020-01-19--16-00-55_diary.txt'); 
             testCase.assertEqual(reporter.getStepFile(), ...
                 '../test/logs/2020-01-19--16-00-55_step.csv'); 
             % TODO read and assert...
-            reporter.writeRecord(12,'[19 108]',1,2,0,1,0,75); 
-            reporter.writeRecord(13,'[64 110]',0,1,0,1,0,76); 
+            reporter.writeRecord(12,'[19 108]',1,2,0,1,0,0.05); 
+            reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06); 
             reporter.closeStepFile(); 
         end
         function testBuildRecordFields(testCase)
@@ -47,6 +47,7 @@ classdef ReporterTest < AbstractTest
             testCase.assertEqual(reporter.step, 2);
             testCase.assertEqual(reporter.placeId, '[203 207 221 368]'); 
             testCase.assertEqual(reporter.placeRecognized, true); 
+            testCase.assertEqual(reporter.gridSquarePercent, 0.01); 
             %  turnstep
             motorCortex = animal.motorCortex; 
             motorCortex.turnDistance = 3;
@@ -54,7 +55,8 @@ classdef ReporterTest < AbstractTest
             pause(0.5);             
             reporter.buildStepFields();            
             testCase.assertEqual(reporter.step, 5);
-            testCase.assertEqual(reporter.turnOrRun, motorCortex.turnBehavior);            
+            testCase.assertEqual(reporter.turnOrRun, motorCortex.turnBehavior);
+            testCase.assertEqual(reporter.gridSquarePercent, 0.01); 
             motorCortex.runSpeed = 1; 
             motorCortex.runDistance = 5; 
             motorCortex.run(); 
@@ -65,6 +67,7 @@ classdef ReporterTest < AbstractTest
             testCase.assertEqual(reporter.placeId, '[246 297 323 458]'); 
             testCase.assertEqual(reporter.placeRecognized, false); 
             testCase.assertEqual(reporter.simulated, false);
+            testCase.assertEqual(reporter.gridSquarePercent, 0.04); 
             animal.motorCortex.pendingSimulationOn = true; 
             animal.motorCortex.remainingDistance = 2; 
             animal.motorCortex.nextRandomSimulatedNavigation(); 
@@ -72,6 +75,7 @@ classdef ReporterTest < AbstractTest
             reporter.buildStepFields();            
             testCase.assertEqual(reporter.step, 12);
             testCase.assertEqual(reporter.simulated, true);
+            testCase.assertEqual(reporter.gridSquarePercent, 0.05); 
 %             reporter.cleanFilesForTesting(); 
 %             reporter.buildFiles(); 
 %             testCase.assertEqual(reporter.getHeader(), ...

@@ -16,6 +16,7 @@ classdef Reporter < handle
         placeRecognized
         turnOrRun
         simulated
+        gridSquarePercent
     end
     methods 
         function obj = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal)
@@ -28,6 +29,7 @@ classdef Reporter < handle
             obj.animal = animal;
             obj.turnOrRun = 0; 
             obj.simulated = false; 
+            obj.gridSquarePercent = 0.0;
         end
         function setTimekeeper(obj, timekeeper) 
            obj.timekeeper = timekeeper; 
@@ -55,7 +57,7 @@ classdef Reporter < handle
            obj.stepFileId = fopen( obj.getStepFile(), 'a' );            
         end
         function header = getHeader(obj)
-           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquare"';
+           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent"';
         end
         function diaryFile = getDiaryFile(obj)
            diaryFile = [obj.filepath,obj.formattedDateTime,'_diary.txt'];  
@@ -69,9 +71,10 @@ classdef Reporter < handle
            obj.placeRecognized = obj.animal.hippocampalFormation.placeRecognized;
            obj.turnOrRun = obj.animal.motorCortex.currentBehavior; 
            obj.simulated = obj.animal.simulatedMotion; 
+           obj.gridSquarePercent = obj.animal.environment.gridSquarePercent(); 
         end
-        function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquare)
-           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%d\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquare);
+        function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquarePercent)
+           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent);
 %             12,'[19 108]',1,2,0,1,0,75);  
         end
         
