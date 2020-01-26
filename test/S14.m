@@ -27,18 +27,22 @@ classdef S14 < handle
             obj.ec.nFeatures = 1; 
             obj.ec.hdsPullsFeatureWeightsFromLec = true;
             obj.ec.keepRunnerForReporting = true; % monitor for very large runs 
+            obj.ec.hdsMinimumVelocity = pi/10; 
+            obj.ec.minimumRunVelocity = 0.05; 
+            obj.ec.minimumTurnVelocity=pi/10;
             obj.ec.build(); 
             if visual
                 obj.ec.setupDisplay(); 
             end
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
-            obj.ec.totalSteps = 20; % 28
-            obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/10;obj.initializeActivation(true);'); 
-            obj.ec.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/10'); 
+            obj.ec.totalSteps = 10; % 28
+            obj.ec.addHeadDirectionSystemEvent(5, 'obj.initializeActivation(true);'); 
+%             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/10;obj.initializeActivation(true);');             
+%             obj.ec.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/10'); 
 %             obj.ec.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
             obj.ec.addAnimalEvent(7, 'obj.motorCortex.prepareNavigate(); ');
-            obj.ec.addAnimalEvent(8, 'obj.motorCortex.navigate(400); ');            
+            obj.ec.addAnimalEvent(8, 'obj.motorCortex.navigate(10); ');            
         end
         function run(obj, steps)
             obj.ec.runHeadDirectionSystemForSteps(steps);            

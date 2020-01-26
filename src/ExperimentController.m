@@ -55,6 +55,8 @@ classdef ExperimentController < System
         twoCuesOnly
         nFeatures
         hdsMinimumVelocity
+        minimumRunVelocity
+        minimumTurnVelocity
         hdsAnimalVelocityCalibration
         keepRunnerForReporting
         report
@@ -63,6 +65,8 @@ classdef ExperimentController < System
         reportFilepath
         reportFormattedDateTime
         reporter 
+        startingScenario
+        runningScenario
     end
     methods
         function obj = ExperimentController()
@@ -86,6 +90,8 @@ classdef ExperimentController < System
             obj.twoCuesOnly = false; 
             obj.nFeatures = 3;
             obj.hdsMinimumVelocity = pi/20; 
+            obj.minimumRunVelocity = 0.1;
+            obj.minimumTurnVelocity = pi/30; 
             obj.hdsAnimalVelocityCalibration = 1.0; 
             obj.keepRunnerForReporting = false; 
             obj.report = false; 
@@ -93,6 +99,9 @@ classdef ExperimentController < System
             obj.reportPipeTag = ''; 
             obj.reportFormattedDateTime = ''; 
             obj.reportFilepath = ''; 
+            obj.startingScenario = 1; 
+            obj.runningScenario = false; 
+            obj.seed = uint32(0); % duplicates initialization in System 
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -102,9 +111,9 @@ classdef ExperimentController < System
             obj.iteration = 0; 
             obj.nChartStats = 6;
            
-            buildEnvironment(obj);            
+            obj.buildEnvironment();            
             
-            buildAnimal(obj); 
+            obj.buildAnimal(); 
             buildChartSystem(obj, obj.nChartSystemSingleDimensionCells);
             obj.headDirectionSystemPropertyMap = containers.Map(); 
             obj.chartSystemPropertyMap = containers.Map(); 
@@ -120,10 +129,11 @@ classdef ExperimentController < System
 %             motorCortex.counterClockwiseTurn();
 
             obj.setChildTimekeeper(obj); 
+            obj.seed = 0;
             obj.loadFixedRandom();
-            if (obj.report)
-                obj.buildReporter(); 
-            end
+%             if (obj.report)
+%                 obj.buildReporter(); 
+%             end
         end
         function buildSystemMap(obj)
             obj.systemMap = containers.Map('KeyType','char','ValueType','double');
@@ -173,6 +183,8 @@ classdef ExperimentController < System
             obj.animal.nFeatures = obj.nFeatures; 
             obj.animal.hdsPullsFeatureWeightsFromLec = obj.hdsPullsFeatureWeightsFromLec; 
             obj.animal.hdsMinimumVelocity = obj.hdsMinimumVelocity; 
+            obj.animal.minimumRunVelocity = obj.minimumRunVelocity; 
+            obj.animal.minimumVelocity = obj.minimumTurnVelocity; 
             obj.animal.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration;                   
             
             obj.animal.h = obj.h;
@@ -324,8 +336,10 @@ classdef ExperimentController < System
            if (obj.report)
               obj.reporter.reportStep();  
            end
-%            disp('experiment controller step: before doStep');                          
-           obj.doStep(obj.lastSystem); 
+%            disp('experiment controller step: before doStep'); 
+           if ~obj.runningScenario
+               obj.doStep(obj.lastSystem); 
+           end
         end
         function continueHeadDirectionSystem(obj)
             if obj.currentStep == 1
@@ -503,8 +517,34 @@ classdef ExperimentController < System
            seed = obj.seed; 
         end
         function buildReporter(obj)
+           if (isempty(obj.reportFormattedDateTime))
+               obj.reportFormattedDateTime = char(datetime('now','Format','yyyy-MM-dd--HH-mm-ss'));
+           end
            obj.reporter = Reporter(obj.reportFilepath, obj.reportFormattedDateTime, ...
-               obj.bumpRandomSeed(), obj.reportTag, obj.reportPipeTag, obj.animal);  
+               obj.seed, obj.reportTag, obj.reportPipeTag, obj.animal);  
+        end
+        function runScenario(obj, navigationSteps)
+            obj.runningScenario = true; 
+            obj.time = 0; 
+            obj.build(); 
+            for ii = 1:obj.startingScenario
+                obj.bumpRandomSeed();
+            end
+            obj.buildReporter(); 
+            obj.reporter.buildFiles(); 
+            disp(['scenario: ',num2str(obj.startingScenario)]); 
+            if (navigationSteps > 0)
+                obj.animal.motorCortex.prepareNavigate();
+                obj.animal.motorCortex.navigate(navigationSteps);
+            end
+            obj.reporter.closeStepFile();
+            obj.reportFormattedDateTime = ''; 
+            diary off; 
+                
+           %             controller.reporter.cleanFilesForTesting(); 
+%             controller.reporter.buildFiles();  
+            %             controller.
+ 
         end
         function setupDisplay(obj)
             hold on;  

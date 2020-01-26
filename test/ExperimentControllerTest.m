@@ -1,20 +1,104 @@
 classdef ExperimentControllerTest < AbstractTest
     methods (Test)
-        function testCreatesReporterForEachRun(testCase)
+        function testNewScenarioBumpsSeedResetsStepsReloadsEventsForNewAnimalEnv(testCase)
+            % bump seed
+            % create new reporter
+            % build again
+            % restarts steps 
+            % doStep does nothing if no LastSystem?
+            % runScenario initialize HDS, does navigation?
+            % continues with next scenario 
             controller = ExperimentController(); 
             controller.report = true; 
             controller.reportTag = '0123EF456';
             controller.reportPipeTag = 'v1.2.1'; 
             controller.reportFilepath =  '../test/logs/';
+%             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+%             controller.reportFormattedDateTime = formattedDateTime;
+            controller.nHeadDirectionCells = 30;
+            controller.nCueIntervals = 30;
+            controller.gridSize=[6,5]; 
+            controller.visualize(false);
+            controller.pullVelocityFromAnimal = false;
+            controller.pullFeaturesFromAnimal = false;  % had missed this
+            controller.defaultFeatureDetectors = false; 
+            controller.updateFeatureDetectors = true; 
+            controller.settleToPlace = false;
+            controller.placeMatchThreshold = 1; % was 2  
+            controller.showHippocampalFormationECIndices = true; 
+            controller.sparseOrthogonalizingNetwork = true; 
+            controller.separateMecLec = true; 
+            controller.twoCuesOnly = true; 
+            controller.nFeatures = 1; 
+            controller.hdsPullsFeatureWeightsFromLec = true;
+            controller.keepRunnerForReporting = true; % monitor for very large runs 
+            controller.hdsMinimumVelocity = pi/10; 
+            controller.minimumRunVelocity = 0.05; 
+            controller.minimumTurnVelocity=pi/10;
+            
+            controller.build(); 
+            controller.stepPause = 0;
+            controller.resetSeed = false; 
+            testCase.assertEqual(controller.environment.gridSquareTotal(), 1, 'animal placed'); 
+            testCase.assertEqual(controller.currentStep, 1); 
+            controller.startingScenario = 1; 
+            controller.runScenario(10); 
+% %             controller.totalSteps = 10; % 28
+            
+            testCase.assertEqual(controller.reporter.seed, uint32(1301868182)); 
+            testCase.assertEqual(controller.reporter.placeId, '[12 14]'); 
+            testCase.assertEqual(controller.getTime(), 10); 
+            animal1 = controller.animal; 
+            environment1 = controller.environment; 
+            controller.startingScenario = 2; 
+            pause(1); 
+            controller.runScenario(10); 
+            testCase.assertEqual(controller.reporter.seed, uint32(2938499220)); 
+            animal2 = controller.animal; 
+            environment2 = controller.environment; 
+            testCase.assertNotSameHandle(animal1, ...
+                animal2, 'animal should have been re-created');
+            testCase.assertNotSameHandle(environment1, ...
+                environment2, 'environment should have been re-created');
+            testCase.assertEqual(controller.reporter.placeId, '[16 41]'); 
+            testCase.assertEqual(controller.getTime(), 10, ...
+                'time restarts for each scenario');
+%             [16 41]
+%             diary off; 
+
+%             diary on; 
+% %             controller.includeHeadDirectionFeatureInput = false;
+%             controller.build(); 
+%             if visual
+%                 controller.setupDisplay(); 
+%             end
+%             controller.addHeadDirectionSystemEvent(5, 'obj.initializeActivation(true);'); 
+% %             controller.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/10;obj.initializeActivation(true);');             
+% %             controller.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/10'); 
+% %             controller.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
+%             controller.addAnimalEvent(7, 'obj.motorCortex.prepareNavigate(); ');
+%             controller.addAnimalEvent(8, 'obj.motorCortex.navigate(10); ');            
+        end
+        function testCreatesReporterForEachRun(testCase)
+            controller = ExperimentController(); 
+            controller.startingScenario = 1; 
+            controller.reportTag = '0123EF456';
+            controller.reportPipeTag = 'v1.2.1'; 
+            controller.reportFilepath =  '../test/logs/';
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
             controller.reportFormattedDateTime = formattedDateTime;
-            controller.build(); 
-            controller.reporter.cleanFilesForTesting(); 
-            controller.reporter.buildFiles();  
+            controller.runScenario(0);
+%             controller.build(); 
+
+%             controller.reporter.buildFiles();  
             testCase.assertEqual(controller.reporter.getStepFile(), ...
                 '../test/logs/2020-01-19--16-00-55_step.csv'); 
             testCase.assertEqual(controller.reporter.seed, ...
                 uint32(1301868182), 'use second entry in current rng State as the seed'); 
+%             controller.reporter.closeStepFile();
+%             diary off; 
+%             diary on; 
+            controller.reporter.cleanFilesForTesting(); 
         end
         function testCreatesPredictableSequenceOfSeedsForRandomNumberGenerator(testCase)
          % This test depends on the details of the implementation of rng().  If this test breaks,
