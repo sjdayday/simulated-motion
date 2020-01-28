@@ -278,7 +278,10 @@ classdef Animal < System
             if obj.simulatedMotion
                 obj.distanceTraveled = 0; 
                 obj.simulatedDistanceTraveled = distance; 
-                obj.calculateSimulatedPositionFromSimulatedDistanceTraveled(); 
+                obj.calculateSimulatedPositionFromSimulatedDistanceTraveled();
+                obj.hippocampalFormation.addNextPlaceToSimulatedRunPlaces(); 
+                % can't add place directly here, cause HF not yet called 
+
             else
                 obj.distanceTraveled = distance; 
                 obj.calculateVertices();

@@ -64,7 +64,8 @@ classdef HippocampalFormation < System
         placeRecognized
         simulatedMotion
         hdsMinimumVelocity
-        hdsAnimalVelocityCalibration        
+        hdsAnimalVelocityCalibration
+        nextPlacePendingAdditionToSimulatedRunPlaces
     end
     methods
         function obj = HippocampalFormation()
@@ -112,7 +113,7 @@ classdef HippocampalFormation < System
             obj.simulatedMotion = false; 
             obj.hdsMinimumVelocity = pi/20; 
             obj.hdsAnimalVelocityCalibration = 1.0;       
-
+            obj.nextPlacePendingAdditionToSimulatedRunPlaces = false; 
          end
         function build(obj)
             calculateSizes(obj); 
@@ -327,7 +328,13 @@ classdef HippocampalFormation < System
                 disp(['Place output: ',obj.printPlaceOutputIndices()]);
                 obj.printPlaceFieldStats(); 
            end
-           
+           if (obj.nextPlacePendingAdditionToSimulatedRunPlaces) 
+              obj.animal.motorCortex.addPlaceToSimulatedRunPlaces(obj.placeOutputIndices());
+              obj.nextPlacePendingAdditionToSimulatedRunPlaces = false; 
+           end
+        end
+        function addNextPlaceToSimulatedRunPlaces(obj)
+           obj.nextPlacePendingAdditionToSimulatedRunPlaces = true;  
         end
         function placeRecognized = recallPlace(obj)
            placeRecognized = obj.placeSystem.recallPlace([obj.mecOutput, obj.lecOutput]); 

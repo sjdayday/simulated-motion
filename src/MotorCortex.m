@@ -48,6 +48,7 @@ classdef MotorCortex < System
         pendingSimulationOff
         debugSteps
         currentBehavior
+        simulatedRunPlaces
     end
     methods
         function obj = MotorCortex(animal)
@@ -92,7 +93,8 @@ classdef MotorCortex < System
             obj.pendingSimulationOn = false;
             obj.pendingSimulationOff = false; 
             obj.debugSteps = 0; 
-            obj.currentBehavior = 0; 
+            obj.currentBehavior = 0;
+            obj.simulatedRunPlaces = {}; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -224,6 +226,11 @@ classdef MotorCortex < System
             obj.physicalPlace = obj.animal.hippocampalFormation.placeOutput;  
             obj.turnDistance = 0; % needed for reverseSimulatedTurn; run reversal is automatic
             obj.simulatedBehaviorHistory = [];
+            obj.simulatedRunPlaces = {};  
+        end
+        function addPlaceToSimulatedRunPlaces(obj, placeIndices)
+           index = length(obj.simulatedRunPlaces) + 1; 
+           obj.simulatedRunPlaces{index} = placeIndices; 
         end
         function simulationOff(obj)
             obj.simulatedMotion = false; 

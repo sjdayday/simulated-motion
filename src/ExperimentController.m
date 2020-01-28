@@ -533,6 +533,7 @@ classdef ExperimentController < System
             obj.buildReporter(); 
             obj.reporter.buildFiles(); 
             disp(['scenario: ',num2str(obj.startingScenario)]); 
+            disp(obj.environment.showGridSquares()); 
             if (navigationSteps > 0)
                 obj.animal.motorCortex.prepareNavigate();
                 obj.animal.motorCortex.navigate(navigationSteps);

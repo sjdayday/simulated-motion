@@ -583,13 +583,17 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [88 163]);
         end
-        function testRunToSamePlaceAfterSimulatedRunUpdatesPlaceId(testCase)
+        function testRunToSamePlaceAfterSimulatedRunUpdatesPlaceIdReportsRetrace(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance 
             testCase.placeMatchThreshold = 1;  
             testCase.buildAnimal();             
             motorCortex = testCase.animal.motorCortex;            
             testCase.animal.place(testCase.environment, 1, 1, pi); 
+            formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+            reporter = Reporter('', formattedDateTime, uint32(123456), 'tag', 'pipeTag', testCase.animal); 
+            reporter.buildStepFields();
+            
 %             testCase.assertEqual(motorCortex.behaviorHistory(1,:), [3 0 0], ...
 %                 'orienting');                        
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
@@ -615,6 +619,7 @@ classdef MotorCortexTest < AbstractTest
 %             motorCortex.setSimulatedMotion(true); 
             motorCortex.simulationOn(); 
             motorCortex.run(); 
+%             57 17 188 ;  [57 96]; [96 200]; [96 188]
             testCase.assertEqual(motorCortex.physicalPlace, lastPlace);
             testCase.assertEqual(testCase.animal.x , 1);            
             testCase.assertEqual(testCase.animal.y , 1);            
@@ -630,11 +635,19 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(3).getMaxActivationIndex(), ... 
                 15); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), ... 
-                10);             
+                10);    
+            testCase.assertEqual(length(motorCortex.simulatedRunPlaces), 3);
+            testCase.assertEqual(motorCortex.simulatedRunPlaces{1}, [57]);
+            testCase.assertEqual(motorCortex.simulatedRunPlaces{2}, [17]);
+            testCase.assertEqual(motorCortex.simulatedRunPlaces{3}, [188]);
+            reporter.buildStepFields();
+            testCase.assertEqual(reporter.simulated, true);
+            testCase.assertEqual(reporter.placeRecognized, false);
+            
 %             motorCortex.setSimulatedMotion(false); 
             motorCortex.settlePhysical(); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                17, 'stable; now present features'); 
+                17, 'head direction unchanged'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), ...
                 25); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), ... 
@@ -658,7 +671,7 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(testCase.animal.hippocampalFormation.placeOutputIndices(), ...
                 [96 188],'MEC output same, updated with LEC');
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                17, 'stable; now present features'); 
+                17, 'head direction unchanged'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), ...
                 14); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), ... 
@@ -667,7 +680,11 @@ classdef MotorCortexTest < AbstractTest
                 15); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(4).getMaxActivationIndex(), ... 
                 10);             
-
+            reporter.buildStepFields();
+            testCase.assertEqual(reporter.simulated, false);
+            testCase.assertEqual(reporter.placeRecognized, true);
+            testCase.assertEqual(reporter.retracedTrajectory, true);
+            testCase.assertEqual(reporter.successfulRetrace, true);
         end   
 %         
         function testSimulatedRandomNavigationReturnsToOriginalPositionDirection(testCase)

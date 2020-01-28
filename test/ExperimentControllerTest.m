@@ -1,13 +1,7 @@
 classdef ExperimentControllerTest < AbstractTest
     methods (Test)
         function testNewScenarioBumpsSeedResetsStepsReloadsEventsForNewAnimalEnv(testCase)
-            % bump seed
-            % create new reporter
-            % build again
-            % restarts steps 
-            % doStep does nothing if no LastSystem?
             % runScenario initialize HDS, does navigation?
-            % continues with next scenario 
             controller = ExperimentController(); 
             controller.report = true; 
             controller.reportTag = '0123EF456';
@@ -63,21 +57,7 @@ classdef ExperimentControllerTest < AbstractTest
             testCase.assertEqual(controller.reporter.placeId, '[16 41]'); 
             testCase.assertEqual(controller.getTime(), 10, ...
                 'time restarts for each scenario');
-%             [16 41]
-%             diary off; 
-
-%             diary on; 
-% %             controller.includeHeadDirectionFeatureInput = false;
-%             controller.build(); 
-%             if visual
-%                 controller.setupDisplay(); 
-%             end
-%             controller.addHeadDirectionSystemEvent(5, 'obj.initializeActivation(true);'); 
-% %             controller.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/10;obj.initializeActivation(true);');             
-% %             controller.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/10'); 
-% %             controller.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
-%             controller.addAnimalEvent(7, 'obj.motorCortex.prepareNavigate(); ');
-%             controller.addAnimalEvent(8, 'obj.motorCortex.navigate(10); ');            
+            disp(environment2.showGridSquares()); 
         end
         function testCreatesReporterForEachRun(testCase)
             controller = ExperimentController(); 
