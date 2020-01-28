@@ -76,7 +76,7 @@ classdef Reporter < handle
            obj.simulated = obj.animal.simulatedMotion; 
            obj.gridSquarePercent = obj.animal.environment.gridSquarePercent(); 
            obj.retracedTrajectory = obj.animal.motorCortex.navigateFirstSimulatedRun; 
-           obj.successfulRetrace = false; % FIXME
+           obj.successfulRetrace = obj.animal.motorCortex.successfulRetrace; 
         end
         function reportStep(obj)
             obj.buildStepFields(); 

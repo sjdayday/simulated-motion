@@ -685,6 +685,9 @@ classdef MotorCortexTest < AbstractTest
             testCase.assertEqual(reporter.placeRecognized, true);
             testCase.assertEqual(reporter.retracedTrajectory, true);
             testCase.assertEqual(reporter.successfulRetrace, true);
+            testCase.assertEqual(length(motorCortex.simulatedRunPlaces), 0, ...
+                'cleared after comparing last of pending places');
+            testCase.assertEqual(reporter.placeId, '[96 188]');
         end   
 %         
         function testSimulatedRandomNavigationReturnsToOriginalPositionDirection(testCase)

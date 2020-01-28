@@ -49,6 +49,7 @@ classdef MotorCortex < System
         debugSteps
         currentBehavior
         simulatedRunPlaces
+        successfulRetrace
     end
     methods
         function obj = MotorCortex(animal)
@@ -95,6 +96,7 @@ classdef MotorCortex < System
             obj.debugSteps = 0; 
             obj.currentBehavior = 0;
             obj.simulatedRunPlaces = {}; 
+            obj.successfulRetrace = false; 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -232,12 +234,30 @@ classdef MotorCortex < System
            index = length(obj.simulatedRunPlaces) + 1; 
            obj.simulatedRunPlaces{index} = placeIndices; 
         end
+        function evaluateSuccessfulRetrace(obj, placeIndices) 
+           obj.successfulRetrace = false;
+           numberPlaces = length(obj.simulatedRunPlaces); 
+           if (numberPlaces > 0)
+               obj.evaluateRetraceForCurrentPlace(placeIndices); 
+               if (numberPlaces == 1)
+                   obj.simulatedRunPlaces = {};  
+               else
+                   obj.simulatedRunPlaces = obj.simulatedRunPlaces(2:end);    
+               end
+           end 
+        end
+        function evaluateRetraceForCurrentPlace(obj, placeIndices) 
+            simulatedIndices = obj.simulatedRunPlaces{1}; 
+            anyMatches = ismember(simulatedIndices, placeIndices); % vector of logicals
+            obj.successfulRetrace = any(anyMatches);
+        end
         function simulationOff(obj)
             obj.simulatedMotion = false; 
             obj.animal.simulatedMotion = false;
             obj.animal.hippocampalFormation.simulatedMotion = false; 
             
             obj.navigateFirstSimulatedRun = true;  
+            obj.successfulRetrace = false; 
         end        
         function turnAway = turnAwayFromWhiskersTouching(obj, steps)
             turnAway = true; 
@@ -289,6 +309,7 @@ classdef MotorCortex < System
                   obj.runDistance = nextBehavior(2); 
                   obj.clockwiseness = 0; 
                   obj.currentPlan = obj.run();
+                  disp('after navigating first simulated run, before turning flag off'); 
                   obj.navigateFirstSimulatedRun = false; % for reporting, don't turn off til run is done
                end 
                if (nextBehavior(1) == obj.noBehavior)

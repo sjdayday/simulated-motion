@@ -285,6 +285,9 @@ classdef Animal < System
             else
                 obj.distanceTraveled = distance; 
                 obj.calculateVertices();
+                if obj.motorCortex.navigateFirstSimulatedRun
+                    obj.hippocampalFormation.evaluateSuccessfulRetrace(); 
+                end
             end
             obj.hippocampalFormation.updateTurnAndLinearVelocity(0, obj.linearVelocity); 
 

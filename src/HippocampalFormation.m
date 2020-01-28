@@ -66,6 +66,7 @@ classdef HippocampalFormation < System
         hdsMinimumVelocity
         hdsAnimalVelocityCalibration
         nextPlacePendingAdditionToSimulatedRunPlaces
+        pendingEvaluateSuccessfulRetrace
     end
     methods
         function obj = HippocampalFormation()
@@ -332,9 +333,16 @@ classdef HippocampalFormation < System
               obj.animal.motorCortex.addPlaceToSimulatedRunPlaces(obj.placeOutputIndices());
               obj.nextPlacePendingAdditionToSimulatedRunPlaces = false; 
            end
+           if obj.pendingEvaluateSuccessfulRetrace
+              obj.animal.motorCortex.evaluateSuccessfulRetrace(obj.placeOutputIndices());  
+              obj.pendingEvaluateSuccessfulRetrace = false; 
+           end
         end
         function addNextPlaceToSimulatedRunPlaces(obj)
            obj.nextPlacePendingAdditionToSimulatedRunPlaces = true;  
+        end
+        function evaluateSuccessfulRetrace(obj)
+           obj.pendingEvaluateSuccessfulRetrace = true; 
         end
         function placeRecognized = recallPlace(obj)
            placeRecognized = obj.placeSystem.recallPlace([obj.mecOutput, obj.lecOutput]); 
