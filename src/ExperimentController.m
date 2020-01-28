@@ -67,6 +67,7 @@ classdef ExperimentController < System
         reporter 
         startingScenario
         runningScenario
+        cleanReporterFilesForTesting
     end
     methods
         function obj = ExperimentController()
@@ -102,6 +103,7 @@ classdef ExperimentController < System
             obj.startingScenario = 1; 
             obj.runningScenario = false; 
             obj.seed = uint32(0); % duplicates initialization in System 
+            obj.cleanReporterFilesForTesting = false; 
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -541,11 +543,24 @@ classdef ExperimentController < System
             obj.reporter.closeStepFile();
             obj.reportFormattedDateTime = ''; 
             diary off; 
+            if obj.cleanReporterFilesForTesting
+                obj.reporter.cleanFilesForTesting(); 
+            end
                 
            %             controller.reporter.cleanFilesForTesting(); 
 %             controller.reporter.buildFiles();  
             %             controller.
- 
+        end
+        function runScenarios(obj, scenarios, navigationSteps)
+           if (scenarios > 0) 
+               for ii = 1:scenarios
+                   obj.startingScenario = ii;
+                   obj.runScenario(navigationSteps);
+               end
+           else
+              disp('scenarios must be positive integer; exiting because was: ');
+              disp(scenarios); 
+           end
         end
         function setupDisplay(obj)
             hold on;  

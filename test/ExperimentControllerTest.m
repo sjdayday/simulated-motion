@@ -1,5 +1,86 @@
 classdef ExperimentControllerTest < AbstractTest
     methods (Test)
+        % uncomment to run arbitrary numbers of scenarios
+%         function testRunLongScenarios(testCase)
+%             % runScenario initialize HDS, does navigation?
+%             controller = ExperimentController(); 
+%             controller.report = true; 
+%             controller.reportTag = '0123EF456';
+%             controller.reportPipeTag = 'v1.2.1'; 
+%             controller.reportFilepath =  '../test/logs/';
+% %             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+% %             controller.reportFormattedDateTime = formattedDateTime;
+% %             controller.cleanReporterFilesForTesting = true;
+%             controller.nHeadDirectionCells = 30;
+%             controller.nCueIntervals = 30;
+%             controller.gridSize=[6,5]; 
+%             controller.visualize(false);
+%             controller.pullVelocityFromAnimal = false;
+%             controller.pullFeaturesFromAnimal = false;  % had missed this
+%             controller.defaultFeatureDetectors = false; 
+%             controller.updateFeatureDetectors = true; 
+%             controller.settleToPlace = false;
+%             controller.placeMatchThreshold = 1; % was 2  
+%             controller.showHippocampalFormationECIndices = true; 
+%             controller.sparseOrthogonalizingNetwork = true; 
+%             controller.separateMecLec = true; 
+%             controller.twoCuesOnly = true; 
+%             controller.nFeatures = 1; 
+%             controller.hdsPullsFeatureWeightsFromLec = true;
+%             controller.keepRunnerForReporting = true; % monitor for very large runs 
+%             controller.hdsMinimumVelocity = pi/10; 
+%             controller.minimumRunVelocity = 0.05; 
+%             controller.minimumTurnVelocity=pi/10;
+%             controller.build(); 
+%             controller.stepPause = 0;
+%             controller.resetSeed = false; 
+%             controller.runScenarios(3, 1000); 
+% % %             controller.totalSteps = 10; % 28
+%             disp(controller.environment.showGridSquares()); 
+%         end
+        function testRunMultipleScenarios(testCase)
+            % runScenario initialize HDS, does navigation?
+            controller = ExperimentController(); 
+            controller.report = true; 
+            controller.reportTag = '0123EF456';
+            controller.reportPipeTag = 'v1.2.1'; 
+            controller.reportFilepath =  '../test/logs/';
+%             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+%             controller.reportFormattedDateTime = formattedDateTime;
+            controller.cleanReporterFilesForTesting = true;
+            controller.nHeadDirectionCells = 30;
+            controller.nCueIntervals = 30;
+            controller.gridSize=[6,5]; 
+            controller.visualize(false);
+            controller.pullVelocityFromAnimal = false;
+            controller.pullFeaturesFromAnimal = false;  % had missed this
+            controller.defaultFeatureDetectors = false; 
+            controller.updateFeatureDetectors = true; 
+            controller.settleToPlace = false;
+            controller.placeMatchThreshold = 1; % was 2  
+            controller.showHippocampalFormationECIndices = true; 
+            controller.sparseOrthogonalizingNetwork = true; 
+            controller.separateMecLec = true; 
+            controller.twoCuesOnly = true; 
+            controller.nFeatures = 1; 
+            controller.hdsPullsFeatureWeightsFromLec = true;
+            controller.keepRunnerForReporting = true; % monitor for very large runs 
+            controller.hdsMinimumVelocity = pi/10; 
+            controller.minimumRunVelocity = 0.05; 
+            controller.minimumTurnVelocity=pi/10;
+            controller.build(); 
+            controller.stepPause = 0;
+            controller.resetSeed = false; 
+            controller.runScenarios(2, 10); 
+% %             controller.totalSteps = 10; % 28
+            testCase.assertEqual(controller.startingScenario, 2);
+            testCase.assertEqual(controller.reporter.seed, uint32(2938499220)); 
+            testCase.assertEqual(controller.reporter.placeId, '[16 41]'); 
+            testCase.assertEqual(controller.getTime(), 10, ...
+                'time restarts for each scenario');
+            disp(controller.environment.showGridSquares()); 
+            testCase.assertEqual(controller.reporter.gridSquarePercent, 0.02); 
+        end
         function testNewScenarioBumpsSeedResetsStepsReloadsEventsForNewAnimalEnv(testCase)
             % runScenario initialize HDS, does navigation?
             controller = ExperimentController(); 

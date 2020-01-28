@@ -225,7 +225,11 @@ classdef Environment < System
         function calculateGridSquare(obj, position)
             column = ceil(position(1) / obj.hardcodedGridDimension); 
             row = ceil(position(2) / obj.hardcodedGridDimension); 
-            obj.gridSquares(row, column) = 1; 
+            if ((row > 0) && (column > 0)) 
+                obj.gridSquares(row, column) = 1;
+            else
+                disp(['Error:  Environment.calculateGridSquare, position gives invalid grid square: ',mat2str(position)]);
+            end
         end
         function arenaDisplay = showGridSquares(obj)
            arenaDisplay = flipud(obj.gridSquares); 
