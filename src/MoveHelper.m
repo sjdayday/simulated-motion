@@ -12,7 +12,7 @@ classdef MoveHelper < handle
             obj.motorCortex = motorCortex; 
 
          end
-         function aMove = move(obj, behavior, distance, speed, clockwiseness)
+         function aMove = move(obj, behavior, speed, distance, clockwiseness)
              build = false; 
 %             aMove = behavior; 
              if (behavior == obj.motorCortex.turnBehavior)

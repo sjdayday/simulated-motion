@@ -50,6 +50,7 @@ classdef MotorCortex < System
         currentBehavior
         simulatedRunPlaces
         successfulRetrace
+        moveHelper
     end
     methods
         function obj = MotorCortex(animal)
@@ -97,6 +98,8 @@ classdef MotorCortex < System
             obj.currentBehavior = 0;
             obj.simulatedRunPlaces = {}; 
             obj.successfulRetrace = false; 
+            obj.moveHelper = MoveHelper(obj);
+            
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -403,26 +406,34 @@ classdef MotorCortex < System
         function aMove = turn(obj)
             disp(['clockwiseness: ', num2str(obj.clockwiseness)]);  
 %             aTurn = Turn(obj.movePrefix, obj.animal, obj.clockwiseness, obj.turnSpeed, obj.turnDistance); 
-            turn = true;
+%             turn = true;
             obj.currentBehavior = obj.turnBehavior; 
-            build = false; 
+%             build = false; 
 %             runner = []; 
 %             behaviorStatus = []; 
-            aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); % obj.runner obj.listenAndMark
-%             if (obj.standaloneMoves) 
-                obj.doMove(aMove); 
+%             behavior = motorCortex.turnBehavior; 
+%             distance = 15; 
+%             clockwiseness = 1; 
+%             speed = 1; 
+%             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 58);             
+%             createdBehavior = helper.move(behavior, distance, speed, clockwiseness); 
+              aMove = obj.moveHelper.move(obj.currentBehavior, obj.turnSpeed, obj.turnDistance, obj.clockwiseness); 
+%             aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); % obj.runner obj.listenAndMark
+% %             if (obj.standaloneMoves) 
+%                 obj.doMove(aMove); 
 %             end            
         end
         function aMove = run(obj)
             obj.clockwiseness = 0; 
-            turn = false;
+%             turn = false;
             obj.currentBehavior = obj.runBehavior; 
-            build = false;
+%             build = false;
 %             behaviorStatus = [];
-            aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); 
-%             if (obj.standaloneMoves) 
-                obj.doMove(aMove); 
-%             end                        
+            aMove = obj.moveHelper.move(obj.currentBehavior, obj.runSpeed, obj.runDistance, obj.clockwiseness); 
+%             aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); 
+% %             if (obj.standaloneMoves) 
+%                 obj.doMove(aMove); 
+% %             end                        
         end
         function doMove(obj, aMove)
             aMove.keepRunnerForReporting = obj.keepRunnerForReporting;

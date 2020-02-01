@@ -20,7 +20,7 @@ classdef MoveHelperTest < AbstractTest
             clockwiseness = 1; 
             speed = 1; 
             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 58);             
-            createdBehavior = helper.move(behavior, distance, speed, clockwiseness); 
+            createdBehavior = helper.move(behavior, speed, distance, clockwiseness); 
 %             aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build);             
 %             motorCortex.turnDistance = 15;
 
@@ -34,7 +34,7 @@ classdef MoveHelperTest < AbstractTest
 %             motorCortex.runSpeed = 1; 
 %             motorCortex.runDistance = 5; 
 %             motorCortex.run(); 
-            helper.move(behavior, distance, speed, clockwiseness); 
+            helper.move(behavior, speed, distance, clockwiseness); 
 %             testCase.assertEqual(createdBehavior, motorCortex.runBehavior);
             testCase.assertThat(animal.x, ...            
                  IsEqualTo(1, 'Within', RelativeTolerance(.00001))); 
