@@ -150,6 +150,9 @@ classdef MotorCortex < System
         function nextRandomNavigation(obj)
            obj.debugSteps = obj.debugSteps + 1;  
            disp(['nextRandomNavigation debugSteps: ',num2str(obj.debugSteps)]);
+           if (obj.simulationSettleRequired)
+              obj.nextRandomSimulatedNavigation(); 
+           end
            if (obj.pendingSimulationOff)
               disp('simulation off');  
               obj.simulationOff(); 
@@ -166,8 +169,8 @@ classdef MotorCortex < System
                    disp('turning away from whiskers touching'); 
                    behavior = obj.turnBehavior; 
                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-               elseif (obj.simulationSettleRequired)
-                   obj.nextRandomSimulatedNavigation(); 
+%                elseif (obj.simulationSettleRequired)
+%                    obj.nextRandomSimulatedNavigation(); 
                else
                    if (obj.navigateFirstSimulatedRun)
                        disp('about to retraceFirstSimulatedRun');
@@ -198,9 +201,12 @@ classdef MotorCortex < System
                if (obj.simulationSettleRequired)
                     disp('simulationSettleRequired, about to settle'); 
                     obj.simulationSettleRequired = false; 
-                    turned = obj.settlePhysical();
+                    % to settle, must be in simulation...
+                    turned = obj.settlePhysical(); 
                     if (~turned)
-                        if (obj.simulatedMotion)
+%                         if (obj.simulatedMotion)                        
+                        % ...but if pending off, next move should not be simulated; exit to real 
+                        if ((obj.simulatedMotion) && (~obj.pendingSimulationOff))
                             disp(['simulated move, about to turn or run ',num2str(steps)]); 
                             obj.simulatedMove(steps);                    
                         else
@@ -442,7 +448,6 @@ classdef MotorCortex < System
             obj.pendingSimulationOn = simulated; 
             obj.pendingSimulationOff = ~simulated;             
         end
-        
         function turned = settlePhysical(obj)
             obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
             obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
