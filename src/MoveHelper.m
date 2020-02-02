@@ -22,7 +22,7 @@ classdef MoveHelper < handle
              end
              aMove = Move(obj.motorCortex.movePrefix, obj.motorCortex.animal, ... 
                speed, distance, clockwiseness, turn, obj.motorCortex.getMoveBehaviorStatus(), build);  
-             obj.doMove(aMove); 
+%              obj.doMove(aMove); 
          end
          function doMove(obj, aMove)
              obj.motorCortex.doMove(aMove);  

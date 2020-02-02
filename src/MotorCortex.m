@@ -51,6 +51,7 @@ classdef MotorCortex < System
         simulatedRunPlaces
         successfulRetrace
         moveHelper
+        navigationStatus
     end
     methods
         function obj = MotorCortex(animal)
@@ -99,7 +100,7 @@ classdef MotorCortex < System
             obj.simulatedRunPlaces = {}; 
             obj.successfulRetrace = false; 
             obj.moveHelper = MoveHelper(obj);
-            
+            obj.navigationStatus = NavigationStatusRandom(obj); 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -163,10 +164,7 @@ classdef MotorCortex < System
            end           
            steps = obj.randomSteps(); 
            if (steps == 0)
-              disp('no remaining steps...exiting');  
-              obj.navigation.behaviorStatus.finish = true;
-              obj.navigation.behaviorStatus.waitForInput(false); 
-              obj.navigation.behaviorStatus.isDone = true;
+               obj.exitNavigation(); 
            else
                if obj.turnAwayFromWhiskersTouching(steps)
                    disp('turning away from whiskers touching'); 
@@ -186,6 +184,12 @@ classdef MotorCortex < System
                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
                end
            end
+        end
+        function exitNavigation(obj)
+              disp('no remaining steps...exiting');  
+              obj.navigation.behaviorStatus.finish = true;
+              obj.navigation.behaviorStatus.waitForInput(false); 
+              obj.navigation.behaviorStatus.isDone = true;
         end
         function nextRandomSimulatedNavigation(obj)
            disp('nextRandomSimulatedNavigation'); 
@@ -417,10 +421,10 @@ classdef MotorCortex < System
 %             speed = 1; 
 %             testCase.assertEqual(animal.headDirectionSystem.getMaxActivationIndex(), 58);             
 %             createdBehavior = helper.move(behavior, distance, speed, clockwiseness); 
-              aMove = obj.moveHelper.move(obj.currentBehavior, obj.turnSpeed, obj.turnDistance, obj.clockwiseness); 
+            aMove = obj.moveHelper.move(obj.currentBehavior, obj.turnSpeed, obj.turnDistance, obj.clockwiseness); 
 %             aMove = Move(obj.movePrefix, obj.animal, obj.turnSpeed, obj.turnDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); % obj.runner obj.listenAndMark
 % %             if (obj.standaloneMoves) 
-%                 obj.doMove(aMove); 
+            obj.moveHelper.doMove(aMove); 
 %             end            
         end
         function aMove = run(obj)
@@ -432,7 +436,7 @@ classdef MotorCortex < System
             aMove = obj.moveHelper.move(obj.currentBehavior, obj.runSpeed, obj.runDistance, obj.clockwiseness); 
 %             aMove = Move(obj.movePrefix, obj.animal, obj.runSpeed, obj.runDistance, obj.clockwiseness, turn, obj.getMoveBehaviorStatus(), build); 
 % %             if (obj.standaloneMoves) 
-%                 obj.doMove(aMove); 
+            obj.moveHelper.doMove(aMove); 
 % %             end                        
         end
         function doMove(obj, aMove)

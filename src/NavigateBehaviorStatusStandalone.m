@@ -18,6 +18,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
             obj.defaultPetriNet = 'include-navigate-move-turn-run.xml';            
             obj.acknowledging = true; 
             obj.initialized = false; 
+            obj.finish = false; 
 %             obj.speed = 0; 
 %             obj.distance = 0; 
 %             obj.clockwiseness = 0; 

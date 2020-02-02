@@ -8,8 +8,10 @@ classdef TestingMoveHelper < MoveHelper
             obj = obj@MoveHelper(motorCortex);
          end
          function doMove(obj, aMove)
-            obj.motorCortex.currentPlan = aMove;             
-            obj.motorCortex.navigationStatus.nextStatus();  
+            obj.motorCortex.currentPlan = aMove;                        
+         end
+         function nextStatus(obj)
+             obj.motorCortex.navigationStatus.nextStatus();  
          end
     end
 
