@@ -14,7 +14,6 @@ classdef NavigationStatus < handle
             immediateStatus.lastStatus = obj;
             navigationStatus = immediateStatus.nextStatus(); 
             obj.setStatus(navigationStatus, immediateStatus); 
-%             navigationStatus.lastStatus = immediateStatus; 
         end
         function setStatus(obj, next, last)
             next.lastStatus = last; 

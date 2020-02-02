@@ -17,11 +17,13 @@ classdef NavigationStatusTest < AbstractTest
             testCase.assertEqual(status.steps, 4);
             testCase.assertEqual(status.behavior, motorCortex.runBehavior);
             testCase.assertEqual(motorCortex.remainingDistance, 2);
+            testCase.assertEqual(motorCortex.behaviorHistory, [2 4 0]);
             newStatus2 = newStatus.nextStatus(); 
             testCase.assertClass(newStatus2, 'NavigationStatusRandom'); 
             testCase.assertEqual(newStatus.steps, 2);
             testCase.assertEqual(newStatus.behavior, motorCortex.turnBehavior);
             testCase.assertEqual(motorCortex.remainingDistance, 0);
+            testCase.assertEqual(motorCortex.behaviorHistory, [2 4 0 ; 1 2 1], 'CCW turn');
             testCase.assertEqual(motorCortex.navigation.behaviorStatus.finish, false);                        
             newStatus3 = newStatus2.nextStatus(); 
             testCase.assertClass(newStatus3, 'NavigationStatusFinal'); 

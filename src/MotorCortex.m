@@ -181,15 +181,19 @@ classdef MotorCortex < System
                        disp(['not navigateFirstSimulatedRun, about to turn or run ',num2str(steps)]); 
                        behavior = obj.turnOrRun(steps);
                    end
-                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+                   obj.updateBehaviorHistory(behavior, steps); 
+%                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
                end
            end
         end
+        function updateBehaviorHistory(obj, behavior, steps)
+           obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+        end
         function exitNavigation(obj)
-              disp('no remaining steps...exiting');  
-              obj.navigation.behaviorStatus.finish = true;
-              obj.navigation.behaviorStatus.waitForInput(false); 
-              obj.navigation.behaviorStatus.isDone = true;
+           disp('no remaining steps...exiting');  
+           obj.navigation.behaviorStatus.finish = true;
+           obj.navigation.behaviorStatus.waitForInput(false); 
+           obj.navigation.behaviorStatus.isDone = true;
         end
         function nextRandomSimulatedNavigation(obj)
            disp('nextRandomSimulatedNavigation'); 
