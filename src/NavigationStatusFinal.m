@@ -7,13 +7,13 @@ classdef NavigationStatusFinal < NavigationStatus
         behavior
     end
     methods 
-        function obj = NavigationStatusFinal(motorCortex)
-            obj = obj@NavigationStatus(motorCortex);
+        function obj = NavigationStatusFinal(motorCortex, updateAll)
+            obj = obj@NavigationStatus(motorCortex, updateAll);
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
             obj.motorCortex.exitNavigation(); 
-            navigationStatus = NavigationStatusFinal(obj.motorCortex); 
+            navigationStatus = NavigationStatusFinal(obj.motorCortex, obj.updateAll); 
         end
     end
 end

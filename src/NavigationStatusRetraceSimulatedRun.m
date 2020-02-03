@@ -1,13 +1,14 @@
-% NavigationStatusRandom:  motor cortex state for random physical
-% navigation
-classdef NavigationStatusRandom < NavigationStatus 
+% NavigationStatusRetraceSimulatedRun:  motor cortex state to retrace the
+% first simulated run from simulated behavior history, upon exiting
+% simulation mode
+classdef NavigationStatusRetraceSimulatedRun < NavigationStatus 
 
     properties
         steps
         behavior
     end
     methods 
-        function obj = NavigationStatusRandom(motorCortex, updateAll)
+        function obj = NavigationStatusRetraceSimulatedRun(motorCortex, updateAll)
             obj = obj@NavigationStatus(motorCortex, updateAll);
         end
         function navigationStatus = nextStatus(obj)

@@ -1,44 +1,49 @@
-% NavigationStatusSimulatedRandom:  motor cortex state for simulated random
-% navigation
-classdef NavigationStatusSimulatedRandom < NavigationStatus 
+% NavigationStatusSettle:  motor cortex state to settle internal representation 
+% back to previous physical place following a simulated turn or run
+% this only reverses a Run, and transitions immediately to a next status
+classdef NavigationStatusSettle < NavigationStatus 
 
     properties
         steps
-        behavior
+        clockwiseness
     end
     methods 
-        function obj = NavigationStatusSimulatedRandom(motorCortex, updateAll)
+        function obj = NavigationStatusSettle(motorCortex, updateAll)
             obj = obj@NavigationStatus(motorCortex, updateAll);
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
-            obj.steps = obj.motorCortex.randomSteps();
-            if (obj.steps == 0)
-                navigationStatus = obj.immediateTransition(NavigationStatusFinal(obj.motorCortex, obj.updateAll)); 
-            elseif (obj.motorCortex.pendingSimulationOff) 
-%                 navigationStatus = obj.immediateTransition(NavigationStatusPendingSimulationOn(obj.motorCortex));                 
+            if obj.updateAll
+                obj.motorCortex.settleBasic(); 
+            end
+            obj.steps = obj.motorCortex.turnDistance; 
+            obj.clockwiseness = obj.motorCortex.clockwiseness * -1; 
+            obj.motorCortex.clockwiseness = obj.clockwiseness; 
+            if ((obj.steps > 0) && (obj.clockwiseness ~= 0))
+                navigationStatus = ... 
+                    obj.immediateTransition(NavigationStatusSettleReverseTurn(obj.motorCortex, obj.steps, obj.clockwiseness, obj.updateAll)); 
+            elseif obj.motorCortex.pendingSimulationOff 
+                navigationStatus = ...
+                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll));                 
             else
-%                 obj.motorCortex.simulatedMove(obj.steps);
-%                 obj.behavior = obj.motorCortex.turnOrRun(obj.steps);
-                obj.buildBehavior(obj.steps); 
-                obj.motorCortex.updateSimulatedBehaviorHistory(obj.behavior, obj.steps);               
-                navigationStatus = NavigationStatusSettle(obj.motorCortex, obj.updateAll); 
-                obj.setStatus(navigationStatus, obj);                 
-            end 
-        end
-        function buildBehavior(obj, steps)
-            if (isempty(obj.behavior)) % default, else overridden for testing
-               obj.behavior = obj.motorCortex.turnOrRun(steps);
+                navigationStatus = obj.immediateTransition(NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll)); 
             end
         end
     end
 end
 
-%               obj.simulationSettleRequired = true;  
-%               behavior = obj.turnOrRun(steps);
-%               obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
-%               disp('obj.simulatedBehaviorHistory: '); 
-%               disp(obj.simulatedBehaviorHistory);             
+%         function turned = reverseSimulatedTurn(obj)
+%             turned = false;
+%             if ((obj.turnDistance > 0) && (obj.clockwiseness ~= 0))
+%                turned = true; 
+%                disp(['reverse simulated turn; turnDistance: ',num2str(obj.turnDistance)]);                  
+%                obj.clockwiseness = obj.clockwiseness * -1; 
+%                obj.turn(); 
+%                obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [obj.reverseSimulatedTurnBehavior obj.turnDistance obj.clockwiseness]];
+%                disp('obj.simulatedBehaviorHistory: '); 
+%                disp(obj.simulatedBehaviorHistory);
+%             end            
+%         end
 
 
 

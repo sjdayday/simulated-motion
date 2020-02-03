@@ -100,7 +100,8 @@ classdef MotorCortex < System
             obj.simulatedRunPlaces = {}; 
             obj.successfulRetrace = false; 
             obj.moveHelper = MoveHelper(obj);
-            obj.navigationStatus = NavigationStatusRandom(obj); 
+            updateAll = true; 
+            obj.navigationStatus = NavigationStatusRandom(obj, updateAll); 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -188,6 +189,9 @@ classdef MotorCortex < System
         end
         function updateBehaviorHistory(obj, behavior, steps)
            obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
+        end
+        function updateSimulatedBehaviorHistory(obj, behavior, steps)
+           obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
         end
         function exitNavigation(obj)
            disp('no remaining steps...exiting');  
@@ -467,10 +471,13 @@ classdef MotorCortex < System
             obj.pendingSimulationOn = simulated; 
             obj.pendingSimulationOff = ~simulated;             
         end
-        function turned = settlePhysical(obj)
+        function settleBasic(obj)
             obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
             obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
             obj.animal.hippocampalFormation.settleGrids(); 
+        end
+        function turned = settlePhysical(obj)
+            obj.settleBasic(); 
             turned = obj.reverseSimulatedTurn(); 
         end
         function turned = reverseSimulatedTurn(obj)

@@ -4,10 +4,13 @@ classdef NavigationStatus < handle
     properties
         motorCortex
         lastStatus
+        updateAll
+        moving
     end
     methods 
-        function obj = NavigationStatus(motorCortex)
+        function obj = NavigationStatus(motorCortex, updateAll)
             obj.motorCortex = motorCortex; 
+            obj.updateAll = updateAll; 
         end
         function navigationStatus = immediateTransition(obj, next)
             immediateStatus = next; 
