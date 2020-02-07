@@ -43,11 +43,3 @@ classdef NavigationStatusRandom < NavigationStatus
         end
     end
 end
-
-%                if obj.turnAwayFromWhiskersTouching(steps)
-%                    disp('turning away from whiskers touching'); 
-%                    behavior = obj.turnBehavior; 
-%                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-%                elseif (obj.simulationSettleRequired)
-
-%         end

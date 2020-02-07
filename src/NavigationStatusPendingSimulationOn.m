@@ -1,5 +1,5 @@
-% NavigationStatusRandom:  motor cortex state for random physical
-% navigation
+% NavigationStatusPendingSimulationOn:  motor cortex state to transition 
+% to simulation
 classdef NavigationStatusPendingSimulationOn < NavigationStatus 
 
     properties
@@ -16,8 +16,6 @@ classdef NavigationStatusPendingSimulationOn < NavigationStatus
             obj.motorCortex.simulationOn();  
             obj.motorCortex.pendingSimulationOn = false; 
             navigationStatus = obj.immediateTransition(NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll, obj)); 
-%             navigationStatus = NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll); 
-%             obj.setStatus(navigationStatus, obj); 
         end
     end
 end
