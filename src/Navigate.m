@@ -41,11 +41,12 @@ classdef Navigate <  Behavior
             obj.animal.motorCortex.setSimulatedMotion(simulation);          
         end
         function done(obj)
-            if (obj.simulation)
-                obj.animal.motorCortex.nextRandomSimulatedNavigation(); 
-            else
-                obj.animal.motorCortex.nextRandomNavigation(); 
-            end
+            obj.animal.motorCortex.navigationStatus.nextStatus();  
+%             if (obj.simulation)
+%                 obj.animal.motorCortex.nextRandomSimulatedNavigation(); 
+%             else
+%                 obj.animal.motorCortex.nextRandomNavigation(); 
+%             end
         end
         
 %         function simulateChanged(obj, source, event)
