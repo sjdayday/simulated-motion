@@ -7,23 +7,28 @@ classdef NavigationStatusSimulatedRandom < NavigationStatus
         behavior
     end
     methods 
-        function obj = NavigationStatusSimulatedRandom(motorCortex, updateAll)
-            obj = obj@NavigationStatus(motorCortex, updateAll);
+        function obj = NavigationStatusSimulatedRandom(motorCortex, updateAll, lastStatus)
+            obj = obj@NavigationStatus(motorCortex, updateAll, lastStatus);
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
             obj.steps = obj.motorCortex.randomSteps();
             if (obj.steps == 0)
-                navigationStatus = obj.immediateTransition(NavigationStatusFinal(obj.motorCortex, obj.updateAll)); 
+                obj.moving = false; 
+                navigationStatus = obj.immediateTransition(NavigationStatusFinal(obj.motorCortex, obj.updateAll, obj)); 
             elseif (obj.motorCortex.pendingSimulationOff) 
+                obj.moving = false; 
+                navigationStatus = ...
+                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj));                                 
 %                 navigationStatus = obj.immediateTransition(NavigationStatusPendingSimulationOn(obj.motorCortex));                 
             else
 %                 obj.motorCortex.simulatedMove(obj.steps);
 %                 obj.behavior = obj.motorCortex.turnOrRun(obj.steps);
+                obj.moving = true; 
                 obj.buildBehavior(obj.steps); 
                 obj.motorCortex.updateSimulatedBehaviorHistory(obj.behavior, obj.steps);               
-                navigationStatus = NavigationStatusSettle(obj.motorCortex, obj.updateAll); 
-                obj.setStatus(navigationStatus, obj);                 
+                navigationStatus = NavigationStatusSettle(obj.motorCortex, obj.updateAll, obj); 
+                obj.setStatus(navigationStatus);                 
             end 
         end
         function buildBehavior(obj, steps)

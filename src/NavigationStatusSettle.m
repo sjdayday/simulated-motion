@@ -8,11 +8,12 @@ classdef NavigationStatusSettle < NavigationStatus
         clockwiseness
     end
     methods 
-        function obj = NavigationStatusSettle(motorCortex, updateAll)
-            obj = obj@NavigationStatus(motorCortex, updateAll);
+        function obj = NavigationStatusSettle(motorCortex, updateAll, lastStatus)
+            obj = obj@NavigationStatus(motorCortex, updateAll, lastStatus);
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
+            obj.moving = false; 
             if obj.updateAll
                 obj.motorCortex.settleBasic(); 
             end
@@ -21,12 +22,13 @@ classdef NavigationStatusSettle < NavigationStatus
             obj.motorCortex.clockwiseness = obj.clockwiseness; 
             if ((obj.steps > 0) && (obj.clockwiseness ~= 0))
                 navigationStatus = ... 
-                    obj.immediateTransition(NavigationStatusSettleReverseTurn(obj.motorCortex, obj.steps, obj.clockwiseness, obj.updateAll)); 
+                    obj.immediateTransition(NavigationStatusSettleReverseTurn(obj.motorCortex, obj.steps, obj.clockwiseness, obj.updateAll, obj)); 
             elseif obj.motorCortex.pendingSimulationOff 
                 navigationStatus = ...
-                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll));                 
+                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj));                 
             else
-                navigationStatus = obj.immediateTransition(NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll)); 
+                navigationStatus = ... 
+                    obj.immediateTransition(NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll, obj)); 
             end
         end
     end

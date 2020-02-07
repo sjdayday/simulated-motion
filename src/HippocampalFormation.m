@@ -540,13 +540,14 @@ classdef HippocampalFormation < System
            end
         end
         function graphStats(obj)
-            if ishandle(obj.hh) 
-                plot(obj.stats(:,1));
-                hold on
-                plot(obj.stats(:,2)); 
-            else
-                obj.hh = figure; 
-            end
+            % commented 2/3 for demo
+%             if ishandle(obj.hh) 
+%                 plot(obj.stats(:,1));
+%                 hold on
+%                 plot(obj.stats(:,2)); 
+%             else
+%                 obj.hh = figure; 
+%             end
         end        
         function plotPlaces(obj)
            figure(obj.h) 

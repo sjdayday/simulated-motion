@@ -100,8 +100,9 @@ classdef MotorCortex < System
             obj.simulatedRunPlaces = {}; 
             obj.successfulRetrace = false; 
             obj.moveHelper = MoveHelper(obj);
+            lastStatus = []; 
             updateAll = true; 
-            obj.navigationStatus = NavigationStatusRandom(obj, updateAll); 
+            obj.navigationStatus = NavigationStatusRandom(obj, updateAll, lastStatus); 
         end
         function build(obj)
             featureLength = obj.distanceUnits + obj.nHeadDirectionCells; 
@@ -342,7 +343,7 @@ classdef MotorCortex < System
         function behavior = popNextSimulatedBehavior(obj)
            rows = size(obj.simulatedBehaviorHistory, 1); 
            if (rows == 0)
-               behavior = obj.noBehavior;
+               behavior = [obj.noBehavior, 0, 0];
            else
                behavior = obj.simulatedBehaviorHistory(1,:);    
                if (rows == 1)

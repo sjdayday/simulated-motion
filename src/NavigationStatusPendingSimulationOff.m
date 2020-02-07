@@ -7,15 +7,16 @@ classdef NavigationStatusPendingSimulationOff < NavigationStatus
         behavior
     end
     methods 
-        function obj = NavigationStatusPendingSimulationOff(motorCortex, updateAll)
-            obj = obj@NavigationStatus(motorCortex, updateAll);
+        function obj = NavigationStatusPendingSimulationOff(motorCortex, updateAll, lastStatus)
+            obj = obj@NavigationStatus(motorCortex, updateAll, lastStatus);
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
+            obj.moving = false; 
             obj.motorCortex.simulationOff();  
-            obj.motorCortex.pendingSimulationOff = false; 
-            navigationStatus = NavigationStatusRetraceSimulatedRun(obj.motorCortex, obj.updateAll); 
-            obj.setStatus(navigationStatus, obj); 
+            obj.motorCortex.pendingSimulationOff = false;  
+            navigationStatus = ...
+                obj.immediateTransition(NavigationStatusRetraceSimulatedMoves(obj.motorCortex, obj.updateAll, obj));                 
         end
     end
 end
