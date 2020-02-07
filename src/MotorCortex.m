@@ -374,15 +374,9 @@ classdef MotorCortex < System
             end
             obj.behaviorHistory = [];
             obj.remainingDistance = steps; 
-%             while (obj.remainingDistance > 0)
-                obj.nextRandomNavigation(); 
-%             end
-         
 
-%             aNavigation = Navigate(obj.navigatePrefix, obj.animal); 
-%             aNavigation.keepRunnerForReporting = obj.keepRunnerForReporting; 
-%             obj.currentPlan = aNavigation; 
-
+            obj.navigationStatus.nextStatus();  
+%                 obj.nextRandomNavigation(); 
             obj.navigation.execute(); 
             obj.markedPlaceReport = obj.navigation.placeReport;             
         end
