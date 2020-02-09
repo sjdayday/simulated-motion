@@ -233,6 +233,40 @@ classdef NavigationStatusTest < AbstractTest
             testCase.assertClass(newStatus3.lastStatus.lastStatus.lastStatus.lastStatus, ...
                 'NavigationStatusSimulatedRandom', 'where we started');
         end
+        function testSettleAndSimulationOffToReverseTurnToPendingSimulationOff(testCase)
+            testCase.buildAnimal();
+            motorCortex = testCase.animal.motorCortex; 
+            motorCortex.remainingDistance = 100; 
+            helper = TestingMoveHelper(motorCortex);  
+            motorCortex.moveHelper = helper; 
+            motorCortex.prepareNavigate(); 
+            lastStatus = []; 
+            updateAll = false; 
+            motorCortex.navigationStatus = NavigationStatusRandom(motorCortex, updateAll, lastStatus); 
+
+            motorCortex.setSimulatedMotion(true);
+            rand(); 
+            newStatus = helper.nextStatus(); 
+            testCase.assertClass(newStatus, 'NavigationStatusSettle');                            
+            testCase.assertClass(newStatus.lastStatus, 'NavigationStatusSimulatedRandom'); 
+            testCase.assertEqual(newStatus.lastStatus.behavior, motorCortex.turnBehavior);            
+            testCase.assertEqual(newStatus.lastStatus.steps, 5);
+            motorCortex.turnDistance = 5;              
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.counterClockwise);
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory, [1 5 1 ], 'CCW 5');
+
+            motorCortex.setSimulatedMotion(false);            
+            newStatus2 = helper.nextStatus();
+            testCase.assertClass(motorCortex.navigationStatus, 'NavigationStatusPendingSimulationOff');    
+            testCase.assertClass(newStatus2, 'NavigationStatusPendingSimulationOff');             
+            testCase.assertClass(newStatus2.lastStatus, 'NavigationStatusSettleReverseTurn');
+            testCase.assertClass(newStatus2.lastStatus.lastStatus, 'NavigationStatusSettle', ...
+                'where we started');                                        
+            testCase.assertEqual(newStatus2.lastStatus.steps, 5);
+            testCase.assertEqual(newStatus2.lastStatus.behavior, motorCortex.reverseSimulatedTurnBehavior);
+            testCase.assertEqual(motorCortex.simulatedMotion, true);
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory, [1 5 1; 11 5 -1 ], 'CW 5');
+        end
         function testRetraceMovesEndsAtFirstRun(testCase)
             testCase.buildAnimal();
             motorCortex = testCase.animal.motorCortex; 

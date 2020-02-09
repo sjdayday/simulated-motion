@@ -364,6 +364,7 @@ classdef MotorCortex < System
             obj.navigation.behaviorStatus.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
             obj.navigation.build(); 
             obj.runner = obj.navigation.runner; 
+%             obj.runner.setFiringDelay(10); 
             obj.moveBehaviorStatus = obj.navigation.behaviorStatus.moveBehaviorStatus; 
 %             obj.setupListeners(); % <<< 
 %             obj.currentPlan = aNavigation;             

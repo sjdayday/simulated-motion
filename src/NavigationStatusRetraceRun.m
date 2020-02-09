@@ -18,16 +18,20 @@ classdef NavigationStatusRetraceRun < NavigationStatus
                 obj.moving = false; 
                 obj.motorCortex.turnDistance = obj.steps; % use steps set by retrace simulated moves
                 obj.motorCortex.runDistance = 0; 
-                obj.behavior = obj.motorCortex.turnBehavior;                            
+                obj.behavior = obj.motorCortex.turnBehavior;   
+                % we are about to turn away, so we
+                % won't be able to navigate our first simulated run.  
+                obj.motorCortex.navigateFirstSimulatedRun = false;
+                
                 navigationStatus = obj.immediateTransition(NavigationStatusWhiskersTurnAway(obj.motorCortex, obj.updateAll, obj));                                 
             else        
                 obj.behavior = obj.motorCortex.runBehavior;            
                 obj.motorCortex.currentPlan = obj.motorCortex.run();
                 obj.motorCortex.updateBehaviorHistory(obj.behavior, obj.steps)
                 navigationStatus = NavigationStatusRandom(obj.motorCortex, obj.updateAll, obj); 
+                navigationStatus.turnOffNavigateFirstSimulatedRun = true; 
                 obj.setStatus(navigationStatus); 
             end
-            obj.motorCortex.navigateFirstSimulatedRun = false;            
         end
         function turnAway = turnAwayFromWhiskersTouching(obj)
             turnAway = true; 

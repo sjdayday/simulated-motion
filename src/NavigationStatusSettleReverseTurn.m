@@ -21,8 +21,8 @@ classdef NavigationStatusSettleReverseTurn < NavigationStatus
             obj.motorCortex.turn(); 
             obj.motorCortex.updateSimulatedBehaviorHistory(obj.motorCortex.reverseSimulatedTurnBehavior, obj.steps);               
             if obj.motorCortex.pendingSimulationOff
-                navigationStatus = ...
-                   obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj));                                 
+                navigationStatus = NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj); 
+                obj.setStatus(navigationStatus);                 
             else
                 navigationStatus = NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll, obj); 
                 obj.setStatus(navigationStatus); 

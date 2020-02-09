@@ -1274,6 +1274,15 @@
                 <value></value>
             </inscription>
         </arc>
+        <arc id="CounterClockwise TO SetupTurn" source="CounterClockwise" target="SetupTurn">
+            <arcpath id="" x="398.0" y="552.0" curvePoint="false"/>
+            <arcpath id="" x="251.0" y="552.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="Ongoing TO Finish" source="Ongoing" target="Finish">
             <arcpath id="" x="530.0" y="66.0" curvePoint="false"/>
             <arcpath id="" x="607.0" y="66.0" curvePoint="false"/>
@@ -1288,6 +1297,15 @@
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Clockwise TO SetupTurn" source="Clockwise" target="SetupTurn">
+            <arcpath id="" x="398.0" y="459.0" curvePoint="false"/>
+            <arcpath id="" x="228.0" y="460.0" curvePoint="false"/>
+            <arcpath id="" x="210.0" y="410.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="Distance TO SetupTurn" source="Distance" target="SetupTurn">
@@ -1323,7 +1341,7 @@
             </inscription>
         </arc>
         <arc id="Turn.CleaningDirection TO SetupTurn" source="Turn.CleaningDirection" target="SetupTurn">
-            <arcpath id="" x="296.0" y="415.0" curvePoint="false"/>
+            <arcpath id="" x="296.0" y="416.0" curvePoint="false"/>
             <arcpath id="" x="215.0" y="395.0" curvePoint="false"/>
             <type value="inhibitor"/>
             <inscription>
