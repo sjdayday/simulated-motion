@@ -19,7 +19,7 @@ classdef NavigationStatusSimulatedRandom < NavigationStatus
             elseif (obj.motorCortex.pendingSimulationOff) 
                 obj.moving = false; 
                 navigationStatus = ...
-                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj));                                 
+                    obj.immediateTransition(NavigationStatusSettle(obj.motorCortex, obj.updateAll, obj));
             else
                 obj.moving = true; 
                 obj.buildBehavior(obj.steps); 

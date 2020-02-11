@@ -10,7 +10,7 @@ classdef NavigationStatusRandom < NavigationStatus
     methods 
         function obj = NavigationStatusRandom(motorCortex, updateAll, lastStatus)
             obj = obj@NavigationStatus(motorCortex, updateAll, lastStatus);
-            obj.turnOffNavigateFirstSimulatedRun = false; 
+            obj.turnOffNavigateFirstSimulatedRun = false; % default; overridden by NSRetraceRun
         end
         function navigationStatus = nextStatus(obj)
             obj.debug(); 

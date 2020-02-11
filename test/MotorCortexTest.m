@@ -843,6 +843,35 @@ classdef MotorCortexTest < AbstractTest
 
             
         end
+        function testTurnsSummedToNetDistanceWhenSettlingAndDirectionReversed(testCase)
+            import matlab.unittest.constraints.IsEqualTo
+            import matlab.unittest.constraints.RelativeTolerance 
+            testCase.placeMatchThreshold = 1;  
+            testCase.buildAnimal();             
+            motorCortex = testCase.animal.motorCortex;            
+            testCase.animal.place(testCase.environment, 1, 1, pi); 
+            motorCortex.turnDistance = 0; 
+            motorCortex.clockwiseness = 0;                 
+            motorCortex.simulatedBehaviorHistory = [ 1 3 -1; 1 4 1; 1 2 -1; 2 3 0; 1 5 -1]; 
+            turnNeeded = motorCortex.calculateNetSimulatedTurnsReversed(); 
+            testCase.assertTrue(turnNeeded); 
+            testCase.assertEqual(motorCortex.turnDistance, 6); 
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.counterClockwise);                 
+
+            motorCortex.simulatedBehaviorHistory = [ 1 3 -1; 1 4 1; 1 1 -1]; 
+            turnNeeded = motorCortex.calculateNetSimulatedTurnsReversed(); 
+            testCase.assertFalse(turnNeeded); 
+            testCase.assertEqual(motorCortex.turnDistance, 0); 
+            testCase.assertEqual(motorCortex.clockwiseness, 0);                 
+
+            motorCortex.simulatedBehaviorHistory = [ 1 3 1; 1 4 -1; 1 2 1; 2 3 0; 1 5 1]; 
+            turnNeeded = motorCortex.calculateNetSimulatedTurnsReversed(); 
+            testCase.assertTrue(turnNeeded); 
+            testCase.assertEqual(motorCortex.turnDistance, 6); 
+            testCase.assertEqual(motorCortex.clockwiseness, motorCortex.clockwise);                 
+
+            
+        end
         
         function testMovesAwayWhenWhiskersTouchWhileOrienting(testCase)
             testCase.placeMatchThreshold = 0;  

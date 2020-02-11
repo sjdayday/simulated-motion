@@ -1,6 +1,7 @@
 % NavigationStatusSettle:  motor cortex state to settle internal representation 
 % back to previous physical place following a simulated turn or run
 % this only reverses a Run, and transitions immediately to a next status
+% when about to exit simulation, transitions to settle the net turns 
 classdef NavigationStatusSettle < NavigationStatus 
 
     properties
@@ -17,15 +18,9 @@ classdef NavigationStatusSettle < NavigationStatus
             if obj.updateAll
                 obj.motorCortex.settleBasic(); 
             end
-            obj.steps = obj.motorCortex.turnDistance; 
-            obj.clockwiseness = obj.motorCortex.clockwiseness * -1; 
-            obj.motorCortex.clockwiseness = obj.clockwiseness; 
-            if ((obj.steps > 0) && (obj.clockwiseness ~= 0))
-                navigationStatus = ... 
-                    obj.immediateTransition(NavigationStatusSettleReverseTurn(obj.motorCortex, obj.steps, obj.clockwiseness, obj.updateAll, obj)); 
-            elseif obj.motorCortex.pendingSimulationOff 
+            if obj.motorCortex.pendingSimulationOff 
                 navigationStatus = ...
-                    obj.immediateTransition(NavigationStatusPendingSimulationOff(obj.motorCortex, obj.updateAll, obj));                 
+                    obj.immediateTransition(NavigationStatusSettleNetTurns(obj.motorCortex, obj.updateAll, obj));                 
             else
                 navigationStatus = ... 
                     obj.immediateTransition(NavigationStatusSimulatedRandom(obj.motorCortex, obj.updateAll, obj)); 

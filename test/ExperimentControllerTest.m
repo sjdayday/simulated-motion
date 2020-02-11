@@ -34,7 +34,7 @@ classdef ExperimentControllerTest < AbstractTest
 %             controller.build(); 
 %             controller.stepPause = 0;
 %             controller.resetSeed = false; 
-%             controller.runScenarios(3, 1000); 
+%             controller.runScenarios(1, 3000); 
 % % %             controller.totalSteps = 10; % 28
 %             disp(controller.environment.showGridSquares()); 
 %         end

@@ -5,6 +5,7 @@ classdef NavigationStatusRetraceTurn < NavigationStatus
     properties
         steps 
         behavior
+        clockwiseness
     end
     methods 
         function obj = NavigationStatusRetraceTurn(motorCortex, updateAll, lastStatus)
@@ -14,7 +15,8 @@ classdef NavigationStatusRetraceTurn < NavigationStatus
             obj.debug(); 
             obj.moving = true; 
             obj.steps = obj.motorCortex.turnDistance; 
-            obj.behavior = obj.motorCortex.turnBehavior;            
+            obj.behavior = obj.motorCortex.turnBehavior;  
+            obj.clockwiseness = obj.motorCortex.clockwiseness; 
             obj.motorCortex.currentPlan = obj.motorCortex.turn();
             obj.motorCortex.updateBehaviorHistory(obj.behavior, obj.steps)
             navigationStatus = NavigationStatusRetraceSimulatedMoves(obj.motorCortex, obj.updateAll, obj); 

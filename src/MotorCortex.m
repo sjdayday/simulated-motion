@@ -476,6 +476,29 @@ classdef MotorCortex < System
             obj.settleBasic(); 
             turned = obj.reverseSimulatedTurn(); 
         end
+        function turnNeeded = calculateNetSimulatedTurnsReversed(obj)
+            netDistance = 0; 
+            rows = size(obj.simulatedBehaviorHistory, 1);
+            for ii = 1:rows
+                behavior = obj.simulatedBehaviorHistory(ii,:);
+                if (behavior(1) == obj.turnBehavior)
+                    distance = behavior(2); 
+                    clockwiseness = behavior(3); 
+                    netDistance = netDistance + (distance * clockwiseness);   
+                end
+            end
+            obj.turnDistance = abs(netDistance); 
+            if (netDistance == 0) 
+                turnNeeded = false;
+                obj.clockwiseness = 0; 
+            elseif (netDistance < 0)
+                turnNeeded = true; 
+                obj.clockwiseness = obj.counterClockwise; % reverse direction
+            else
+                turnNeeded = true; 
+                obj.clockwiseness = obj.clockwise;  % reverse direction               
+            end
+        end
         function turned = reverseSimulatedTurn(obj)
             turned = false;
             if ((obj.turnDistance > 0) && (obj.clockwiseness ~= 0))
