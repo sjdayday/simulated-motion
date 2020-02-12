@@ -16,12 +16,12 @@ classdef S4 < handle
             end
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
-            obj.ec.totalSteps = 35;
+            obj.ec.totalSteps = 30;
 %             obj.ec.randomHeadDirection = false; % no effect?  
             obj.ec.addHeadDirectionSystemEvent(5, 'obj.minimumVelocity=pi/30;'); 
             obj.ec.addAnimalEvent(5, 'obj.minimumVelocity=pi/30; obj.showFeatures = 1; obj.features = [30 52];'); 
             obj.ec.addAnimalEvent(7, 'obj.showFeatures = 0; obj.features = [];'); 
-            obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
+            obj.ec.addHeadDirectionSystemEvent(10, 'rand(); obj.initializeActivation(true);'); 
             obj.ec.addAnimalEvent(10, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
 %             obj.ec.addControllerEvent(11, 'disp(''animal physically placed at orientation pi/3, and randomly initializing internal head direction''); pause(10); ')
 %             obj.ec.addHeadDirectionSystemEvent(10, 'obj.initializeActivation(true);'); 
