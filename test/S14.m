@@ -42,7 +42,7 @@ classdef S14 < handle
 %             obj.ec.addAnimalEvent(5, 'obj.minimumRunVelocity = 0.05; obj.minimumVelocity=pi/10'); 
 %             obj.ec.addAnimalEvent(7, 'obj.orientAnimal(pi/3); obj.calculateVertices();'); 
             obj.ec.addAnimalEvent(7, 'obj.motorCortex.prepareNavigate(); ');
-            obj.ec.addAnimalEvent(8, 'obj.motorCortex.navigate(10); ');            
+            obj.ec.addAnimalEvent(8, 'obj.motorCortex.navigate(10); '); % was 10             
         end
         function run(obj, steps)
             obj.ec.runHeadDirectionSystemForSteps(steps);            

@@ -25,7 +25,7 @@ classdef S12Test < AbstractTest
             testCase.assertEqual(script.ec.environment.directionIntervals, 60);            
 %             testCase.assertThat(placeList(18,:), ...
 %                 IsEqualTo([1 1 1  44  272  357  385  413  488  534], 'Within', RelativeTolerance(.1))); 
-        end        
+        end  
         function run20Steps(testCase)
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance
@@ -35,9 +35,9 @@ classdef S12Test < AbstractTest
 %             placeList = script.ec.animal.hippocampalFormation.placeListDisplay;
             testCase.assertEqual(script.ec.time, 28);
             testCase.assertThat(script.ec.animal.vertices, ...
-                IsEqualTo([1.5420 1.1020; 1.5525 1.0025; 1.7462 1.0732], 'Within', RelativeTolerance(.001))); 
+                IsEqualTo([1.3000 1.0500; 1.3000 0.9500; 1.5000 1.0000], 'Within', RelativeTolerance(.001))); 
             % was [1.4580 1.2933; 1.5080 1.2067; 1.6562 1.3500] at pi/6
-            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), 33);
+            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), 3);
         end       
 
     end

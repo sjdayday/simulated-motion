@@ -30,11 +30,11 @@ classdef S13Test < AbstractTest
 %             placeList = script.ec.animal.hippocampalFormation.placeListDisplay;
             testCase.assertEqual(script.ec.time, 48);
             testCase.assertThat(script.ec.animal.vertices, ...
-                IsEqualTo([1.5310 1.3722; 1.6261 1.3413; 1.6404 1.5470], 'Within', RelativeTolerance(.001))); 
+                IsEqualTo([0.9706 1.0595; 1.0294 1.1405; 0.8382 1.2176], 'Within', RelativeTolerance(.001))); 
 %                 IsEqualTo([1.5420 1.1020; 1.5525 1.0025; 1.7462 1.0732], 'Within', RelativeTolerance(.001))); 
             % was [1.4580 1.2933; 1.5080 1.2067; 1.6562 1.3500] at pi/6
-            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), 11);
-            testCase.assertEqual(script.ec.animal.hippocampalFormation.placeOutputIndices(), [50 146]); 
+            testCase.assertEqual(script.ec.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), 8);
+            testCase.assertEqual(script.ec.animal.hippocampalFormation.placeOutputIndices(), [116 132]); 
         end       
 
     end
