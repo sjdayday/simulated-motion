@@ -114,11 +114,7 @@ classdef MotorCortex < System
             obj.behaviorHistory = [];
             obj.remainingDistance = steps; 
             while (obj.remainingDistance > 0)
-                if (obj.simulatedMotion)
-                    obj.nextRandomSimulatedNavigation(); 
-                else
-                    obj.nextRandomNavigation(); 
-                end
+                obj.navigationStatus.nextStatus();
             end
         end
         % orient(true) when placed, else orient(false), cause activation
@@ -153,41 +149,6 @@ classdef MotorCortex < System
            obj.animal.hippocampalFormation.orienting = false;            
  
         end
-        function nextRandomNavigation(obj)
-           obj.debugSteps = obj.debugSteps + 1;  
-           disp(['nextRandomNavigation debugSteps: ',num2str(obj.debugSteps)]);
-           if (obj.simulationSettleRequired)
-              obj.nextRandomSimulatedNavigation(); 
-           end
-           if (obj.pendingSimulationOff)
-              disp('simulation off');  
-              obj.simulationOff(); 
-              obj.pendingSimulationOff = false; 
-           end           
-           steps = obj.randomSteps(); 
-           if (steps == 0)
-               obj.exitNavigation(); 
-           else
-               if obj.turnAwayFromWhiskersTouching(steps)
-                   disp('turning away from whiskers touching'); 
-                   behavior = obj.turnBehavior; 
-                   obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-%                elseif (obj.simulationSettleRequired)
-%                    obj.nextRandomSimulatedNavigation(); 
-               else
-                   if (obj.navigateFirstSimulatedRun)
-                       disp('about to retraceFirstSimulatedRun');
-                       nextBehavior = obj.retraceFirstSimulatedRun(steps); 
-                       behavior = nextBehavior(1);
-                   else
-                       disp(['not navigateFirstSimulatedRun, about to turn or run ',num2str(steps)]); 
-                       behavior = obj.turnOrRun(steps);
-                   end
-                   obj.updateBehaviorHistory(behavior, steps); 
-%                    obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
-               end
-           end
-        end
         function updateBehaviorHistory(obj, behavior, steps)
            obj.behaviorHistory = [obj.behaviorHistory; [behavior steps obj.clockwiseness]];                
         end
@@ -199,48 +160,6 @@ classdef MotorCortex < System
            obj.navigation.behaviorStatus.finish = true;
            obj.navigation.behaviorStatus.waitForInput(false); 
            obj.navigation.behaviorStatus.isDone = true;
-        end
-        function nextRandomSimulatedNavigation(obj)
-           disp('nextRandomSimulatedNavigation'); 
-           if (obj.pendingSimulationOn)
-              disp('simulation on'); 
-              obj.simulationOn();  
-              obj.pendingSimulationOn = false; 
-           end
-           steps = obj.randomSteps(); 
-           if (steps == 0)
-              disp('no remaining steps...exiting'); 
-              obj.navigation.behaviorStatus.finish = true;
-              obj.navigation.behaviorStatus.waitForInput(false); 
-              obj.navigation.behaviorStatus.isDone = true;
-           else
-               if (obj.simulationSettleRequired)
-                    disp('simulationSettleRequired, about to settle'); 
-                    obj.simulationSettleRequired = false; 
-                    % to settle, must be in simulation...
-                    turned = obj.settlePhysical(); 
-                    if (~turned)
-%                         if (obj.simulatedMotion)                        
-                        % ...but if pending off, next move should not be simulated; exit to real 
-                        if ((obj.simulatedMotion) && (~obj.pendingSimulationOff))
-                            disp(['simulated move, about to turn or run ',num2str(steps)]); 
-                            obj.simulatedMove(steps);                    
-                        else
-                            obj.nextRandomNavigation(); 
-                        end
-                    end
-               else
-                   disp(['not simulationSettleRequired, simulated move, about to turn or run ',num2str(steps)]); 
-                   obj.simulatedMove(steps);
-               end
-           end
-        end
-        function simulatedMove(obj, steps)
-              obj.simulationSettleRequired = true;  
-              behavior = obj.turnOrRun(steps);
-              obj.simulatedBehaviorHistory = [obj.simulatedBehaviorHistory; [behavior steps obj.clockwiseness]];                
-              disp('obj.simulatedBehaviorHistory: '); 
-              disp(obj.simulatedBehaviorHistory);             
         end
         function simulationOn(obj)
             obj.simulatedMotion = true; 

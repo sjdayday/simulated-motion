@@ -78,11 +78,12 @@ classdef MotorCortexTest < AbstractTest
             motorCortex.clockwiseTurn();
             result = motorCortex.markedPlaceReport.toCharArray()'; 
             testCase.assertEqual(result, ...
-               ['Move.Enabled: Default=1  ' newline,  ...
-                'Move.Turn.Clockwise: Default=1  ' newline, ... 
-                'Move.Turn.Distance: Default=2  ' newline, ...                 
-                'Move.Turn.Speed: Default=1  ' newline, ...
-                'Move.TurnMotion: Default=1  ' newline]);
+               ['Move.Clockwise: Default=1  ' newline,  ...
+                'Move.Distance: Default=2  ' newline, ... 
+                'Move.Enabled: Default=1  ' newline, ...                 
+                'Move.Speed: Default=1  ' newline, ...
+                'Move.Turn: Default=1  ' newline]);
+            
         end
         function testExpectedPlacesAreMarkedAfterNavigateZeroSteps(testCase)
             env = Environment();
@@ -715,41 +716,37 @@ classdef MotorCortexTest < AbstractTest
 %             motorCortex.setSimulatedMotion(true); 
             motorCortex.simulationOn(); 
             motorCortex.maxBehaviorSteps = 3; 
+            lastStatus = []; 
+            updateAll = true; 
+            motorCortex.navigationStatus = NavigationStatusSimulatedRandom(motorCortex, updateAll, lastStatus); 
+            
             motorCortex.randomNavigation(15);
             motorCortex.settlePhysical(); 
+%             motorCortex.navigationStatus.nextStatus(); % force final settle
+            disp('motorCortex.simulatedBehaviorHistory: ');     
             disp(motorCortex.simulatedBehaviorHistory); 
-        %      1     2     1
-        %     11     2    -1
-        %      2     2     0
-        %      2     3     0
-        %      1     1     1
-        %     11     1    -1  
-        
 %      1     2     1
-%     11     2    -1
-%      2     2     0
-%      2     1     0
+%      1     3    -1
+%      1     3     1
 %      1     2    -1
-%     11     2     1
-%      2     3     0        
+%      2     2     0
+%      2     3     0            
              testCase.assertEqual(motorCortex.simulatedBehaviorHistory(1,:), [1 2 1], ...
                 'counter clockwise turn 2');
-             testCase.assertEqual(motorCortex.simulatedBehaviorHistory(2,:), [11 2 -1], ...
-                'reverse counter clockwise turn 2');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [2 2 0], ...
-                'run for 2, settle consumes addtl steps');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [2 1 0], ...
-                'run for 1, settle consumes addtl steps');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [1 2 -1], ...
-                'counterclockwise turn 1');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(6,:), [11 2 1], ...
-                'reverse counterclockwise turn 1');
-            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(7,:), [2 3 0], ...
-                'run for 3');
+             testCase.assertEqual(motorCortex.simulatedBehaviorHistory(2,:), [1 3 -1], ...
+                'clockwise turn 3');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(3,:), [1 3 1], ...
+                'counter clockwise turn 3');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(4,:), [1 2 -1], ...
+                'clockwise turn 2');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(5,:), [2 2 0], ...
+                'run 2');
+            testCase.assertEqual(motorCortex.simulatedBehaviorHistory(6,:), [2 3 0], ...
+                'run 3');
 
             
             testCase.assertEqual(testCase.animal.hippocampalFormation.headDirectionSystem.getMaxActivationIndex(), ...
-                18, 's/b 17 if all turns successfully reversed'); 
+                17, 's/b 17 if all turns successfully reversed'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(1).getMaxActivationIndex(), ...
                 25, 'grids settled back'); 
             testCase.assertEqual(testCase.animal.hippocampalFormation.grids(2).getMaxActivationIndex(), ... 
