@@ -77,7 +77,7 @@
             <name>
                 <value>CleaningUp</value>
                 <graphics>
-                    <offset x="46.0" y="43.0"/>
+                    <offset x="59.0" y="43.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -131,7 +131,7 @@
             <name>
                 <value>Continuing</value>
                 <graphics>
-                    <offset x="85.0" y="32.0"/>
+                    <offset x="89.0" y="12.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -428,7 +428,7 @@
             <name>
                 <value>Turned</value>
                 <graphics>
-                    <offset x="-5.0" y="35.0"/>
+                    <offset x="10.0" y="41.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -507,7 +507,7 @@
             <name>
                 <value>Stop</value>
                 <graphics>
-                    <offset x="37.0" y="29.0"/>
+                    <offset x="37.0" y="21.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -559,7 +559,7 @@
             <name>
                 <value>Continue</value>
                 <graphics>
-                    <offset x="46.0" y="-1.0"/>
+                    <offset x="61.0" y="17.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -682,6 +682,32 @@
                 <value>1</value>
             </rate>
         </transition>
+        <transition id="CleanFinish">
+            <graphics>
+                <position x="725.0" y="134.0"/>
+            </graphics>
+            <name>
+                <value>T0</value>
+                <graphics>
+                    <offset x="-2.0" y="27.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
         <transition id="Prepare">
             <graphics>
                 <position x="332.0" y="114.0"/>
@@ -736,7 +762,7 @@
         </transition>
         <transition id="Clean2">
             <graphics>
-                <position x="596.0" y="216.0"/>
+                <position x="595.0" y="222.0"/>
             </graphics>
             <name>
                 <value>Clean2</value>
@@ -762,12 +788,12 @@
         </transition>
         <transition id="Clean1">
             <graphics>
-                <position x="592.0" y="206.0"/>
+                <position x="591.0" y="212.0"/>
             </graphics>
             <name>
                 <value>Clean1</value>
                 <graphics>
-                    <offset x="-14.0" y="20.0"/>
+                    <offset x="-16.0" y="22.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -833,6 +859,32 @@
             </priority>
             <orientation>
                 <value>0</value>
+            </orientation>
+            <rate>
+                <value>1</value>
+            </rate>
+        </transition>
+        <transition id="Clean3">
+            <graphics>
+                <position x="607.0" y="202.0"/>
+            </graphics>
+            <name>
+                <value>T0</value>
+                <graphics>
+                    <offset x="-20.0" y="21.0"/>
+                </graphics>
+            </name>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <timed>
+                <value>false</value>
+            </timed>
+            <priority>
+                <value>1</value>
+            </priority>
+            <orientation>
+                <value>90</value>
             </orientation>
             <rate>
                 <value>1</value>
@@ -928,8 +980,8 @@
         </arc>
         <arc id="Finish TO CleaningDirection" source="Finish" target="CleaningDirection">
             <arcpath id="" x="741.0" y="144.0" curvePoint="false"/>
-            <arcpath id="" x="769.0" y="437.0" curvePoint="false"/>
-            <arcpath id="" x="95.0" y="436.0" curvePoint="false"/>
+            <arcpath id="" x="768.0" y="443.0" curvePoint="false"/>
+            <arcpath id="" x="94.0" y="442.0" curvePoint="false"/>
             <arcpath id="" x="94.0" y="264.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
@@ -1024,12 +1076,28 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="Stopped TO CleanFinish" source="Stopped" target="CleanFinish">
+            <arcpath id="" x="740.0" y="368.0" curvePoint="false"/>
+            <arcpath id="" x="730.0" y="164.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
         <arc id="Turned TO Continue" source="Turned" target="Continue">
             <arcpath id="" x="651.0" y="264.0" curvePoint="false"/>
             <arcpath id="" x="651.0" y="209.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Ongoing TO CleanFinish" source="Ongoing" target="CleanFinish">
+            <arcpath id="" x="659.0" y="132.0" curvePoint="false"/>
+            <arcpath id="" x="725.0" y="149.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="ObjectSensed TO Stop" source="ObjectSensed" target="Stop">
@@ -1113,16 +1181,32 @@
             </inscription>
         </arc>
         <arc id="CleaningUp TO Clean2" source="CleaningUp" target="Clean2">
-            <arcpath id="" x="598.0" y="319.0" curvePoint="false"/>
-            <arcpath id="" x="601.0" y="236.0" curvePoint="false"/>
+            <arcpath id="" x="597.0" y="319.0" curvePoint="false"/>
+            <arcpath id="" x="600.0" y="242.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
+        <arc id="Continuing TO Clean3" source="Continuing" target="Clean3">
+            <arcpath id="" x="551.0" y="198.0" curvePoint="false"/>
+            <arcpath id="" x="597.0" y="217.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
+        <arc id="CleaningUp TO Clean3" source="CleaningUp" target="Clean3">
+            <arcpath id="" x="599.0" y="319.0" curvePoint="false"/>
+            <arcpath id="" x="612.0" y="222.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="Continuing TO Clean1" source="Continuing" target="Clean1">
-            <arcpath id="" x="551.0" y="200.0" curvePoint="false"/>
-            <arcpath id="" x="582.0" y="221.0" curvePoint="false"/>
+            <arcpath id="" x="550.0" y="201.0" curvePoint="false"/>
+            <arcpath id="" x="581.0" y="227.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1130,7 +1214,7 @@
         </arc>
         <arc id="CleaningUp TO Clean1" source="CleaningUp" target="Clean1">
             <arcpath id="" x="597.0" y="319.0" curvePoint="false"/>
-            <arcpath id="" x="597.0" y="226.0" curvePoint="false"/>
+            <arcpath id="" x="596.0" y="232.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
@@ -1240,9 +1324,17 @@
                 <value>Default,1</value>
             </inscription>
         </arc>
+        <arc id="Turned TO Clean3" source="Turned" target="Clean3">
+            <arcpath id="" x="643.0" y="266.0" curvePoint="false"/>
+            <arcpath id="" x="612.0" y="222.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
+            </inscription>
+        </arc>
         <arc id="Turned TO Clean2" source="Turned" target="Clean2">
-            <arcpath id="" x="640.0" y="269.0" curvePoint="false"/>
-            <arcpath id="" x="616.0" y="231.0" curvePoint="false"/>
+            <arcpath id="" x="639.0" y="269.0" curvePoint="false"/>
+            <arcpath id="" x="615.0" y="237.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
                 <value>Default,1</value>
