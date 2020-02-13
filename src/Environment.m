@@ -222,13 +222,15 @@ classdef Environment < System
         % note that lower left in the arena, e.g., 0.1, 0.1, is upper left
         % in the matrix: (1, 1).  Also, the x position in the arena is the   
         % column in the matrix, and the y position is the row
+        % Note guards on row and column, otherwise gridSquares is resized
+        % dynamically. 
         function calculateGridSquare(obj, position)
             column = ceil(position(1) / obj.hardcodedGridDimension); 
             row = ceil(position(2) / obj.hardcodedGridDimension); 
-            if ((row > 0) && (column > 0)) 
+            if ((row > 0) && (column > 0)  && (row <= 10) && (column <= 10) ) 
                 obj.gridSquares(row, column) = 1;
             else
-                disp(['Error:  Environment.calculateGridSquare, position gives invalid grid square: ',mat2str(position)]);
+                disp(['Environment.calculateGridSquare, position gives invalid grid square, possibly due to simulated run beyond environment walls: ',mat2str(position),' row: ',num2str(row),' column: ',num2str(column)]);
             end
         end
         function arenaDisplay = showGridSquares(obj)

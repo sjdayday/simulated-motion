@@ -300,5 +300,26 @@ classdef EnvironmentTest < AbstractTest
             testCase.assertEqual(env.gridSquareTotal(), 4);
             testCase.assertEqual(env.gridSquarePercent(), 0.04);
         end
+        function testInvalidPositionsNotAddedToGridSquares(testCase)
+            env = Environment();
+            env.addWall([0 0],[0 2]); 
+            env.addWall([0 2],[2 2]); 
+            env.addWall([0 0],[2 0]); 
+            env.addWall([2 0],[2 2]);
+            
+%             env.distanceIntervals = 8;
+%             env.directionIntervals = 60;
+%             env.center = [1 1]; 
+            env.build();  
+
+            % explicit build for gridSquares because will need to
+            % re-initialize when parameters change in long test run
+            env.buildGridSquares(); 
+            testCase.assertEqual(size(env.gridSquares), [10 10]);
+            env.calculateGridSquare([-0.1, 0.1]);
+            testCase.assertEqual(size(env.gridSquares), [10 10]);
+            env.calculateGridSquare([0.1, 4.1]);
+            testCase.assertEqual(size(env.gridSquares), [10 10]);
+        end
     end
 end
