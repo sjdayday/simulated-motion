@@ -86,7 +86,7 @@ classdef Animal < System
         simulatedDistanceTraveled
         xSimulated
         ySimulated
-
+        ripples
     end
     methods
         function obj = Animal()
@@ -150,7 +150,8 @@ classdef Animal < System
             obj.nStabilizationSteps = 3; 
             obj.simulatedMotion = false; 
             obj.hdsMinimumVelocity = pi/20; 
-            obj.hdsAnimalVelocityCalibration = 1.0;                   
+            obj.hdsAnimalVelocityCalibration = 1.0; 
+            obj.ripples = 4; % default
         end
         function build(obj)
             obj.hippocampalFormation = HippocampalFormation();
@@ -186,6 +187,7 @@ classdef Animal < System
             obj.buildInitialVertices(); 
             obj.controller.build(); 
             obj.motorCortex.keepRunnerForReporting = obj.keepRunnerForReporting; 
+            obj.motorCortex.ripples = obj.ripples; 
 %             obj.setChildTimekeeper(obj); 
         end
         function setChildTimekeeper(obj, timekeeper) 

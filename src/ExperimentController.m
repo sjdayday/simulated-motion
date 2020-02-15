@@ -68,6 +68,7 @@ classdef ExperimentController < System
         startingScenario
         runningScenario
         cleanReporterFilesForTesting
+        ripples
     end
     methods
         function obj = ExperimentController()
@@ -104,6 +105,7 @@ classdef ExperimentController < System
             obj.runningScenario = false; 
             obj.seed = uint32(0); % duplicates initialization in System 
             obj.cleanReporterFilesForTesting = false; 
+            obj.ripples = 4; % default
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -188,7 +190,7 @@ classdef ExperimentController < System
             obj.animal.minimumRunVelocity = obj.minimumRunVelocity; 
             obj.animal.minimumVelocity = obj.minimumTurnVelocity; 
             obj.animal.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration;                   
-            
+            obj.animal.ripples = obj.ripples; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 

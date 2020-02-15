@@ -478,6 +478,39 @@
                 </status>
             </toolspecificplace>
         </place>
+        <place id="RippleCount">
+            <graphics>
+                <position x="841.0" y="574.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,4</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
         <place id="Ripples">
             <graphics>
                 <position x="668.0" y="259.0"/>
@@ -923,7 +956,7 @@
             <arcpath id="" x="668.0" y="274.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,4</value>
+                <value>Default,#(RippleCount)</value>
             </inscription>
         </arc>
         <arc id="Rest TO Energy" source="Rest" target="Energy">
@@ -940,7 +973,7 @@
             <arcpath id="" x="670.0" y="266.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,4</value>
+                <value>Default,#(RippleCount)</value>
             </inscription>
         </arc>
         <arc id="FinishKnown TO Done" source="Finish" target="Done">

@@ -5,13 +5,14 @@ classdef ReporterTest < AbstractTest
             tag = '0123EF456';
             pipeTag = 'v1.2.1'; 
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
-            animal = Animal(); 
+            animal = Animal();
+            animal.build(); 
             filepath = '../test/logs/';
             reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
             reporter.cleanFilesForTesting(); 
             reporter.buildFiles(); 
             testCase.assertEqual(reporter.getHeader(), ...
-                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent"'); 
+                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","sparsePlaceId","ripples","grids","headDirectionCells"'); 
             testCase.assertEqual(reporter.getDiaryFile(), ...
                 '../test/logs/2020-01-19--16-00-55_diary.txt'); 
             testCase.assertEqual(reporter.getStepFile(), ...
@@ -21,12 +22,27 @@ classdef ReporterTest < AbstractTest
             reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06); 
             reporter.closeStepFile(); 
         end
+        function testReporterLogsParameters(testCase)
+            seed = uint32(123456); 
+            tag = '0123EF456';
+            pipeTag = 'v1.2.1'; 
+            formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
+            animal = Animal();
+            animal.build(); 
+            filepath = '../test/logs/';
+            reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
+            testCase.assertEqual(reporter.sparsePlaceId, false);
+            testCase.assertEqual(reporter.ripples, 4);
+            testCase.assertEqual(reporter.grids, 4);
+            testCase.assertEqual(reporter.headDirectionCells, 60);
+        end
         function testBuildRecordFieldsExceptSuccessfulRetraceTrue(testCase)
             seed = uint32(123456); 
             tag = '0123EF456';
             pipeTag = 'v1.2.1'; 
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
             animal = Animal(); 
+            animal.build(); 
             filepath = '../test/logs/';
             reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
             animal.showHippocampalFormationECIndices = true; 

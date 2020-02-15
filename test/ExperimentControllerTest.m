@@ -37,6 +37,7 @@ classdef ExperimentControllerTest < AbstractTest
 %             controller.runScenarios(1, 3000); 
 % % %             controller.totalSteps = 10; % 28
 %             disp(controller.environment.showGridSquares()); 
+% %             disp(controller.environment.showGridSquares()); 
 %         end
         function testRunMultipleScenarios(testCase)
             % runScenario initialize HDS, does navigation?

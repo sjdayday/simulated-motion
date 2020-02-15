@@ -52,6 +52,7 @@ classdef MotorCortex < System
         successfulRetrace
         moveHelper
         navigationStatus
+        ripples
     end
     methods
         function obj = MotorCortex(animal)
@@ -99,6 +100,7 @@ classdef MotorCortex < System
             obj.currentBehavior = 0;
             obj.simulatedRunPlaces = {}; 
             obj.successfulRetrace = false; 
+            obj.ripples = 4; % default
             obj.moveHelper = MoveHelper(obj);
             lastStatus = []; 
             updateAll = true; 
@@ -281,6 +283,7 @@ classdef MotorCortex < System
             obj.navigation.behaviorStatus.firingLimit = obj.firingLimit; 
             obj.navigation.behaviorStatus.keepRunnerForReporting = obj.keepRunnerForReporting; 
             obj.navigation.behaviorStatus.readyAcknowledgeBuildsPlaceReport = obj.readyAcknowledgeBuildsPlaceReport; 
+            obj.navigation.behaviorStatus.ripples = obj.ripples; 
             obj.navigation.build(); 
             obj.runner = obj.navigation.runner; 
 %             obj.runner.setFiringDelay(10); 

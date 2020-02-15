@@ -10,6 +10,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
          moveBehaviorStatus
          finish
          initialized
+         ripples
     end
     methods
          function obj = NavigateBehaviorStatusStandalone(prefix, runner)
@@ -40,6 +41,7 @@ classdef NavigateBehaviorStatusStandalone < BehaviorStatus
                 obj.moveBehaviorStatus.turn = obj.turn; 
                 obj.moveBehaviorStatus.markPlaces(); 
             else 
+                obj.markPlaceMultipleTokens([obj.prefix, 'RippleCount'], obj.ripples); 
                 obj.initialized = true;
             end
         end

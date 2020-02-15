@@ -19,6 +19,10 @@ classdef Reporter < handle
         gridSquarePercent
         retracedTrajectory
         successfulRetrace
+        sparsePlaceId
+        ripples
+        grids
+        headDirectionCells
     end
     methods 
         function obj = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal)
@@ -33,6 +37,7 @@ classdef Reporter < handle
             obj.simulated = false; 
             obj.gridSquarePercent = 0.0;
             obj.successfulRetrace = false; 
+            obj.buildParameterFields();
         end
         function setTimekeeper(obj, timekeeper) 
            obj.timekeeper = timekeeper; 
@@ -60,7 +65,7 @@ classdef Reporter < handle
            obj.stepFileId = fopen( obj.getStepFile(), 'a' );            
         end
         function header = getHeader(obj)
-           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent"';
+           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","sparsePlaceId","ripples","grids","headDirectionCells"';
         end
         function diaryFile = getDiaryFile(obj)
            diaryFile = [obj.filepath,obj.formattedDateTime,'_diary.txt'];  
@@ -84,10 +89,15 @@ classdef Reporter < handle
                 obj.retracedTrajectory, obj.successfulRetrace, obj.gridSquarePercent)
         end
         function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquarePercent)
-           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent);
+           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f,%d,%d,%d,%d\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent,obj.sparsePlaceId,obj.ripples,obj.grids,obj.headDirectionCells);
 %             12,'[19 108]',1,2,0,1,0,75);  
         end
-        
+        function buildParameterFields(obj)
+            obj.sparsePlaceId = obj.animal.sparseOrthogonalizingNetwork; 
+            obj.ripples = obj.animal.ripples; 
+            obj.grids = obj.animal.hippocampalFormation.nGrids; 
+            obj.headDirectionCells = obj.animal.nHeadDirectionCells;            
+        end
         function cleanFilesForTesting(obj)
             diary off; 
             obj.deleteFile(obj.getDiaryFile()); 

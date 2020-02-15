@@ -9,7 +9,7 @@
             <name>
                 <value>Done</value>
                 <graphics>
-                    <offset x="87.0" y="31.0"/>
+                    <offset x="59.0" y="38.0"/>
                 </graphics>
             </name>
             <capacity>
@@ -109,7 +109,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/>  
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -313,7 +313,7 @@
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
-                    <merge type="away"/> 
+                    <merge type="away"/>
                     <external>
                         <value>true</value>
                     </external>
@@ -471,6 +471,39 @@
                     <offset x="0.0" y="0.0"/>
                 </graphics>
                 <value>Default,0</value>
+            </initialMarking>
+            <toolspecificplace tool="PIPE" version="5">
+                <status>
+                    <external>
+                        <value>true</value>
+                    </external>
+                    <inputOnly>
+                        <value>true</value>
+                    </inputOnly>
+                    <outputOnly>
+                        <value>false</value>
+                    </outputOnly>
+                </status>
+            </toolspecificplace>
+        </place>
+        <place id="RippleCount">
+            <graphics>
+                <position x="841.0" y="574.0"/>
+            </graphics>
+            <name>
+                <value>P0</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <capacity>
+                <value>0</value>
+            </capacity>
+            <initialMarking>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+                <value>Default,4</value>
             </initialMarking>
             <toolspecificplace tool="PIPE" version="5">
                 <status>
@@ -794,7 +827,7 @@
             <name>
                 <value>Finish</value>
                 <graphics>
-                    <offset x="85.0" y="11.0"/>
+                    <offset x="48.0" y="5.0"/>
                 </graphics>
             </name>
             <infiniteServer>
@@ -931,7 +964,7 @@
             <arcpath id="" x="668.0" y="274.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,4</value>
+                <value>Default,#(Navigate.RippleCount)</value>
             </inscription>
         </arc>
         <arc id="Rest TO Energy" source="Rest" target="Energy">
@@ -948,7 +981,7 @@
             <arcpath id="" x="670.0" y="266.0" curvePoint="false"/>
             <type value="normal"/>
             <inscription>
-                <value>Default,4</value>
+                <value>Default,#(Navigate.RippleCount)</value>
             </inscription>
         </arc>
         <arc id="FinishKnown TO Done" source="Finish" target="Done">
