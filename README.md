@@ -11,7 +11,9 @@ https://github.com/sarahtattersall/PIPECore/tree/hierarchical-nets
 
 Once PIPECore is installed, run its tests; they should run without errors.  
 
-In order to run Petrinets under Matlab, the entire classpath needs to be added to the Matlab classpath.  
+In order to run Petrinets under Matlab, the pipecore jar needs to be added to the Matlab classpath:  
+https://github.com/sarahtattersall/PIPECore/releases/download/pipe-core--2.0.0/pipe-core-2.0.0.jar
+
 Although similar function is available through the dynamic javaclasspath command,
 what seemed to work best for me was to update the classpath file directly.  
 
@@ -19,27 +21,9 @@ On my mac, this was:
 
 /Applications/MATLAB_R2018b.app/toolbox/local/classpath.txt
  
-Adjust for your Matlab installation, and add entries, specifying a full path:
+Adjust for your Matlab installation, and add entries, specifying a full path to the downloaded jar:
 ``` 
-[complete path to your maven repository]/.m2/repository/uk/ac/imperial/pipe-markov-chain/1.1.2-SNAPSHOT/pipe-markov-chain-1.1.2-SNAPSHOT.jar
-[complete path to your maven repository]/.m2/repository/uk/ac/imperial/pipe-core/2.0.0-beta-2-SNAPSHOT/pipe-core-2.0.0-beta-2-SNAPSHOT.jar
-[complete path to your maven repository]/.m2/repository/org/antlr/antlr4/4.5.3/antlr4-4.5.3.jar
-[complete path to your maven repository]/.m2/repository/org/antlr/antlr4-runtime/4.5.3/antlr4-runtime-4.5.3.jar
-[complete path to your maven repository]/.m2/repository/com/google/guava/guava/17.0/guava-17.0.jar
-[complete path to your maven repository]/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar
-[complete path to your maven repository]/.m2/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar
-[complete path to your maven repository]/.m2/repository/commons-collections/commons-collections/3.0/commons-collections-3.0.jar
-[complete path to your maven repository]/.m2/repository/commons-io/commons-io/1.3.2/commons-io-1.3.2.jar
-[complete path to your maven repository]/.m2/repository/com/esotericsoftware/kryo/kryo/2.24.0/kryo-2.24.0.jar
-[complete path to your maven repository]/.m2/repository/com/esotericsoftware/minlog/minlog/1.2/minlog-1.2.jar
-[complete path to your maven repository]/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar
-[complete path to your maven repository]/.m2/repository/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar
-[complete path to your maven repository]/.m2/repository/org/apache/logging/log4j/log4j-core/2.3/log4j-core-2.3.jar
-[complete path to your maven repository]/.m2/repository/org/apache/logging/log4j/log4j-api/2.3/log4j-api-2.3.jar
-[complete path to your maven repository]/.m2/repository/org/objenesis/objenesis/2.1/objenesis-2.1.jar
-[complete path to your maven repository]/.m2/repository/de/twentyeleven/skysail/jgraphx-osgi/1.10.3.1/jgraphx-osgi-1.10.3.1.jar
-[complete path to your maven repository]/.m2/repository/javax/json/javax.json-api/1.0/javax.json-api-1.0.jar
-[complete path to your maven repository]/.m2/repository/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar
+/Users/steve/PIPE/pipe-core-2.0.0.jar
 ```
 
 This code was developed under Matlab R2018b, although some of it might run at lower versions.  
@@ -75,7 +59,7 @@ s = S4();
 s.runAll(); 
 ```
 
-Debugging of the PIPE Petri net java code may require updating the following file:
+If more detailed debugging of the PIPE Petri net java code is needed, you may need to update the following file:
  
 src/main/resources/log4j2.xml  in the PIPECore jar....
 
