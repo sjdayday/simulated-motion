@@ -10,8 +10,8 @@ classdef S20 < handle
             close all;
             obj.ec = ExperimentController(); 
             obj.ec.report = true; 
-            obj.ec.reportTag = '0123EF456';
-            obj.ec.reportPipeTag = 'v1.2.1'; 
+            obj.ec.reportTag = 'v1.0.0';
+            obj.ec.reportPipeTag = 'pipe-core--2.0.0'; 
             obj.ec.reportFilepath =  '../test/logs/';
 %             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
 %             obj.ec.reportFormattedDateTime = formattedDateTime;
@@ -83,9 +83,51 @@ classdef S20 < handle
 %             obj.ec.runHeadDirectionSystemForSteps(steps);            
         end
         function runAll(obj)
-            obj.ec.runScenarios(1, 30); 
+            % sparse placeID = 0; 
+            obj.ec.ripples = 6; % 2 mecoutput;  3 = 6 mecoutput 
+            nextScenario = 1; 
+            lastScenario = 1; 
+            obj.ec.runScenarios(nextScenario, lastScenario, 100); 
             disp(obj.ec.environment.showGridSquares()); 
-%             obj.ec.runHeadDirectionSystem();            
+%             obj.ec.runHeadDirectionSystem();           
         end
+%         function runAll(obj)
+%             % sparse placeID = 0; 
+%             obj.ec.nGridGains = 1; % 2 mecoutput;  3 = 6 mecoutput 
+%             nextScenario = 1; 
+%             lastScenario = 1; 
+%             obj.ec.runScenarios(nextScenario, lastScenario, 30); 
+%             disp(obj.ec.environment.showGridSquares()); 
+% %             obj.ec.runHeadDirectionSystem();           
+%         end
+%         function runAll(obj)
+%             % sparse placeID = 0; 
+%             obj.ec.sparseOrthogonalizingNetwork = false; 
+%             nextScenario = 1; 
+%             lastScenario = 1; 
+%             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
+%             disp(obj.ec.environment.showGridSquares()); 
+% %             obj.ec.runHeadDirectionSystem();           
+%         end
+%         function runAll(obj)
+%             % headDirectionCells = 60 
+%             obj.ec.nHeadDirectionCells = 60;
+%             obj.ec.nCueIntervals = 60;
+%             obj.ec.hdsMinimumVelocity = pi/30; 
+%             obj.ec.minimumTurnVelocity=pi/30;
+% 
+%             nextScenario = 1; 
+%             lastScenario = 1; 
+%             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
+%             disp(obj.ec.environment.showGridSquares()); 
+% %             obj.ec.runHeadDirectionSystem();            
+%         end
+%         function runAll(obj)
+%             nextScenario = 16; 
+%             lastScenario = 20; 
+%             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
+%             disp(obj.ec.environment.showGridSquares()); 
+% %             obj.ec.runHeadDirectionSystem();            
+%         end
     end
 end

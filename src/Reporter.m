@@ -17,6 +17,7 @@ classdef Reporter < handle
         turnOrRun
         simulated
         gridSquarePercent
+        saturationPercent
         retracedTrajectory
         successfulRetrace
         sparsePlaceId
@@ -65,7 +66,7 @@ classdef Reporter < handle
            obj.stepFileId = fopen( obj.getStepFile(), 'a' );            
         end
         function header = getHeader(obj)
-           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","sparsePlaceId","ripples","grids","headDirectionCells"';
+           header = '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","saturationPercent","sparsePlaceId","ripples","grids","headDirectionCells"';
         end
         function diaryFile = getDiaryFile(obj)
            diaryFile = [obj.filepath,obj.formattedDateTime,'_diary.txt'];  
@@ -79,17 +80,18 @@ classdef Reporter < handle
            obj.placeRecognized = obj.animal.hippocampalFormation.placeRecognized;
            obj.turnOrRun = obj.animal.motorCortex.currentBehavior; 
            obj.simulated = obj.animal.simulatedMotion; 
-           obj.gridSquarePercent = obj.animal.environment.gridSquarePercent(); 
+           obj.gridSquarePercent = obj.animal.environment.gridSquarePercent();
+           obj.saturationPercent = obj.animal.hippocampalFormation.placeSystem.saturation(); 
            obj.retracedTrajectory = obj.animal.motorCortex.navigateFirstSimulatedRun; 
            obj.successfulRetrace = obj.animal.motorCortex.successfulRetrace; 
         end
         function reportStep(obj)
             obj.buildStepFields(); 
             obj.writeRecord(obj.step, obj.placeId, obj.simulated, obj.turnOrRun, obj.placeRecognized, ...
-                obj.retracedTrajectory, obj.successfulRetrace, obj.gridSquarePercent)
+                obj.retracedTrajectory, obj.successfulRetrace, obj.gridSquarePercent, obj.saturationPercent);
         end
-        function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquarePercent)
-           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f,%d,%d,%d,%d\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent,obj.sparsePlaceId,obj.ripples,obj.grids,obj.headDirectionCells);
+        function writeRecord(obj, step, placeId, simulated, turnOrRun, placeRecognized, retracedTrajectory, successfulRetrace, gridSquarePercent, saturationPercent)
+           fprintf( obj.stepFileId, '%d,%d,%s,%d,%d,%d,%d,%d,%f,%f,%d,%d,%d,%d\n', obj.seed,step,placeId,simulated,turnOrRun,placeRecognized,retracedTrajectory,successfulRetrace,gridSquarePercent,saturationPercent,obj.sparsePlaceId,obj.ripples,obj.grids,obj.headDirectionCells);
 %             12,'[19 108]',1,2,0,1,0,75);  
         end
         function buildParameterFields(obj)

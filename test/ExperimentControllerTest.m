@@ -34,7 +34,7 @@ classdef ExperimentControllerTest < AbstractTest
 %             controller.build(); 
 %             controller.stepPause = 0;
 %             controller.resetSeed = false; 
-%             controller.runScenarios(1, 3000); 
+%             controller.runScenarios(1, 1, 3000); 
 % % %             controller.totalSteps = 10; % 28
 %             disp(controller.environment.showGridSquares()); 
 % %             disp(controller.environment.showGridSquares()); 
@@ -71,8 +71,10 @@ classdef ExperimentControllerTest < AbstractTest
             controller.minimumTurnVelocity=pi/10;
             controller.build(); 
             controller.stepPause = 0;
-            controller.resetSeed = false; 
-            controller.runScenarios(2, 10); 
+            controller.resetSeed = false;
+            next = 1; 
+            last = 2;
+            controller.runScenarios(next, last, 10); 
 % %             controller.totalSteps = 10; % 28
             testCase.assertEqual(controller.startingScenario, 2);
             testCase.assertEqual(controller.reporter.seed, uint32(2938499220)); 

@@ -46,9 +46,9 @@ classdef ExperimentController < System
         separateMecLec
         hdsPullsFeatureWeightsFromLec
 %        possible grid parms 
-%         nGridOrientations 
+        nGridOrientations 
 %         gridDirectionBiasIncrement             
-%         nGridGains
+        nGridGains
 %         baseGain 
         gridSize            
         thirdCue
@@ -83,6 +83,7 @@ classdef ExperimentController < System
             obj.rebuildHeadDirectionSystemFlag = true; 
             obj.nHeadDirectionCells = 60; 
             obj.gridSize = [10,9];
+            obj.nGridGains = 2; 
             obj.settleToPlace = false;
             obj.nCueIntervals = obj.nHeadDirectionCells; 
             obj.sparseOrthogonalizingNetwork = false; 
@@ -190,7 +191,8 @@ classdef ExperimentController < System
             obj.animal.minimumRunVelocity = obj.minimumRunVelocity; 
             obj.animal.minimumVelocity = obj.minimumTurnVelocity; 
             obj.animal.hdsAnimalVelocityCalibration = obj.hdsAnimalVelocityCalibration;                   
-            obj.animal.ripples = obj.ripples; 
+            obj.animal.ripples = obj.ripples;
+            obj.animal.nGridGains = obj.nGridGains; 
             obj.animal.h = obj.h;
             obj.animal.build(); 
                 obj.animal.hippocampalFormation.h = obj.h; 
@@ -553,15 +555,15 @@ classdef ExperimentController < System
 %             controller.reporter.buildFiles();  
             %             controller.
         end
-        function runScenarios(obj, scenarios, navigationSteps)
-           if (scenarios > 0) 
-               for ii = 1:scenarios
+        function runScenarios(obj, nextScenario, lastScenario, navigationSteps)
+           if (lastScenario > 0) 
+               for ii = nextScenario:lastScenario
                    obj.startingScenario = ii;
                    obj.runScenario(navigationSteps);
                end
            else
               disp('scenarios must be positive integer; exiting because was: ');
-              disp(scenarios); 
+              disp(lastScenario); 
            end
         end
         function setupDisplay(obj)

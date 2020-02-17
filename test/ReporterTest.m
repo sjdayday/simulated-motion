@@ -12,14 +12,14 @@ classdef ReporterTest < AbstractTest
             reporter.cleanFilesForTesting(); 
             reporter.buildFiles(); 
             testCase.assertEqual(reporter.getHeader(), ...
-                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","sparsePlaceId","ripples","grids","headDirectionCells"'); 
+                '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","saturationPercent","sparsePlaceId","ripples","grids","headDirectionCells"'); 
             testCase.assertEqual(reporter.getDiaryFile(), ...
                 '../test/logs/2020-01-19--16-00-55_diary.txt'); 
             testCase.assertEqual(reporter.getStepFile(), ...
                 '../test/logs/2020-01-19--16-00-55_step.csv'); 
             % TODO read and assert...
-            reporter.writeRecord(12,'[19 108]',1,2,0,1,0,0.05); 
-            reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06); 
+            reporter.writeRecord(12,'[19 108]',1,2,0,1,0,0.05,0.01); 
+            reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06,0.02); 
             reporter.closeStepFile(); 
         end
         function testReporterLogsParameters(testCase)
