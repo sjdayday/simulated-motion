@@ -69,6 +69,7 @@ classdef ExperimentController < System
         runningScenario
         cleanReporterFilesForTesting
         ripples
+        scenarioDelay
     end
     methods
         function obj = ExperimentController()
@@ -107,6 +108,7 @@ classdef ExperimentController < System
             obj.seed = uint32(0); % duplicates initialization in System 
             obj.cleanReporterFilesForTesting = false; 
             obj.ripples = 4; % default
+            obj.scenarioDelay = 0; 
         end
         function build(obj)
   %             obj.hFigures = figure; 
@@ -560,6 +562,7 @@ classdef ExperimentController < System
                for ii = nextScenario:lastScenario
                    obj.startingScenario = ii;
                    obj.runScenario(navigationSteps);
+                   pause(obj.scenarioDelay); % avoid conflict across threads
                end
            else
               disp('scenarios must be positive integer; exiting because was: ');
