@@ -951,6 +951,14 @@
                 <value>Default,10</value>
             </inscription>
         </arc>
+        <arc id="Finish TO Done" source="Finish" target="Done">
+            <arcpath id="" x="596.0" y="341.0" curvePoint="false"/>
+            <arcpath id="" x="666.0" y="364.0" curvePoint="false"/>
+            <type value="normal"/>
+            <inscription>
+                <value>Default,1</value>
+            </inscription>
+        </arc>
         <arc id="Rest TO Ripples" source="Rest" target="Ripples">
             <arcpath id="" x="596.0" y="274.0" curvePoint="false"/>
             <arcpath id="" x="668.0" y="274.0" curvePoint="false"/>
@@ -974,14 +982,6 @@
             <type value="normal"/>
             <inscription>
                 <value>Default,#(RippleCount)</value>
-            </inscription>
-        </arc>
-        <arc id="FinishKnown TO Done" source="Finish" target="Done">
-            <arcpath id="" x="596.0" y="341.0" curvePoint="false"/>
-            <arcpath id="" x="666.0" y="364.0" curvePoint="false"/>
-            <type value="normal"/>
-            <inscription>
-                <value>Default,1</value>
             </inscription>
         </arc>
         <arc id="NotUseEnergy TO Resources" source="NotUseEnergy" target="Resources">
@@ -1150,6 +1150,15 @@
             <type value="normal"/>
             <inscription>
                 <value>Default,#(Tired)</value>
+            </inscription>
+        </arc>
+        <arc id="Done TO Finish" source="Done" target="Finish">
+            <arcpath id="" x="665.0" y="368.0" curvePoint="false"/>
+            <arcpath id="" x="629.0" y="368.0" curvePoint="false"/>
+            <arcpath id="" x="596.0" y="341.0" curvePoint="false"/>
+            <type value="inhibitor"/>
+            <inscription>
+                <value></value>
             </inscription>
         </arc>
         <arc id="Resources TO UseEnergy" source="Resources" target="UseEnergy">

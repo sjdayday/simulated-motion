@@ -8,12 +8,12 @@ classdef S20 < handle
     methods 
         function runAll(obj)
             obj.ec.ripples = 2;
-            obj.ec.nGridGains = 1; % x 2 = grids
+            obj.ec.nGridGains = 3; % x 2 = grids
             obj.ec.nHeadDirectionCells = 60;
             obj.ec.nCueIntervals = 60;
             obj.ec.hdsMinimumVelocity = pi/30; 
             obj.ec.minimumTurnVelocity=pi/30;
-            nextScenario = 9; % > 1 is restart after previous problem  
+            nextScenario = 1; % > 1 is restart after previous problem  
             lastScenario = 20; 
             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
             disp(obj.ec.environment.showGridSquares()); 
@@ -23,7 +23,7 @@ classdef S20 < handle
             obj.ec = ExperimentController(); 
             obj.ec.scenarioDelay = 5; % 5 seconds between delays to avoid NPE between PetriNetRunner threads
             obj.ec.report = true; 
-            obj.ec.reportTag = 'v1.0.2';
+            obj.ec.reportTag = 'v1.0.4';
             obj.ec.reportPipeTag = 'pipe-core--2.0.0'; 
             obj.ec.reportFilepath =  '../test/logs/';
 %             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
