@@ -1,6 +1,6 @@
 %% LecSystem class:  simple model of Lateral Entorhinal Cortex (LEC)
 % Detects angles to cues in the Environment
-% Hard-coded expectation that there are three cues:  
+% LEC expects that there are two or three cues:  
 %  Environment first cue (most salient)
 %  Environment second cue
 %  Environment nearest wall or a third cue 

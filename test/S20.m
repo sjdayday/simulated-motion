@@ -7,7 +7,8 @@ classdef S20 < handle
     end
     methods 
         function runAll(obj)
-            obj.ec.ripples = 2;
+            obj.ec.sparseOrthogonalizingNetwork = false; 
+            obj.ec.ripples = 6;
             obj.ec.nGridGains = 3; % x 2 = grids
             obj.ec.nHeadDirectionCells = 60;
             obj.ec.nCueIntervals = 60;
