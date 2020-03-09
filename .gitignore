@@ -6,3 +6,4 @@ test/logs
 */savedResults.mat
 */*.m~
 */pathdef.m
+R/.Rapp.history
