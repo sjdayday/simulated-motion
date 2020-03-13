@@ -871,6 +871,21 @@ classdef MotorCortexTest < AbstractTest
 
             
         end
+
+        function testEvaluateRetraceForCurrentPlace(testCase)
+            testCase.buildAnimal(); 
+            motorCortex = testCase.animal.motorCortex; 
+            motorCortex.successfulRetrace = false; 
+            motorCortex.simulatedRunPlaces{1} = [ 1 2 3 4 5];
+            placeIndices = [1 2 3 4 5 6]; 
+            motorCortex.evaluateRetraceForCurrentPlace(placeIndices); 
+            testCase.assertTrue(motorCortex.successfulRetrace, ...
+                'simulated is proper subset of place');      
+            placeIndices = [ 3 4 5 6]; 
+            motorCortex.evaluateRetraceForCurrentPlace(placeIndices); 
+            testCase.assertFalse(motorCortex.successfulRetrace, ... 
+                'some simulated indices not in the place');      
+        end
         
         function testMovesAwayWhenWhiskersTouchWhileOrienting(testCase)
             testCase.placeMatchThreshold = 0;  

@@ -40,6 +40,7 @@ classdef NavigationStatusRandom < NavigationStatus
             % simulated run.  This is for reporting only.  
             if (obj.turnOffNavigateFirstSimulatedRun)
                obj.motorCortex.navigateFirstSimulatedRun = false; 
+               obj.motorCortex.successfulRetrace = false; % reset so no false positives  
             end
         end
         function turnAway = turnAwayFromWhiskersTouching(obj)

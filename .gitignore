@@ -7,3 +7,5 @@ test/logs
 */*.m~
 */pathdef.m
 R/.Rapp.history
+R/.RData
+R/.Rhistory

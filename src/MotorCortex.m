@@ -192,7 +192,7 @@ classdef MotorCortex < System
         function evaluateRetraceForCurrentPlace(obj, placeIndices) 
             simulatedIndices = obj.simulatedRunPlaces{1}; 
             anyMatches = ismember(simulatedIndices, placeIndices); % vector of logicals
-            obj.successfulRetrace = any(anyMatches);
+            obj.successfulRetrace = all(anyMatches);
         end
         function simulationOff(obj)
             obj.simulatedMotion = false; 
