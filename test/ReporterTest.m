@@ -7,16 +7,16 @@ classdef ReporterTest < AbstractTest
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
             animal = Animal();
             animal.build(); 
-            filepath = '../test/logs/';
+            filepath = '../test/testlogs/';
             reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
             reporter.cleanFilesForTesting(); 
             reporter.buildFiles(); 
             testCase.assertEqual(reporter.getHeader(), ...
                 '"seed","step","placeId","simulated","turn/run","placeRecognized","retracedTrajectory","successfulRetrace","gridSquarePercent","saturationPercent","sparsePlaceId","ripples","grids","headDirectionCells"'); 
             testCase.assertEqual(reporter.getDiaryFile(), ...
-                '../test/logs/2020-01-19--16-00-55_diary.txt'); 
+                '../test/testlogs/2020-01-19--16-00-55_diary.txt'); 
             testCase.assertEqual(reporter.getStepFile(), ...
-                '../test/logs/2020-01-19--16-00-55_step.csv'); 
+                '../test/testlogs/2020-01-19--16-00-55_step.csv'); 
             % TODO read and assert...
             reporter.writeRecord(12,'[19 108]',1,2,0,1,0,0.05,0.01); 
             reporter.writeRecord(13,'[64 110]',0,1,0,1,0,0.06,0.02); 
@@ -29,7 +29,7 @@ classdef ReporterTest < AbstractTest
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
             animal = Animal();
             animal.build(); 
-            filepath = '../test/logs/';
+            filepath = '../test/testlogs/';
             reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
             testCase.assertEqual(reporter.sparsePlaceId, false);
             testCase.assertEqual(reporter.ripples, 4);
@@ -43,7 +43,7 @@ classdef ReporterTest < AbstractTest
             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
             animal = Animal(); 
             animal.build(); 
-            filepath = '../test/logs/';
+            filepath = '../test/testlogs/';
             reporter = Reporter(filepath, formattedDateTime, seed, tag, pipeTag, animal); 
             animal.showHippocampalFormationECIndices = true; 
             animal.pullVelocityFromAnimal = false;             

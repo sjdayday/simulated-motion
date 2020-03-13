@@ -1,5 +1,7 @@
 test/diary.txt
 test/logs
+test/oldlogs*
+test/testlogs
 */simNeuralNetworkFunction.m
 */planNeuralNetworkFunction.m
 */testNeuralNetworkFunction.m
