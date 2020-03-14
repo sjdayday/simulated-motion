@@ -27,9 +27,9 @@ classdef S14 < handle
             obj.ec.nFeatures = 1; 
             obj.ec.hdsPullsFeatureWeightsFromLec = true;
             obj.ec.keepRunnerForReporting = true; % monitor for very large runs 
-            obj.ec.hdsMinimumVelocity = pi/10; 
+            obj.ec.hdsMinimumVelocity = pi/15; 
             obj.ec.minimumRunVelocity = 0.05; 
-            obj.ec.minimumTurnVelocity=pi/10;
+            obj.ec.minimumTurnVelocity=pi/15;
             obj.ec.build(); 
             if visual
                 obj.ec.setupDisplay(); 

@@ -7,13 +7,13 @@ classdef S20 < handle
     end
     methods 
         function runAll(obj)
-            obj.ec.sparseOrthogonalizingNetwork = false; 
-            obj.ec.ripples = 6;
-            obj.ec.nGridGains = 3; % x 2 = grids
-            obj.ec.nHeadDirectionCells = 60;
-            obj.ec.nCueIntervals = 60;
-            obj.ec.hdsMinimumVelocity = pi/30; 
-            obj.ec.minimumTurnVelocity=pi/30;
+            obj.ec.sparseOrthogonalizingNetwork = true; 
+            obj.ec.ripples = 2;
+            obj.ec.nGridGains = 2; % x 2 = grids
+%             obj.ec.nHeadDirectionCells = 60;
+%             obj.ec.nCueIntervals = 60;
+%             obj.ec.hdsMinimumVelocity = pi/30; 
+%             obj.ec.minimumTurnVelocity=pi/30;
             nextScenario = 1; % > 1 is restart after previous problem  
             lastScenario = 20; 
             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
@@ -24,7 +24,7 @@ classdef S20 < handle
             obj.ec = ExperimentController(); 
             obj.ec.scenarioDelay = 5; % 5 seconds between delays to avoid NPE between PetriNetRunner threads
             obj.ec.report = true; 
-            obj.ec.reportTag = 'v1.0.4';
+            obj.ec.reportTag = 'v1.0.6';
             obj.ec.reportPipeTag = 'pipe-core--2.0.0'; 
             obj.ec.reportFilepath =  '../test/logs/';
 %             formattedDateTime = char(datetime(2020,1,19,16,0,55, 'Format','yyyy-MM-dd--HH-mm-ss')); 
@@ -47,9 +47,9 @@ classdef S20 < handle
             obj.ec.nFeatures = 1; 
             obj.ec.hdsPullsFeatureWeightsFromLec = true;
             obj.ec.keepRunnerForReporting = true; % monitor for very large runs 
-            obj.ec.hdsMinimumVelocity = pi/10; 
+            obj.ec.hdsMinimumVelocity = pi/15; 
             obj.ec.minimumRunVelocity = 0.05; 
-            obj.ec.minimumTurnVelocity=pi/10;
+            obj.ec.minimumTurnVelocity=pi/15;
             obj.ec.build(); 
             obj.ec.stepPause = 0;
             obj.ec.resetSeed = false; 
