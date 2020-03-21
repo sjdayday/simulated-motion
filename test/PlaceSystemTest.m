@@ -20,6 +20,34 @@ classdef PlaceSystemTest < AbstractTest
             testCase.assertEqual(placeSystem.ECOutput, ...
              [ 1 1 1 1 1 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 ], ...
               'original MEC + LEC input');         
+            testCase.assertEqual(80, sum(sum(placeSystem.network)), ...
+              'number of activated synapses');         
+        end
+        function testPlaceSystemCreatedWithDGConnectedToCA3SparseInputs(testCase)
+            outputMecLength = 10; 
+            outputLecLength = 10;
+            placeSystem = PlaceSystem(outputMecLength, outputLecLength); 
+            placeSystem.DG.sparse = true;
+            placeSystem.DG.nMEC = 5; 
+            placeSystem.DG.separateMecLec = true;             
+            testCase.assertEqual(placeSystem.nMEC, 10); 
+            testCase.assertEqual(placeSystem.nLEC, 10); 
+            testCase.assertEqual(placeSystem.nDGInput, 20); 
+            testCase.assertEqual(placeSystem.nCA3, 20);
+            MecOutput = [ 1 1 1 1 1 0 0 0 0 0]; 
+            LecOutput = [ 1 0 1 0 1 0 1 0 1 0]; 
+            fired = placeSystem.step(MecOutput, LecOutput); 
+            testCase.assertEqual(placeSystem.DGOutput, ...
+             [ 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 ], ...
+             'only two outputs');
+            testCase.assertEqual(fired, ...
+             [ 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 ], ...
+              'input orthogonalized through DG, then fired as detonator synapses');
+            testCase.assertEqual(placeSystem.ECOutput, ...
+             [ 1 1 1 1 1 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 ], ...
+              'original MEC + LEC input');         
+            testCase.assertEqual(20, sum(sum(placeSystem.network)), ...
+              'number of activated synapses');         
         end
         function testPlaceSystemReturnsCa3OutputsFromFragmentaryEcOutputs(testCase)
             outputMecLength = 10; 

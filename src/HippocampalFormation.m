@@ -213,7 +213,7 @@ classdef HippocampalFormation < System
                          obj.grids(1,kk).h = obj.h; 
                     end
                 end
-                gain = gain * 1.42; 
+                gain = gain * 1.42; % based on observations in rats 
                 index = index + 1; 
             end
         end

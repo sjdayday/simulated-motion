@@ -188,15 +188,6 @@ classdef GridChartNetwork < System
             obj.jY = reshape(jy,1,[]);
             obj.iY = reshape(iy,1,[]);
             obj.weights = ones(obj.nCells); % W 
-            
-%                     positiveHorizontalWeights
-%         negativeHorizontalWeights
-%         positiveVerticalWeights
-%         negativeVerticalWeights
-%         horizonalWeightInputVector
-%         verticalWeightInputVector
-%         maxMotionWeight
-%         sigmaMotionWeight
             [obj.positiveWeights, obj.negativeWeights] = ... 
                 buildMotionWeights(obj, obj.weightInputVector);
         end

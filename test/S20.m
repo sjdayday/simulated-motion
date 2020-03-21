@@ -8,12 +8,12 @@ classdef S20 < handle
     methods 
         function runAll(obj)
             obj.ec.sparseOrthogonalizingNetwork = true; 
-            obj.ec.ripples = 2;
-            obj.ec.nGridGains = 2; % x 2 = grids
-%             obj.ec.nHeadDirectionCells = 60;
-%             obj.ec.nCueIntervals = 60;
-%             obj.ec.hdsMinimumVelocity = pi/30; 
-%             obj.ec.minimumTurnVelocity=pi/30;
+            obj.ec.ripples = 6;
+            obj.ec.nGridGains = 3; % x 2 = grids
+            obj.ec.nHeadDirectionCells = 60;
+            obj.ec.nCueIntervals = 60;
+            obj.ec.hdsMinimumVelocity = pi/30; 
+            obj.ec.minimumTurnVelocity=pi/30;
             nextScenario = 1; % > 1 is restart after previous problem  
             lastScenario = 20; 
             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
