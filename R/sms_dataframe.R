@@ -13,10 +13,10 @@ build_retracedf <- function(smsdf)
   library(dplyr)
   retracedf = smsdf %>%
   rename(turnRun = "turn/run") %>%
-  select(step, seed, turnRun, simulated, retracedTrajectory, successfulRetrace, sparsePlaceId, ripples, grids, headDirectionCells) %>%
+  select(step, seed, turnRun, simulated, retracedTrajectory, successfulRetrace, saturationPercent, sparsePlaceId, ripples, grids, headDirectionCells) %>%
   filter(simulated == 0, turnRun == 2, retracedTrajectory == 1) %>%
   group_by(sparsePlaceId, ripples, grids, headDirectionCells, seed) %>%
-  summarise(retracedTotal = sum(retracedTrajectory), successfulTotal = sum(successfulRetrace), successfulPercent = successfulTotal / retracedTotal)
+  summarise(retracedTotal = sum(retracedTrajectory), successfulTotal = sum(successfulRetrace), successfulPercent = successfulTotal / retracedTotal, step = max(step), saturationPercent = last(saturationPercent))
 
   retracedf
 }
@@ -25,6 +25,18 @@ build_retraceModel <- function(retracedf)
   fitretrace <- lm(successfulPercent ~ sparsePlaceId + ripples + grids + headDirectionCells, data=retracedf)
   summary(fitretrace)
   fitretrace
+}
+build_retraceModel2 <- function(retracedf)
+{
+  fitretrace2 <- lm(successfulPercent ~ sparsePlaceId + ripples + grids + headDirectionCells + step, data=retracedf)
+  summary(fitretrace2)
+  fitretrace2
+}
+build_retraceModel3 <- function(retracedf)
+{
+  fitretrace3 <- lm(successfulPercent ~ sparsePlaceId + ripples + grids + headDirectionCells + step + saturationPercent, data=retracedf)
+  summary(fitretrace3)
+  fitretrace3
 }
 build_gridSquarePercent_df <- function(smsdf, percent)
 {
