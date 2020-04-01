@@ -11,3 +11,4 @@ test/testlogs
 R/.Rapp.history
 R/.RData
 R/.Rhistory
+R/*.pdf
