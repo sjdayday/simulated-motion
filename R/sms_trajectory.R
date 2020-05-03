@@ -1,10 +1,23 @@
 # create data from sms files
-build_trajectorydf <- function()
+# awklog 2020-03-17--20-19-55_diary.txt > position-1-6-6-60.dat
+# (sparseness = 1, ripples = 6, grids = 6, head direction cells = 60)
+# build_one_pdf("position-1-6-6-60")
+build_one_pdf <- function(filename)
+{
+   trajectorydf <- build_trajectorydf(filename)
+   trajectorydf <- build_pointsdf(trajectorydf)
+   fullpdfname <- paste(filename,".pdf",sep="")
+   pdf(fullpdfname)
+   graph_segments(trajectorydf)
+   dev.off()
+}
+build_trajectorydf <- function(filename)
 {
   library(plyr)
   library(readr)
   smsdir <- "../test/logs"
-  smsfiles <- list.files(path=smsdir, pattern="*.dat", full.names=TRUE)
+  fullfilename <- paste(filename,".dat",sep="")
+  smsfiles <- list.files(path=smsdir, pattern=fullfilename, full.names=TRUE)
   trajectorydf <- ldply(smsfiles, read_csv)
   trajectorydf
 }
