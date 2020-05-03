@@ -15,10 +15,20 @@ classdef NavigationStatusRetraceSimulatedMoves < NavigationStatus
         function navigationStatus = nextStatus(obj)
             obj.debug(); 
             obj.moving = false; 
-            nextBehavior = obj.motorCortex.popNextSimulatedBehavior(); 
-            obj.behavior = nextBehavior(1); 
-            obj.steps = nextBehavior(2); 
-            obj.clockwiseness = nextBehavior(3); 
+%             nextBehavior = obj.motorCortex.popNextSimulatedBehavior(); 
+%             obj.behavior = nextBehavior(1); 
+%             obj.steps = nextBehavior(2); 
+%             obj.clockwiseness = nextBehavior(3); 
+%  Instead of reading the history of simulated moves, begin random moves
+            obj.steps = obj.motorCortex.randomSteps(); 
+            obj.behavior = randi(2); 
+            direction = randi([0,1]);
+            if direction 
+                obj.clockwiseness = obj.motorCortex.counterClockwise;                   
+            else
+                obj.clockwiseness = obj.motorCortex.clockwise; 
+            end
+
             if (obj.behavior == obj.motorCortex.reverseSimulatedTurnBehavior)
                 navigationStatus = ...
                     obj.immediateTransition(NavigationStatusRetraceSimulatedMoves(obj.motorCortex, obj.updateAll, obj)); 
