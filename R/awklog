@@ -1,0 +1,28 @@
+#!/usr/bin/awk -f 
+# that's where awk is on my mac; alternatively, it might be:  /bin/awk
+# read animal position out of diary file
+# write a csv file with time step and both physical and simulated position
+BEGIN { 
+   print "timestep,x,y,simx,simy"; 
+}
+{ 
+   OFS=",";
+   line = $0; 
+#  test = $2; 
+   step = $3; 
+   x = $7;
+   y = $9; 
+   if (substr(line,1,13) == "Animal   time") {
+      i = getline;
+      if (i > 0) {
+         line = line $0; 
+      } else {
+         printf("missing continuation ", NR); 
+      }
+   print step,x,y,$5,$7; 
+   }
+}
+#BEGIN { print "File\tOwner" }
+#{ print $2, "\t", $3}
+#END { print " - DONE -" }
+
