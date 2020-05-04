@@ -28,8 +28,10 @@ classdef NavigationStatusRetraceSimulatedMoves < NavigationStatus
             else
                 obj.clockwiseness = obj.motorCortex.clockwise; 
             end
-
-            if (obj.behavior == obj.motorCortex.reverseSimulatedTurnBehavior)
+            if (obj.steps == 0)
+                obj.moving = false; 
+                navigationStatus = obj.immediateTransition(NavigationStatusFinal(obj.motorCortex, obj.updateAll, obj)); 
+            elseif (obj.behavior == obj.motorCortex.reverseSimulatedTurnBehavior)
                 navigationStatus = ...
                     obj.immediateTransition(NavigationStatusRetraceSimulatedMoves(obj.motorCortex, obj.updateAll, obj)); 
             elseif (obj.behavior == obj.motorCortex.turnBehavior)
