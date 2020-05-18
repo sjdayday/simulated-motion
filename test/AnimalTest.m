@@ -605,7 +605,7 @@ classdef AnimalTest < AbstractTest
             testCase.assertEqual(testCase.environment.gridSquares(5, 6), 1) ...
             
         end
-        function testTracksSimulatedPositionAfterTurnAndRunForStatsReporting(testCase)
+        function testTracksSimulatedPositionAfterTurnAndRunForStatsReporting(testCase)           
             import matlab.unittest.constraints.IsEqualTo
             import matlab.unittest.constraints.RelativeTolerance            
             buildAnimalInEnvironment(testCase);
@@ -627,7 +627,11 @@ classdef AnimalTest < AbstractTest
                IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
             testCase.assertThat(testCase.animal.ySimulated, ...
                IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
-            testCase.assertEqual(testCase.environment.gridSquares(6, 5), 1);           
+            testCase.assertEqual(testCase.environment.gridSquares(6, 5), 1); 
+            
+%             settling should reset simulated position to physical position
+            testCase.animal.resetSimulatedPositionOnlyToPhysicalPosition();
+            
             clockwiseness = -1 ;  %clockwise  
             testCase.animal.turn(clockwiseness, 15); 
             testCase.assertThat(testCase.animal.currentDirection, ...
@@ -645,9 +649,9 @@ classdef AnimalTest < AbstractTest
             testCase.assertThat(testCase.animal.xSimulated, ...
                IsEqualTo(1.2, 'Within', RelativeTolerance(.00001)));         
             testCase.assertThat(testCase.animal.ySimulated, ...
-               IsEqualTo(1.1, 'Within', RelativeTolerance(.00001)));         
+               IsEqualTo(1, 'Within', RelativeTolerance(.00001)));         
             % animal's position in the environment is also updated 
-            testCase.assertEqual(testCase.environment.gridSquares(6, 6), 1);
+            testCase.assertEqual(testCase.environment.gridSquares(5, 6), 1);
 
            
         end

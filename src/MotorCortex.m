@@ -393,6 +393,7 @@ classdef MotorCortex < System
             obj.animal.hippocampalFormation.placeOutput = obj.physicalPlace;
             obj.animal.hippocampalFormation.updateSubsystemFeatureDetectors(); 
             obj.animal.hippocampalFormation.settleGrids(); 
+            obj.animal.resetSimulatedPositionOnlyToPhysicalPosition();
         end
         function turned = settlePhysical(obj)
             obj.settleBasic(); 

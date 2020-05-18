@@ -327,7 +327,7 @@ classdef Animal < System
             obj.x = obj.environment.position(1); 
             obj.y = obj.environment.position(2); 
             obj.currentDirection = radians; 
-            obj.resetSimulatedPositionToPhysicalPosition(); 
+            obj.resetSimulatedPositionAndDirectionToPhysicalPosition(); 
             obj.environment.calculateGridSquare([obj.x, obj.y]); 
             obj.calculateAxisOfRotation(); 
             obj.translateShape();
@@ -354,11 +354,14 @@ classdef Animal < System
             obj.y = obj.y + deltaY;
             obj.environment.setPosition([obj.x, obj.y]); 
             obj.environment.calculateGridSquare([obj.x, obj.y]); 
-            obj.resetSimulatedPositionToPhysicalPosition(); 
+            obj.resetSimulatedPositionAndDirectionToPhysicalPosition(); 
         end
-        function resetSimulatedPositionToPhysicalPosition(obj)
+        function resetSimulatedPositionOnlyToPhysicalPosition(obj)
             obj.xSimulated = obj.x; 
             obj.ySimulated = obj.y;
+        end              
+        function resetSimulatedPositionAndDirectionToPhysicalPosition(obj)
+            obj.resetSimulatedPositionOnlyToPhysicalPosition();
             obj.simulatedCurrentDirection = obj.currentDirection; 
         end      
         function calculateSimulatedPositionFromSimulatedDistanceTraveled(obj)
