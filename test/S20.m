@@ -7,13 +7,14 @@ classdef S20 < handle
     end
     methods 
         function runAll(obj)
-             obj.flavors(20, 2, 1, true, true); 
-             obj.flavors(20, 4, 1, true, true); 
-             obj.flavors(20, 6, 1, true, true);             
+%              obj.flavors(20, 2, 1, true, true); 
+%              obj.flavors(20, 4, 1, true, true); 
+%              obj.flavors(20, 6, 1, true, true);             
 %             obj.flavors(20, 2, 2, true, true); 
 %             obj.flavors(20, 4, 2, true, true); 
 %             obj.flavors(20, 6, 2, true, true);             
 %             obj.flavors(20, 2, 3, true, true); 
+%             obj.restart(19, 20, 2, 3, true, true); 
 %             obj.flavors(20, 4, 3, true, true); 
 %             obj.flavors(20, 6, 3, true, true);             
 %             obj.flavors(20, 2, 1, false, true); 
@@ -24,6 +25,7 @@ classdef S20 < handle
 %             obj.flavors(20, 6, 2, false, true);             
 %             obj.flavors(20, 2, 3, false, true); 
 %             obj.flavors(20, 4, 3, false, true); 
+%             obj.restart(9, 20, 6, 3, true, true); 
 %             obj.flavors(20, 6, 3, false, true);             
 %             obj.flavors(20, 2, 1, true, false); 
 %             obj.flavors(20, 4, 1, true, false); 
@@ -37,12 +39,12 @@ classdef S20 < handle
 %             obj.flavors(20, 2, 1, false, false); 
 %             obj.flavors(20, 4, 1, false, false); 
 %             obj.flavors(20, 6, 1, false, false);             
-%             obj.flavors(20, 2, 2, false, false); 
-%             obj.flavors(20, 4, 2, false, false); 
-%             obj.flavors(20, 6, 2, false, false);             
-%             obj.flavors(20, 2, 3, false, false); 
-%             obj.flavors(20, 4, 3, false, false); 
-%             obj.flavors(20, 6, 3, false, false);             
+            obj.flavors(20, 2, 2, false, false); 
+            obj.flavors(20, 4, 2, false, false); 
+            obj.flavors(20, 6, 2, false, false);             
+            obj.flavors(20, 2, 3, false, false); 
+            obj.flavors(20, 4, 3, false, false); 
+            obj.flavors(20, 6, 3, false, false);             
 
 %             obj.ec.sparseOrthogonalizingNetwork = true; 
 %             obj.ec.ripples = 6;
@@ -56,8 +58,7 @@ classdef S20 < handle
 %             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
 %             disp(obj.ec.environment.showGridSquares()); 
         end        
-        
-        function flavors(obj, last, ripples, gains, sparse, moreCells)
+        function restart(obj, first, last, ripples, gains, sparse, moreCells)
             obj.buildController(); 
             obj.ec.sparseOrthogonalizingNetwork = sparse; 
             obj.ec.ripples = ripples;
@@ -68,10 +69,28 @@ classdef S20 < handle
                 obj.ec.hdsMinimumVelocity = pi/30; 
                 obj.ec.minimumTurnVelocity=pi/30;                
             end
-            nextScenario = 1; % > 1 is restart after previous problem  
+            nextScenario = first; % > 1 is restart after previous problem  
             lastScenario = last; 
             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
             disp(obj.ec.environment.showGridSquares()); 
+        end
+        
+        function flavors(obj, last, ripples, gains, sparse, moreCells)
+            obj.restart(1, last, ripples, gains, sparse, moreCells); 
+%             obj.buildController(); 
+%             obj.ec.sparseOrthogonalizingNetwork = sparse; 
+%             obj.ec.ripples = ripples;
+%             obj.ec.nGridGains = gains; % x 2 = grids
+%             if moreCells
+%                 obj.ec.nHeadDirectionCells = 60;
+%                 obj.ec.nCueIntervals = 60;
+%                 obj.ec.hdsMinimumVelocity = pi/30; 
+%                 obj.ec.minimumTurnVelocity=pi/30;                
+%             end
+%             nextScenario = 1; % > 1 is restart after previous problem  
+%             lastScenario = last; 
+%             obj.ec.runScenarios(nextScenario, lastScenario, 3000); 
+%             disp(obj.ec.environment.showGridSquares()); 
         end
 
         function buildController(obj)
