@@ -25,7 +25,7 @@ classdef S20 < handle
 %             obj.flavors(20, 6, 2, false, true);             
 %             obj.flavors(20, 2, 3, false, true); 
 %             obj.flavors(20, 4, 3, false, true); 
-%             obj.restart(9, 20, 6, 3, true, true); 
+            obj.restart(9, 20, 6, 3, false, true); % had been sparse=true, so dup 
 %             obj.flavors(20, 6, 3, false, true);             
 %             obj.flavors(20, 2, 1, true, false); 
 %             obj.flavors(20, 4, 1, true, false); 
@@ -39,12 +39,12 @@ classdef S20 < handle
 %             obj.flavors(20, 2, 1, false, false); 
 %             obj.flavors(20, 4, 1, false, false); 
 %             obj.flavors(20, 6, 1, false, false);             
-            obj.flavors(20, 2, 2, false, false); 
-            obj.flavors(20, 4, 2, false, false); 
-            obj.flavors(20, 6, 2, false, false);             
-            obj.flavors(20, 2, 3, false, false); 
-            obj.flavors(20, 4, 3, false, false); 
-            obj.flavors(20, 6, 3, false, false);             
+%             obj.flavors(20, 2, 2, false, false); 
+%             obj.flavors(20, 4, 2, false, false); 
+%             obj.flavors(20, 6, 2, false, false);             
+%             obj.flavors(20, 2, 3, false, false); 
+%             obj.flavors(20, 4, 3, false, false); 
+%             obj.flavors(20, 6, 3, false, false);             
 
 %             obj.ec.sparseOrthogonalizingNetwork = true; 
 %             obj.ec.ripples = 6;

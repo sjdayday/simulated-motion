@@ -42,6 +42,73 @@ build_saturationline <- function(smsdf)
 
   saturationdf
 }
+build_rawenergydf <- function(smsdf, nRipples)
+{
+  library(dplyr)
+  rawenergydf = smsdf %>%
+  rename(turnRun = "turn/run") %>%
+  select(gridSquarePercent, simulated, ripples, sparsePlaceId, grids, headDirectionCells, seed) %>%
+  filter(simulated == 0, ripples == nRipples) %>%
+  group_by(sparsePlaceId, ripples, grids, headDirectionCells, seed) %>%
+  mutate(energy = row_number())
+
+  rawenergydf
+}
+build_energydf <- function(smsdf, nRipples)
+{
+  library(dplyr)
+  rawenergydf <- build_rawenergydf(smsdf, nRipples)
+  energydf = rawenergydf %>%
+  select(energy, gridSquarePercent, ripples, sparsePlaceId, grids, headDirectionCells, seed) %>%
+  group_by(energy) %>%
+  summarise(meanPercent = mean(gridSquarePercent), sdPercent = sd(gridSquarePercent))
+
+  energydf
+}
+plot_energy <- function(energydf)
+{
+   require(tidyr)
+   require(ggplot2)
+   energydf$lowersd = energydf$meanPercent-energydf$sdPercent
+   energydf$uppersd = energydf$meanPercent+energydf$sdPercent
+   ggplot(energydf, aes(x=energy, y=meanPercent)) + geom_line(size=1, alpha=0.8) +
+    geom_ribbon(aes(ymin=lowersd, ymax=uppersd) ,fill="blue", alpha=0.2) + theme_light(base_size = 16) + xlab("Energy") + ggtitle("Percentage of grid squares explored") + scale_y_continuous(name="Grid square percentage", breaks=c(0.8, 0.9), limits=c(0.0, 1.0))
+   ggsave("energyPercentage.pdf")
+}
+plot_energyAll <- function(smsdf)
+{
+   energydf2 <- build_energydf(smsdf, 2)
+   energydf4 <- build_energydf(smsdf, 4)
+   energydf6 <- build_energydf(smsdf, 6)
+   require(tidyr)
+   require(ggplot2)
+   ggplot(energydf2, aes(x=energy, y=meanPercent, colour="2")) + geom_line(size=1, alpha=0.8) +
+    theme_light(base_size = 16) + xlab("Energy") +
+    ggtitle("Percentage of grid squares explored") +
+    scale_y_continuous(name="Grid square percentage", breaks=c(0.8, 0.9), limits=c(0.0, 1.0)) +
+    geom_line(data=energydf4, aes(x=energy, y=meanPercent, colour="4"), size=1, alpha=0.8) +
+    geom_line(data=energydf6, aes(x=energy, y=meanPercent, colour="6"), size=1, alpha=0.8) +
+    scale_color_manual(name="Ripples",
+    breaks = c("2", "4", "6"),
+    values = c("blue", "darkgreen", "brown"))
+    ggsave("energyPercentage.pdf")
+}
+
+build_energydf2 <- function(smsdf)
+{
+  energydf2 <- build_energydf(smsdf, 2)
+  energydf2
+}
+build_energydf4 <- function(smsdf)
+{
+  energydf4 <- build_energydf(smsdf, 4)
+  energydf4
+}
+build_energydf6 <- function(smsdf)
+{
+  energydf6 <- build_energydf(smsdf, 6)
+  energydf6
+}
 plot_exploration <- function(exploredf)
 {
    require(tidyr)
